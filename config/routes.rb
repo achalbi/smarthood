@@ -12,9 +12,9 @@ EMS::Application.routes.draw do
   match '/contact', to: 'static_pages#contact'
 
 
-  match '/signup',  to: 'users#new', :as => "signup"
-  match '/signin',  to: 'sessions#new', :as => "login"
-  match '/signout', to: 'sessions#destroy', via: :delete , :as => "logout"
+  match '/signup',  to: 'users#new'
+  match '/signin',  to: 'sessions#new'
+  match '/signout', to: 'sessions#destroy', via: :delete
   
 
   # The priority is based upon order of creation:
