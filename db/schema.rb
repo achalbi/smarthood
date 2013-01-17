@@ -20,7 +20,6 @@ ActiveRecord::Schema.define(:version => 20130116090718) do
     t.datetime "updated_at",             :null => false
     t.string   "password_digest"
     t.string   "remember_token"
-    t.string   "auth_token"
     t.string   "password_reset_token"
     t.datetime "password_reset_sent_at"
   end
