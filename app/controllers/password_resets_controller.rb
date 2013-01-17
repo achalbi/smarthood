@@ -23,6 +23,7 @@ class PasswordResetsController < ApplicationController
       redirect_to root_url, :notice => "Password has been reset!"
     else
       render 'edit'
+    end
   end
 
 end
