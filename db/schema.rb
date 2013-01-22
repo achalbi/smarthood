@@ -11,7 +11,18 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130118053652) do
+ActiveRecord::Schema.define(:version => 20130122172839) do
+
+  create_table "groups", :force => true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.boolean  "privacy"
+    t.integer  "User_id"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  add_index "groups", ["User_id"], :name => "index_groups_on_User_id"
 
   create_table "microposts", :force => true do |t|
     t.string   "content"
@@ -32,6 +43,17 @@ ActiveRecord::Schema.define(:version => 20130118053652) do
   add_index "relationships", ["followed_id"], :name => "index_relationships_on_followed_id"
   add_index "relationships", ["follower_id", "followed_id"], :name => "index_relationships_on_follower_id_and_followed_id", :unique => true
   add_index "relationships", ["follower_id"], :name => "index_relationships_on_follower_id"
+
+  create_table "user_groups", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "group_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "user_groups", ["group_id"], :name => "index_user_groups_on_group_id"
+  add_index "user_groups", ["user_id", "group_id"], :name => "index_user_groups_on_user_id_and_group_id", :unique => true
+  add_index "user_groups", ["user_id"], :name => "index_user_groups_on_user_id"
 
   create_table "users", :force => true do |t|
     t.string   "name"

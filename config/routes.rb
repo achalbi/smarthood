@@ -1,6 +1,8 @@
 EMS::Application.routes.draw do
 
   
+  get "groups/new"
+
   resources :users
   resources :sessions, only: [:new, :create, :destroy]
   resources :password_resets
