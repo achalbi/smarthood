@@ -1,13 +1,14 @@
 EMS::Application.routes.draw do
 
   
-  get "groups/new"
+
 
   resources :users
   resources :sessions, only: [:new, :create, :destroy]
   resources :password_resets
   resources :microposts, only: [:create, :destroy]
   resources :relationships, only: [:create, :destroy]
+  resources :groups
 
   resources :users do
     member do

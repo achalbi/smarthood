@@ -21,6 +21,7 @@ class User < ActiveRecord::Base
   has_many :followers, through: :reverse_relationships, source: :follower
   has_many :user_groups, dependent: :destroy
   has_many :groups, :through => :user_groups
+  accepts_nested_attributes_for :groups
 
   before_save { |user| user.email = email.downcase }
   before_save :create_remember_token
