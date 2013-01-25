@@ -256,3 +256,28 @@ aside {
 .red_color{
   color: #f00;
 }
+
+.green_color{
+  color: #0a0;
+}
+
+ /* user_group  */
+
+.groups {
+  list-style: none;
+  margin: 0;
+  li {
+    overflow: auto;
+    padding: 10px 0;
+    border-top: 1px solid $grayLighter;
+    &:last-child {
+      border-bottom: 1px solid $grayLighter;
+    }
+  }
+}
+
+.pull-right-half{
+  padding-right: 200px;
+  float: right;
+}
+

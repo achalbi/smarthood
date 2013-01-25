@@ -9,6 +9,7 @@ EMS::Application.routes.draw do
   resources :microposts, only: [:create, :destroy]
   resources :relationships, only: [:create, :destroy]
   resources :groups
+  resources :user_groups
 
   resources :users do
     member do
