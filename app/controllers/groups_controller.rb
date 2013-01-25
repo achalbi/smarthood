@@ -7,7 +7,6 @@ before_filter :signed_in_user, only: [:create, :destroy]
   def index
 
   	@groups = Group.paginate(page: params[:page], :per_page => 10)
- 	
   end
 
   def create
@@ -15,6 +14,7 @@ before_filter :signed_in_user, only: [:create, :destroy]
     @group.User = current_user
     if @group.save
       flash[:success] = "Group created!"
+      @group.follow!(current_user, @group.id)
       redirect_to :action => :index
     else
     	flash[:error] = "Group not created!"
