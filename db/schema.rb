@@ -11,7 +11,18 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130125042542) do
+ActiveRecord::Schema.define(:version => 20130127161153) do
+
+  create_table "groupposts", :force => true do |t|
+    t.integer  "post_id"
+    t.integer  "user_group_id"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
+  add_index "groupposts", ["post_id", "user_group_id"], :name => "index_groupposts_on_post_id_and_user_group_id", :unique => true
+  add_index "groupposts", ["post_id"], :name => "index_groupposts_on_post_id"
+  add_index "groupposts", ["user_group_id"], :name => "index_groupposts_on_user_group_id"
 
   create_table "groups", :force => true do |t|
     t.string   "name"
@@ -32,6 +43,15 @@ ActiveRecord::Schema.define(:version => 20130125042542) do
   end
 
   add_index "microposts", ["user_id", "created_at"], :name => "index_microposts_on_user_id_and_created_at"
+
+  create_table "posts", :force => true do |t|
+    t.string   "content"
+    t.integer  "user_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "posts", ["user_id", "created_at"], :name => "index_posts_on_user_id_and_created_at"
 
   create_table "relationships", :force => true do |t|
     t.integer  "follower_id"

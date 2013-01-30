@@ -1,0 +1,22 @@
+<tr>
+  <td>
+<li>
+  <span class="content"><%= user_group.group.name %> 
+	<% if user_group.group.privacy? %>
+  <span class="red_color">Private</span>
+  <% end %>
+   <% unless user_group.group.User.nil? %> 
+   <span class="green_color">Owner</span>	
+   <%= user_group.group.User.name %> <% end %>
+</span>
+<div id="hide_form">
+  <div id="add_group_<%= user_group.group.id %>" class="pull-right">
+<%= link_to "Move", '#',  class: "btn btn-large btn-primary pull-right rowLink", id: user_group.id %>
+  </div>
+</div>
+  <span class="timestamp">
+    <%= user_group.group.description %>
+  </span>
+</li>
+</td>
+</tr>

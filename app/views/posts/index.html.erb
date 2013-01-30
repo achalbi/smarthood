@@ -1,0 +1,83 @@
+<%= form_for(@post) do |f| %>
+  <%= render 'shared/error_messages', object: f.object %>
+  <div class="field textarea-height">
+    <%= f.text_area :content, placeholder: "Compose new post...", :rows=>3, :cols=>40 %>
+  </div>
+  <%= f.submit "Post", class: "btn btn-large btn-primary" %>
+
+<table width="100%">
+  <tr>
+    <td>
+       <table  width="400px" class="displayTable">
+      <caption><h3>Selected Group</h3></caption>
+    </table>
+    </td>
+    <td>
+          </td>
+    <td>
+       <table  width="400px" class="displayTable">
+      <caption><h3>User Group List</h3></caption>
+    </table>
+
+    </td>
+  </tr>
+<tr>
+<td>
+
+  <table id="table1" style="background-color: white"  width="400px" class="displayTable">
+
+      <tbody>
+
+      </tbody>
+  </table>
+</td>
+<td>
+</td>
+<td>
+  <table id="table2" style="background-color: lightyellow; margin-top: 30px;"  width="400px" class="displayTable free-flow">
+      
+      <tbody>
+      	
+
+		<ul class="groups">
+		  <%= render :partial => 'posts/user_group', :collection => @user_groups   %>
+		</ul>
+      <div style="display: none">
+          <% @user_groups.each do |user_group| %>
+          <%= check_box_tag "user_groups[#{user_group.id}]", user_group.id %>
+        <%= user_group.group.name %>
+        <% end %>
+      </div>  
+      </tbody>
+  </table>
+</td>
+</tr>
+</table>
+<% end %>
+<script type="text/javascript">
+// Setup the "Move" links
+$(".rowLink").click(function () {
+    // get the row containing this link 
+    var row = $(this).closest("tr");
+ 
+    // find out in which table it resides
+    var table = $(this).closest("table");
+ 
+    // move it
+    row.detach();
+  var id = this.id;
+    if (table.is("#table1")) {
+        $('#user_groups_'+id).attr('checked', false);
+        $("#table2").append(row);
+    }
+    else {
+      $("#user_groups_"+id).attr('checked', true);
+      $("#table1").append(row);
+    }
+ 
+    // draw the user's attention to it
+    row.fadeOut();
+    row.fadeIn();
+});
+
+</script>

@@ -10,6 +10,9 @@ EMS::Application.routes.draw do
   resources :relationships, only: [:create, :destroy]
   resources :groups
   resources :user_groups
+  resources :posts
+
+  resources :post, :has_many => [:user_groups]
 
   resources :users do
     member do

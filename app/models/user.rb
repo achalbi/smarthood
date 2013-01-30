@@ -21,8 +21,9 @@ class User < ActiveRecord::Base
   has_many :followers, through: :reverse_relationships, source: :follower
   has_many :user_groups, dependent: :destroy
   has_many :groups, :through => :user_groups
-  
 
+  has_many :posts, dependent: :destroy
+  
   before_save { |user| user.email = email.downcase }
   before_save :create_remember_token
   #before_create { generate_token(:remember_token) }

@@ -13,8 +13,10 @@
       </section>
     </aside>
      <div class="span8">
-      <h3>Micropost Feed</h3>
-      <%= render 'shared/feed' %>
+      <h3><a href="#" id="mp_link">Micropost Feed </a>| <a href="#" id="gp_link">Grouppost Feed</a></h3>
+      <div id="mp_div"> <%= render 'shared/feed' %> </div>
+      <div id="gp_div" style="display: none"> <%= render 'shared/group_feed' %> </div>
+
     </div>
   </div>  
 <% else %>
@@ -32,3 +34,17 @@
 
 <%= link_to image_tag("indy.png", alt: "Rashi"), 'http://rashi.org/' %>
 <% end %> 
+<script type="text/javascript">
+$("#mp_link").click(function(){
+  this.style.backgroundColor="#BDBDBD";
+  $("#gp_link").css("background-color","#ffffff");
+  $("#gp_div").hide();
+  $("#mp_div").show();
+})
+$("#gp_link").click(function(){
+  $("#gp_link").css("background-color","#BDBDBD");
+  $("#mp_link").css("background-color","#ffffff");
+  $("#mp_div").hide();
+  $("#gp_div").show();
+})
+</script>

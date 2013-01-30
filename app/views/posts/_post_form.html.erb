@@ -1,0 +1,54 @@
+<%= form_for[@post, @group] do |f| %>
+  <%= render 'shared/error_messages', object: f.object %>
+  <div class="field">
+    <%= f.text_area :content, placeholder: "Compose new micropost..." %>
+  </div>
+  <%= f.submit "Post", class: "btn btn-large btn-primary" %>
+
+  <table id="table1" style="background-color: Lime" class="displayTable">
+      <caption>Selected Group</caption>
+      <tbody>
+
+      </tbody>
+  </table>
+  <table id="table2" style="background-color: Yellow; margin-top: 30px;" class="displayTable">
+      <caption>Group List</caption>
+
+      <tbody>
+      	<%= will_paginate @groups %>
+
+		<ul class="groups">
+		  <%= render @groups %>
+		</ul>
+
+		<%= will_paginate @groups %>
+         
+      </tbody>
+  </table>
+<% end %>
+
+<script type="text/javascript">
+// Setup the "Move" links
+$(".rowLink").click(function () {
+    // get the row containing this link 
+    var row = $(this).closest("tr");
+ 
+    // find out in which table it resides
+    var table = $(this).closest("table");
+ 
+    // move it
+    row.detach();
+ 
+    if (table.is("#table1")) {
+        $("#table2").append(row);
+    }
+    else {
+        $("#table1").append(row);
+    }
+ 
+    // draw the user's attention to it
+    row.fadeOut();
+    row.fadeIn();
+});
+
+</script>

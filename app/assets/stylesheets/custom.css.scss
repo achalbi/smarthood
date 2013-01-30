@@ -281,3 +281,24 @@ aside {
   float: right;
 }
 
+.textarea-height{
+  textarea-height: 100px;
+  height: 100px
+}
+
+.displayTable{
+  list-style: none;
+  margin: 0;
+  tr {
+    overflow: auto;
+    padding: 3px 0;
+    border-top: 1px solid $grayLighter;
+    &:last-child {
+      border-bottom: 1px solid $grayLighter;
+    }
+  }
+}
+
+.free-flow{
+    float: right;
+}

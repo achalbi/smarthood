@@ -7,8 +7,8 @@ class UserGroup < ActiveRecord::Base
   validates :group_id, presence: true
   validates :user_id, presence: true
 
-  
-
+  has_many :groupposts, dependent: :destroy
+  has_many :posts, :through => :groupposts
 
   def unfollow!(user, id)
     user.user_groups.find(id).destroy
