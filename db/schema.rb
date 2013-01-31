@@ -11,18 +11,18 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130127161153) do
+ActiveRecord::Schema.define(:version => 20130131201149) do
 
   create_table "groupposts", :force => true do |t|
     t.integer  "post_id"
-    t.integer  "user_group_id"
-    t.datetime "created_at",    :null => false
-    t.datetime "updated_at",    :null => false
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.string   "group_id"
   end
 
-  add_index "groupposts", ["post_id", "user_group_id"], :name => "index_groupposts_on_post_id_and_user_group_id", :unique => true
+  add_index "groupposts", ["group_id"], :name => "index_groupposts_on_group_id"
+  add_index "groupposts", ["post_id", "group_id"], :name => "index_groupposts_on_post_id_and_group_id", :unique => true
   add_index "groupposts", ["post_id"], :name => "index_groupposts_on_post_id"
-  add_index "groupposts", ["user_group_id"], :name => "index_groupposts_on_user_group_id"
 
   create_table "groups", :force => true do |t|
     t.string   "name"

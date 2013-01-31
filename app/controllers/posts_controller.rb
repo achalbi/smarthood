@@ -11,10 +11,10 @@ class PostsController < ApplicationController
   def create
     @post = current_user.posts.build(params[:post])
     @user_groups = current_user.user_groups.find(params[:user_groups].keys.collect(&:to_i))
-    @post.save
-    @user_groups.each do |user_group|
-      @post.user_groups<< user_group
-      end      
+      @post.save
+      @user_groups.each do |user_group|
+        @post.groups<< user_group.group
+        end      
     if @post.save
       flash[:success] = "Post created!"
       redirect_to root_url

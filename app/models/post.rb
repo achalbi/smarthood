@@ -3,7 +3,7 @@ class Post < ActiveRecord::Base
 
   belongs_to :user
   has_many :groupposts, dependent: :destroy
-  has_many :user_groups, :through => :groupposts
+  has_many :groups, :through => :groupposts
 
 
 end

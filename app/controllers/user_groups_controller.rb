@@ -15,7 +15,6 @@ class UserGroupsController < ApplicationController
   def destroy
    @user_group = current_user.user_groups.find(params[:id])
    @group = Group.find(@user_group.group_id)
-    flash[:success] = @group.name
     @user_group.unfollow!(current_user, params[:id])
     respond_to do |format|
       format.html { redirect_to 'groups/index' }
