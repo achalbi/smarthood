@@ -36,14 +36,14 @@
 <% end %> 
 <script type="text/javascript">
 $("#mp_link").click(function(){
-  this.style.backgroundColor="#BDBDBD";
-  $("#gp_link").css("background-color","#ffffff");
+  $("#mp_link").css("text-decoration","underline");
+  $("#gp_link").css("text-decoration","none");
   $("#gp_div").hide();
   $("#mp_div").show();
 })
 $("#gp_link").click(function(){
-  $("#gp_link").css("background-color","#BDBDBD");
-  $("#mp_link").css("background-color","#ffffff");
+  $("#gp_link").css("text-decoration","underline");
+  $("#mp_link").css("text-decoration","none");
   $("#mp_div").hide();
   $("#gp_div").show();
 })

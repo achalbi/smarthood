@@ -5,5 +5,9 @@ class Post < ActiveRecord::Base
   has_many :groupposts, dependent: :destroy
   has_many :groups, :through => :groupposts
 
+  validates :content, presence: true
+  validates :user_id, presence: true
+
+  default_scope order: 'posts.created_at DESC'
 
 end

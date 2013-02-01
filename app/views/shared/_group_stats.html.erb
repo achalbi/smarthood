@@ -1,0 +1,9 @@
+<% @user ||= current_user %>
+<div class="stats">
+  <a href="<%= followers_group_path(@group) %>">
+    <strong id="followers" class="stat">
+      <%= @group.users.count %>
+    </strong>
+    followers
+  </a>
+</div>

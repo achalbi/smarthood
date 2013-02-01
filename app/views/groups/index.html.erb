@@ -1,6 +1,6 @@
 <% provide(:title, 'All Groups') %>
 <h1>All Groups</h1>
-<%= render 'create_group' if signed_in? %>
+
 <%= will_paginate @groups %>
 
 <ul class="groups">

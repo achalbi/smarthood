@@ -1,21 +1,27 @@
 <li>
-  <span class="content"><%= group.name %> 
+  <span class="content">
+    <font ></font><%= link_to group.name, group %>  
+   
 	<% if group.privacy? %>
-  <span class="red_color">Private</span>
+  <span class="red_color"> - Private</span>
   <% end %>
-   <% unless group.User.nil? %> 
-   <span class="green_color">Owner</span>	
-   <%= group.User.name %> <% end %>
+   
 </span>
   <div id="follow_form_<%= group.id %>" class="pull-right-half">
-  <% if group.following?(current_user, group) %>
-    <%= render 'unfollow', :group => group %>
+  <% if group.privacy? %>
+  <%= link_to "Send request",'', class: "btn btn-large btn-primary pull-right" %>
   <% else %>
-    <%= render 'follow', :group => group %>
+    <% if group.following?(current_user, group) %>
+      <%= render 'unfollow', :group => group %>
+    <% else %>
+      <%= render 'follow', :group => group %>
+    <% end %>
   <% end %>
   </div>
   <span class="timestamp">
     <%= group.description %>
   </span>
-
+    <% unless group.User.nil? %> <br>
+   <span class="green_color">Owner</span> 
+   <%= link_to group.User.name, group.User %> <% end %>
 </li>

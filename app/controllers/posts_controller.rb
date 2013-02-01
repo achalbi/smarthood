@@ -9,19 +9,27 @@ class PostsController < ApplicationController
   end
 
   def create
-    @post = current_user.posts.build(params[:post])
-    @user_groups = current_user.user_groups.find(params[:user_groups].keys.collect(&:to_i))
-      @post.save
-      @user_groups.each do |user_group|
-        @post.groups<< user_group.group
-        end      
-    if @post.save
-      flash[:success] = "Post created!"
-      redirect_to root_url
-    else
-      flash[:error] = "Post not created!"
-      #redirect_to root_url
+    if params[:user_groups].nil?
+      flash[:error] = "Please select Group"
+      @post = current_user.posts.build(params[:post])
+      @user_groups = current_user.user_groups.all
       render 'posts/index'
+    else
+        @post = current_user.posts.build(params[:post])
+        @user_groups = current_user.user_groups.find(params[:user_groups].keys.collect(&:to_i))
+          @post.save
+          @user_groups.each do |user_group|
+            @post.groups<< user_group.group
+            end      
+        if @post.save
+          flash[:success] = "Post created!"
+          redirect_to root_url
+        else
+          @user_groups = current_user.user_groups.all
+          flash[:error] = "Post not created!"
+          #redirect_to root_url
+          render 'posts/index'
+        end
     end
   end
 

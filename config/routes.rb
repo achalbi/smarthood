@@ -20,6 +20,12 @@ EMS::Application.routes.draw do
     end
   end
 
+  resources :groups do
+    member do
+      get :followers
+    end
+  end
+
   root to: 'static_pages#home'
 
 

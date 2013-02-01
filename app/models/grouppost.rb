@@ -7,5 +7,5 @@ class Grouppost < ActiveRecord::Base
   validates :group_id, presence: true
   validates :post_id, presence: true
 
-
+  default_scope order: 'groupposts.created_at DESC'
 end

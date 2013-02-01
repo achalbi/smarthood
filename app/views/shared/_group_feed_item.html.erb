@@ -4,6 +4,15 @@
       <%= link_to group_feed_item.user.name, group_feed_item.user %>
     </span>
     <span class="content"><%= group_feed_item.content %></span>
+    <span ><br><h6>Belongs to <%="Group".pluralize(group_feed_item.groups.count) %>:</h6>
+      <ul class="groupsList">
+      <% group_feed_item.groups.each do |group| %>
+      <ol>
+      <%= link_to group.name, group %>
+      </ol>
+      <% end %>
+      </ul>
+    </span>
     <span class="timestamp">
       Posted <%= time_ago_in_words(group_feed_item.created_at) %> ago.
     </span>

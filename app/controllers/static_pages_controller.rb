@@ -6,7 +6,7 @@ class StaticPagesController < ApplicationController
       # @group_feed_items = current_user.posts.paginate(page: params[:page])
 	    @groupposts = Grouppost.find(:all, :conditions => {:group_id => current_user.user_groups.map{|a| a.group_id}})
       @group_feed_items = @groupposts.collect{|a| a.post}.uniq
-      # @group_feed_items = @group_feed_items.paginate(page: params[:page])
+      # @group_feed_items = @group_feed_items.
 
     end
   end
