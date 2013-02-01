@@ -1,7 +1,15 @@
 <li id="<%= post.id %>">
 
     <span class="content"><%= post.content %></span>
-
+    <span ><h6>Belongs to <%="Group".pluralize(post.groups.count) %>:</h6>
+      <ul class="groupsList">
+      <% post.groups.each do |group| %>
+      <ol>
+      <%= link_to group.name, group %>
+      </ol>
+      <% end %>
+      </ul>
+    </span>
     <span class="timestamp">
       Posted <%= time_ago_in_words(post.created_at) %> ago.
     </span>
