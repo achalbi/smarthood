@@ -1,0 +1,35 @@
+<br>
+<% post.comments.each do |comment| %>
+<ol>
+<%= link_to gravatar_for(comment.user, size: 30), comment.user %>
+    <span class="user">
+      <%= link_to comment.user.name, comment.user %>
+    </span>
+     <span class="content"><%= comment.content %></span>
+     <span class="timestamp">
+      Posted <%= time_ago_in_words(comment.created_at) %> ago.
+    </span>
+     <% if current_user?(comment.user) %>
+    <%= link_to "delete", comment, method: :delete, data: { confirm: "You sure?" },title: comment.content %>
+  
+<% end %>  
+</ol>
+<% end %>
+<ol>
+<%= link_to gravatar_for(current_user, size: 30), current_user %>
+    <span class="user">
+      <%= link_to current_user.name, current_user %>
+    </span>
+
+<%= form_for [post.comments.build] do |f| %>
+  <%= f.hidden_field :post_id %>
+  <%= render 'shared/error_messages', object: f.object %>
+  <div class="field">
+    <%= f.text_field :content, placeholder: "Comment...", size: 10 %>
+  </div>
+  <div style="display:none">
+  <%= f.submit "Post", class: "btn btn-large btn-primary "  %>
+  </div>
+<% end %>
+                                
+</ol>

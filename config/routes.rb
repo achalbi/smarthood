@@ -3,6 +3,8 @@ EMS::Application.routes.draw do
   
 
 
+ 
+
   resources :users
   resources :sessions, only: [:new, :create, :destroy]
   resources :password_resets
@@ -11,9 +13,13 @@ EMS::Application.routes.draw do
   resources :groups
   resources :user_groups
   resources :posts
+  resources :comments
 
   resources :post, :has_many => [:user_groups]
 
+  resources :posts do
+    resources :comments
+  end
   resources :users do
     member do
       get :following, :followers

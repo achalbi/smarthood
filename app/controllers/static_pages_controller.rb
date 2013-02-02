@@ -7,7 +7,8 @@ class StaticPagesController < ApplicationController
 	    @groupposts = Grouppost.find(:all, :conditions => {:group_id => current_user.user_groups.map{|a| a.group_id}})
       @group_feed_items = @groupposts.collect{|a| a.post}.uniq
       # @group_feed_items = @group_feed_items.
-
+      @comments = Comment.new
+      @post = @group_feed_items
     end
   end
   

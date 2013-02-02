@@ -5,6 +5,9 @@ class Post < ActiveRecord::Base
   has_many :groupposts, dependent: :destroy
   has_many :groups, :through => :groupposts
 
+  
+  has_many :comments
+
   validates :content, presence: true
   validates :user_id, presence: true
 

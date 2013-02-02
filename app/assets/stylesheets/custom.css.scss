@@ -314,3 +314,10 @@ aside {
   }
 }
 
+.comments > ol {
+    overflow: auto;
+    padding:5px 0;
+    padding-left: 50px;
+
+     &:hover { background-color: #eee; }   
+}
