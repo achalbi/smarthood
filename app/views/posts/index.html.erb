@@ -1,5 +1,9 @@
-<%= form_for(@post) do |f| %>
+<%= form_for(@post, :html => {:multipart => true}) do |f| %>
   <%= render 'shared/error_messages', object: f.object %>
+
+  <%= f.fields_for :photos, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
+        <%= render(:partial => 'posts/photo', :locals => { :f => photo_form }) %>
+        <% end %>
   <div class="field textarea-height">
     <%= f.text_area :content, placeholder: "Compose new post...", :rows=>3, :cols=>40 %>
   </div>
