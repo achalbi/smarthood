@@ -8,12 +8,20 @@ class CommentsController < ApplicationController
     @comment.user = current_user
     @comment.save
     flash[:success] = "Comments created!"
-    redirect_to root_path
+    respond_to do |format|
+         format.html { redirect_to root_path }
+         format.js { render  :locals => { :post => @post } }
+      end
   end
 
   def destroy
+    @comment = Comment.find(params[:id])
+    @post = Post.find(@comment.post_id)
      Comment.find(params[:id]).destroy
     flash[:success] = "Comments destroyed!"
-    redirect_to root_path
+    respond_to do |format|
+         format.html { redirect_to root_path }
+         format.js { render  :locals => { :post => @post } }
+      end
   end
 end

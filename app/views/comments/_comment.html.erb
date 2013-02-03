@@ -10,7 +10,7 @@
       Posted <%= time_ago_in_words(comment.created_at) %> ago.
     </span>
      <% if current_user?(comment.user) %>
-    <%= link_to "delete", comment, method: :delete, data: { confirm: "You sure?" },title: comment.content %>
+    <%= link_to "delete", comment, method: :delete, remote: true, data: { confirm: "You sure?" },title: comment.content %>
   
 <% end %>  
 </ol>
@@ -21,7 +21,7 @@
       <%= link_to current_user.name, current_user %>
     </span>
 
-<%= form_for [post.comments.build] do |f| %>
+<%= form_for [post.comments.build], remote: true do |f| %>
   <%= f.hidden_field :post_id %>
   <%= render 'shared/error_messages', object: f.object %>
   <div class="field">
