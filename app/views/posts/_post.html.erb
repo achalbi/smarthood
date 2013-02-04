@@ -1,6 +1,6 @@
 <li id="<%= post.id %>">
     <% post.photos.each do |photo| %>
-  <div align="center" >
+  <div align="center" class="img_zoom" >
     <%= cl_image_tag(photo.pic_url(:medium)) %>
   </div>
   <% end %>
@@ -22,3 +22,13 @@
  
 
 </li>
+
+<script type="text/javascript">
+$('.img_zoom img').load(function() {
+    $(this).data('height', this.height);
+}).bind('mouseenter mouseleave', function(e) {
+    $(this).stop().animate({
+        height: $(this).data('height') * (e.type === 'mouseenter' ? 2 : 1)
+    });
+});
+</script>
