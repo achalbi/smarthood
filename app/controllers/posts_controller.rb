@@ -30,7 +30,7 @@ class PostsController < ApplicationController
             end      
         if @post.save
 
-         # flash[:success] = "Post created!"
+         flash[:success] = "Post created!"
           redirect_to root_url
         else
           @user_groups = current_user.user_groups.all

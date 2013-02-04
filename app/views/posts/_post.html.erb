@@ -1,4 +1,10 @@
 <li id="<%= post.id %>">
+    <% post.photos.each do |photo| %>
+  <div align="center" >
+    <%= cl_image_tag(photo.pic_url(:medium)) %>
+  </div>
+  <% end %>
+  <br>
   <%= link_to gravatar_for(post.user), post.user %>
     <span class="user">
       <%= link_to post.user.name, post.user %>

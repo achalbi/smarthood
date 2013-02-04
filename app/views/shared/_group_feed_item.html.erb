@@ -1,7 +1,7 @@
 <li id="post_id_<%= group_feed_item.id %>">
   <% group_feed_item.photos.each do |photo| %>
-  <div align="center" >
-    <%= cl_image_tag(photo.pic_url(:medium)) %>
+  <div align="center" class="img_zoom">
+    <%= cl_image_tag(photo.pic_url(:medium))  %>
   </div>
   <% end %>
   <br>
@@ -33,3 +33,13 @@
    
  </div>
 </li>
+
+<script type="text/javascript">
+$('.img_zoom img').load(function() {
+    $(this).data('height', this.height);
+}).bind('mouseenter mouseleave', function(e) {
+    $(this).stop().animate({
+        height: $(this).data('height') * (e.type === 'mouseenter' ? 1.5 : 1)
+    });
+});
+</script>
