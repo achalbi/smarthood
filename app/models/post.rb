@@ -6,7 +6,7 @@ class Post < ActiveRecord::Base
   has_many :groupposts, dependent: :destroy
   has_many :groups, :through => :groupposts
 
-  has_many :photos
+  has_many :photos, dependent: :destroy
   accepts_nested_attributes_for :photos, :allow_destroy => true
 
   

@@ -1,7 +1,10 @@
 <li id="post_id_<%= group_feed_item.id %>">
   <% group_feed_item.photos.each do |photo| %>
-    <%= image_tag photo.pic.url %>
+  <div align="center" >
+    <%= cl_image_tag(photo.pic_url(:medium)) %>
+  </div>
   <% end %>
+  <br>
   <%= link_to gravatar_for(group_feed_item.user), group_feed_item.user %>
     <span class="user">
       <%= link_to group_feed_item.user.name, group_feed_item.user %>

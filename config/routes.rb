@@ -1,10 +1,6 @@
 EMS::Application.routes.draw do
 
   
-
-
- 
-
   resources :users
   resources :sessions, only: [:new, :create, :destroy]
   resources :password_resets
@@ -14,12 +10,14 @@ EMS::Application.routes.draw do
   resources :user_groups
   resources :posts
   resources :comments
+  resources :photos
 
   resources :post, :has_many => [:user_groups]
 
   resources :posts do
     resources :comments
   end
+
   resources :users do
     member do
       get :following, :followers
@@ -30,6 +28,10 @@ EMS::Application.routes.draw do
     member do
       get :followers
     end
+  end
+
+  resources :posts do
+     resources :photos, :only => [:create, :destroy]
   end
 
   root to: 'static_pages#home'

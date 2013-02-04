@@ -1,12 +1,16 @@
 <%= form_for(@post, :html => {:multipart => true}) do |f| %>
   <%= render 'shared/error_messages', object: f.object %>
-
+  <%= link_to "Add image", "#",  class: "btn btn-primary", id: "image_upload"%><br>
+  <div id="image" style="display:none">
   <%= f.fields_for :photos, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
         <%= render(:partial => 'posts/photo', :locals => { :f => photo_form }) %>
         <% end %>
+  </div>
+  <br>
   <div class="field textarea-height">
     <%= f.text_area :content, placeholder: "Compose new post...", :rows=>3, :cols=>40 %>
   </div>
+  <br>
   <%= f.submit "Post", class: "btn btn-large btn-primary" %>
 
 <table width="100%">
@@ -83,5 +87,19 @@ $(".rowLink").click(function () {
     row.fadeOut();
     row.fadeIn();
 });
+$("#image_upload").click(function(){
+  $("#image").fadeIn();
+    $("#image").fadeOut();
+    $("#image").fadeIn();
+    $("#image_upload").fadeOut();
+    $("#image").show();
+    $("#image_upload").hide();
+  });
 
+$("#remove_image").click(function(){
+  $("#pic").val("");
+  $("#image").hide();
+  $("#image_upload").show();
+
+});
 </script>

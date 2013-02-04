@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130203083009) do
+ActiveRecord::Schema.define(:version => 20130203181218) do
 
   create_table "comments", :force => true do |t|
     t.string   "content"
@@ -62,6 +62,7 @@ ActiveRecord::Schema.define(:version => 20130203083009) do
     t.string   "pic_content_type"
     t.integer  "pic_file_size"
     t.datetime "pic_updated_at"
+    t.string   "pic"
   end
 
   create_table "posts", :force => true do |t|
