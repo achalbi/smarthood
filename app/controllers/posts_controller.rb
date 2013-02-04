@@ -18,7 +18,7 @@ class PostsController < ApplicationController
        
         @post = current_user.posts.build(params[:post])
           if !params[:post][:photos_attributes].nil?
-               Cloudinary::Uploader.upload(params[:post][:photos_attributes][:NEW_RECORD][:pic])
+           #    Cloudinary::Uploader.upload(params[:post][:photos_attributes][:NEW_RECORD][:pic])
           end
       
           @user_groups = current_user.user_groups.find(params[:user_groups].keys.collect(&:to_i))
