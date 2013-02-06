@@ -3,19 +3,19 @@
   <%= link_to "Add image", "#",  class: "btn btn-primary", id: "image_upload"%><br>
   <div id="image" style="display:none">
   <%= f.fields_for :photos, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
-        <%= render(:partial => 'posts/photo', :locals => { :f => photo_form }) %>
+        <% render(:partial => 'posts/photo', :locals => { :f => photo_form }) %>
         <% end %>
   </div>
-  <br>
+    <br>
   <div class="field textarea-height">
     <%= f.text_area :content, placeholder: "Compose new post...", :rows=>3, :cols=>40 %>
   </div>
-  <br>
-  <%= f.submit "Post", class: "btn btn-large btn-primary" %>
+  <br>  <%= f.submit "Post", class: "btn btn-large btn-primary" %>
 
 <table width="100%">
   <tr>
     <td>
+
        <table  width="400px" class="displayTable">
       <caption><h3>Selected Group</h3></caption>
     </table>
@@ -88,12 +88,9 @@ $(".rowLink").click(function () {
     row.fadeIn();
 });
 $("#image_upload").click(function(){
-  $("#image").fadeIn();
-    $("#image").fadeOut();
-    $("#image").fadeIn();
-    $("#image_upload").fadeOut();
-    $("#image").show();
-    $("#image_upload").hide();
+      
+   $("#image_upload").before($("div#image").html().replace('NEW_RECORD', new Date().getTime()) ); 
+   
   });
 
 $("#remove_image").click(function(){

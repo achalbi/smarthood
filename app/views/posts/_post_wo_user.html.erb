@@ -1,6 +1,30 @@
-<li id="<%= post.id %>">
-
+<li id="<%= post.id %>" class="posts">
+<div id="gallery">
+  <ul id="grid">
+  <% post.photos.each do |photo| %>
+  <li>
+      <div  class="img_zoom" >
+    <a href="<%= photo.pic_url %>" rel="rettyPhoto[<%= post.id %>]" class="lightview" 
+   data-lightview-group="thumbnail-<%= post.id %>" 
+   data-lightview-group-options="controls: 'thumbnails'">
+    <%= cl_image_tag(photo.pic_url(:medium), class:"image_al_c")  %></a> 
+    </div>
+    </li>
+  <% end %>
+</ul>
+</div>
+  
+  <div class="clear-float">
+    <br>
     <span class="content"><%= post.content %></span>
+    <span class="timestamp">
+      Posted <%= time_ago_in_words(post.created_at) %> ago.
+    </span>
+  <% if current_user?(post.user) %>
+    <%= link_to "delete", post, method: :delete,
+                                     data: { confirm: "You sure?" },
+                                     title: post.content %>
+  <% end %>
     <span ><h6>Belongs to <%="Group".pluralize(post.groups.count) %>:</h6>
       <ul class="groupsList">
       <% post.groups.each do |group| %>
@@ -10,12 +34,16 @@
       <% end %>
       </ul>
     </span>
-    <span class="timestamp">
-      Posted <%= time_ago_in_words(post.created_at) %> ago.
-    </span>
-  <% if current_user?(post.user) %>
-    <%= link_to "delete", post, method: :delete,
-                                     data: { confirm: "You sure?" },
-                                     title: post.content %>
-  <% end %>
+    
+</div>
 </li>
+
+<script type="text/javascript">
+$('.img_zoom img').load(function() {
+    $(this).data('height', this.height);
+}).bind('mouseenter mouseleave', function(e) {
+    $(this).stop().animate({
+        height: $(this).data('height') * (e.type === 'mouseenter' ? 1.08 : 1)
+    });
+});
+</script>

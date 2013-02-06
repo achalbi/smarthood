@@ -86,6 +86,11 @@ GEM
     nokogiri (1.5.6-x86-mingw32)
     pg (0.12.2-x86-mingw32)
     polyglot (0.3.3)
+    prettyphoto-rails (0.2.0)
+      jquery-rails
+      rails (>= 3.1)
+      sass-rails
+      uglifier
     rack (1.4.4)
     rack-cache (1.2)
       rack (>= 0.4)
@@ -175,6 +180,7 @@ DEPENDENCIES
   jquery-rails (= 2.0.2)
   mini_magick
   pg (= 0.12.2)
+  prettyphoto-rails
   rails (= 3.2.11)
   rspec-rails (= 2.11.0)
   sass-rails (= 3.2.5)

@@ -4,7 +4,7 @@ namespace :db do
    #make_users
  #  make_microposts
   # make_relationships
-   make_groups
+  # make_groups
   # make_memberships
   end
 end

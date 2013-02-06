@@ -1,16 +1,40 @@
-<li id="post_id_<%= group_feed_item.id %>">
+<li id="post_id_<%= group_feed_item.id %>" class="posts">
+  <div id="gallery">
+  <ul id="grid">
   <% group_feed_item.photos.each do |photo| %>
-  <div align="center" class="img_zoom">
-    <%= cl_image_tag(photo.pic_url(:medium))  %>
-  </div>
+  <li>
+      <div  class="img_zoom" >
+    <a href="<%= photo.pic_url %>" rel="rettyPhoto[<%= group_feed_item.id %>]" class="lightview" 
+   data-lightview-group="thumbnail-<%= group_feed_item.id %>" 
+   data-lightview-group-options="controls: 'thumbnails'">
+    <%= cl_image_tag(photo.pic_url(:medium), class:"image_al_c")  %></a> 
+    </div>
+    </li>
   <% end %>
-  <br>
+</ul>
+</div>
+  
+  <div class="clear-float">
+    <br>
   <%= link_to gravatar_for(group_feed_item.user), group_feed_item.user %>
     <span class="user">
       <%= link_to group_feed_item.user.name, group_feed_item.user %>
     </span>
+
     <span class="content"><%= group_feed_item.content %></span>
-    <span ><br><h6>Belongs to <%="Group".pluralize(group_feed_item.groups.count) %>:</h6>
+    <span class="timestamp">
+      Posted <%= time_ago_in_words(group_feed_item.created_at) %> ago.
+    </span>
+
+    
+  <% if current_user?(group_feed_item.user) %>
+    <%= link_to "delete", group_feed_item, method: :delete,
+                                     data: { confirm: "You sure?" },
+                                     title: group_feed_item.content %>
+  <% end %>
+<br>
+
+      <span  class="center_block"><br><h6>Belongs to <%="Group".pluralize(group_feed_item.groups.count) %>:</h6>
       <ul class="groupsList">
       <% group_feed_item.groups.each do |group| %>
       <ol>
@@ -19,18 +43,11 @@
       <% end %>
       </ul>
     </span>
-    <span class="timestamp">
-      Posted <%= time_ago_in_words(group_feed_item.created_at) %> ago.
-    </span>
-  <% if current_user?(group_feed_item.user) %>
-    <%= link_to "delete", group_feed_item, method: :delete,
-                                     data: { confirm: "You sure?" },
-                                     title: group_feed_item.content %>
-  <% end %>
   <div class="comments">
     <%= render :partial => "comments/comment", :locals => { :comment => @comment, :post => group_feed_item} %>
 
    
+ </div>
  </div>
 </li>
 
@@ -39,7 +56,7 @@ $('.img_zoom img').load(function() {
     $(this).data('height', this.height);
 }).bind('mouseenter mouseleave', function(e) {
     $(this).stop().animate({
-        height: $(this).data('height') * (e.type === 'mouseenter' ? 1.5 : 1)
+        height: $(this).data('height') * (e.type === 'mouseenter' ? 1.08 : 1)
     });
 });
 </script>

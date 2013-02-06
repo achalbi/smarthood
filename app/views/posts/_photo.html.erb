@@ -3,3 +3,8 @@
     <%= f.file_field :pic, id: "pic" %>
     <%= link_to "Remove", "#", id:"remove_image", class: "btn btn-danger"%>
 </fieldset>
+<script type="text/javascript">
+$("#remove_image").click(function(){
+	$(this).closest('fieldset').remove();
+});
+</script>

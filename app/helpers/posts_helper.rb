@@ -1,10 +1,11 @@
 module PostsHelper
 
 	def add_photo(form_builder)
-	  link_to_function "add", :id  => "add_photo" do |page|
+	  link_to_function "add",  :id  => "add_photo" do |page|
 	    form_builder.fields_for :photos, Photo.new, :child_index => 'NEW_RECORD' do |photo_form|
-	      html = render(:partial => 'photo', :locals => { :f => photo_form })
-	      page << "$('add_photo').insert({ before: '#{escape_javascript(html)}'.replace(/NEW_RECORD/g, new Date().getTime()) });"
+	      html = render(:partial => 'posts/photo', :locals => { :f => photo_form })
+	      #page << "$('add_photo').insert({ before: '#{escape_javascript(html)}'.replace(/NEW_RECORD/g, new Date().getTime()) });"
+	      page << "$('#add_photo').before( '<%= escape_javascript(html) %>'.replace('NEW_RECORD', new Date().getTime()) );"
 	    end
 	  end
 	end
