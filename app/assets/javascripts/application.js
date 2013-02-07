@@ -14,4 +14,6 @@
 //= require jquery_ujs
 //= require bootstrap
 //= require_tree .
-//= require_tree ../../../vendor/assets/javascripts/.
+//= require_tree ../../../vendor/assets/javascripts/lightview/.
+//= require_tree ../../../vendor/assets/javascripts/spinners/.
+//= require_tree ../../../vendor/assets/javascripts/excanvas/.
