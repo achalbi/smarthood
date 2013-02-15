@@ -38,10 +38,11 @@
 		      <b class="bold_font">Privacy : </b>
 		      <%= @event.privacy? ? "True" : "False" %>
 		      <br>
+		      <% if !@event.start_date_time.nil? %>
 		      <b class="bold_font">Start : </b>
 		      <%= @event.start_date_time.to_formatted_s(:long) %>
 		      <br>
-		  	  
+		  	  <% end %>
 		  	   <div style="display: none">
 		          <% @invite_groups.each do |group| %>
 		          <%= check_box_tag "invite_groups[#{group.id}]", group.id , @event_inv_gp.detect {|i| i==group.id}%>

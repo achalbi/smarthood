@@ -43,25 +43,41 @@ class EventsController < ApplicationController
    	def create
       @event = current_user.events.build(params[:event])
      
-
-        @invited_groups = Group.find(params[:invite_groups].keys.collect(&:to_i))  
-        @editor_groups = Group.find(params[:editor_groups].keys.collect(&:to_i))
+        if !params[:invite_groups].nil?
+          @invited_groups = Group.find(params[:invite_groups].keys.collect(&:to_i))  
+        end
+        if !params[:editor_groups].nil?
+          @editor_groups = Group.find(params[:editor_groups].keys.collect(&:to_i))
+        end
+        if !params[:invite_users].nil?
         @invited_users = User.find(params[:invite_users].keys.collect(&:to_i))
+        end
+        if !params[:editor_users].nil?
         @editor_users = User.find(params[:editor_users].keys.collect(&:to_i))
-        
+        end
+
         if @event.save
-          @invited_groups.each do |invited_group|
-            @event.invited_groups << invited_group
+          if !@invited_groups.nil?
+            @invited_groups.each do |invited_group|
+              @event.invited_groups << invited_group
+            end
           end
-          @invited_users.each do |invited_user|
-            @event.invited_users << invited_user
+          if !@invited_users.nil?
+            @invited_users.each do |invited_user|
+              @event.invited_users << invited_user
+            end
           end
-          @editor_groups.each do |editor_group|
-            @event.editor_groups << editor_group
+          if !@editor_groups.nil?
+            @editor_groups.each do |editor_group|
+              @event.editor_groups << editor_group
+            end
           end
-          @editor_users.each do |editor_user|
-            @event.editor_users << editor_user
+          if !@editor_users.nil?
+            @editor_users.each do |editor_user|
+              @event.editor_users << editor_user
+            end
           end  
+
         end
         @event.save
         flash[:success] = "Event successfully created!"
