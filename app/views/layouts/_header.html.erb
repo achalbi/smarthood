@@ -8,6 +8,20 @@
            <% if signed_in? %>
             <li><%= link_to "Users", users_path %></li>
             <% end %>
+              <li id="fat-menu" class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                Events <b class="caret"></b>
+              </a>
+              <ul class="dropdown-menu">
+                <li><%= link_to "Create Events", new_event_path %></li>
+                <li><%= link_to "All Events", events_path %></li>
+                <li class="divider"></li>
+                <li>
+                  <%= link_to "Group Post", posts_path %>
+                </li>
+              </ul>
+            </li>
+             
           <li id="fat-menu" class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                 Groups <b class="caret"></b>

@@ -1,0 +1,23 @@
+
+
+<table class="pretty" width="100%">  
+  <tr>  
+    <th><%= sortable "name", params[:sort3], params[:direction3] %></th>   
+  </tr>  
+  <% @invite_users.each do |user| %>  
+  <tr class="tr-hover">  
+    <td>
+    	<span id="table2_inv_usr_list" >
+    		<div style="height:35px">
+
+    	<%=  user.name %>
+    	<%= link_to "Add", '#', id: "usr_"+user.id.to_s,  class: "btn btn-primary pull-right rowLink3" %>
+        
+    	</div>
+    	</span>
+    </td>  
+  </tr>  
+  <% end %>  
+</table>    
+
+

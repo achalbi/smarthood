@@ -1,0 +1,120 @@
+<% provide(:title, 'Event') %>
+<table class="container_full" width="1200px">
+	<tr>
+		<td colspan="6" >
+			<h1 ><%= @event.name %></h1>
+		</td>
+	</tr>
+<tr>
+	<td class="span4">
+		<div  >
+			<h2>Invited users</h2>
+			  <span id="table1_inv_gp_sel" >
+			    <div >
+			    </div>
+			  </span> 
+			<%= render 'invite_groups'%>
+			<%= render 'invite_users'%>
+	  	</div>
+	</td>
+	<td class="span1 clear-float"></td>
+	<td class="text_top">
+		<br>
+		<br>
+		<br>
+		
+		<div class="text_top">
+		      <%= form_for(@event) do |f| %>
+		    	 <%= render 'shared/error_messages', object: f.object %>
+		      <b class="bold_font">Name : </b>   <%= @event.name %>
+		      <br>
+		      <b class="bold_font">Description : </b>
+		      <%= @event.description %>
+		      <br>
+		      <b class="bold_font">Location : </b>
+		      <%= @event.location %>
+		      <br>
+		      
+		      <b class="bold_font">Privacy : </b>
+		      <%= @event.privacy? ? "True" : "False" %>
+		      <br>
+		      <b class="bold_font">Start : </b>
+		      <%= @event.start_date_time.to_formatted_s(:long) %>
+		      <br>
+		  	  
+		  	   <div style="display: none">
+		          <% @invite_groups.each do |group| %>
+		          <%= check_box_tag "invite_groups[#{group.id}]", group.id , @event_inv_gp.detect {|i| i==group.id}%>
+		          <%= check_box_tag "editor_groups[#{group.id}]", group.id, @event_ed_gp.detect {|i| i==group.id} %>
+		        <% end %>
+			        <% @invite_users.each do |user| %>
+			          <%= check_box_tag "invite_users[#{user.id}]", user.id, @event_inv_usr.detect {|i| i==user.id} %>
+			          <%= check_box_tag "editor_users[#{user.id}]", user.id, @event_ed_usr.detect {|i| i==user.id} %>
+			        <% end %>
+		      </div>	
+		  	  
+		  	  <br>
+
+		      <%= f.submit "Edit my event", class: "btn btn-large btn-primary" %>
+		    <% end %>
+
+		    <%= form_for([@event.activities.build], remote: true) do |f| %>
+		    <%= f.hidden_field :event_id %>
+		    	 <%= render 'shared/error_messages', object: f.object %>
+		      <%= f.label :name %>
+		      <%= f.text_field :name %>
+
+		      <%= f.label :description %>
+		      <%= f.text_field :description %>
+
+		      <%= f.label :location %>
+		      <%= f.text_field :location %>
+
+		      <div class="span2 overrideClass"	>
+		      <%= label_tag :start_date_time %>
+		      <%= f.datetime_select(:start_date_time, :prompt => {:day => 'Choose day', :month => 'Choose month', :year => 'Choose year'}) %>
+		  	  </div>
+		      <%= f.submit "Create an activity", class: "btn btn-large btn-primary" %>
+		    <% end %>
+		    <div id="event_activities">
+		    	
+		    	<%= render @activities %>
+		    </div>
+		 		</div>
+	</td>
+	<td class="span1"></td>
+	<td>
+    	<td class="span4">
+		<div  >
+			<h2>Editors</h2>
+			  <span id="table1_edit_gp_sel" >
+			    <div >
+			    </div>
+			  </span> 
+			<%= render 'editor_groups'%>
+			<%= render 'editor_users'%>
+	  	</div>
+	</td>
+
+</tr>
+</table>
+<% @event.invited_groups.each do |group| %>
+<script type="text/javascript">
+$("#gp_"+<%= group.id %>).click();
+</script>
+<% end %>
+<% @event.editor_groups.each do |group| %>
+<script type="text/javascript">
+$("#ed_gp_"+<%= group.id %>).click();
+</script>
+<% end %>
+<% @event.invited_users.each do |user| %>
+<script type="text/javascript">
+$("#usr_"+<%= user.id %>).click();
+</script>
+<% end %>
+<% @event.editor_users.each do |user| %>
+<script type="text/javascript">
+$("#ed_usr_"+<%= user.id %>).click();
+</script>
+<% end %>

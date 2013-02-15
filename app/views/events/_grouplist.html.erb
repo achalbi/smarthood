@@ -1,0 +1,22 @@
+
+
+<table class="pretty" width="100%">  
+  <tr>  
+    <th><%= sortable "name", params[:sort1], params[:direction1] %></th>   
+  </tr>  
+  <% @invite_groups.each do |group| %>  
+  <tr class="tr-hover">  
+    <td>
+    	<span id="table2_inv_gp_list" >
+    		<div style="height:35px">
+
+    	<%=  group.name %>
+    	<%= link_to "Add", '#', id: "gp_"+group.id.to_s,  class: "btn btn-primary pull-right rowLink1" %>
+    	</div>
+    	</span>
+    </td>  
+  </tr>  
+  <% end %>  
+</table>    
+
+

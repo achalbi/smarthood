@@ -1,6 +1,9 @@
 EMS::Application.routes.draw do
 
-  
+
+
+  get "activities/new"
+
   resources :users
   resources :sessions, only: [:new, :create, :destroy]
   resources :password_resets
@@ -11,6 +14,8 @@ EMS::Application.routes.draw do
   resources :posts
   resources :comments
   resources :photos
+  resources :events
+  resources :activities
 
   resources :post, :has_many => [:user_groups]
 
@@ -21,6 +26,16 @@ EMS::Application.routes.draw do
   resources :users do
     member do
       get :following, :followers
+    end
+  end
+
+  resources :events do
+    resources :activities
+  end
+
+  resources :events do
+    collection  do
+      get :inviteuser, :eventeditors
     end
   end
 

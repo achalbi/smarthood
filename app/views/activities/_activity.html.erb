@@ -1,0 +1,16 @@
+<br>
+
+
+<ol>
+    <span class="user">
+      <%= link_to activity.name, activity %>
+    </span>
+     <span class="content"><%= activity.description %></span>
+     <span class="timestamp">
+      Created <%= time_ago_in_words(activity.created_at) %> ago.
+    </span>
+  
+</ol>
+
+
+

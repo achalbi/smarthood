@@ -25,7 +25,7 @@
                                      data: { confirm: "You sure?" },
                                      title: post.content %>
   <% end %>
-    <span ><h6>Belongs to <%="Group".pluralize(post.groups.count) %>:</h6>
+    <span ><h6>Posted under the <%="Group".pluralize(post.groups.count) %>:</h6>
       <ul class="groupsList">
       <% post.groups.each do |group| %>
       <ol>

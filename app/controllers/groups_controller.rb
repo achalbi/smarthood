@@ -36,4 +36,13 @@ before_filter :signed_in_user, only: [:create, :destroy]
     render 'show_follow'
   end
 
+  private  
+  def sort_column  
+    %w[asc desc].include?(params[:direction]) ?  params[:direction] : "asc"
+  end  
+    
+  def sort_direction  
+     %w[asc desc].include?(params[:direction]) ?  params[:direction] : "asc"   
+  end  
+
 end

@@ -11,7 +11,17 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130203181218) do
+ActiveRecord::Schema.define(:version => 20130214030752) do
+
+  create_table "activities", :force => true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.string   "location"
+    t.datetime "start_date_time"
+    t.integer  "event_id"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+  end
 
   create_table "comments", :force => true do |t|
     t.string   "content"
@@ -22,6 +32,74 @@ ActiveRecord::Schema.define(:version => 20130203181218) do
   end
 
   add_index "comments", ["user_id", "created_at", "post_id"], :name => "index_comments_on_user_id_and_created_at_and_post_id"
+
+  create_table "event_editor_groups", :force => true do |t|
+    t.integer  "event_id"
+    t.integer  "group_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "event_editor_groups", ["event_id", "group_id"], :name => "index_event_editor_groups_on_event_id_and_group_id", :unique => true
+  add_index "event_editor_groups", ["event_id"], :name => "index_event_editor_groups_on_event_id"
+  add_index "event_editor_groups", ["group_id"], :name => "index_event_editor_groups_on_group_id"
+
+  create_table "event_editor_users", :force => true do |t|
+    t.integer  "event_id"
+    t.integer  "user_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "event_editor_users", ["event_id", "user_id"], :name => "index_event_editor_users_on_event_id_and_user_id", :unique => true
+  add_index "event_editor_users", ["event_id"], :name => "index_event_editor_users_on_event_id"
+  add_index "event_editor_users", ["user_id"], :name => "index_event_editor_users_on_user_id"
+
+  create_table "event_editors", :force => true do |t|
+    t.integer  "event_id"
+    t.integer  "user_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "event_editors", ["event_id", "user_id"], :name => "index_event_editors_on_event_id_and_user_id", :unique => true
+  add_index "event_editors", ["event_id"], :name => "index_event_editors_on_event_id"
+  add_index "event_editors", ["user_id"], :name => "index_event_editors_on_user_id"
+
+  create_table "event_invited_groups", :force => true do |t|
+    t.integer  "event_id"
+    t.integer  "group_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "event_invited_groups", ["event_id", "group_id"], :name => "index_event_invited_groups_on_event_id_and_group_id", :unique => true
+  add_index "event_invited_groups", ["event_id"], :name => "index_event_invited_groups_on_event_id"
+  add_index "event_invited_groups", ["group_id"], :name => "index_event_invited_groups_on_group_id"
+
+  create_table "event_invited_users", :force => true do |t|
+    t.integer  "event_id"
+    t.integer  "user_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "event_invited_users", ["event_id", "user_id"], :name => "index_event_invited_users_on_event_id_and_user_id", :unique => true
+  add_index "event_invited_users", ["event_id"], :name => "index_event_invited_users_on_event_id"
+  add_index "event_invited_users", ["user_id"], :name => "index_event_invited_users_on_user_id"
+
+  create_table "events", :force => true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.string   "location"
+    t.datetime "start_date_time"
+    t.boolean  "privacy"
+    t.integer  "creator"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+  end
+
+  add_index "events", ["creator", "created_at", "start_date_time"], :name => "index_events_on_creator_and_created_at_and_start_date_time"
 
   create_table "groupposts", :force => true do |t|
     t.integer  "post_id"

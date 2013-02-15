@@ -405,3 +405,41 @@ div.grid_display h2 {
     margin-left: auto;
     margin-right: auto;
   }
+
+/* search*/
+.pretty th .current {  
+  padding-right: 12px;  
+  background-repeat: no-repeat;  
+  background-position: right center;  
+}  
+.pretty th .asc {   
+  background-image: url(/images/up_arrow.gif);   
+}  
+  
+.pretty th .desc {   
+  background-image: url(/images/down_arrow.gif);   
+}  
+
+.tr-hover{
+  &:hover { background-color: #eee; }   
+}
+
+.overrideClass select {
+  width: auto !important;
+  height: auto !important; 
+  
+  }
+
+  .container_full{
+   margin-right: auto;
+    margin-left: auto; 
+   
+  }
+
+  .bold_font{
+    font-size:20px;
+    padding: 10px;  
+  }
+  .text_top{
+    vertical-align:text-top;
+  }

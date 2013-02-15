@@ -1,0 +1,12 @@
+
+
+<table class="pretty">  
+  <tr>  
+    <th><%= sortable "name", params[:sort2], params[:direction2] %></th>   
+  </tr>  
+  <% @editors_groups.each do |group| %>  
+  <tr>  
+    <td><%=  group.name %></td>  
+  </tr>  
+  <% end %>  
+</table>    

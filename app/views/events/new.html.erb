@@ -1,0 +1,74 @@
+<% provide(:title, 'Create event') %>
+<table class="container_full" width="1200px">
+	<tr>
+		<td colspan="6" >
+			<h1 >Create event</h1>
+		</td>
+	</tr>
+<tr>
+	<td class="span4">
+		<div  >
+			<h2>Invited users</h2>
+			  <span id="table1_inv_gp_sel" >
+			    <div >
+			    </div>
+			  </span> 
+			<%= render 'invite_groups'%>
+			<%= render 'invite_users'%>
+	  	</div>
+	</td>
+	<td class="span1 clear-float"></td>
+	<td>
+
+		
+		<div class="">
+		      <%= form_for(@event) do |f| %>
+		    	 <%= render 'shared/error_messages', object: f.object %>
+		      <%= f.label :name %>
+		      <%= f.text_field :name %>
+
+		      <%= f.label :description %>
+		      <%= f.text_field :description %>
+
+		      <%= f.label :location %>
+		      <%= f.text_field :location %>
+
+		      <%= f.check_box :privacy %>
+		      <%= label_tag :privacy %>
+		      <div class="span2 overrideClass"	>
+		      <%= label_tag :start_date_time %>
+		      <%= f.datetime_select(:start_date_time, :prompt => {:day => 'Choose day', :month => 'Choose month', :year => 'Choose year'}) %>
+		  	  </div>
+		  	   <div style="display:none">
+		          <% @invite_groups.each do |group| %>
+		          <%= check_box_tag "invite_groups[#{group.id}]", group.id %>
+		          <%= check_box_tag "editor_groups[#{group.id}]", group.id %>
+		        <% end %>
+			        <% @invite_users.each do |user| %>
+			          <%= check_box_tag "invite_users[#{user.id}]", user.id %>
+			          <%= check_box_tag "editor_users[#{user.id}]", user.id %>
+			        <% end %>
+		      </div>	
+		  	  
+		  	  
+
+		      <%= f.submit "Create my event", class: "btn btn-large btn-primary" %>
+		    <% end %>
+		 		</div>
+	</td>
+	<td class="span1"></td>
+	<td>
+    	<td class="span4">
+		<div  >
+			<h2>Editors</h2>
+			  <span id="table1_edit_gp_sel" >
+			    <div >
+			    </div>
+			  </span> 
+			<%= render 'editor_groups'%>
+			<%= render 'editor_users'%>
+	  	</div>
+	</td>
+
+</tr>
+</table>

@@ -1,0 +1,22 @@
+
+
+<table class="pretty" width="100%">  
+  <tr>  
+    <th><%= sortable "name", params[:sort2], params[:direction2] %></th>   
+  </tr>  
+  <% @editor_groups.each do |group| %>  
+  <tr class="tr-hover">  
+    <td>
+    	<span id="table2_edit_gp_list" >
+    		<div style="height:35px">
+
+    	<%=  group.name %>
+    	<%= link_to "Add", '#', id: "ed_gp_"+group.id.to_s,  class: "btn btn-primary pull-right rowLink2" %>
+    	</div>
+    	</span>
+    </td>  
+  </tr>  
+  <% end %>  
+</table>    
+
+

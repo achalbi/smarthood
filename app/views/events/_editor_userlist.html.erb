@@ -1,0 +1,23 @@
+
+
+<table class="pretty" width="100%" >  
+  <tr >  
+    <th><%= sortable "name", params[:sort4], params[:direction4] %></th>   
+  </tr>  
+  <% @editor_users.each do |user| %>  
+  <tr class="tr-hover" >  
+    <td 
+    	<span id="table2_edit_usr_list" >
+    		<div style="height:35px">
+
+    	<%=  user.name %>
+    	<%= link_to "Add", '#', id: "ed_usr_"+user.id.to_s,  class: "btn btn-primary pull-right rowLink4" %>
+
+    	</div>
+    	</span>
+    </td>  
+  </tr>  
+  <% end %>  
+</table>   
+
+

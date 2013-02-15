@@ -1,0 +1,76 @@
+<h3>Groups</h3> 
+
+<%= form_tag new_event_path, :method => 'get', remote: true, id: "groups_search_editor" do  %>  
+  <%= hidden_field_tag :direction2, params[:direction2] %>  
+  <%= hidden_field_tag :sort2, params[:sort2] %> 
+  <p>  
+    <%= text_field_tag :search2, params[:search2] %>  
+      </p> 
+         <div style="display:none">
+          <% @editor_groups.each do |group| %>
+          <%= check_box_tag "p_editor_groups[#{group.id}]", group.id %>
+        <%= group.name %>
+        <% end %>
+      </div> 
+<% end %>
+
+  <div id="event_group_editor" style="height:200px;overflow:auto;">
+      <%= render 'editor_grouplist' %>
+    
+  </div>
+   
+
+<script type="text/javascript">
+
+$(function () {  
+  $(document).on('click', '#event_group_editor th a, #event_group_editor .pagination a', function () {  
+      $.getScript(this.href);  
+      return false;  
+    }  
+  );  
+});  
+
+$('#groups_search_editor input').keyup(function () {  
+  $.get($('#groups_search_editor').attr('action'), $('#groups_search_editor').serialize(), null, 'script');  
+  return false;  
+});  
+
+
+// Setup the "moveove" links
+$(document).on('click', '.rowLink2',function () {
+    // get the row containing this link 
+    var row = $(this).closest("div");
+ 
+    // find out in which table it resides
+    var table = $(this).closest("span");
+ 
+    // move it
+    row.detach(); 
+  var id = this.id;
+       id = id.replace("ed_gp_", ""); 
+      if (table.is("#table1_edit_gp_sel")) {
+        $('#editor_groups_'+id).attr('checked', false);
+        $('#p_editor_groups_'+id).attr('checked', false);
+       $(row).html( $(row).html().replace("Remove","Add")); 
+       //  $("#table2_inv_gp_list").append(row);
+        loadEditorGroup();
+    }
+    else {
+      $("#editor_groups_"+id).attr('checked', true);
+      $("#p_editor_groups_"+id).attr('checked', true);
+      $(row).html( $(row).html().replace("Add","Remove"));
+      $("#table1_edit_gp_sel").append(row);
+
+    }
+ 
+    // draw the user's attention to it
+    row.fadeOut();
+    row.fadeIn();
+});
+
+function loadEditorGroup(){
+$.get($('#groups_search').attr('action'), $('#groups_search').serialize(), null, 'script');  
+  return false;  
+
+}
+</script>
