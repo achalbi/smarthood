@@ -1,6 +1,13 @@
 <% provide(:title, 'All events') %>
 <h1>All events</h1>
+<%= link_to "List view", '#', id: "list_view",  class: "btn btn-primary pull-right" %>
+<%= link_to "FullCalendar view", '#', id: "fullCalendar_view",  class: "btn btn-primary pull-right" %>
+<br>	
+<br>
+<br>
+<div id="event_list">
 
+<h3>List view</h3>
 <%= will_paginate @events %>
 
 <ul class="users">
@@ -8,3 +15,40 @@
 </ul>
 
 <%= will_paginate @events %>
+<br>
+<br>
+</div>
+<div id='calendar_upper'>
+<h3>Calendar view</h3>
+	<div id='calendar'></div></div>
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#list_view').click(function(){
+		$('#event_list').show();
+		$('#calendar_upper').hide();
+		$('#fullCalendar_view').show();
+		$('#list_view').hide();
+		
+	});
+	$('#fullCalendar_view').click(function(){
+		$('#event_list').hide();
+		$('#calendar_upper').show();
+		$('#fullCalendar_view').hide();
+		$('#list_view').show();
+
+	});
+		//$('#calendar').fullCalendar('today');
+		//$('#list_view').click();
+		$('#event_list').show();
+		//
+		$('#fullCalendar_view').show();
+		$('#list_view').hide();
+    // page is now ready, initialize the calendar...
+
+   // $('#calendar').fullCalendar({
+        // put your options and callbacks here
+   // });
+});
+</script>

@@ -2,7 +2,7 @@
 <table class="container_full" width="1200px">
 	<tr>
 		<td colspan="6" >
-			<h1 ><%= @event.name %></h1>
+			<h1 ><%= @event.title %></h1>
 		</td>
 	</tr>
 <tr>
@@ -26,7 +26,7 @@
 		<div class="text_top">
 		      <%= form_for(@event) do |f| %>
 		    	 <%= render 'shared/error_messages', object: f.object %>
-		      <b class="bold_font">Name : </b>   <%= @event.name %>
+		      <b class="bold_font">Name : </b>   <%= @event.title %>
 		      <br>
 		      <b class="bold_font">Description : </b>
 		      <%= @event.description %>
@@ -34,13 +34,21 @@
 		      <b class="bold_font">Location : </b>
 		      <%= @event.location %>
 		      <br>
-		      
+		      <b class="bold_font">All day : </b>
+		      <%= @event.all_day? ? "True" : "False" %>
+		      <br>
+
 		      <b class="bold_font">Privacy : </b>
 		      <%= @event.privacy? ? "True" : "False" %>
 		      <br>
-		      <% if !@event.start_date_time.nil? %>
+		      <% if !@event.starts_at.nil? %>
 		      <b class="bold_font">Start : </b>
-		      <%= @event.start_date_time.to_formatted_s(:long) %>
+		      <%= @event.starts_at.to_formatted_s(:long) %>
+		      <% end %>
+		      <br>
+		      <% if !@event.ends_at.nil? %>
+		      <b class="bold_font">End : </b>
+		      <%= @event.ends_at.to_formatted_s(:long) %>
 		      <br>
 		  	  <% end %>
 		  	   <div style="display: none">
@@ -63,7 +71,7 @@
 		    <%= f.hidden_field :event_id %>
 		    	 <%= render 'shared/error_messages', object: f.object %>
 		      <%= f.label :name %>
-		      <%= f.text_field :name %>
+		      <%= f.text_field :title %>
 
 		      <%= f.label :description %>
 		      <%= f.text_field :description %>
@@ -72,8 +80,11 @@
 		      <%= f.text_field :location %>
 
 		      <div class="span2 overrideClass"	>
-		      <%= label_tag :start_date_time %>
-		      <%= f.datetime_select(:start_date_time, :prompt => {:day => 'Choose day', :month => 'Choose month', :year => 'Choose year'}) %>
+		      <%= label_tag :starts_at %>
+		      <%= f.datetime_select(:starts_at, :prompt => {:day => 'Choose day', :month => 'Choose month', :year => 'Choose year'}) %>
+		      <%= label_tag :ends_at %>
+		      <%= f.datetime_select(:ends_at, :prompt => {:day => 'Choose day', :month => 'Choose month', :year => 'Choose year'}) %>
+
 		  	  </div>
 		      <%= f.submit "Create an activity", class: "btn btn-large btn-primary" %>
 		    <% end %>

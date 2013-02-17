@@ -24,20 +24,25 @@
 		<div class="">
 		      <%= form_for(@event) do |f| %>
 		    	 <%= render 'shared/error_messages', object: f.object %>
-		      <%= f.label :name %>
-		      <%= f.text_field :name %>
+		      <%= f.label :title %>
+		      <%= f.text_field :title %>
 
 		      <%= f.label :description %>
 		      <%= f.text_field :description %>
 
 		      <%= f.label :location %>
 		      <%= f.text_field :location %>
+		      
+		      <%= f.check_box :all_day %>
+		      <%= label_tag :all_day %>
 
 		      <%= f.check_box :privacy %>
 		      <%= label_tag :privacy %>
 		      <div class="span2 overrideClass"	>
-		      <%= label_tag :start_date_time %>
-		      <%= f.datetime_select(:start_date_time, :prompt => {:day => 'Choose day', :month => 'Choose month', :year => 'Choose year'}) %>
+		      <%= label_tag :starts_at %>
+		      <%= f.datetime_select(:starts_at, :prompt => {:day => 'Choose day', :month => 'Choose month', :year => 'Choose year'}) %>
+		      <%= label_tag :ends_at %>
+		      <%= f.datetime_select(:ends_at, :prompt => {:day => 'Choose day', :month => 'Choose month', :year => 'Choose year'}) %>
 		  	  </div>
 		  	   <div style="display:none">
 		          <% @invite_groups.each do |group| %>

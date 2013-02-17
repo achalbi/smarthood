@@ -11,17 +11,29 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130214030752) do
+ActiveRecord::Schema.define(:version => 20130216143817) do
 
   create_table "activities", :force => true do |t|
-    t.string   "name"
+    t.string   "title"
     t.text     "description"
     t.string   "location"
-    t.datetime "start_date_time"
+    t.datetime "starts_at"
+    t.datetime "ends_at"
     t.integer  "event_id"
-    t.datetime "created_at",      :null => false
-    t.datetime "updated_at",      :null => false
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
   end
+
+  create_table "activityposts", :force => true do |t|
+    t.integer  "post_id"
+    t.integer  "activity_id"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  add_index "activityposts", ["activity_id"], :name => "index_activityposts_on_activity_id"
+  add_index "activityposts", ["post_id", "activity_id"], :name => "index_activityposts_on_post_id_and_activity_id", :unique => true
+  add_index "activityposts", ["post_id"], :name => "index_activityposts_on_post_id"
 
   create_table "comments", :force => true do |t|
     t.string   "content"
@@ -89,17 +101,19 @@ ActiveRecord::Schema.define(:version => 20130214030752) do
   add_index "event_invited_users", ["user_id"], :name => "index_event_invited_users_on_user_id"
 
   create_table "events", :force => true do |t|
-    t.string   "name"
+    t.string   "title"
     t.text     "description"
     t.string   "location"
-    t.datetime "start_date_time"
     t.boolean  "privacy"
     t.integer  "creator"
-    t.datetime "created_at",      :null => false
-    t.datetime "updated_at",      :null => false
+    t.datetime "starts_at"
+    t.datetime "ends_at"
+    t.boolean  "all_day"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
   end
 
-  add_index "events", ["creator", "created_at", "start_date_time"], :name => "index_events_on_creator_and_created_at_and_start_date_time"
+  add_index "events", ["creator", "created_at", "starts_at", "ends_at"], :name => "index_events_on_creator_and_created_at_and_starts_at_and_ends_at"
 
   create_table "groupposts", :force => true do |t|
     t.integer  "post_id"

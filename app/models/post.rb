@@ -9,6 +9,10 @@ class Post < ActiveRecord::Base
   has_many :photos, dependent: :destroy
   accepts_nested_attributes_for :photos, :allow_destroy => true
 
+
+  has_many :activityposts, dependent: :destroy
+  has_many :activities, :through => :activityposts
+
   
   has_many :comments
 

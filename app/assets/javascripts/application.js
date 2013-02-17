@@ -10,9 +10,11 @@
 // WARNING: THE FIRST BLANK LINE MARKS THE END OF WHAT'S TO BE PROCESSED, ANY BLANK LINE SHOULD
 // GO AFTER THE REQUIRES BELOW.
 //
-//= require bootstrap
 //= require jquery
 //= require jquery_ujs
+//= require jquery-ui
+//= require fullcalendar
+//= require bootstrap
 //= require_tree .
 //= require_tree ../../../vendor/assets/javascripts/lightview/.
 //= require_tree ../../../vendor/assets/javascripts/spinners/.

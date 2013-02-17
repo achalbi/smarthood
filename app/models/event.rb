@@ -1,5 +1,5 @@
 class Event < ActiveRecord::Base
-  attr_accessible :description, :location, :name, :privacy, :start_date_time, :user_id
+  attr_accessible :all_day, :description, :location, :title, :privacy, :starts_at, :ends_at, :user_id
 
   belongs_to :User
 
@@ -16,7 +16,33 @@ class Event < ActiveRecord::Base
   has_many :event_editor_groups, dependent: :destroy
   has_many :editor_groups, class_name: "Group", :through => :event_editor_groups, source: "group"
 
-	validates :name, presence: true
+	validates :title, presence: true
 	validates :description, presence: true
 	validates :creator, presence: true
+
+  scope :between, lambda {|start_time, end_time|
+    {:conditions => ["? < starts_at < ?", Event.format_date(start_time), Event.format_date(end_time)] }
+  }
+
+  # need to override the json view to return what full_calendar is expecting.
+  # http://arshaw.com/fullcalendar/docs/event_data/Event_Object/
+  def as_json(options = {})
+    {
+      :id => self.id,
+      :title => self.title,
+      :description => self.description || "",
+      :start => starts_at.rfc822,
+      :end => ends_at.rfc822,
+      :allDay => self.all_day,
+      :recurring => false,
+      :url => Rails.application.routes.url_helpers.event_path(id),
+      #:color => "red"
+    }
+
+  end
+
+  def self.format_date(date_time)
+    Time.at(date_time.to_i).to_formatted_s(:db)
+  end
+
 end
