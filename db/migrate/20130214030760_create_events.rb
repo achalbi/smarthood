@@ -12,6 +12,6 @@ class CreateEvents < ActiveRecord::Migration
 
       t.timestamps
     end
-    add_index :events, [:creator, :created_at, :starts_at, :ends_at]
+    add_index :events, [:creator, :created_at, :starts_at, :ends_at], :name => "index_evts_on_crtor_and_crted_and_starts_and_ends"
   end
 end
