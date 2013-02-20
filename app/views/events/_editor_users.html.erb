@@ -7,7 +7,7 @@
   <p>  
     <%= text_field_tag :search4, params[:search4] %>  
       </p> 
-         <div >
+         <div style="display:none">
           <% @editor_users.each do |user| %>
           <%= check_box_tag "p_editor_users[#{user.id}]", user.id %>
         <%= user.name %>
