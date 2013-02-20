@@ -38,12 +38,13 @@
 
 		      <%= f.check_box :privacy %>
 		      <%= label_tag :privacy %>
-		      <div class="span2 overrideClass"	>
+		      <div class="span3 overrideClass"	>
 		      <%= label_tag :starts_at %>
-		      <%= f.datetime_select(:starts_at, :prompt => {:day => 'Choose day', :month => 'Choose month', :year => 'Choose year'}) %>
+		      <%= f.text_field :starts_at%>
 		      <%= label_tag :ends_at %>
-		      <%= f.datetime_select(:ends_at, :prompt => {:day => 'Choose day', :month => 'Choose month', :year => 'Choose year'}) %>
+		      <%= f.text_field :ends_at %>
 		  	  </div>
+
 		  	   <div style="display:none">
 		          <% @invite_groups.each do |group| %>
 		          <%= check_box_tag "invite_groups[#{group.id}]", group.id %>
@@ -77,3 +78,41 @@
 
 </tr>
 </table>
+<script type="text/javascript">
+
+var startDateTextBox = $("#event_starts_at");
+var endDateTextBox = $("#event_ends_at");
+
+startDateTextBox.datetimepicker({ 
+	onClose: function(dateText, inst) {
+		if (endDateTextBox.val() != '') {
+			var testStartDate = startDateTextBox.datetimepicker('getDate');
+			var testEndDate = endDateTextBox.datetimepicker('getDate');
+			if (testStartDate > testEndDate)
+				endDateTextBox.datetimepicker('setDate', testStartDate);
+		}
+		else {
+			endDateTextBox.val(dateText);
+		}
+	},
+	onSelect: function (selectedDateTime){
+		endDateTextBox.datetimepicker('option', 'minDate', startDateTextBox.datetimepicker('getDate') );
+	}
+});
+endDateTextBox.datetimepicker({ 
+	onClose: function(dateText, inst) {
+		if (startDateTextBox.val() != '') {
+			var testStartDate = startDateTextBox.datetimepicker('getDate');
+			var testEndDate = endDateTextBox.datetimepicker('getDate');
+			if (testStartDate > testEndDate)
+				startDateTextBox.datetimepicker('setDate', testEndDate);
+		}
+		else {
+			startDateTextBox.val(dateText);
+		}
+	},
+	onSelect: function (selectedDateTime){
+		startDateTextBox.datetimepicker('option', 'maxDate', endDateTextBox.datetimepicker('getDate') );
+	}
+});
+</script>

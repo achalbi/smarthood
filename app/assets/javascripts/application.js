@@ -19,3 +19,4 @@
 //= require_tree ../../../vendor/assets/javascripts/lightview/.
 //= require_tree ../../../vendor/assets/javascripts/spinners/.
 //= require_tree ../../../vendor/assets/javascripts/excanvas/.
+//= require_tree ../../../vendor/assets/javascripts/datetime/.

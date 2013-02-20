@@ -8,11 +8,25 @@
       <span><b>Posts:</b> <%= @activity.posts.count %></span>
     </section>
     <section>
-   	<% if !@users.nil? %>
-      <% if @users.any? %>
+    <% if !@inv_users.nil? %>
+      <% if @inv_users.any? %>
+           <h3>Invited users</h3>
         <div class="user_avatars">
-          <% @users.each do |user| %>
-            <%= link_to gravatar_for(user, size: 30), user %>
+          <% @inv_users.each do |user| %>
+            <%= link_to gravatar_for(user, size: 40), user %>
+          <% end %>
+        </div>
+      <% end %>
+    <% end %>
+    </section>
+    <section>
+
+    <% if !@ed_users.nil? %>
+      <% if @ed_users.any? %>
+      <h3>Editors</h3>
+        <div class="user_avatars">
+          <% @ed_users.each do |user| %>
+            <%= link_to gravatar_for(user, size: 40), user %>
           <% end %>
         </div>
       <% end %>
@@ -20,11 +34,12 @@
     </section>
   </aside>
   <div class="span8">
-
-        <%= render :partial => 'posts/activity_post', :locals => {:post => @post} %>
+        <%= render :partial => 'posts/activity_post', :locals => {:post => @post}, :activity => @activity %>
 
   </div>
     <div class="span8">
+
+         <span><h2><b>Posts:</b> <%= @activity.posts.count %></h2></span>
     <ol class="microposts">
              <% @activity.posts.each do |post| %>
              <%= render :partial => 'posts/post', :locals => {:post => post} %>

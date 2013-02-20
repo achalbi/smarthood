@@ -11,4 +11,22 @@
     <%= f.text_area :content, placeholder: "Compose new post...", :rows=>3, :cols=>40 %>
   </div>
   <br>  <%= f.submit "Post", class: "btn btn-large btn-primary" %>
+  <%= hidden_field_tag :type, "activity" %>  
+  <%= hidden_field_tag :activity, @activity.id %>
 <% end %>
+
+<script type="text/javascript">
+$("#image_upload").click(function(){
+      
+   $("#image_upload").before($("div#image").html().replace('NEW_RECORD', new Date().getTime()) ); 
+   
+  });
+
+$("#remove_image").click(function(){
+  $("#pic").val("");
+  $("#image").hide();
+  $("#image_upload").show();
+
+});
+
+</script>

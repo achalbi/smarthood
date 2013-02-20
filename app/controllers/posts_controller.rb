@@ -9,6 +9,16 @@ class PostsController < ApplicationController
   end
 
   def create
+    case params[:type]
+    when "activity"
+        @activity = Activity.find(params[:activity])
+        @post = @activity.posts.build(params[:post])
+        @post.user = current_user
+        @post.save
+        @activity.posts << @post
+        redirect_to @activity
+    else
+      
     if params[:user_groups].nil?
       flash[:error] = "Please select Group"
       @post = current_user.posts.build(params[:post])
@@ -24,7 +34,6 @@ class PostsController < ApplicationController
           @user_groups = current_user.user_groups.find(params[:user_groups].keys.collect(&:to_i))
           @post.save
 
-
           @user_groups.each do |user_group|
             @post.groups<< user_group.group
             end      
@@ -38,6 +47,7 @@ class PostsController < ApplicationController
           #redirect_to root_url
           render 'posts/index'
         end
+    end
     end
   end
 
