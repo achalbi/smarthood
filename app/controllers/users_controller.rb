@@ -5,7 +5,7 @@ class UsersController < ApplicationController
   before_filter :admin_user,     only: :destroy
 
   def new
-  	@user = User.new
+  	 @user = env['omniauth.identity'] ||= User.new
   end
 
   def show

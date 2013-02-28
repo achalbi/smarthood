@@ -2,7 +2,24 @@ EMS::Application.routes.draw do
 
 
 
+  get "albums/new"
+
+  get "albums/create"
+
+  get "albums/destroy"
+
+  get "albums/show"
+
+  get "authentication/index"
+
+  get "authentication/create"
+
+  get "authentication/destroy"
+
   get "activities/new"
+
+  match '/auth/:provider/callback' => 'authentication#create'
+  match '/auth/failure' => 'authentication#failure'
 
   resources :users
   resources :sessions, only: [:new, :create, :destroy]
@@ -16,6 +33,9 @@ EMS::Application.routes.draw do
   resources :photos
   resources :events
   resources :activities
+  resources :authentications
+
+ # match '/auth/:provider/callback', to: 'sessions#create' #omniauth route
 
   resources :post, :has_many => [:user_groups]
 

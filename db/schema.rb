@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130216143817) do
+ActiveRecord::Schema.define(:version => 20130227162804) do
 
   create_table "activities", :force => true do |t|
     t.string   "title"
@@ -35,12 +35,39 @@ ActiveRecord::Schema.define(:version => 20130216143817) do
   add_index "activityposts", ["post_id", "activity_id"], :name => "index_activityposts_on_post_id_and_activity_id", :unique => true
   add_index "activityposts", ["post_id"], :name => "index_activityposts_on_post_id"
 
+  create_table "albumactivities", :force => true do |t|
+    t.integer  "activity_id"
+    t.integer  "album_id"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  create_table "albums", :force => true do |t|
+    t.string   "title"
+    t.text     "description"
+    t.string   "privacy"
+    t.integer  "user_id"
+    t.integer  "cover_photo_id"
+    t.string   "type"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+  end
+
+  create_table "authentications", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "provider"
+    t.string   "uid"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
   create_table "comments", :force => true do |t|
     t.string   "content"
     t.integer  "user_id"
     t.integer  "post_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.integer  "photo_id"
   end
 
   add_index "comments", ["user_id", "created_at", "post_id"], :name => "index_comments_on_user_id_and_created_at_and_post_id"
@@ -137,6 +164,14 @@ ActiveRecord::Schema.define(:version => 20130216143817) do
 
   add_index "groups", ["User_id"], :name => "index_groups_on_User_id"
 
+  create_table "identities", :force => true do |t|
+    t.string   "name"
+    t.string   "email"
+    t.string   "password_digest"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+  end
+
   create_table "microposts", :force => true do |t|
     t.string   "content"
     t.integer  "user_id"
@@ -145,6 +180,13 @@ ActiveRecord::Schema.define(:version => 20130216143817) do
   end
 
   add_index "microposts", ["user_id", "created_at"], :name => "index_microposts_on_user_id_and_created_at"
+
+  create_table "photoalbums", :force => true do |t|
+    t.integer  "photo_id"
+    t.integer  "album_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "photos", :force => true do |t|
     t.integer  "post_id"
@@ -155,6 +197,9 @@ ActiveRecord::Schema.define(:version => 20130216143817) do
     t.integer  "pic_file_size"
     t.datetime "pic_updated_at"
     t.string   "pic"
+    t.integer  "user_id"
+    t.string   "title"
+    t.text     "description"
   end
 
   create_table "posts", :force => true do |t|

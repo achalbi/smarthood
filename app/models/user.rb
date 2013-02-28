@@ -9,7 +9,7 @@
 #  updated_at :datetime         not null
 #
 
-class User < ActiveRecord::Base
+class User < OmniAuth::Identity::Models::ActiveRecord
   attr_accessible :name, :email, :password, :password_confirmation
   has_secure_password
   has_many :microposts, dependent: :destroy
@@ -32,6 +32,7 @@ class User < ActiveRecord::Base
 
   has_many :posts, dependent: :destroy
   has_many :comments, dependent: :destroy
+  has_many :authentications
   
   before_save { |user| user.email = email.downcase }
   before_save :create_remember_token
@@ -86,6 +87,49 @@ def feed
       scoped  
     end  
   end 
+
+  def self.create_with_omniauth(auth)
+    # you should handle here different providers data
+    # eg. case auth['provider'] ..
+#create(name: auth['info']['name'])
+    # IMPORTANT: when you're creating a user from a strategy that
+    # is not identity, you need to set a password, otherwise it will fail
+    # I use: user.password = rand(36**10).to_s(36)
+
+    create! do |user|
+      user.provider = auth["provider"]
+      user.uid = auth["uid"]
+      user.name = auth["info"]["name"]
+    end
+
+  end
+
+  def self.from_omniauth(auth)
+    find_by_provider_and_uid(auth["provider"], auth["uid"]) || create_with_omniauth(auth)
+  end
+
+
+def apply_omniauth(omniauth)
+  case omniauth['provider']
+  when 'facebook'
+    self.apply_facebook(omniauth)
+  end
+  #authentications.build(:provider => omniauth['provider'], :uid => omniauth['uid'], :token =>(omniauth['credentials']['token'] rescue nil))
+end
+ 
+def facebook
+  @fb_user ||= FbGraph::User.me(self.authentications.find_by_provider('facebook').token)
+end
+ 
+ 
+protected
+ 
+def apply_facebook(omniauth)
+  if (extra = omniauth['extra']['user_hash'] rescue false)
+    self.email = (extra['email'] rescue '')
+    
+  end
+end
 
   private
   def create_remember_token

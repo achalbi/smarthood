@@ -37,5 +37,10 @@ EMS::Application.configure do
 
   config.action_mailer.default_url_options = { :host => "localhost:3000" }
 
-  config.serve_static_assets = false
+  config.serve_static_assets = true
+
+  
+  
+ENV['FACEBOOK_APP_ID'] = "536159993072259";
+ENV['FACEBOOK_SECRET'] = "68fcf96519f8ecaab34473583bbaebb0";
 end

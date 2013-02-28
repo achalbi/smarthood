@@ -15,6 +15,11 @@ gem 'mini_magick'
 gem 'flash_cookie_session'
 #gem 'cocaine', '0.3.2'
 gem 'fullcalendar-rails'
+gem 'omniauth-twitter'
+gem 'omniauth-facebook'
+gem 'omniauth-google-oauth2'
+gem 'omniauth-identity'
+gem 'simple_form'
 
 group :development, :test do
   gem 'sqlite3', '1.3.5'
