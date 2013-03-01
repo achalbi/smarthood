@@ -11,7 +11,7 @@ class AuthenticationController < ApplicationController
 
   if authentication
     flash[:notice] = "Signed in successfully."
-    user = User.find(authentication.uid)
+    user = User.find(authentication.user_id)
     sign_in user
     redirect_back_or user
     #sign_in_and_redirect(:user, authentication.user)
