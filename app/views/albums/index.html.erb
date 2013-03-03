@@ -1,0 +1,87 @@
+<% provide(:title, 'Album') %>
+
+  <div class="row">
+    <aside class="span4">
+      <section>
+        <%= render 'shared/user_info' %>
+      </section>
+     <section>
+       <h3><%= link_to "Camera Roll", albums_path %></h3>
+     </section>
+       <% unless @albums.nil? %>
+         <% @albums.each do |album| %>
+          <section>
+          <h3><%= link_to album.title, album, remote: true %></h3>
+          </section>
+         <% end %>
+       <% end %>  
+    
+      
+    </aside>
+    <div id="albums">
+       <div class="span8">
+        <h3>Create album </h3>
+        <div class="span8">
+         <%= form_for(@album) do  |f| %> 
+         <%= render 'shared/error_messages', object: f.object %>
+          <%= f.label :title %>
+          <%= f.text_field :title %>
+
+          <%= f.label :description %>
+          <%= f.text_area :description, placeholder: "Album description...", :rows=>2, :cols=>40 %>
+        <%= submit_tag "Create album", class: "btn btn-large btn-primary "  %>
+        </div>
+        <br><br>
+         <div id="gallery">
+       <ul id="grid">
+        <% @camera_roll.each do |photo| %>
+          <li>
+          <div  class="img_zoom" id="div-img_<%= photo.id %>">
+        <a href="#" id="a-img_<%= photo.id %>">
+        <%= cl_image_tag(photo.pic_url(:thumb), class:"image_al_c ", id:"#{photo.id}")   %></a> 
+        </div>
+        </li>
+         <div style="display:none" >
+            <%= check_box_tag "photo[#{photo.id}]", photo.id %>
+           
+        </div>
+        <% end %>
+       </ul>
+      </div>
+      <% end %>
+      </div>
+  </div>
+  </div>  
+<script type="text/javascript">
+$("#image_upload").click(function(){
+      
+   $("#image_upload").after($("div#image").html().replace('NEW_RECORD', new Date().getTime()) ); 
+   
+  });
+
+$("#remove_image").click(function(){
+  $("#pic").val("");
+  $("#image").hide();
+  $("#image_upload").show();
+
+});
+
+$(document).ready(function(){
+    $('.image_al_c').click(function(){
+          var id = this.id;
+     if($("#photo_"+id).is(':checked')){
+        $("#photo_"+id).attr('checked', false);
+        $("#a-img_"+id).removeClass("img-selected");
+
+         
+    }else{
+       $("#photo_"+id).attr('checked', true);
+        $("#a-img_"+id).addClass("img-selected");
+      }
+  });
+});
+
+
+
+
+</script>

@@ -3,11 +3,40 @@ class AlbumsController < ApplicationController
   end
 
   def create
+    unless params[:photo].nil?
+         @photos = Photo.find(params[:photo].keys.collect(&:to_i))  
+          @album = current_user.albums.build(params[:album])
+          # @album.user = current_user
+          @album.save
+          @photos.each do |photo|
+            @album.photos << photo
+          end
+          
+    else
+      flash[:notice] = "Please select atleast 1 photo..."
+      
+    end
+   
+    redirect_to albums_path
+  end
+
+  def update
   end
 
   def destroy
   end
 
   def show
+    @album = Album.find(params[:id])
+       respond_to do |format|
+         format.html {  }
+         format.js { render  :locals => { :album => @album } }
+      end
+  end
+
+  def index
+  	@camera_roll = current_user.photos.order('created_at DESC').all
+  	@albums = current_user.albums.all
+    @album = Album.new
   end
 end

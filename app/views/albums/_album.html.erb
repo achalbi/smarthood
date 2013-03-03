@@ -1,0 +1,18 @@
+     <div class="span8">
+      <h3><%= @album.title %></a></h3>
+       <div id="gallery">
+     <ul id="grid">
+    <% @album.photos.each do |photo| %>
+      <li>
+      <div  class="img_zoom" >
+    <a href="<%= photo.pic_url %>"  class="lightview" 
+   data-lightview-group="thumbnail-" 
+   data-lightview-group-options="controls: 'thumbnails'">
+    <%= cl_image_tag(photo.pic_url(:thumb), class:"image_al_c")  %></a> 
+    </div>
+    </li>
+  
+  <% end %>
+  </ul>
+  </div>
+    </div>
