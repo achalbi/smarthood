@@ -1,0 +1,66 @@
+<% provide(:title, 'Home') %>
+
+  <div class="row">
+    <aside class="span4">
+      <section>
+        <%= render 'shared/user_info' %>
+      </section>
+     <section>
+        <%= form_for(@photo, :html => {:multipart => true}) do |f| %>
+          <%= render 'shared/error_messages', object: f.object %>
+          <%= link_to "Add image", "#",  class: "btn btn-primary", id: "image_upload"%><br>
+          <div id="image">
+          <!-- style="display:none"> -->
+               <%= f.fields_for :photos, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
+                    <% render(:partial => 'photos/photo', :locals => { :f => photo_form }) %>
+                <% end %>
+          </div>
+          <br>
+          <%= hidden_field_tag :type, "user" %>  
+          <%= f.submit "Post", class: "btn btn-primary" %>
+         <% end %>
+     </section>
+      
+    </aside>
+     <div class="span8">
+      <h3><a href="#">Camera Roll </a></h3>
+       <div id="gallery">
+     <ul id="grid">
+    <% @photos.each do |photo| %>
+      <li>
+      <div  class="img_zoom" >
+    <a href="<%= photo.pic_url %>"  class="lightview" 
+   data-lightview-group="thumbnail-" 
+   data-lightview-group-options="controls: 'thumbnails'">
+    <%= cl_image_tag(photo.pic_url(:thumb), class:"image_al_c")  %></a> 
+    </div>
+    </li>
+  
+  <% end %>
+  </ul>
+  </div>
+    </div>
+  </div>  
+<script type="text/javascript">
+$("#image_upload").click(function(){
+      
+   $("#image_upload").after($("div#image").html().replace('NEW_RECORD', new Date().getTime()) ); 
+   
+  });
+
+$("#remove_image").click(function(){
+  $("#pic").val("");
+  $("#image").hide();
+  $("#image_upload").show();
+
+});
+
+/*
+$('img.image_al_c').load(function() {
+    $(this).data('height', this.height);
+}).bind('mouseenter mouseleave', function(e) {
+    $(this).stop().animate({
+        height: $(this).data('height') * (e.type === 'mouseenter' ? 1.5 : 1)
+    });
+});*/
+</script>

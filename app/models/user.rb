@@ -10,7 +10,9 @@
 #
 
 class User < OmniAuth::Identity::Models::ActiveRecord
-  attr_accessible :name, :email, :password, :password_confirmation
+  attr_accessible :name, :email, :password, :password_confirmation, :photo, :photo_file_name, :photo_content_type, :photo_file_size, :photo_updated_at, :photos_attributes, :pic
+
+
   has_secure_password
   has_many :microposts, dependent: :destroy
   has_many :relationships, foreign_key: "follower_id", dependent: :destroy
@@ -32,7 +34,9 @@ class User < OmniAuth::Identity::Models::ActiveRecord
 
   has_many :posts, dependent: :destroy
   has_many :comments, dependent: :destroy
-  has_many :authentications
+  has_many :authentications, dependent: :destroy
+  has_many :photos, dependent: :destroy
+  accepts_nested_attributes_for :photos, :allow_destroy => true
   
   before_save { |user| user.email = email.downcase }
   before_save :create_remember_token
@@ -87,6 +91,10 @@ def feed
       scoped  
     end  
   end 
+#def photos=(attrs)
+#  attrs.each { |attr| self.photos.build(:pic => attr) }
+#end
+
 
   def self.create_with_omniauth(auth)
     # you should handle here different providers data

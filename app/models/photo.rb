@@ -1,7 +1,8 @@
 class Photo < ActiveRecord::Base
-  attr_accessible :post_id, :pic
+  attr_accessible :post_id, :pic, :user_id
   
   belongs_to :post
+  belongs_to :user
   mount_uploader :pic, PhotoUploader
 #  has_attached_file :pic,  :url =>
 #"/images/photos/:id/:style_:basename.:extension", :path =>

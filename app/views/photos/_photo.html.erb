@@ -1,6 +1,7 @@
+
 <fieldset>
-      
-    <%= f.file_field :pic, id: "pic" %>
+     <br> 
+    <%= f.file_field :pic, id: "pic", :multiple => true %>
     <%= link_to "Remove", "#", class: "btn btn-danger remove_image"%>
 </fieldset>
 <script type="text/javascript">
