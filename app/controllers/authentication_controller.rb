@@ -29,6 +29,8 @@ class AuthenticationController < ApplicationController
           end
           user = User.find(authentication.uid)
            flash[:notice] = "Signed up successfully."
+           # Tell the UserMailer to send a welcome Email after save
+          UserMailer.welcome_email(user).deliver
     else
       
       #user.authentications.build(:provider => omniauth ['provider'], :uid => omniauth['uid'])
@@ -39,9 +41,10 @@ class AuthenticationController < ApplicationController
       user.password = rand(36**10).to_s(36)
       user.password_confirmation = user.password
       user.save!
-      flash[:notice] = "Signed in successfully."
+      flash[:notice] = "Signed up successfully."
       #sign_in_and_redirect(:user, user)
-      
+      # Tell the UserMailer to send a welcome Email after save
+        UserMailer.welcome_email(user).deliver
     end
     sign_in user
     redirect_back_or user

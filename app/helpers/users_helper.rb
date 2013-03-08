@@ -21,6 +21,9 @@ module UsersHelper
     unless user.authentications.first.nil?
       if user.authentications.first.provider == 'facebook'
         gravatar_url = "http://graph.facebook.com/#{user.authentications.first.username}/picture?width=#{size}&height=#{size}"
+      else
+      gravatar_id = Digest::MD5::hexdigest(user.email.downcase)
+      gravatar_url = "https://secure.gravatar.com/avatar/#{gravatar_id}?s=#{size}"        
       end
     else
       gravatar_id = Digest::MD5::hexdigest(user.email.downcase)

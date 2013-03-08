@@ -1,5 +1,5 @@
 $(document).ready ->
-  $('#calendar1').fullCalendar
+  $('#calendar').fullCalendar
     editable: true,
     header:
       left: 'prev,next today',

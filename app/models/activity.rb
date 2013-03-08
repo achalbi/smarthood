@@ -6,6 +6,7 @@ class Activity < ActiveRecord::Base
   has_many :activityposts, dependent: :destroy
   has_many :posts, :through => :activityposts
 
-
+  has_many :albums, :as => :albumable
+  
   validates :title, presence: true
 end

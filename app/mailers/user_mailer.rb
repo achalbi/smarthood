@@ -1,5 +1,5 @@
 class UserMailer < ActionMailer::Base
-  default from: "from@example.com"
+  default from: "rashi.residency@gmail.com"
 
   # Subject can be set in your I18n file at config/locales/en.yml
   # with the following lookup:
@@ -10,4 +10,12 @@ def password_reset(user)
   @user = user
   mail :to => user.email, :subject => "Password Reset"
 end
+
+  def welcome_email(user)
+    @user = user
+    @url  = "https://ems-rashi.herokuapp.com/signin"
+   # attachments.inline['image.jpg'] = File.read(gravatar_for(user))
+    attachments.inline['indy.png'] = File.read("#{Rails.root}/public/assets/indy.png")
+    mail(:to => user.email, :subject => "Welcome to Rashi EMS")
+  end
 end

@@ -13,6 +13,7 @@ class Post < ActiveRecord::Base
   has_many :activityposts, dependent: :destroy
   has_many :activities, :through => :activityposts
 
+  has_many :albums, :as => :albumable
   
   has_many :comments
 

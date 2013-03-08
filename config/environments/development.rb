@@ -39,7 +39,18 @@ EMS::Application.configure do
 
   config.serve_static_assets = true
 
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.raise_delivery_errors = true
   
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+  :address              => "smtp.gmail.com",
+  :port                 => 587,
+  :domain               => 'ems-rashi.herokuapp.com',
+  :user_name            => 'rashi.residency@gmail.com',
+  :password             => 'Residency',
+  :authentication       => 'plain',
+  :enable_starttls_auto => true  }
   
 ENV['FACEBOOK_APP_ID'] = "536159993072259";
 ENV['FACEBOOK_SECRET'] = "68fcf96519f8ecaab34473583bbaebb0";
