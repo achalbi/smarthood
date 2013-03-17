@@ -1,4 +1,4 @@
-<% provide(:title, "Sign in") %>
+<% provide(:title, " - Sign in") %>
 
 
 <div class="row1 offset8">
@@ -24,6 +24,7 @@
 <div id="fb-root"></div>
 
     <div class="fb-login-button topline" data-show-faces="true" data-width="200" data-max-rows="1">
+      <%= link_to image_tag("facebook.png", alt: "Facebook"), '/auth/facebook' %>
     <%= link_to "Sign in with Facebook", "/auth/facebook", class: "btn primary large"  %> </div>
     <br>
 </p>
