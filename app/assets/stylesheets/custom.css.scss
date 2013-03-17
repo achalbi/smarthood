@@ -342,14 +342,14 @@ margin-right:auto;
 
 #grid li {
   display: inline-block;
-
+  border-top: 1px solid #ffffff;
   padding: 0;
   margin: 0 5px 10px 5px;
-
   } 
 
 #grid li a {
   display: block;
+  
   }
 
 #grid li img {
@@ -449,3 +449,36 @@ div.grid_display h2 {
   .text_top{
     vertical-align:text-top;
   }
+
+  .fbtopbar{
+  overflow: visible;
+  margin-bottom: $baseLineHeight;
+  //color: $navbarText;
+
+  // Fix for IE7's bad z-indexing so dropdowns don't appear below content that follows the navbar
+  *position: relative;
+  *z-index: 2;
+
+  }
+
+//customizing navbar
+  .btn {
+    text-shadow: none;
+  }
+
+.navbar li:hover,
+.navbar li.dropdown.open:hover{
+  background-color: #758ab6!important ;
+  text-shadow: none!important;
+}
+
+.topline{
+  background: #f2f2f2;
+  margin-top: 14px;
+  margin-bottom: 14px;
+  padding: 13px 20px 14px 15px;
+  border-top: 1px solid #ddd;
+  -webkit-border-radius: 0 0 0px 0px;
+  -moz-border-radius: 0 0 0px 0px;
+  border-radius: 0 0 0px 0px;
+}

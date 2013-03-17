@@ -20,6 +20,13 @@ gem 'omniauth-facebook'
 gem 'omniauth-google-oauth2'
 gem 'omniauth-identity'
 gem 'simple_form'
+gem 'node'
+#gem 'metro-rails'
+#gem 'therubyracer'
+#gem 'metro-ui-rails'
+
+#gem 'macbury-metro-ui-rails'
+#gem 'modern-ui-sass', git: 'git://github.com/thorn/modern-ui-sass.git'
 
 group :development, :test do
   gem 'sqlite3', '1.3.5'

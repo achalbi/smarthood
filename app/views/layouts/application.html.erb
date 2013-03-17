@@ -3,6 +3,7 @@
   <head>
     <title><%= full_title(yield(:title)) %></title>
     <%= stylesheet_link_tag "application", media: "all" %>
+    
     <%= javascript_include_tag "application" %>
 
     <%= stylesheet_link_tag "fullcalendar", media: "all" %>
@@ -17,7 +18,11 @@
   </head>
   <body>
   	<%= render 'layouts/header' %>
-    <div class="container">
+    <br>
+    <br>
+    <br>
+    <br>
+    <div class="container-fluid">
       <% flash.each do |key, value| %>
         <div class="alert alert-<%= key %>"><%= value %></div>
       <% end %>

@@ -1,14 +1,14 @@
 <% provide(:title, 'Camera Roll') %>
 
   <div class="row">
-    <aside class="span4">
+    <aside class="span6">
       <section>
         <%= render 'shared/user_info' %>
       </section>
      <section>
         <%= form_for(@photo, :html => {:multipart => true}) do |f| %>
           <%= render 'shared/error_messages', object: f.object %>
-          <%= link_to "Add image", "#",  class: "btn btn-primary", id: "image_upload"%><br>
+          <%= link_to "Add image", "#",  class: "btn primary", id: "image_upload"%><br>
           <div id="image">
           <!-- style="display:none"> -->
                <%= f.fields_for :photos, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
@@ -17,7 +17,7 @@
           </div>
           <br>
           <%= hidden_field_tag :type, "user" %>  
-          <%= f.submit "Post", class: "btn btn-primary" %>
+          <%= f.submit "Post", class: "btn primary" %>
          <% end %>
      </section>
       
@@ -25,14 +25,14 @@
      <div class="span8">
       <h3><a href="#">Camera Roll </a></h3>
        <div id="gallery">
-     <ul id="grid">
+     <ul id="grid" class="media-grid">
     <% @photos.each do |photo| %>
       <li>
       <div  class="img_zoom" >
     <a href="<%= photo.pic_url %>"  class="lightview" 
    data-lightview-group="thumbnail-" 
    data-lightview-group-options="controls: 'thumbnails'">
-    <%= cl_image_tag(photo.pic_url(:thumb), class:"image_al_c")  %></a> 
+    <%= cl_image_tag(photo.pic_url(:thumb), class:"image_al_c thumbnail")  %></a> 
     </div>
     </li>
   

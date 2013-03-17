@@ -3,7 +3,7 @@
 	<tr>
 		<td colspan="6" >
 			<h1 ><%= @event.title %></h1>
-			<%= link_to "Edit", edit_event_path, id: "edit",  class: "btn btn-primary pull-right" %>
+			<%= link_to "Edit", edit_event_path, id: "edit",  class: "btn primary pull-right" %>
 		</td>
 	</tr>
 <tr>
@@ -38,7 +38,7 @@
 		      <br>
 		  	  <% end %>
 		  	  <br>	
-		  	  <aside class="span4">
+		  	  <aside class="span6">
 				    <section>
 				      <span>&nbsp;&nbsp;&nbsp;
 				      	<a href="#" id="my_post_link">view my posts</a>
@@ -107,7 +107,7 @@
 		      <%= label_tag :ends_at %>
 		      <%= f.text_field :ends_at %>
 		  	  </div>
-		      <%= f.submit "Create an activity", class: "btn btn-large btn-primary" %>
+		      <%= f.submit "Create an activity", class: "btn primary" %>
 		    <% end %>
 		</div>
 		    <div id="event_activities">

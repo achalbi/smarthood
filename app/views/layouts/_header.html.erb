@@ -1,16 +1,17 @@
-<header class="navbar navbar-fixed-top navbar-inverse">
-  <div class="navbar-inner">
-    <div class="container">
-      <%= link_to "Rashi - EMS", root_path, id: "logo" %>
-      <nav>
-        <ul class="nav pull-right">
-          <li><%= link_to "Home", root_path %></li>
-           <% if signed_in? %>
+<header class="container-fluid">
+  <div class="topbar">  
+    <div class="topbar-inner navbar ">
+      <div class="container canvas">
+        <%= link_to "Scrapbook", root_path, id: "logo1", class: "brand" %>
+        <nav>
+          <ul class="nav pull-right">
+            <li ><%= link_to "Home", root_path %></li>
+            <% if signed_in? %>
             <li><%= link_to "Users", users_path %></li>
             <% end %>
               <li id="fat-menu" class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                Events <b class="caret"></b>
+                Events <b class="caret1"></b>
               </a>
               <ul class="dropdown-menu">
                 <li><%= link_to "Create Events", new_event_path %></li>
@@ -20,7 +21,7 @@
             </li>
             <li id="fat-menu" class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                Photos <b class="caret"></b>
+                Photos <b class="caret1"></b>
               </a>
               <ul class="dropdown-menu">
                 <li><%= link_to "Camera roll", photos_path %></li>
@@ -30,7 +31,7 @@
             </li>
           <li id="fat-menu" class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                Groups <b class="caret"></b>
+                Groups <b class="caret1"></b>
               </a>
               <ul class="dropdown-menu">
                 <li><%= link_to "Create group", new_group_path %></li>
@@ -46,7 +47,7 @@
             
             <li id="fat-menu" class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                Account <b class="caret"></b>
+                Account <b class="caret1"></b>
               </a>
               <ul class="dropdown-menu">
                 <li><%= link_to "Profile", current_user %></li>
@@ -64,4 +65,5 @@
       </nav>
     </div>
   </div>
+</div>
 </header>

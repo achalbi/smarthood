@@ -1,6 +1,6 @@
 <%= form_for(@post, :html => {:multipart => true}) do |f| %>
   <%= render 'shared/error_messages', object: f.object %>
-  <%= link_to "Add image", "#",  class: "btn btn-primary", id: "image_upload"%><br>
+  <%= link_to "Add image", "#",  class: "btn primary", id: "image_upload"%><br>
   <div id="image" style="display:none">
   <%= f.fields_for :photos, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
         <% render(:partial => 'posts/photo', :locals => { :f => photo_form }) %>
@@ -10,7 +10,7 @@
   <div class="field textarea-height">
     <%= f.text_area :content, placeholder: "Compose new post...", :rows=>3, :cols=>40 %>
   </div>
-  <br>  <%= f.submit "Post", class: "btn btn-large btn-primary" %>
+  <br>  <%= f.submit "Post", class: "btn primary" %>
   <%= hidden_field_tag :type, "activity" %>  
   <%= hidden_field_tag :activity, @activity.id %>
 <% end %>

@@ -9,7 +9,7 @@
 </span>
   <div id="follow_form_<%= group.id %>" class="pull-right-half">
   <% if group.privacy? %>
-  <%= link_to "Send request",'', class: "btn btn-large btn-primary pull-right" %>
+  <%= link_to "Send request",'', class: "btn primary pull-right" %>
   <% else %>
     <% if group.following?(current_user, group) %>
       <%= render 'unfollow', :group => group %>

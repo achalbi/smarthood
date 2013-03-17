@@ -24,11 +24,12 @@
 <%= form_for [post.comments.build], remote: true do |f| %>
   <%= f.hidden_field :post_id %>
   <%= render 'shared/error_messages', object: f.object %>
+  <br>
   <div class="field">
-    <%= f.text_field :content, placeholder: "Comment...", size: 10 %>
+    <%= f.text_field :content, placeholder: "Comment...", class: "xxlarge" %>
   </div>
   <div style="display:none">
-  <%= f.submit "Post", class: "btn btn-large btn-primary "  %>
+  <%= f.submit "Post", class: "btn primary "  %>
   </div>
 <% end %>
                                 

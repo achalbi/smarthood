@@ -1,13 +1,13 @@
 <li id="post_id_<%= group_feed_item.id %>" class="posts">
   <div id="gallery">
-  <ul id="grid">
+  <ul id="grid" class="media-grid">
   <% group_feed_item.photos.each do |photo| %>
   <li>
-      <div  class="img_zoom" >
+      <div  class="img_zoom1" >
     <a href="<%= photo.pic_url %>" rel="rettyPhoto[<%= group_feed_item.id %>]" class="lightview" 
    data-lightview-group="thumbnail-<%= group_feed_item.id %>" 
    data-lightview-group-options="controls: 'thumbnails'">
-    <%= cl_image_tag(photo.pic_url(:medium), class:"image_al_c")  %></a> 
+    <%= cl_image_tag(photo.pic_url(:thumb), class:"image_al_c thumbnail")  %></a> 
     </div>
     </li>
   <% end %>
