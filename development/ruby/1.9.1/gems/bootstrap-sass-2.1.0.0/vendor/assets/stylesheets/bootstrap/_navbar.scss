@@ -381,7 +381,13 @@
     border-color: $navbarInverseBorder;
   }
 
-  .brand,
+  .brand{
+    color: $navbarInverseLinkColor;
+    //text-shadow: 0 -1px 0 rgba(0,0,0,.25);
+    &:hover {
+      color: $navbarInverseLinkColorHover;
+    }
+  }
   .nav > li > a {
     color: $navbarInverseLinkColor;
     text-shadow: 0 -1px 0 rgba(0,0,0,.25);
