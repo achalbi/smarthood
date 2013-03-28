@@ -12,6 +12,6 @@
  *= require_tree .
  *= require_tree ../../../vendor/assets/stylesheets/lightview/.
  *= require_tree ../../../vendor/assets/stylesheets/datetime/.
-  *= require_tree ../../../vendor/assets/.
-  *= require_tree ../../../vendor/assets/stylesheets/sidemenu/.
-*/
+ *= require_tree ../../../vendor/assets/.
+ *= require_tree ../../../vendor/assets/stylesheets/sidemenu/.
+ */
