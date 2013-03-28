@@ -22,3 +22,4 @@
 //= require_tree ../../../vendor/assets/javascripts/spinners/.
 //= require_tree ../../../vendor/assets/javascripts/excanvas/.
 //= require_tree ../../../vendor/assets/javascripts/datetime/.
+//= require_tree ../../../vendor/assets/javascripts/sidemenu/.

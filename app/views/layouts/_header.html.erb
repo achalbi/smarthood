@@ -1,11 +1,13 @@
 <header class="container-fluid">
   <div class="topbar">  
+    
     <div class="topbar-inner navbar ">
-      <div class="container canvas">
-        <%= link_to "Scrapbook", root_path, id: "logo1", class: "brand" %>
+      <div class="container-fluid canvas">
+
+        <%= link_to "Scrapbook", root_path, id: "logo1", class: "brand ", style:"margin-left:150px" %>
         <nav>
           <ul class="nav pull-right">
-            <li ><%= link_to "Home", root_path %></li>
+           <!-- <li ><%= link_to "Home", root_path %></li>
             <% if signed_in? %>
             <li><%= link_to "Users", users_path %></li>
             <% end %>
@@ -42,7 +44,7 @@
                 </li>
               </ul>
             </li>
-          
+          -->
           <% if signed_in? %>
             
             <li id="fat-menu" class="dropdown">
