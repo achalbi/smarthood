@@ -5,17 +5,19 @@
       <section>
         <%= render 'shared/user_info' %>
       </section>
-     <section>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
         <%= form_for(@photo, :html => {:multipart => true}) do |f| %>
           <%= render 'shared/error_messages', object: f.object %>
           <br>
-          <div id="image">
-          <!-- style="display:none"> -->
-          <div id="upload1" style = "border:2px dashed #ddd; width:100px; height:100px; padding:10px;  left:40px; text-align:center; z-index: 1;
-          ">Drag files or Click here
+         
+          <div id="upload1" style = "border:2px dashed #ddd; width:200px; height:50px; padding:10px;  left:40px; text-align:right; z-index: 1;  background: url(assets/addMedia.png) no-repeat 10%; 
+          ">   Click here to upload photos
           </div>
-          </div>
-           <!-- <%= link_to "Add image", "#",  class: "btn primary", id: "image_upload"%>-->
+          <!-- <%= link_to "Add image", "#",  class: "btn primary", id: "image_upload"%>-->
                <%= f.fields_for :photos, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
                  <!--   <% render(:partial => 'photos/photo', :locals => { :f => photo_form }) %>-->
                    <%= photo_form.file_field :pic, id: "pic", :multiple => true,style: "width:1px; height:1px; padding:0px;  left:0px;" %>                <% end %>
@@ -24,18 +26,21 @@
           <%= hidden_field_tag :type, "user" %>  
           <%= f.submit "Post", class: "btn primary" %>
          <% end %>
-     </section>
+     
       
     </aside>
      <div class="span8">
-      <h3><a href="#">Camera Roll </a></h3>
-
      
+       <div id="image" style="display:none">
+          <!-- style="display:none"> -->
+           <h3><a href="#">Photos ready to be uploaded... </a></h3>
+          <canvas id="imageCanvas" style = "border: 1px solid #ddd; padding:10px; align:center" ></canvas>
+       </div>
           
-          <canvas id="imageCanvas" style = "border: 1px solid #ddd;" ></canvas>
-        
-       <div id="gallery">
-     <ul id="grid" class="media-grid">
+        <h3><a href="#">Camera Roll </a></h3>
+
+       <div id="gallery" style="width:600px;">
+     <ul id="grid" class="media-grid1">
     <% @photos.each do |photo| %>
       <li>
       <div  class="img_zoom" >
@@ -75,6 +80,7 @@ $('img.image_al_c').load(function() {
 });*/
 
 $("#upload1").click(function(){
+    $("#image").show();
       $("#pic").click();
      
     });
