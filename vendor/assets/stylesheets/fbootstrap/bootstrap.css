@@ -1660,7 +1660,7 @@ table .headerSortUp.purple, table .headerSortDown.purple {
 }
 .topbar a {
   color: #ffffff;
-  /*text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);*/
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
 }
 .topbar h3 a:hover, .topbar .brand:hover, .topbar ul .active > a {
   background-color: #627aad;

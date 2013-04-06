@@ -11,13 +11,16 @@ class AlbumsController < ApplicationController
           @photos.each do |photo|
             @album.photos << photo
           end
-          
+          flash[:success] = "Album created"
     else
       flash[:notice] = "Please select atleast 1 photo..."
       
     end
    
-    redirect_to albums_path
+      respond_to do |format|
+         format.html {  }
+         format.js {render  :locals => { :album => @album }  }
+      end
   end
 
   def update
@@ -38,5 +41,9 @@ class AlbumsController < ApplicationController
   	@camera_roll = current_user.photos.order('created_at DESC').all
   	@albums = current_user.albums.all
     @album = Album.new
+     respond_to do |format|
+         format.html {  }
+         format.js { render  :locals => { :album => @camera_roll } }
+      end
   end
 end

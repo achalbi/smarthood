@@ -5,8 +5,14 @@
       <section>
         <%= render 'shared/user_info' %>
       </section>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
      <section>
-       <h3><%= link_to "Camera Roll", albums_path %></h3>
+       <h3><%= link_to "Camera Roll", albums_path, remote: true %></h3>
      </section>
        <% unless @albums.nil? %>
          <% @albums.each do |album| %>
@@ -22,23 +28,21 @@
        <div class="span8">
         <h3>Create album </h3>
         <div class="span8">
-         <%= form_for(@album) do  |f| %> 
-         <%= render 'shared/error_messages', object: f.object %>
-          <%= f.label :title %>
-          <%= f.text_field :title %>
+           <%= form_for(@album) do  |f| %> 
+           <%= render 'shared/error_messages', object: f.object %>
+            <%= f.label :title %>
+            <%= f.text_field :title %>
 
-          <%= f.label :description %>
-          <%= f.text_area :description, placeholder: "Album description...", :rows=>2, :cols=>40 %>
-          <span class=" overrideClass">
-          <%= f.label :privacy %>
-          <%= f.select :privacy, options_for_select([["Public", "public"], ["Follower", "follower"], ["Private", "private"]]) %>
-          
-        </span>
-        <br>
-        <%= submit_tag "Create album", class: "btn primary "  %>
-
-        
-    </div>
+            <%= f.label :description %>
+            <%= f.text_area :description, placeholder: "Album description...", :rows=>2, :cols=>40 %>
+            <span class=" overrideClass">
+            <%= f.label :privacy %>
+            <%= f.select :privacy, options_for_select([["Public", "public"], ["Follower", "follower"], ["Private", "private"]]) %>
+            
+          </span>
+          <br>
+          <%= submit_tag "Create album", class: "btn primary "  %>        
+        </div>
          <br><br>
          <div id="gallery">
        <ul id="grid">

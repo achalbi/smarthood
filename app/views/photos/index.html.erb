@@ -10,51 +10,112 @@
       <br>
       <br>
       <br>
-        <%= form_for(@photo, :html => {:multipart => true}) do |f| %>
-          <%= render 'shared/error_messages', object: f.object %>
-          <br>
-         
-          <div id="upload1" style = "border:2px dashed #ddd; width:200px; height:50px; padding:10px;  left:40px; text-align:right; z-index: 1;  background: url(assets/addMedia.png) no-repeat 10%; 
+      <br>
+      <div id="upload1" style = "border:2px dashed #ddd; width:200px; height:50px; padding:10px;  left:40px; text-align:right; z-index: 1;  background: url(assets/addMedia.png) no-repeat 10%; 
           ">   Click here to upload photos
           </div>
+          <br>
+      <section>
+       <h2 style="float:left;"><%= link_to "Camera Roll", albums_path, remote: true, id:"roll" %></h2>
+     </section>
+       <% unless @albums.nil? %>
+       <section>
+          <h2 style="float:left;"><%= link_to "Albums","#" %><span style="clear:both;"></span></h2>
+          <%= link_to "+", '#', id: "plus",  class: "btn secondary pull-right " %>
+       </section>
+         <% @albums.each do |album| %>
+          <section>
+            <h3 style="float:right;"><%= link_to album.title, album, remote: true %></h3>
+          </section>
+         <% end %>
+       <% end %>  
+       
+     
+      
+    </aside>
+       <div id="newAlbum" style="display:none;">
+          <h2 style="float:left; margin-left:170px;"><a href="#">Create album</a></h2><br><br><br>
+          <div class="pull-left" >
+             <%= form_for(@album, remote: true) do  |f| %> 
+             <%= render 'shared/error_messages', object: f.object %>
+              <%= f.label "title: " %>&nbsp;
+              <%= f.text_field :title %>
+              <br>
+              <%= f.label "description:" %>&nbsp;&nbsp;
+              <%= f.text_area :description, placeholder: "Album description...", :rows=>2, :cols=>40 %>
+              <span class=" overrideClass"><br><br>
+              <%= f.label "privacy:" %>&nbsp;
+              <%= f.select :privacy, options_for_select([["Public", "public"], ["Follower", "follower"], ["Private", "private"]]) %>
+              
+              </span>
+            <br><br>
+
+            <%= submit_tag "Create album", class: "btn primary ",style:"float:left; margin-left:135px;"  %>   
+          </div>
+          <br><br><br><br><br><br><br><br><br><br><br><br>
+           <div class="span12" id="gallery2">
+         <ul id="grid">
+          <% @photos.each do |photo| %>
+            <li>
+            <div  class="img_zoom" id="div-img_<%= photo.id %>">
+          <a  id="a-img_<%= photo.id %>">
+          <%= cl_image_tag(photo.pic_url(:thumb), class:"image_al_c1", id:"#{photo.id}")   %></a> 
+          </div>
+          </li>
+           <div style="display:none" >
+              <%= check_box_tag "photo[#{photo.id}]", photo.id %>
+             
+          </div>
+          <% end %>
+         </ul>
+        </div>
+        <% end %>
+       </div>
+
+     <div  class="span8">
+     <div id="floater-wrapper">
+       <div id="image" style="display:none;">
+          <!-- style="display:none"> -->
+          <div id="floater" style="width:640px;">
+           <h3><a href="#">Photos ready to be uploaded... </a>
+            <%= form_for(@photo, :html => {:multipart => true}) do |f| %>
+          <%= render 'shared/error_messages', object: f.object %>
+          
+         
+          
           <!-- <%= link_to "Add image", "#",  class: "btn primary", id: "image_upload"%>-->
                <%= f.fields_for :photos, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
                  <!--   <% render(:partial => 'photos/photo', :locals => { :f => photo_form }) %>-->
                    <%= photo_form.file_field :pic, id: "pic", :multiple => true,style: "width:1px; height:1px; padding:0px;  left:0px;" %>                <% end %>
 
-          <br>
+          
           <%= hidden_field_tag :type, "user" %>  
           <%= f.submit "Post", class: "btn primary" %>
-         <% end %>
-     
-      
-    </aside>
-     <div class="span8">
-     
-       <div id="image" style="display:none">
-          <!-- style="display:none"> -->
-           <h3><a href="#">Photos ready to be uploaded... </a></h3>
+         <% end %></h3>
+       </div>
           <canvas id="imageCanvas" style = "border: 1px solid #ddd; padding:10px; align:center" ></canvas>
        </div>
           
-        <h3><a href="#">Camera Roll </a></h3>
-
-       <div id="gallery" style="width:600px;">
-     <ul id="grid" class="media-grid1">
-    <% @photos.each do |photo| %>
-      <li>
-      <div  class="img_zoom" >
-    <a href="<%= photo.pic_url %>"  class="lightview" 
-   data-lightview-group="thumbnail-" 
-   data-lightview-group-options="controls: 'thumbnails'">
-    <%= cl_image_tag(photo.pic_url(:thumb), class:"image_al_c thumbnail")  %></a> 
+        
+        <br>
+       <div id="gallery" style="width:640px;">
+        <h2 style="float:left;"><a href="#">Camera Roll</a></h2><br><br><br>
+           <ul id="grid" class="media-grid1">
+          <% @photos.each do |photo| %>
+            <li>
+            <div  class="img_zoom" >
+          <a href="<%= photo.pic_url %>"  class="lightview" 
+         data-lightview-group="thumbnail-" 
+         data-lightview-group-options="controls: 'thumbnails'">
+          <%= cl_image_tag(photo.pic_url(:thumb), class:"image_al_c thumbnail")  %></a> 
+          </div>
+          </li>
+        
+        <% end %>
+        </ul>
+      </div>
     </div>
-    </li>
-  
-  <% end %>
-  </ul>
   </div>
-    </div>
   </div>  
 <script type="text/javascript">
 $("#image_upload").click(function(){
@@ -80,94 +141,92 @@ $('img.image_al_c').load(function() {
 });*/
 
 $("#upload1").click(function(){
-    $("#image").show();
       $("#pic").click();
-     
     });
+
+$("#roll").click(function(){
+  $("#image").hide();
+  $("#gallery").show();
+  $("#newAlbum").hide();
+});
+
+
+$("#plus").click(function(){
+  $("#newAlbum").show();
+  $("#image").hide();
+  $("#gallery").hide();
+  });
+ 
+
 $(document).ready(function() {
-     var imageLoader = document.getElementById('pic');
+    var imageLoader = document.getElementById('pic');
     imageLoader.addEventListener('change', handleImage, false);
 
-  
-
-function handleImage(e){
-  var canvas = document.getElementById('imageCanvas');
-  var ctx = canvas.getContext('2d');
-  var iCnt=0;
-  var files = e.target.files;
-  canvas.width = 600;
-  canvas.height = 155*(Math.ceil(files.length/4));
-  for( var i = 0, len = files.length; i < len; i++) 
-        {
-        if(files[i])
+  function handleImage(e){
+    var canvas = document.getElementById('imageCanvas');
+    var ctx = canvas.getContext('2d');
+    var iCnt=0;
+    var files = e.target.files;
+    if(files.length==0){
+      $("#image").hide();
+      $("#gallery").show();
+      $("#newAlbum").hide();
+    }else{
+      $("#image").show();
+      $("#gallery").hide();
+      $("#newAlbum").hide();
+    }
+    canvas.width = 600;
+    canvas.height = 155*(Math.ceil(files.length/4));
+    for( var i = 0, len = files.length; i < len; i++) 
           {
-            var reader = new FileReader();
-            reader.onload = function(event){
-              var img = new Image();
+          if(files[i])
+            {
+              var reader = new FileReader();
+              reader.onload = function(event){
+                var img = new Image();
 
-              img.onload = function(){
-                var ratioPx = 150;
-                var sWidth =ratioPx;
-                var ratio = img.width/sWidth;
-                var sHeight = img.height/ratio;   
-                  if(sHeight>ratioPx){
-                     sHeight =ratioPx;
-                     ratio = img.height/sHeight;
-                     sWidth = img.width/ratio;  
-                  }
-                ctx.drawImage(img, 155*(iCnt%4),155*(Math.floor(iCnt/4)),sWidth,sHeight);
-                //ctx.drawImage(img,0,0,sWidth,sHeight);
-                iCnt++;
+                img.onload = function(){
+                  var ratioPx = 150;
+                  var sWidth =ratioPx;
+                  var ratio = img.width/sWidth;
+                  var sHeight = img.height/ratio;   
+                    if(sHeight>ratioPx){
+                       sHeight =ratioPx;
+                       ratio = img.height/sHeight;
+                       sWidth = img.width/ratio;  
+                    }
+                  ctx.drawImage(img, 155*(iCnt%4),155*(Math.floor(iCnt/4)),sWidth,sHeight);
+                  //ctx.drawImage(img,0,0,sWidth,sHeight);
+                  iCnt++;
+                }
+                img.src = event.target.result;
               }
-              img.src = event.target.result;
+              reader.readAsDataURL(e.target.files[i]);     
             }
-            reader.readAsDataURL(e.target.files[i]);     
           }
-        }
-}
+  }
+
+   $(window).scroll( function() {
+        if ($(window).scrollTop() > ($('#floater-wrapper').offset().top)-40)
+            $('#floater').addClass('floating');
+         // console.log("addClass");
+        else
+            $('#floater').removeClass('floating');
+         // console.log("removeClass");
+    } );
 });
-/*
-    var errors="";
-    
-    $('#upload').mfupload({
-        
-        type        : '',   //all types
-        maxsize     : 2,
-      
-        ini_text    : "Drag your file to here or click (max: 2MB each)",
-        over_text   : "Drop Here",
-        over_col    : 'white',
-        over_bkcol  : 'green',
-        
-        init        : function(){       
-            $("#uploaded").empty();
-        },
-        
-        start       : function(result){     
-            $("#uploaded").append("<div id='FILE"+result.fileno+"' class='files'>"+result.filename+"<div id='PRO"+result.fileno+"' class='progress'></div></div>"); 
-        },
 
-        loaded      : function(result){
-            $("#PRO"+result.fileno).remove();
-            $("#FILE"+result.fileno).html("Uploaded: "+result.filename+" ("+result.size+")");           
-        },
+    $('.image_al_c1').click(function(){
+          var id = this.id;
+     if($("#photo_"+id).is(':checked')){
+        $("#photo_"+id).attr('checked', false);
+        $("#a-img_"+id).removeClass("img-selected");
 
-        progress    : function(result){
-            $("#PRO"+result.fileno).css("width", result.perc+"%");
-        },
-
-        error       : function(error){
-            errors += error.filename+": "+error.err_des+"\n";
-        },
-
-        completed   : function(){
-            if (errors != "") {
-                alert(errors);
-                errors = "";
-            }
-        }
-    });     
-});
-*/
-
+         
+    }else{
+       $("#photo_"+id).attr('checked', true);
+        $("#a-img_"+id).addClass("img-selected");
+      }
+  });
 </script>
