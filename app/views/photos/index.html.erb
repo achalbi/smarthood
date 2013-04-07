@@ -25,7 +25,7 @@
        </section>
          <% @albums.each do |album| %>
           <section>
-            <h3 style="float:right;"><%= link_to album.title, album, remote: true %></h3>
+            <h3 style="float:right;"><%= link_to album.title, album, class:"albumLink", remote: true %></h3>
           </section>
          <% end %>
        <% end %>  
@@ -52,13 +52,13 @@
 
             <%= submit_tag "Create album", class: "btn primary ",style:"float:left; margin-left:135px;"  %>   
           </div>
-          <br><br><br><br><br><br><br><br><br><br><br><br>
+          <br><br><br><br><br><br><br><br><br><br><br><br><br>
            <div class="span12" id="gallery2">
          <ul id="grid">
           <% @photos.each do |photo| %>
             <li>
             <div  class="img_zoom" id="div-img_<%= photo.id %>">
-          <a  id="a-img_<%= photo.id %>">
+          <a  id="a-img_<%= photo.id %>" style="cursor:pointer;">
           <%= cl_image_tag(photo.pic_url(:thumb), class:"image_al_c1", id:"#{photo.id}")   %></a> 
           </div>
           </li>
@@ -79,15 +79,10 @@
           <div id="floater" style="width:640px;">
            <h3><a href="#">Photos ready to be uploaded... </a>
             <%= form_for(@photo, :html => {:multipart => true}) do |f| %>
-          <%= render 'shared/error_messages', object: f.object %>
-          
-         
-          
-          <!-- <%= link_to "Add image", "#",  class: "btn primary", id: "image_upload"%>-->
-               <%= f.fields_for :photos, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
-                 <!--   <% render(:partial => 'photos/photo', :locals => { :f => photo_form }) %>-->
+          <%= render 'shared/error_messages', object: f.object %>         
+                  <%= f.fields_for :photos, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
+                 
                    <%= photo_form.file_field :pic, id: "pic", :multiple => true,style: "width:1px; height:1px; padding:0px;  left:0px;" %>                <% end %>
-
           
           <%= hidden_field_tag :type, "user" %>  
           <%= f.submit "Post", class: "btn primary" %>
@@ -145,6 +140,12 @@ $("#upload1").click(function(){
     });
 
 $("#roll").click(function(){
+  $("#image").hide();
+  $("#gallery").show();
+  $("#newAlbum").hide();
+});
+
+$(".albumLink").click(function(){
   $("#image").hide();
   $("#gallery").show();
   $("#newAlbum").hide();
@@ -229,4 +230,7 @@ $(document).ready(function() {
         $("#a-img_"+id).addClass("img-selected");
       }
   });
+
+
+
 </script>

@@ -1,21 +1,30 @@
+    <script type="text/javascript">var photoCount = 0;</script>
      <div style="width:640px;">
       <div id="floater" style="float:left;"><h2 ><a href="#"><%= @album.title %></a></h2></div>
        <%= link_to "Edit", '#', id: "edit",  class: "btn secondary pull-right " %>
+       <%= link_to "Cancel", '#', id: "cancel",  class: "btn secondary pull-right ", style:"display:none;margin-left:10px" %>
+
        <%= link_to "Delete album", '#', id: "delAlbum",  class: "btn danger pull-right ", style:"display:none;" %>
-       <%= link_to "Delete photo", '#', id: "delPhoto",  class: "btn danger pull-right ", style:"display:none;margin-right:10px;" %>
+       <%= link_to "Delete photo", '#', id: "delPhoto",  class: "btn danger pull-right ", style:"display:none;" %>
        
         <br><br>
             <div id="gallery1">
      <ul id="grid">
     <% @album.photos.each do |photo| %>
       <li>
-      <div  class="img_zoom" >
-    <a href="<%= photo.pic_url %>"  class="lightview" 
+      <div  class="img_zoom" id="div-img_<%= photo.id %>" >
+    <a href="<%= photo.pic_url %>"  class="lightview editPhotos"  id="a-img_<%= photo.id %>"
    data-lightview-group="thumbnail-" 
    data-lightview-group-options="controls: 'thumbnails'">
-    <%= cl_image_tag(photo.pic_url(:thumb), class:"image_al_c")  %></a> 
+   <img src="assets/delete.png" id="a-img_chk_<%= photo.id %>" style="z-index: 1;position:absolute;margin-left:150px;display:none" class"changeDelBtn"/>
+   <script type="text/javascript"> photoCount++;</script>
+    <%= cl_image_tag(photo.pic_url(:thumb), class:"image_al_c", id:"#{photo.id}")  %></a> 
+     
     </div>
     </li>
+    <div style="display:none" >
+            <%= check_box_tag "photo[#{photo.id}]", photo.id %> 
+    </div>
   
   <% end %>
   </ul>
@@ -32,10 +41,67 @@
                  // console.log("removeClass");
             } );
 
-           $("#edit").click(function(){
+             $(this).click(function(e) {
+
+              if($('.editPhotos').hasClass('disabled')){
+                e.preventDefault();
+              } 
+                  //do other stuff when a click happens
+              });
+
+
+            $("#edit").click(function(){
             $("#edit").hide();
-            $("#delPhoto").show();
+            $("#cancel").show();
             $("#delAlbum").show();
+            // $("a.lightview").removeAttr("href").css("cursor","pointer");
+            $('a.editPhotos').addClass('disabled');
+            $('a.editPhotos').removeClass('lightview');
            });
+           $("#cancel").click(function(){
+            $("#cancel").hide();
+            $("#edit").show();
+            $("#delAlbum").hide();
+            $("#delPhoto").hide();
+            $('a.editPhotos').removeClass('disabled');
+            $('a.editPhotos').addClass('lightview');
+           });
+
+
+            var photoMode = 0;
+            
+           $('.image_al_c').click(function(){
+             var id = this.id;
+             
+             if($(".img_zoom a").hasClass("disabled")){
+
+
+                 if($("#photo_"+id).is(':checked')){
+                    $("#photo_"+id).attr('checked', false);
+                    $("#a-img_"+id).removeClass("img-selected");
+                    $("#a-img_chk_"+id).hide();
+                    photoMode--;
+
+
+                 }else{
+                    $("#photo_"+id).attr('checked', true);
+                    $("#a-img_"+id).addClass("img-selected");
+                    $("#a-img_chk_"+id).show();
+                    photoMode++;
+                  }
+                    if(!(photoMode==0)){
+                      $("#delAlbum").hide();
+                      $("#delPhoto").show();
+                    }else{
+                      $("#delAlbum").show();
+                      $("#delPhoto").hide();
+                    }
+                    if(photoMode==photoCount){
+                      $("#delAlbum").show();
+                      $("#delPhoto").hide(); 
+                     }
+              }
+          }); 
+ 
         });
     </script>

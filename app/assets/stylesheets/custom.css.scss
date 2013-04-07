@@ -353,10 +353,10 @@ margin-right:auto;
   }
 
 #grid li img {
-  background-color: #64666a;
+  /*background-color: #64666a;
   padding: 2px; margin: 0;
   border: 1px dotted #58595b;
-  opacity:0.8; filter:alpha(opacity=80);
+  opacity:0.8; filter:alpha(opacity=80);*/
   }
 
 #grid li a:hover img {
@@ -506,3 +506,10 @@ div.grid_display h2 {
     background-color: #ffffff!important;
     z-index:1;
 }
+
+a.disabled {
+  cursor:pointer;
+ // pointer-events: none;
+  
+}
+
