@@ -26,7 +26,13 @@ EMS::Application.routes.draw do
   resources :events
   resources :activities
   resources :authentication
-  resources :albums
+  resources :albums do
+    collection do
+      get :edit
+    end
+  end
+
+  #match '/delete_photos', to: 'albums#delete_photos'
 
  # match '/auth/:provider/callback', to: 'sessions#create' #omniauth route
 

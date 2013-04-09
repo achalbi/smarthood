@@ -27,12 +27,7 @@ class PhotosController < ApplicationController
   end
  
   def destroy
-    respond_to do |format|
-      unless @photo.destroy
-        flash[:error] = 'Photo could not be deleted'
-      end
-      format.js
-    end
+    redirect_to photos_path
   end
  
   private

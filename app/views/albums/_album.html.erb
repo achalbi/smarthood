@@ -4,32 +4,51 @@
        <%= link_to "Edit", '#', id: "edit",  class: "btn secondary pull-right " %>
        <%= link_to "Cancel", '#', id: "cancel",  class: "btn secondary pull-right ", style:"display:none;margin-left:10px" %>
 
-       <%= link_to "Delete album", '#', id: "delAlbum",  class: "btn danger pull-right ", style:"display:none;" %>
-       <%= link_to "Delete photo", '#', id: "delPhoto",  class: "btn danger pull-right ", style:"display:none;" %>
-       
-        <br><br>
+       <%= link_to "Delete album", @album, id: "delAlbum",  class: "btn danger pull-right ", style:"display:none;", method: :delete, remote: true, data: { confirm: "You sure?" },title: @album.title %>
+
+       <%= form_for @album, :url => { :action => "edit" },  :method => :get, remote: true do  |f| %>
+     
+       <%= f.submit "Delete photo",  id: "delPhoto",  class: "btn danger pull-right ", style:"display:none;", data: { confirm: "You sure?" } %>
+        
+   
+        <br><br><br>
             <div id="gallery1">
      <ul id="grid">
+      <div id="nonEditDiv">
     <% @album.photos.each do |photo| %>
       <li>
       <div  class="img_zoom" id="div-img_<%= photo.id %>" >
     <a href="<%= photo.pic_url %>"  class="lightview editPhotos"  id="a-img_<%= photo.id %>"
    data-lightview-group="thumbnail-" 
    data-lightview-group-options="controls: 'thumbnails'">
-   <img src="assets/delete.png" id="a-img_chk_<%= photo.id %>" style="z-index: 1;position:absolute;margin-left:150px;display:none" class"changeDelBtn"/>
-   <script type="text/javascript"> photoCount++;</script>
-    <%= cl_image_tag(photo.pic_url(:thumb), class:"image_al_c", id:"#{photo.id}")  %></a> 
+    <%= cl_image_tag(photo.pic_url(:thumb))  %></a> 
      
     </div>
     </li>
-    <div style="display:none" >
-            <%= check_box_tag "photo[#{photo.id}]", photo.id %> 
-    </div>
-  
   <% end %>
+  </div>
+  <div id="editDiv" style="display:none;">
+  <% @album.photos.each do |photo| %>
+    <li>
+    <div  class="img_zoom" id="div-img_<%= photo.id %>"  >
+    <a   class=" editPhotos"  id="a-img_edit_<%= photo.id %>" style="cursor:pointer;">
+   <img src="assets/delete.png" id="a-img_chk_<%= photo.id %>" style="z-index: 1;position:absolute;margin-left:150px;display:none;" class"changeDelBtn"/>
+    <%= cl_image_tag(photo.pic_url(:thumb), class:"image_al_c", id:"#{photo.id}")  %></a> 
+
+     
+    </div>
+    <script type="text/javascript"> photoCount++;</script>
+    
+    <div style="display:none;" >
+            <%= check_box_tag "photo_chk[#{photo.id}]", photo.id %> 
+    </div>
+    </li>
+  <% end %>
+</div>
   </ul>
   </div>
-    </div>
+  <% end %>
+      </div>
     <script type="text/javascript">
         $(document).ready(function(){
            $(window).scroll( function() {
@@ -40,31 +59,36 @@
                     $('#floater').removeClass('floating');
                  // console.log("removeClass");
             } );
-
+/*
              $(this).click(function(e) {
 
-              if($('.editPhotos').hasClass('disabled')){
-                e.preventDefault();
+              if($('.editPhotos').hasClass('disabling')){
+               e.preventDefault();
               } 
                   //do other stuff when a click happens
-              });
+              });*/
 
 
             $("#edit").click(function(){
-            $("#edit").hide();
-            $("#cancel").show();
-            $("#delAlbum").show();
+              $("#edit").hide();
+              $("#cancel").show();
+              $("#delAlbum").show();
+              $("#nonEditDiv").hide();
+              $("#editDiv").show();
+
             // $("a.lightview").removeAttr("href").css("cursor","pointer");
-            $('a.editPhotos').addClass('disabled');
-            $('a.editPhotos').removeClass('lightview');
+            //$('a.editPhotos').addClass('disabling');
+            //$('a.editPhotos').removeClass('lightview');
            });
            $("#cancel").click(function(){
             $("#cancel").hide();
             $("#edit").show();
             $("#delAlbum").hide();
             $("#delPhoto").hide();
-            $('a.editPhotos').removeClass('disabled');
-            $('a.editPhotos').addClass('lightview');
+            $("#nonEditDiv").show();
+            $("#editDiv").hide();
+            //$('a.editPhotos').removeClass('disabling');
+            //$('a.editPhotos').addClass('lightview');
            });
 
 
@@ -73,18 +97,19 @@
            $('.image_al_c').click(function(){
              var id = this.id;
              
-             if($(".img_zoom a").hasClass("disabled")){
+          //   if($(".img_zoom a").hasClass("disabling")){
 
 
-                 if($("#photo_"+id).is(':checked')){
-                    $("#photo_"+id).attr('checked', false);
+                 if($("#photo_chk_"+id).is(':checked')){
+                    $("#photo_chk_"+id).prop("checked", false);
                     $("#a-img_"+id).removeClass("img-selected");
                     $("#a-img_chk_"+id).hide();
                     photoMode--;
 
 
                  }else{
-                    $("#photo_"+id).attr('checked', true);
+
+                    $("#photo_chk_"+id).prop("checked", true);
                     $("#a-img_"+id).addClass("img-selected");
                     $("#a-img_chk_"+id).show();
                     photoMode++;
@@ -100,7 +125,7 @@
                       $("#delAlbum").show();
                       $("#delPhoto").hide(); 
                      }
-              }
+             // }
           }); 
  
         });

@@ -8,4 +8,6 @@ class Album < ActiveRecord::Base
   has_many :photos, :through => :photoalbums
 
   validates :title,  presence: true
+
+ 
 end

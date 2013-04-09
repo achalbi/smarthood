@@ -1,0 +1,13 @@
+<% unless @albums.nil? %>
+       <section>
+          <h2 style="float:left;"><%= link_to "Albums","#" %><span style="clear:both;"></span></h2>
+          <%= link_to "+", '#', id: "plus",  class: "btn secondary pull-right " %>
+       </section>
+       
+         <% @albums.each do |album| %>
+          <section>
+            <h3 style="float:right;"><%= link_to album.title, album, class:"albumLink", remote: true %></h3>
+          </section>
+         <% end %>
+       
+ <% end %>  
