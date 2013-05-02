@@ -11,7 +11,7 @@
       <div class="span4">
         <div style = "border:2px solid #ddd; width:150px; height:50px; padding:10px;  left:20px; text-align:right; z-index: 1;  background: url(/assets/album_icon.png) no-repeat 10%; 
           " > 
-        <h4 ><%= link_to " Albums","#" %></h4></div>
+        <h4 ><%= link_to " Albums", list_albums_path, remote: true %></h4></div>
       </div>
       <div class="span3">
         <div id="upload1" style = "border:2px dashed #ddd; width:170px; height:50px; padding:10px;  left:40px; text-align:right; z-index: 1;  background: url(/assets/upload-foto.png) no-repeat 10%; 

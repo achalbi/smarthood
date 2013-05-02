@@ -28,7 +28,7 @@ EMS::Application.routes.draw do
   resources :authentication
   resources :albums do
     collection do
-      get :edit
+      get :edit,:list
     end
   end
 

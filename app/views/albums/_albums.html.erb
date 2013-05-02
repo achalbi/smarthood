@@ -1,10 +1,17 @@
 <% unless @albums.nil? %>
-       
-       
+
+      <div id="gallery1" class="span12 ">
+         <ul id="grid">
          <% @albums.each do |album| %>
-          <section>
-            <h3 style="float:right;"><%= link_to album.title, album, class:"albumLink", remote: true %></h3>
-          </section>
-         <% end %>
+          <li>
+          <div  class="img_zoom" >
+           <%= link_to cl_image_tag(album.photos[0].pic_url(:thumb), class:"image_al_c thumbnail") , album, class:"albumLink", remote: true %>
+             <h3 style="float:right;"><%= link_to album.title, album, class:"albumLink", remote: true %></h3>
+        </div>
+        </li>
+      
+      <% end %>
+      </ul>
+      </div>
        
  <% end %>  
