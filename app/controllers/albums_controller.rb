@@ -56,6 +56,15 @@ class AlbumsController < ApplicationController
       end
   end
 
+  def list
+    @albums = current_user.albums.all
+    @album = Album.new
+     respond_to do |format|
+         format.html {  }
+         format.js { render  :locals => { :albums => @albums } }
+      end
+  end
+
   
   def edit
     @album = Album.find(params[:id])
