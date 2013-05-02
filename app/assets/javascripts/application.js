@@ -23,4 +23,5 @@
 //= require_tree ../../../vendor/assets/javascripts/excanvas/.
 //= require_tree ../../../vendor/assets/javascripts/datetime/.
 //= require_tree ../../../vendor/assets/javascripts/sidemenu/.
+//= require_tree ../../../vendor/assets/javascripts/.
 //= require fullcalendar

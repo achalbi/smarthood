@@ -6,9 +6,9 @@
 
        <%= link_to "Delete album", @album, id: "delAlbum",  class: "btn danger pull-right ", style:"display:none;", method: :delete, remote: true, data: { confirm: "You sure?" },title: @album.title %>
 
-       <%= form_for @album, :url => { :action => "edit" },  :method => :get, remote: true do  |f| %>
+       <%= form_for  @album, :url => { :action => "edit" },  :method => :get, remote: true do  |f| %>
      
-       <%= f.submit "Delete photo",  id: "delPhoto",  class: "btn danger pull-right ", style:"display:none;", data: { confirm: "You sure?" } %>
+       <%= f.submit "Update",  id: "delPhoto",  class: "btn primary pull-right ", style:"display:none;", data: { confirm: "You sure?" } %>
         
    
         <br><br><br>
@@ -21,19 +21,31 @@
     <a href="<%= photo.pic_url %>"  class="lightview editPhotos"  id="a-img_<%= photo.id %>"
    data-lightview-group="thumbnail-" 
    data-lightview-group-options="controls: 'thumbnails'">
-    <%= cl_image_tag(photo.pic_url(:thumb))  %></a> 
+    <%= cl_image_tag(photo.pic_url(:thumb), class:"thumbnail")  %></a> 
      
     </div>
     </li>
   <% end %>
   </div>
   <div id="editDiv" style="display:none;">
+     <%= render 'shared/error_messages', object: f.object %>
+              <%= f.label "title: " %>&nbsp;
+              <%= f.text_field :title %>
+              <br>
+              <%= f.label "description:" %>&nbsp;&nbsp;
+              <%= f.text_area :description, placeholder: "Album description...", :rows=>2, :cols=>40 %>
+              <span class=" overrideClass"><br><br>
+              <%= f.label "privacy:" %>&nbsp;
+              <%= f.select :privacy, options_for_select([["Public", "public"], ["Follower", "follower"], ["Private", "private"]]) %>
+              
+              </span>
+              <br><br><br>
   <% @album.photos.each do |photo| %>
     <li>
     <div  class="img_zoom" id="div-img_<%= photo.id %>"  >
     <a   class=" editPhotos"  id="a-img_edit_<%= photo.id %>" style="cursor:pointer;">
    <img src="assets/delete.png" id="a-img_chk_<%= photo.id %>" style="z-index: 1;position:absolute;margin-left:150px;display:none;" class"changeDelBtn"/>
-    <%= cl_image_tag(photo.pic_url(:thumb), class:"image_al_c", id:"#{photo.id}")  %></a> 
+    <%= cl_image_tag(photo.pic_url(:thumb), class:"image_al_c thumbnail", id:"#{photo.id}")  %></a> 
 
      
     </div>

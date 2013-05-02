@@ -9,6 +9,7 @@ class PhotosController < ApplicationController
   end
   def index
     @photos = current_user.photos.order('created_at DESC').all
+    @camera_roll = current_user.photos.order('created_at DESC').all
     @photo = Photo.new
     @albums = current_user.albums.all
     @album = Album.new

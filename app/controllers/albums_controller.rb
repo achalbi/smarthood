@@ -63,11 +63,12 @@ class AlbumsController < ApplicationController
        @photos.each do  |photo|
            @album.photoalbums.where(photo_id: photo.id)[0].destroy       
        end
-
-    flash[:success] = "Photos deleted!"
+   if @album.update_attributes(params[:album])
+    flash[:success] = "Album updated successfully!"
     respond_to do |format|
          format.html { redirect_to root_path }
          format.js { render  :locals => { :album => @album } }
       end
+   end
   end
 end
