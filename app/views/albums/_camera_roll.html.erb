@@ -112,5 +112,18 @@
             'speedOut'    : 200, 
             'overlayShow' : false
           });
+
+              $('.image_al_c1').click(function(){
+               var id = this.id;
+               if($("#photo_"+id).is(':checked')){
+                  $("#photo_"+id).attr('checked', false);
+                 // $("#a-img_"+id).removeClass("img-selected");
+                  $("#a-img_chk_"+id).hide();
+              }else{
+                 $("#photo_"+id).attr('checked', true);
+                //  $("#a-img_"+id).addClass("img-selected");
+                  $("#a-img_chk_"+id).show();
+                }
+            });
         });
     </script>

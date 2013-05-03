@@ -1,6 +1,9 @@
     <script type="text/javascript">var photoCount = 0;</script>
-     <div style="width:640px;">
-      <div id="floater" style="float:left;"><h2 ><a href="#"><%= @album.title %></a></h2></div>
+    <div id="floater-wrapper">
+      <div id="floater" >
+      <div  class="actions span12 pull-left" ><h4 ><a href="#" style="float:left;"><%= @album.title %></a>
+      <div style="margin-right:120px;"  >
+            <span style="clear:both;" ></span>
        <%= link_to "Edit", '#', id: "edit",  class: "btn secondary pull-right " %>
        <%= link_to "Cancel", '#', id: "cancel",  class: "btn secondary pull-right ", style:"display:none;margin-left:10px" %>
 
@@ -8,38 +11,41 @@
 
        <%= form_for  @album, :url => { :action => "edit" },  :method => :get, remote: true do  |f| %>
      
-       <%= f.submit "Update",  id: "delPhoto",  class: "btn primary pull-right ", style:"display:none;", data: { confirm: "You sure?" } %>
-        
-   
-        <br><br><br>
-            <div id="gallery1">
+       <%= f.submit "Update",  id: "delPhoto",  class: "btn primary pull-right ", style:"display:none;", data: { confirm: "You sure?" } %></h4>
+        </div>
+         </div></div>
+       </div>
+         <span style="clear:both;" ></span>
+
+     <div id="gallery1" class="pull-left span12" >
      <ul id="grid">
       <div id="nonEditDiv">
     <% @album.photos.each do |photo| %>
       <li>
       <div  class="img_zoom" id="div-img_<%= photo.id %>" >
-    <a href="<%= photo.pic_url %>"  class="lightview editPhotos"  id="a-img_<%= photo.id %>"
+    <a href="<%= photo.pic_url %>"  class="lightview1 editPhotos"  id="a-img_<%= photo.id %>" rel="group1"
    data-lightview-group="thumbnail-" 
-   data-lightview-group-options="controls: 'thumbnails'">
+   data-lightview-group-options="controls: 'thumbnails'" , title="<%= @album.title %>">
     <%= cl_image_tag(photo.pic_url(:thumb), class:"thumbnail")  %></a> 
      
     </div>
     </li>
   <% end %>
   </div>
-  <div id="editDiv" style="display:none;">
+  <div id="editDiv" style="display:none;" >
+    <div class="span9">
      <%= render 'shared/error_messages', object: f.object %>
-              <%= f.label "title: " %>&nbsp;
+              <%= f.label "title: " %>
               <%= f.text_field :title %>
               <br>
-              <%= f.label "description:" %>&nbsp;&nbsp;
+              <%= f.label "description:" %>
               <%= f.text_area :description, placeholder: "Album description...", :rows=>2, :cols=>40 %>
               <span class=" overrideClass"><br><br>
-              <%= f.label "privacy:" %>&nbsp;
+              <%= f.label "privacy:" %>
               <%= f.select :privacy, options_for_select([["Public", "public"], ["Follower", "follower"], ["Private", "private"]]) %>
               
-              </span>
-              <br><br><br>
+              </span></div>
+              <br><div class="span12"><br><br></div>
   <% @album.photos.each do |photo| %>
     <li>
     <div  class="img_zoom" id="div-img_<%= photo.id %>"  >
@@ -63,15 +69,7 @@
       </div>
     <script type="text/javascript">
         $(document).ready(function(){
-           $(window).scroll( function() {
-                if ($(window).scrollTop() > ($('#floater-wrapper').offset().top)-40)
-                    $('#floater').addClass('floating');
-                 // console.log("addClass");
-                else
-                    $('#floater').removeClass('floating');
-                 // console.log("removeClass");
-            } );
-/*
+          /*
              $(this).click(function(e) {
 
               if($('.editPhotos').hasClass('disabling')){
@@ -80,18 +78,18 @@
                   //do other stuff when a click happens
               });*/
 
-
+            var update_bool = false;
             $("#edit").click(function(){
               $("#edit").hide();
               $("#cancel").show();
               $("#delAlbum").show();
               $("#nonEditDiv").hide();
               $("#editDiv").show();
-
             // $("a.lightview").removeAttr("href").css("cursor","pointer");
             //$('a.editPhotos').addClass('disabling');
             //$('a.editPhotos').removeClass('lightview');
            });
+
            $("#cancel").click(function(){
             $("#cancel").hide();
             $("#edit").show();
@@ -99,6 +97,7 @@
             $("#delPhoto").hide();
             $("#nonEditDiv").show();
             $("#editDiv").hide();
+            update_bool=false;
             //$('a.editPhotos').removeClass('disabling');
             //$('a.editPhotos').addClass('lightview');
            });
@@ -126,6 +125,7 @@
                     $("#a-img_chk_"+id).show();
                     photoMode++;
                   }
+                  if(!update_bool){
                     if(!(photoMode==0)){
                       $("#delAlbum").hide();
                       $("#delPhoto").show();
@@ -133,12 +133,47 @@
                       $("#delAlbum").show();
                       $("#delPhoto").hide();
                     }
+                  }
+
                     if(photoMode==photoCount){
                       $("#delAlbum").show();
                       $("#delPhoto").hide(); 
                      }
              // }
           }); 
- 
+          
+          $("a.lightview1").fancybox({
+            'transitionIn'  : 'elastic',
+            'transitionOut' : 'elastic',
+            'speedIn'   : 600, 
+            'speedOut'    : 200, 
+            'overlayShow' : false
+          });
+          $("input").bind("paste",function(){
+              $("#delAlbum").hide();
+              $("#delPhoto").show();
+              update_bool=true;
+          });
+          $("input").change(function(){
+              $("#delPhoto").show();
+              $("#delAlbum").hide();
+              update_bool=true;
+          });  
+          $("textarea").bind("paste",function(){
+              $("#delPhoto").show();
+              $("#delAlbum").hide();
+              update_bool=true;
+          });
+          $("textarea").change(function(){
+              $("#delPhoto").show();
+              $("#delAlbum").hide();
+              update_bool=true;
+          });
+          $("select").change(function(){
+              $("#delPhoto").show();
+              $("#delAlbum").hide();
+              update_bool=true;
+          });
+
         });
     </script>
