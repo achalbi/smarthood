@@ -1,22 +1,29 @@
-     <div style="">
-      <div   >
-      <div id="floater" class="actions span12 pull-left" ><h4 ><a href="#" style="float:left;">Camera Roll</a>
+     <script type="text/javascript">var photoCount2 = 0;</script>
+     <div id="camera_roll">
+      
+      <div  id="floater-wrapper" >
+      <div id="floater" class="well span14 pull-left" ><h4 ><a href="#" style="float:left;">Camera Roll</a>
 
         </h4>    
         <div style="margin-right:120px;"  >
             <span style="clear:both;" ></span> <%= link_to "Add to album", '#', id: "addTo",  class: "btn primary pull-right " %>
-        <%= link_to "cancel ", '#', id: "cancelAlb",  class: "btn secondary pull-right" , style:"display:none;margin-left:5px;"%>
+        <%= link_to "cancel ", albums_path, remote: true,  id: "cancelAlb",  class: "btn secondary pull-right" , style:"display:none;margin-left:5px;"%>
          <%= link_to "Share", '#', id: "share",  class: "btn primary pull-right", style:"display:none;margin-left:5px;" %>
-         <%= link_to "Existing", '#', id: "existingAlb",  class: "btn primary pull-right", style:"display:none;margin-left:5px;" %>
-        <%= link_to "New ", '#', id: "newAlb",  class: "btn primary pull-right", style:"display:none;" %></div>
+         <input type="button" id="existingAlb"  class="btn primary pull-right" style="display:none;margin-left:5px;" value="Existing" />
+          <%= form_for(@album, remote: true) do  |f| %> 
+        <%= link_to "New ", '#', id: "newAlb",  class: "btn primary pull-right", style:"display:none;" %>
+      <%= submit_tag "Create album", id: "createAlb", class: "btn primary ",style:"display:none;float:right;"  %> 
+      <input type="button" value="Update album" id="updateAlbBtn"  class="btn primary " style="display:none;float:right;"  >   
+        </div>
       </div>
       </div>
         <br><br><br> <span style="clear:both;" ></span>
              <div id="newAlbum" style="display:none;">
-          <h2  class="span10 ">Create album</h2><br><br><br>
-          <div class="span9" >
-             <%= form_for(@album, remote: true) do  |f| %> 
+          <h2  class="span14 ">Create album </h2><br><br><br>
+          <div class="span9" style="margin-left:100px;" >
+            
              <%= render 'shared/error_messages', object: f.object %>
+             <br>
               <%= f.label "title: " %>
               <%= f.text_field :title %>
               <br>
@@ -29,9 +36,8 @@
               </span>
             <br><br>
 
-            <%= submit_tag "Create album", class: "btn primary ",style:" margin-left:140px;"  %>   
-          </div>
-          <br><br>
+            </div>
+          <br><br><br>
           <div class="span12" id="gallery2" >
          <ul id="grid">
           <% @camera_roll.each do |photo| %>
@@ -54,6 +60,11 @@
        </div>
       <div id="gallery1" class="span12 ">
          <ul id="grid">
+          <li>
+          <div id="upload1"  style = "border:2px dashed #ddd; width:170px; height:180px; padding:10px;  left:40px; text-align:middle; z-index: 1;  cursor:pointer; background: url(/assets/upload-foto.jpg) no-repeat 50%; float:left;
+          ">  <h5 > Upload photos</h5>
+          </div>
+          </li>
          <% @camera_roll.each do |photo| %>
           <li>
           <div  class="img_zoom" >
@@ -66,6 +77,80 @@
       <% end %>
       </ul>
       </div>
+    </div>
+    <%= form_for  @album, :url => { :action => "updates" },  :method => :get, remote: true do  |f| %>
+    <div id="exstAlbUpdate">
+      <div id="selectedAlb" style="display:none;">
+                 <%= submit_tag "Update album", id: "updateAlb", class: "btn primary ",style:"display:none;float:right;"  %>   
+            <% unless @albums.nil? %>
+                <div id="gallery1" class="span9 pull-left warning alert-message">
+                   <ul id="grid">
+                   <% @albums.each do |album| %>
+                    <li>
+                    <div  class="img_zoom" id="alb-<%= album.id %>" style="display:none;"><h3 style="float:left;">Selected album : &nbsp;</h3>
+                     <%= cl_image_tag(album.photos[0].pic_url(:small), class:"image_al_c3 thumbnail") %>
+                       <h3 style="float:right;"><%= album.title %></h3>
+                  </div>
+                  </li>
+                  <div style="display:none" >
+                      <%= check_box_tag "album[#{album.id}]", album.id %>
+                  </div>
+                <% end %>
+                </ul>
+              </div>
+            <% end %>
+          
+       <div class="span12" id="gallery2" >
+         <ul id="grid">
+          <% @camera_roll.each do |photo| %>
+            <li>
+            <div  class="img_zoom" id="div-img_<%= photo.id %>">
+          <a  id="a-img_<%= photo.id %>" style="cursor:pointer;">
+
+            <img src="/assets/check.png" id="a-img_chk1_<%= photo.id %>" style="z-index: 1;position:absolute;margin-left:50px;display:none;" class"changeDelBtn"/>
+          <%= cl_image_tag(photo.pic_url(:thumb), class:"image_al_c2 thumbnail", id:"#{photo.id}")   %></a> 
+          </div>
+          </li>
+           <div style="display:none" >
+              <%= check_box_tag "photo1[#{photo.id}]", photo.id %>
+             
+          </div>
+          <% end %>
+         </ul>
+        </div>
+        </div>
+      </div>
+        <% end %>
+
+    </div>
+        <div id="modal" style="display:none" >
+          <div id="modal-from-dom" class="modal hide fade in" style="display: block;">
+            <div class="modal-header">
+              <a href="#" id="closeX" class="close">×</a>
+              <h3>Select an album</h3>
+            </div>
+            <div class="modal-body">
+              <% unless @albums.nil? %>
+                <div id="gallery1" class="span9 pull-left">
+                   <ul id="grid">
+                   <% @albums.each do |album| %>
+                    <li>
+                    <div  class="img_zoom" >
+                     <%= link_to cl_image_tag(album.photos[0].pic_url(:small), class:"image_al_c3 thumbnail", id:"#{album.id}") , "#", id: "alb-#{album.id}", class:"albumLink" %>
+                       <h3 style="float:right;"><%= album.title %></h3>
+                  </div>
+                  </li>
+                   <% end %>
+                </ul>
+                </div>
+                 
+              <% end %> 
+            </div>
+            <div class="modal-footer" >
+              <a href="#" style="display:none;" class="btn primary">Primary</a>
+            </div>
+          </div>
+          
     </div>
 
    <script type="text/javascript">
@@ -97,14 +182,30 @@
                    $("#newAlbum").hide();
                    $("#floater").show();
                    $("#gallery1").show();
+                   $("#createAlb").hide();
+                   $("#updateAlbBtn").hide();
+
             });   
 
           $("#newAlb").click(function(){
             $("#newAlbum").show();
             $("#floater").hide();
             $("#gallery1").hide();
+            $("#newAlb").hide();
+            $("#existingAlb").hide();
+            $("#share").hide();
+            $("#createAlb").show();
+            
           }); 
-
+          $("#existingAlb").click(function(){
+            $('#modal').modal('show');
+             $("#floater").hide();
+            $("#gallery1").hide();
+            $("#newAlb").hide();
+            $("#existingAlb").hide();
+            $("#share").hide();
+            
+          });
           $("a.lightview1").fancybox({
             'transitionIn'  : 'elastic',
             'transitionOut' : 'elastic',
@@ -125,5 +226,45 @@
                   $("#a-img_chk_"+id).show();
                 }
             });
+                $('.image_al_c2').click(function(){
+               var id = this.id;
+               
+               if($("#photo1_"+id).is(':checked')){
+                  $("#photo1_"+id).attr('checked', false);
+                  photoCount2--;
+                  $("#a-img_chk1_"+id).hide();
+              }else{
+                 $("#photo1_"+id).attr('checked', true);
+                  photoCount2++;
+                  $("#a-img_chk1_"+id).show();
+                }
+                if(photoCount2>0){
+               $("#updateAlbBtn").show();
+               }else{
+                $("#updateAlbBtn").hide();
+               }
+            });
+
+                $("#closeX").click(function(){
+                    $('#modal').modal('hide');
+                });
+
+               $('.image_al_c3').click(function(){
+               var id = this.id;
+               $('#modal').modal('hide');
+               $("#exstAlbUpdate").show();
+               $("#selectedAlb").show();
+                 $("#album_"+id).attr('checked', true);
+                $("#alb-"+id).show();
+               
+               });
+
+               $('#updateAlbBtn').click(function(){
+                  $("#updateAlb").click();
+               });
+
+               $("#upload1").click(function(){
+                  $("#pic").click();
+                });
         });
     </script>

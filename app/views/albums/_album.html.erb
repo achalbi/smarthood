@@ -1,72 +1,69 @@
     <script type="text/javascript">var photoCount = 0;</script>
+    <%= form_for  @album, :url => { :action => "edit" },  :method => :get, remote: true do  |f| %>
     <div id="floater-wrapper">
       <div id="floater" >
-      <div  class="actions span12 pull-left" ><h4 ><a href="#" style="float:left;"><%= @album.title %></a>
-      <div style="margin-right:120px;"  >
+        <div  class="well span14 pull-left" ><h4 ><a href="#" style="float:left;"><%= @album.title %></a>
+          <div style="margin-right:120px;"  >
             <span style="clear:both;" ></span>
-       <%= link_to "Edit", '#', id: "edit",  class: "btn secondary pull-right " %>
-       <%= link_to "Cancel", '#', id: "cancel",  class: "btn secondary pull-right ", style:"display:none;margin-left:10px" %>
+            <%= link_to "Edit", '#', id: "edit",  class: "btn secondary pull-right " %>
+            <%= link_to "Cancel", '#', id: "cancel",  class: "btn secondary pull-right ", style:"display:none;margin-left:10px" %>
 
-       <%= link_to "Delete album", @album, id: "delAlbum",  class: "btn danger pull-right ", style:"display:none;", method: :delete, remote: true, data: { confirm: "You sure?" },title: @album.title %>
-
-       <%= form_for  @album, :url => { :action => "edit" },  :method => :get, remote: true do  |f| %>
-     
-       <%= f.submit "Update",  id: "delPhoto",  class: "btn primary pull-right ", style:"display:none;", data: { confirm: "You sure?" } %></h4>
+            <%= link_to "Delete album", @album, id: "delAlbum",  class: "btn danger pull-right ", style:"display:none;", method: :delete, remote: true, data: { confirm: "You sure?" },title: @album.title %>
+              <%= f.submit "Update",  id: "delPhoto",  class: "btn primary pull-right ", style:"display:none;", data: { confirm: "You sure?" } %></h4>
+          </div>
         </div>
-         </div></div>
-       </div>
-         <span style="clear:both;" ></span>
-
-     <div id="gallery1" class="pull-left span12" >
-     <ul id="grid">
-      <div id="nonEditDiv">
-    <% @album.photos.each do |photo| %>
-      <li>
-      <div  class="img_zoom" id="div-img_<%= photo.id %>" >
-    <a href="<%= photo.pic_url %>"  class="lightview1 editPhotos"  id="a-img_<%= photo.id %>" rel="group1"
-   data-lightview-group="thumbnail-" 
-   data-lightview-group-options="controls: 'thumbnails'" , title="<%= @album.title %>">
-    <%= cl_image_tag(photo.pic_url(:thumb), class:"thumbnail")  %></a> 
-     
-    </div>
-    </li>
-  <% end %>
-  </div>
-  <div id="editDiv" style="display:none;" >
-    <div class="span9">
-     <%= render 'shared/error_messages', object: f.object %>
-              <%= f.label "title: " %>
-              <%= f.text_field :title %>
-              <br>
-              <%= f.label "description:" %>
-              <%= f.text_area :description, placeholder: "Album description...", :rows=>2, :cols=>40 %>
-              <span class=" overrideClass"><br><br>
-              <%= f.label "privacy:" %>
-              <%= f.select :privacy, options_for_select([["Public", "public"], ["Follower", "follower"], ["Private", "private"]]) %>
-              
-              </span></div>
-              <br><div class="span12"><br><br></div>
-  <% @album.photos.each do |photo| %>
-    <li>
-    <div  class="img_zoom" id="div-img_<%= photo.id %>"  >
-    <a   class=" editPhotos"  id="a-img_edit_<%= photo.id %>" style="cursor:pointer;">
-   <img src="assets/delete.png" id="a-img_chk_<%= photo.id %>" style="z-index: 1;position:absolute;margin-left:150px;display:none;" class"changeDelBtn"/>
-    <%= cl_image_tag(photo.pic_url(:thumb), class:"image_al_c thumbnail", id:"#{photo.id}")  %></a> 
-
-     
-    </div>
-    <script type="text/javascript"> photoCount++;</script>
-    
-    <div style="display:none;" >
-            <%= check_box_tag "photo_chk[#{photo.id}]", photo.id %> 
-    </div>
-    </li>
-  <% end %>
-</div>
-  </ul>
-  </div>
-  <% end %>
       </div>
+    </div>
+    <span style="clear:both;" ></span>
+    <div id="gallery1" class="pull-left span12" >
+      <ul id="grid">
+      <div id="nonEditDiv">
+        <% @album.photos.each do |photo| %>
+          <li>
+            <div  class="img_zoom" id="div-img_<%= photo.id %>" >
+                <a href="<%= photo.pic_url %>"  class="lightview1 editPhotos"  id="a-img_<%= photo.id %>" rel="group1"
+               data-lightview-group="thumbnail-" 
+               data-lightview-group-options="controls: 'thumbnails'" , title="<%= @album.title %>">
+                <%= cl_image_tag(photo.pic_url(:thumb), class:"thumbnail")  %></a> 
+            </div>
+          </li>
+        <% end %>
+      </div>
+      <div id="editDiv" style="display:none;" >
+        <div class="span9">
+          <%= render 'shared/error_messages', object: f.object %>
+                <%= f.label "title: " %>
+                <%= f.text_field :title %>
+                <br>
+                <%= f.label "description:" %>
+                <%= f.text_area :description, placeholder: "Album description...", :rows=>2, :cols=>40 %>
+                <span class=" overrideClass"><br><br>
+                <%= f.label "privacy:" %>
+                <%= f.select :privacy, options_for_select([["Public", "public"], ["Follower", "follower"], ["Private", "private"]]) %>
+                
+                </span>
+        </div>
+        <br>
+        <div class="span12"><br><br></div>
+        <% @album.photos.each do |photo| %>
+          <li>
+            <div  class="img_zoom" id="div-img_<%= photo.id %>"  >
+              <a   class=" editPhotos"  id="a-img_edit_<%= photo.id %>" style="cursor:pointer;">
+                <img src="assets/delete.png" id="a-img_chk_<%= photo.id %>" style="z-index: 1;position:absolute;margin-left:150px;display:none;" class"changeDelBtn"/>
+              <%= cl_image_tag(photo.pic_url(:thumb), class:"image_al_c thumbnail", id:"#{photo.id}")  %>
+              </a>
+            </div>
+            <script type="text/javascript"> photoCount++;</script>
+            <div style="display:none;" >
+                    <%= check_box_tag "photo_chk[#{photo.id}]", photo.id %> 
+            </div>
+          </li>
+        <% end %>
+      </div>
+      </ul>
+    </div>
+  </div>
+<% end %>
     <script type="text/javascript">
         $(document).ready(function(){
           /*

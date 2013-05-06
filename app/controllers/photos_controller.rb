@@ -30,6 +30,19 @@ class PhotosController < ApplicationController
   def destroy
     redirect_to photos_path
   end
+
+    def updates
+    @album = Album.find(params[:album].keys.collect(&:to_i))[0]
+    @photos = Photo.find(params[:photo1].keys.collect(&:to_i)) 
+       @photos.each do  |photo|
+           @album.photos << photo    
+       end
+    flash[:success] = "Album updated successfully!"
+    respond_to do |format|
+         format.html { redirect_to root_path }
+         format.js
+      end
+  end
  
   private
     

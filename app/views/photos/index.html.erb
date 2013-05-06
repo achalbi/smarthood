@@ -4,32 +4,28 @@
   <div class="span16" >
     <div class="row" style="margin-left:10px;">
       <div class="span4">
-        <div  style = "border:2px solid #ddd; width:150px; height:50px; padding:10px;  left:20px; text-align:right; z-index: 1;  background: url(/assets/cam_roll.png) no-repeat 10%; 
+        <div  style = "border:2px solid #ddd; width:150px; height:50px; padding:10px;  left:20px; text-align:right; z-index: 1; cursor:pointer;  background: url(/assets/cam_roll.png) no-repeat 10%; 
           "> 
         <h4 ><%= link_to "Camera Roll", albums_path, remote: true, id:"roll" %></h4></div>
       </div>
       <div class="span4">
-        <div style = "border:2px solid #ddd; width:150px; height:50px; padding:10px;  left:20px; text-align:right; z-index: 1;  background: url(/assets/album_icon.png) no-repeat 10%; 
+        <div style = "border:2px solid #ddd; width:150px; height:50px; padding:10px;  left:20px; text-align:right; z-index: 1; cursor:pointer; background: url(/assets/album_icon.png) no-repeat 10%; 
           " > 
         <h4 ><%= link_to " Albums", list_albums_path, remote: true %></h4></div>
-      </div>
-      <div class="span3">
-        <div id="upload1" style = "border:2px dashed #ddd; width:170px; height:50px; padding:10px;  left:40px; text-align:right; z-index: 1;  background: url(/assets/upload-foto.png) no-repeat 10%; 
-          ">   <h4>Upload photos</h4>
-          </div>
-
       </div>
     </div>
   </div>
 </div>
+
   <div class="row">
 
      <div  class="span16">
      <div id="floater-wrapper">
        <div id="image" style="display:none;">
           <!-- style="display:none"> -->
-          <div id="floater" style="width:640px;">
-           <h3><a href="#">Photos ready to be uploaded... </a>
+          <div id="floater" style="width:670px;align:center;" >
+            <br>
+           <h4 class="well pull-left span14" style="margin-left:30px;" ><a href="#" style="float:left;">Photos ready to be uploaded... </a>
             <%= form_for(@photo, :html => {:multipart => true}) do |f| %>
           <%= render 'shared/error_messages', object: f.object %>         
                   <%= f.fields_for :photos, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
@@ -38,9 +34,11 @@
           
           <%= hidden_field_tag :type, "user" %>  
           <%= f.submit "Post", class: "btn primary" %>
-         <% end %></h3>
+          <%= link_to "cancel ",  "#", id: "cancelUpl",  class: "btn secondary" , style:"margin-left:5px;"%>
+         <% end %></h4>
+
        </div>
-          <canvas id="imageCanvas" style = "border: 1px solid #ddd; padding:10px; align:center" ></canvas>
+          <canvas id="imageCanvas" style = "border: 1px solid #ddd; padding:5px; align:center" ></canvas>
        </div>
           
         
@@ -76,11 +74,14 @@ $('img.image_al_c').load(function() {
     });
 });*/
 
-$("#upload1").click(function(){
-      $("#pic").click();
-    });
+
 
 $("#roll").click(function(){
+  $("#image").hide();
+  $("#gallery").show();
+  $("#newAlbum").hide();
+});
+$("#cancelUpl").click(function(){
   $("#image").hide();
   $("#gallery").show();
   $("#newAlbum").hide();

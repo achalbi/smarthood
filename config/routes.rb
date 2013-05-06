@@ -22,13 +22,18 @@ EMS::Application.routes.draw do
   resources :user_groups
   resources :posts
   resources :comments
-  resources :photos
   resources :events
   resources :activities
   resources :authentication
   resources :albums do
     collection do
-      get :edit,:list
+      get :edit,:list,:updates
+    end
+  end
+
+  resources :photos do
+    collection do
+      get :updates
     end
   end
 

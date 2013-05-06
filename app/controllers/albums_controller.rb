@@ -23,9 +23,6 @@ class AlbumsController < ApplicationController
       end
   end
 
-  def update
-  end
-
   def destroy
     @camera_roll = current_user.photos.order('created_at DESC').all
     @album = Album.find(params[:id])
@@ -66,7 +63,7 @@ class AlbumsController < ApplicationController
   end
 
   
-  def edit
+def edit
     @album = Album.find(params[:id])
     @photos = Photo.find(params[:photo_chk].keys.collect(&:to_i)) 
        @photos.each do  |photo|
@@ -80,4 +77,6 @@ class AlbumsController < ApplicationController
       end
    end
   end
+
+
 end
