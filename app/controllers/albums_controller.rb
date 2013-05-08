@@ -1,5 +1,6 @@
 class AlbumsController < ApplicationController
   def new
+    @album = Album.new
   end
 
   def create
@@ -78,5 +79,14 @@ def edit
    end
   end
 
+  def delete_photos
+      @photos = Photo.find(params[:photo2].keys.collect(&:to_i)) 
+      @photos.each do  |photo|
+           photo.destroy     
+       end
+       @camera_roll = current_user.photos.order('created_at DESC').all
+       redirect_to :controller=>'albums', :action => 'index'
+       
+  end
 
 end

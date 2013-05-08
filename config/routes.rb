@@ -27,13 +27,13 @@ EMS::Application.routes.draw do
   resources :authentication
   resources :albums do
     collection do
-      get :edit,:list,:updates
+      get :edit,:list,:updates,:delete_photos
     end
   end
 
   resources :photos do
     collection do
-      get :updates
+      get :updates,:delete_photos
     end
   end
 

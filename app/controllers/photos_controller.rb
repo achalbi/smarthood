@@ -38,12 +38,20 @@ class PhotosController < ApplicationController
            @album.photos << photo    
        end
     flash[:success] = "Album updated successfully!"
-    respond_to do |format|
-         format.html { redirect_to root_path }
-         format.js
-      end
+    redirect_to :controller=>'albums', :action => 'index'
   end
  
+  def delete_photos
+      @photos = Photo.find(params[:photo2].keys.collect(&:to_i)) 
+      @photos.each do  |photo|
+           photo.destroy     
+       end
+       @camera_roll = current_user.photos.order('created_at DESC').all
+       redirect_to :controller=>'albums', :action => 'index'
+       
+  end
+
+
   private
     
     def find_post

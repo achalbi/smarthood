@@ -1,17 +1,49 @@
+<div  id="floater-wrapper1"  >
+      <div id="floater1" class="well span14 pull-left" style="border:10px solid #fff;" ><h4 ><a href="#" style="float:left;">Albums</a>
+
+        </h4>    
+        <div style="margin-right:120px;"  >
+            <span style="clear:both;" ></span>
+            
+        <%= link_to "cancel ", albums_path, remote: true,  id: "cancelAlb",  class: "btn secondary pull-right" , style:"display:none;margin-left:5px;"%>
+
+      <input type="button" value="Update album" id="updateAlbBtn"  class="btn primary " style="display:none;float:right;"  >   
+        </div>
+      </div>
+      </div>
+
+
 <% unless @albums.nil? %>
 
       <div id="gallery1" class="span12 pull-left">
          <ul id="grid">
+          <li>
+          <div id="upload2"  style = "border:2px dashed #ddd; width:170px; height:180px; padding:10px;  left:40px; text-align:middle; z-index: 1;  cursor:pointer; background: url(/assets/upload-foto.jpg) no-repeat 50%; float:left; margin-bottom:28px;display:none;
+          ">  <h5 > New album</h5>
+          </div>
+          <div style="display:none;">
+            <%= link_to "New album",new_album_path,id: "pics",remote: true %>
+          </div>
+          </li>
+
          <% @albums.each do |album| %>
+         <% unless album.photos[0].nil? %>
           <li>
           <div  class="img_zoom" >
            <%= link_to cl_image_tag(album.photos[0].pic_url(:thumb), class:"image_al_c thumbnail") , album, class:"albumLink", remote: true %>
              <h3 style="float:right;"><%= link_to album.title, album, class:"albumLink", remote: true %></h3>
         </div>
         </li>
-      
+      <% end %> 
       <% end %>
       </ul>
       </div>
        
  <% end %>  
+
+ <script type="text/javascript">
+ $("#upload2").click(function(){
+                  $("#pics").click();
+                });
+
+ </script>

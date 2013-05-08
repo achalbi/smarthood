@@ -1,2 +1,50 @@
-<h1>Albums#new</h1>
-<p>Find me in app/views/albums/new.html.erb</p>
+	<%= form_for(@album, :html => {:multipart => true}) do |f| %>
+   
+	<div id="newAlbum1">
+          <h2  class="span14 ">Create album </h2><br><br><br>
+          <div class="span9" style="margin-left:100px;" >
+            
+             <%= render 'shared/error_messages', object: f.object %>
+             <br>
+              <%= f.label "title: " %>
+              <%= f.text_field :title %>
+              <br>
+              <%= f.label "description:" %>
+              <%= f.text_area :description, placeholder: "Album description...", :rows=>2, :cols=>40 %>
+              <span class=" overrideClass"><br><br>
+              <%= f.label "privacy:" %>
+              <%= f.select :privacy, ["Public", "Follower", "Private"] %>
+              
+              </span>
+            <br><br>
+
+            </div>
+          <br><br><br>
+
+            <div id="floater-wrapper">
+       <div id="image" style="display:none;">
+          <!-- style="display:none"> -->
+          <div id="floater" style="width:670px;align:center;" >
+            <br>
+           <h4 class="well pull-left span14" style="margin-left:30px;" ><a href="#" style="float:left;">Photos ready to be uploaded... </a>
+                     
+         <%= f.fields_for :photos, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
+                 
+                   <%= photo_form.file_field :pic, id: "pic", :multiple => true,style: "width:1px; height:1px; padding:0px;  left:0px;" %>                <% end %>
+          
+          <%= hidden_field_tag :type, "user" %>  
+          <%= f.submit "Upload", class: "btn primary" %>
+          <%= link_to "cancel ",  "albums_path", id: "cancelUpl",  class: "btn secondary" , style:"margin-left:5px;"%>
+         <% end %></h4>
+
+       </div>
+          <canvas id="imageCanvas" style = "border: 1px solid #ddd; padding:5px; align:center" ></canvas>
+       </div>
+  
+              </div>
+    </div>
+ <% end %>
+
+    <script type="text/javascript">
+
+    </script>
