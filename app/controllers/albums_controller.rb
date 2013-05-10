@@ -38,6 +38,7 @@ class AlbumsController < ApplicationController
 
   def show
     @album = Album.find(params[:id])
+    @share = Share.new
        respond_to do |format|
          format.html {  }
          format.js { render  :locals => { :album => @album } }

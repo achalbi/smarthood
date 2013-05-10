@@ -15,9 +15,20 @@
 
 <% unless @albums.nil? %>
 
-      <div id="gallery1" class="span12 pull-left">
-         <ul id="grid">
+      <div id="gallery1" class="span16 pull-left">
+         <ul id="grid" >
+          
+         <% @albums.each do |album| %>
+         <% unless album.photos[0].nil? %>
           <li>
+          <div  class="img_zoom" >
+           <%= link_to cl_image_tag(album.photos[0].pic_url(:smaller), class:"image_al_c thumbnail") , album, class:"albumLink", remote: true %>
+             <h5 style="float:right;"><%= link_to album.title, album, class:"albumLink", remote: true %></h5>
+        </div>
+        </li>
+      <% end %> 
+      <% end %>
+      <li>
           <div id="upload2"  style = "border:2px dashed #ddd; width:170px; height:180px; padding:10px;  left:40px; text-align:middle; z-index: 1;  cursor:pointer; background: url(/assets/upload-foto.jpg) no-repeat 50%; float:left; margin-bottom:28px;display:none;
           ">  <h5 > New album</h5>
           </div>
@@ -26,16 +37,6 @@
           </div>
           </li>
 
-         <% @albums.each do |album| %>
-         <% unless album.photos[0].nil? %>
-          <li>
-          <div  class="img_zoom" >
-           <%= link_to cl_image_tag(album.photos[0].pic_url(:thumb), class:"image_al_c thumbnail") , album, class:"albumLink", remote: true %>
-             <h3 style="float:right;"><%= link_to album.title, album, class:"albumLink", remote: true %></h3>
-        </div>
-        </li>
-      <% end %> 
-      <% end %>
       </ul>
       </div>
        

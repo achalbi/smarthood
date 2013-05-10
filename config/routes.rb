@@ -36,7 +36,7 @@ EMS::Application.routes.draw do
       get :updates,:delete_photos
     end
   end
-
+  resources :shares
   #match '/delete_photos', to: 'albums#delete_photos'
 
  # match '/auth/:provider/callback', to: 'sessions#create' #omniauth route

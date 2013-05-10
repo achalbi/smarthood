@@ -18,4 +18,12 @@ end
     attachments.inline['indy.png'] = File.read("#{Rails.root}/public/assets/indy.png")
     mail(:to => user.email, :subject => "Welcome to Rashi EMS")
   end
+
+  def share_album(user,email,album)
+    @user = user
+    @url  = "https://ems-rashi.herokuapp.com/albums/#{album.id}"
+   # attachments.inline['image.jpg'] = File.read(gravatar_for(user))
+  #  attachments.inline['indy.png'] = File.read("#{Rails.root}/public/assets/indy.png")
+    mail(:to => email, :subject => "Shared album - #{album.title}")
+  end
 end

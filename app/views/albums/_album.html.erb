@@ -1,30 +1,106 @@
     <script type="text/javascript">var photoCount = 0;</script>
+      <div id="modal" style="display:none" >
+          <div id="modal-from-dom" class="modal hide fade in" style="display: block;">
+             <%= form_for  @share, :url => new_share_path, :method => :get,remote: true do  |f| %>
+
+            <div class="modal-header">
+              <a href="#" id="closeX" class="close">×</a>
+              <h3>Share the album</h3>
+            </div>
+            <div class="modal-body">
+                <%= label_tag 'Email: ' %>
+                <%= text_field_tag 'email' %>
+                <%= hidden_field_tag 'type', 'album' %>  
+                <%= hidden_field_tag "id", "#{@album.id}" %>
+            </div>
+            <div class="modal-footer" >
+              <%= submit_tag "Share", id: "shareAlb", class: "btn primary", style: "float:right;"  %> 
+            </div>
+
+            <% end %>
+          </div>
+          
+        </div>
+
+
+
     <%= form_for  @album, :url => { :action => "edit" },  :method => :get, remote: true do  |f| %>
     <div id="floater-wrapper">
       <div id="floater" >
         <div  class="well span14 pull-left" ><h4 ><a href="#" style="float:left;"><%= @album.title %></a>
           <div style="margin-right:120px;"  >
             <span style="clear:both;" ></span>
-            <%= link_to "Edit", '#', id: "edit",  class: "btn secondary pull-right " %>
+            <%= link_to "Edit", '#', id: "edit",  class: "btn secondary pull-right " , style:"margin-left:10px"%>
             <%= link_to "Cancel", '#', id: "cancel",  class: "btn secondary pull-right ", style:"display:none;margin-left:10px" %>
+            <%= link_to "Share", '#', id: "share",  class: "btn secondary pull-right ", style:"margin-left:10px" %>
+
 
             <%= link_to "Delete album", @album, id: "delAlbum",  class: "btn danger pull-right ", style:"display:none;", method: :delete, remote: true, data: { confirm: "You sure?" },title: @album.title %>
-              <%= f.submit "Update",  id: "delPhoto",  class: "btn primary pull-right ", style:"display:none;", data: { confirm: "You sure?" } %></h4>
+              <%= f.submit "Update",  id: "delPhoto",  class: "btn primary pull-right ", style:"display:none;", data: { confirm: "You sure?" } %>
+              <span id="buttonset" style="display:none;">
+                  <input type="checkbox" id="option-fullscreen"><label for="option-fullscreen">Fullscreen</label>
+                  <input type="checkbox" id="option-slideshow"><label for="option-slideshow">Slideshow</label>
+              </span>
+              <div style="display:none;">
+              <select id="effect">
+                    <option>blind</option>
+                  <option>clip</option>
+                  <option>drop</option>
+                  <option>explode</option>
+                  <option selected>fade</option>
+                  <option>fold</option>
+                  <option>puff</option>
+                  <option>random</option>
+                  <option>slide</option>
+                  <option>scale</option>
+              </select>
+              <select id="theme-switcher">
+                  <option value="base">Base</option>
+                  <option value="black-tie">Black Tie</option>
+                  <option value="blitzer">Blitzer</option>
+                  <option value="cupertino">Cupertino</option>
+                  <option value="dark-hive">Dark Hive</option>
+                  <option value="dot-luv">Dot Luv</option>
+                  <option value="eggplant">Eggplant</option>
+                  <option value="excite-bike">Excite Bike</option>
+                  <option value="flick">Flick</option>
+                  <option value="hot-sneaks">Hot sneaks</option>
+                  <option value="humanity">Humanity</option>
+                  <option value="le-frog">Le Frog</option>
+                  <option value="mint-choc">Mint Choc</option>
+                  <option value="overcast">Overcast</option>
+                  <option value="pepper-grinder">Pepper Grinder</option>
+                  <option value="redmond">Redmond</option>
+                  <option value="smoothness">Smoothness</option>
+                  <option value="south-street" selected>South Street</option>
+                  <option value="start">Start</option>
+                  <option value="sunny">Sunny</option>
+                  <option value="swanky-purse">Swanky Purse</option>
+                  <option value="trontastic">Trontastic</option>
+                  <option value="ui-darkness">UI Darkness</option>
+                  <option value="ui-lightness">UI Lightness</option>
+                  <option value="vader">Vader</option>
+              </select>
+              </div>
+
+
+
+            </h4>
           </div>
         </div>
       </div>
     </div>
     <span style="clear:both;" ></span>
-    <div id="gallery1" class="pull-left span12" >
+    <div id="gallery1" class="pull-left span16" >
       <ul id="grid">
-      <div id="nonEditDiv">
+      <div id="gallery">
         <% @album.photos.each do |photo| %>
           <li>
             <div  class="img_zoom" id="div-img_<%= photo.id %>" >
-                <a href="<%= photo.pic_url %>"  class="lightview1 editPhotos"  id="a-img_<%= photo.id %>" rel="group1"
+                <a href="<%= photo.pic_url %>"  class="lightview1 editPhotos"  id="a-img_<%= photo.id %>" rel="group1" data-gallery="gallery"
                data-lightview-group="thumbnail-" 
                data-lightview-group-options="controls: 'thumbnails'" , title="<%= @album.title %>">
-                <%= cl_image_tag(photo.pic_url(:thumb), class:"thumbnail")  %></a> 
+                <%= cl_image_tag(photo.pic_url(:smaller), class:"thumbnail")  %></a> 
             </div>
           </li>
         <% end %>
@@ -44,13 +120,13 @@
                 </span>
         </div>
         <br>
-        <div class="span12"><br><br></div>
+        <div class="span16"><br><br></div>
         <% @album.photos.each do |photo| %>
           <li>
             <div  class="img_zoom" id="div-img_<%= photo.id %>"  >
               <a   class=" editPhotos"  id="a-img_edit_<%= photo.id %>" style="cursor:pointer;">
                 <img src="assets/delete.png" id="a-img_chk_<%= photo.id %>" style="z-index: 1;position:absolute;margin-left:150px;display:none;" class"changeDelBtn"/>
-              <%= cl_image_tag(photo.pic_url(:thumb), class:"image_al_c thumbnail", id:"#{photo.id}")  %>
+              <%= cl_image_tag(photo.pic_url(:smaller), class:"image_al_c thumbnail", id:"#{photo.id}")  %>
               </a>
             </div>
             <script type="text/javascript"> photoCount++;</script>
@@ -80,7 +156,7 @@
               $("#edit").hide();
               $("#cancel").show();
               $("#delAlbum").show();
-              $("#nonEditDiv").hide();
+              $("#gallery").hide();
               $("#editDiv").show();
             // $("a.lightview").removeAttr("href").css("cursor","pointer");
             //$('a.editPhotos').addClass('disabling');
@@ -92,14 +168,22 @@
             $("#edit").show();
             $("#delAlbum").hide();
             $("#delPhoto").hide();
-            $("#nonEditDiv").show();
+            $("#gallery").show();
             $("#editDiv").hide();
             update_bool=false;
             //$('a.editPhotos').removeClass('disabling');
             //$('a.editPhotos').addClass('lightview');
            });
 
-
+           $("#share").click(function(){
+            $('#modal').modal('show');
+            });
+           $("#shareAlb").click(function(){
+            $('#modal').modal('hide');
+            });
+           $("#closeX").click(function(){
+            $('#modal').modal('hide');
+            });
             var photoMode = 0;
             
            $('.image_al_c').click(function(){
