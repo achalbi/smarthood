@@ -1,10 +1,10 @@
     <script type="text/javascript">var photoCount = 0;</script>
       <div id="modal" style="display:none" >
           <div id="modal-from-dom" class="modal hide fade in" style="display: block;">
-             <%= form_for  @share, :url => new_share_path, :method => :get,remote: true do  |f| %>
+             <%= form_for  @share, :url => new_share_path, :method => :get, remote: true do  |f| %>
 
             <div class="modal-header">
-              <a href="#" id="closeX" class="close">×</a>
+              <a href="#" id="clsX" class="close">×</a>
               <h3>Share the album</h3>
             </div>
             <div class="modal-body">
@@ -14,7 +14,8 @@
                 <%= hidden_field_tag "id", "#{@album.id}" %>
             </div>
             <div class="modal-footer" >
-              <%= submit_tag "Share", id: "shareAlb", class: "btn primary", style: "float:right;"  %> 
+              <%= link_to "Share", '#', id: "sharelink",  class: "btn secoprimaryndary pull-right " , style:"margin-left:10px"%>
+              <%= submit_tag "Share", id: "shareAlb", class: "btn primary", style: "float:right;display:none;"  %> 
             </div>
 
             <% end %>
@@ -178,10 +179,11 @@
            $("#share").click(function(){
             $('#modal').modal('show');
             });
-           $("#shareAlb").click(function(){
+           $("#sharelink").click(function(){
             $('#modal').modal('hide');
+            $("#shareAlb").click();
             });
-           $("#closeX").click(function(){
+           $("#clsX").click(function(){
             $('#modal').modal('hide');
             });
             var photoMode = 0;

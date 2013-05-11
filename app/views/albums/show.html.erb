@@ -1,9 +1,13 @@
 <div  style="width:800px;margin-top:50px;">
 
-	<div class=" span2 center" style="height:110px;width:110px;background-color:#f2f2f2;">
+	<div class=" span2 center" style="display:none; height:110px;width:110px;background-color:#f2f2f2;">
 		<input type="button" id="fullscn" class="center pull-right uibutton" value="Fullscreen" style="margin-left:auto;margin-right:20px;margin-top:40px;"> 
 	</div>
-	
+	<span id="buttonset" class="well span4 pull-left" >
+    <label for="option-fullscreen" >Fullscreen : &nbsp;</label>
+                  <input type="checkbox" id="option-fullscreen"> 
+                  <input type="checkbox" id="option-slideshow" style="display:none;" checked><label for="option-slideshow" style="display:none;">Slideshow</label>
+              </span><br><br><br><br><br><br>
 
 	<ul id="grid" >
       <div id="galleries">
@@ -18,11 +22,7 @@
         <% end %>
       </div>
 	</ul>
-		<span id="buttonset" style="display:none;">
-		<label for="option-fullscreen" >Fullscreen : &nbsp;</label>
-                  <input type="checkbox" id="option-fullscreen" checked> 
-                  <input type="checkbox" id="option-slideshow" checked><label for="option-slideshow" style="display:none;">Slideshow</label>
-              </span><br><br><br><br><br>
+		<br><br><br><br><br>
               <div style="display:none;">
               <select id="effect" >
                     <option>blind</option>
@@ -147,7 +147,7 @@ $(function () {
 $(document).ready(function(){
 				
 	$("#fullscn").click(function(){
-		$('#option-fullscreen').click();
+		//$('#option-fullscreen').click();
 		$('#option-fullscreen').click();
 
 	});
