@@ -8,6 +8,7 @@ class AlbumsController < ApplicationController
          @photos = Photo.find(params[:photo].keys.collect(&:to_i))  
           @album = current_user.albums.build(params[:album])
           # @album.user = current_user
+          @share = Share.new
           @album.save
           @photos.each do |photo|
             @album.photos << photo

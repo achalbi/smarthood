@@ -14,7 +14,7 @@
                 <%= hidden_field_tag "id", "#{@album.id}" %>
             </div>
             <div class="modal-footer" >
-              <%= link_to "Share", '#', id: "sharelink",  class: "btn secoprimaryndary pull-right " , style:"margin-left:10px"%>
+              <%= link_to "Share", '#', id: "sharelink",  class: "btn primary pull-right " , style:"margin-left:10px"%>
               <%= submit_tag "Share", id: "shareAlb", class: "btn primary", style: "float:right;display:none;"  %> 
             </div>
 
@@ -94,7 +94,7 @@
     <span style="clear:both;" ></span>
     <div id="gallery1" class="pull-left span16" >
       <ul id="grid">
-      <div id="gallery">
+      <div id="gallery3">
         <% @album.photos.each do |photo| %>
           <li>
             <div  class="img_zoom" id="div-img_<%= photo.id %>" >
@@ -157,7 +157,7 @@
               $("#edit").hide();
               $("#cancel").show();
               $("#delAlbum").show();
-              $("#gallery").hide();
+              $("#gallery3").hide();
               $("#editDiv").show();
             // $("a.lightview").removeAttr("href").css("cursor","pointer");
             //$('a.editPhotos').addClass('disabling');
@@ -169,7 +169,7 @@
             $("#edit").show();
             $("#delAlbum").hide();
             $("#delPhoto").hide();
-            $("#gallery").show();
+            $("#gallery3").show();
             $("#editDiv").hide();
             update_bool=false;
             //$('a.editPhotos').removeClass('disabling');
@@ -182,6 +182,8 @@
            $("#sharelink").click(function(){
             $('#modal').modal('hide');
             $("#shareAlb").click();
+            $("#delPhoto").hide();
+
             });
            $("#clsX").click(function(){
             $('#modal').modal('hide');
