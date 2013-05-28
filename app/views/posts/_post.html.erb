@@ -1,10 +1,21 @@
-<li id="<%= post.id %>">
+<table>
+<tr>
+  <td>
+<div class="pull-left">
+  <section class="grid">
+    <li>
     <%= link_to gravatar_for(post.user), post.user %>
+    </li>
+  </section>
     <span class="user">
       <%= link_to post.user.name, post.user %>
     </span>
-    <span class="content"><%= post.content %></span>
 
+</div>
+</td>
+
+<td>
+<li style="border-top: 0px;" id="<%= post.id %>" class="pull-left">
   <div id="gallery">
   <ul id="grid">
     <% post.photos.each do |photo| %>
@@ -19,8 +30,8 @@
   
   <% end %>
   </ul>
+  <span class="content"><%= post.content %></span>
   </div>
-  <br>
 
     <span class="timestamp">
       Posted <%= time_ago_in_words(post.created_at) %> ago.
@@ -33,9 +44,15 @@
  
 
 </li>
-
+</td>
+</tr>
+</table>
 <script type="text/javascript">
-$('.img_zoom img').load(function() {
+$(document).ready(function(){
+  $(".gravatar").addClass(" thumbnail");
+  });
+
+$('.img_zoom1 img').load(function() {
     $(this).data('height', this.height);
 }).bind('mouseenter mouseleave', function(e) {
     $(this).stop().animate({

@@ -1,6 +1,8 @@
 class Group < ActiveRecord::Base
   belongs_to :User
-  attr_accessible :description, :name, :privacy
+  belongs_to :photo
+  attr_accessible :description, :name, :privacy, :photo_attributes
+  accepts_nested_attributes_for :photo
 
   has_many :user_groups, dependent: :destroy
   has_many :users, :through => :user_groups

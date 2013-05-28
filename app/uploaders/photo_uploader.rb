@@ -43,13 +43,17 @@ class PhotoUploader < CarrierWave::Uploader::Base
      process :resize_to_fill => [50, 50]
    end 
   version :smaller do
-     process :resize_to_fill => [100, 100]
+         cloudinary_transformation :width =>100, :height => 100, :crop => :fill, :gravity => :faces
    end 
   version :small do
-     process :resize_to_fill => [150, 150]
+     cloudinary_transformation :width => 150, :height => 150, :crop => :fill, :gravity => :faces
+
    end 
    version :thumb do
-     process :resize_to_fill => [200, 200]
+    cloudinary_transformation :width => 200, :height => 200, :crop => :fill, :gravity => :faces
+   end 
+   version :thumb_medium do
+    cloudinary_transformation :width => 250, :height => 250, :crop => :fill, :gravity => :faces
    end 
    version :medium do
      process :resize_to_fit => [370, 370]
@@ -81,7 +85,7 @@ class PhotoUploader < CarrierWave::Uploader::Base
   # round corners with a 20-pixel radius and increase brightness by 30%.
   version :bright_face do
     cloudinary_transformation :effect => "brightness:30", :radius => 20,
-      :width => 100, :height => 150, :crop => :thumb, :gravity => :face
+      :width => 100, :height => 150, :crop => :thumb, :gravity => :faces
   end
 
   # Apply an incoming chained transformation: limit image to 1000x1200 and 

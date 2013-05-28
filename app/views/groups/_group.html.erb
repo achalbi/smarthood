@@ -1,27 +1,44 @@
-<li>
-  <span class="content">
-    <font ></font><%= link_to group.name, group %>  
+<li style="width:130px;">
+<div  class="img_zoom"  style="margin:10px; float:left;">
+<% unless group.photo.nil? %>
+  <div  class="img_zoom" id="div-img_<%= group.photo.id %>">
+         <%= link_to cl_image_tag(group.photo.pic_url(:smaller), class:"image_al_c1 thumbnail", id:"#{group.photo.id}"), "/groups/#{group.id}", remote: true,   style:"cursor:pointer;"%>
+          </div>
+<% end %>
+
+  <span >
+    <%= link_to group.name, group %>  
    
 	<% if group.privacy? %>
-  <span class="red_color"> - Private</span>
+ 
   <% end %>
    
 </span>
-  <div id="follow_form_<%= group.id %>" class="pull-right-half">
+<span class="timestamp">
+  <% if group.description.length > 17 %>
+    <%= group.description.slice! 0..17 %>...
+    <% else %>
+    <%= group.description %>
+    <% end %>
+  </span>
+  <!-- <span class="red_color"><br>Private group</span>
+    <% unless group.User.nil? %> <br>
+   <span class="green_color">Owner</span> 
+    <%= link_to group.User.name, group.User %> 
+   <% end %>
+  <div class="center">
   <% if group.privacy? %>
-  <%= link_to "Send request",'', class: "btn primary pull-right" %>
+  <br><br>
+  <%= link_to "Send request",'', class: "uibutton icon secure" %>
   <% else %>
+  <br><br>
     <% if group.following?(current_user, group) %>
       <%= render 'unfollow', :group => group %>
     <% else %>
       <%= render 'follow', :group => group %>
     <% end %>
   <% end %>
+  
+  </div>-->
   </div>
-  <span class="timestamp">
-    <%= group.description %>
-  </span>
-    <% unless group.User.nil? %> <br>
-   <span class="green_color">Owner</span> 
-   <%= link_to group.User.name, group.User %> <% end %>
-</li>
+  </li>

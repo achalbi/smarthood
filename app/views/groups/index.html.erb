@@ -1,10 +1,133 @@
-<% provide(:title, 'All Groups') %>
-<h1>All Groups</h1>
+<% provide(:title, 'Groups') %>
 
-<%= will_paginate @groups %>
+<div id="main">
+  <h1>Groups</h1>
+  <%= link_to "Create group", '#', id: "group1",  class: " pull-left uibutton icon add" %>
+  <br><br>
+<h3>My groups</h3>
 
-<ul class="groups">
-  <%= render @groups %>
+<ul class="grid backColor"> 
+           <%= render @groups %>
 </ul>
 
-<%= will_paginate @groups %>
+<h3>Public groups (Suggested)</h3>
+
+<ul class="grid backColor">
+    <% @public_groups.each do |group| %>
+        <%= render :partial => '/groups/group', :locals =>{:group => group} %>
+    <% end %>
+</ul>
+
+<h3>Private groups (Suggested)</h3>
+
+<ul class="grid backColor">
+    <% @private_groups.each do |group| %>
+        <%= render :partial => '/groups/group', :locals =>{:group => group} %>
+    <% end %>
+</ul>
+</div>
+        <div id="modal" style="display:none" >
+          <div id="modal-from-dom" class="modal hide fade in" style="display: block;">
+          	<%= form_for(@group, remote: true, :html => {:multipart => true}) do |f| %>
+            <div class="modal-header">
+              <a href="#" id="closeX" class="close">×</a>
+              <h3>Create group</h3>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+				  <div class="span6 offset3 ">
+				    
+				    	 <%= render 'shared/error_messages', object: f.object %>
+				      <%= f.label :name %>
+				      <%= f.text_field :name %>
+
+				      <%= f.label :description %>
+				      <%= f.text_field :description %>
+				      <br>&nbsp;
+				      <%= f.check_box :privacy %>
+				      <%= label_tag :privacy %>              
+
+              <%= f.fields_for :photo, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
+                 
+              <%= photo_form.file_field :pic, id: "pic",style: "width:1px; height:1px; padding:0px;  left:0px;" %>  
+              <% end %>
+                   
+          <canvas id="imageCanvas" style = "border: 1px solid #ddd; padding:5px; align:center" >select an image</canvas>
+       
+				  </div>
+				</div>   
+	         </div>
+            <div class="modal-footer" >
+              <%= f.submit "Create my group", class: "btn primary pull-right", id: "crtGrp" %>  
+            </div>
+            <% end %>
+          </div>
+          
+        </div>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		$("#group1").click(function(){
+			$('#modal').modal('show');
+		});
+		$("#closeX").click(function(){
+        	$('#modal').modal('hide');
+        });
+
+		$("#crtGrp").click(function(){
+        	$('#modal').modal('hide');
+        });
+
+
+    var imageLoader = document.getElementById('pic');
+    imageLoader.addEventListener('change', handleImage, false);
+    $("#imageCanvas").click(function(){
+        $("#pic").click();
+    });
+        var canvas = document.getElementById('imageCanvas');
+    var ctx = canvas.getContext('2d');
+    ctx.font="30px Arial";
+    ctx.fillText("Select an image",10,50);
+
+  function handleImage(e){
+    var canvas = document.getElementById('imageCanvas');
+    var ctx = canvas.getContext('2d');
+    var iCnt=0;
+    var files = e.target.files;
+    canvas.width = 300;
+    canvas.height = 155*(Math.ceil(files.length/4));
+    for( var i = 0, len = files.length; i < len; i++) 
+          {
+          if(files[i])
+            {
+              var reader = new FileReader();
+              reader.onload = function(event){
+                var img = new Image();
+
+                img.onload = function(){
+                  var ratioPx = 150;
+                  var sWidth =ratioPx;
+                  var ratio = img.width/sWidth;
+                  var sHeight = img.height/ratio;   
+                    if(sHeight>ratioPx){
+                       sHeight =ratioPx;
+                       ratio = img.height/sHeight;
+                       sWidth = img.width/ratio;  
+                    }
+                  ctx.drawImage(img, 155*(iCnt%4),155*(Math.floor(iCnt/4)),sWidth,sHeight);
+                  //ctx.drawImage(img,0,0,sWidth,sHeight);
+                  iCnt++;
+                }
+                img.src = event.target.result;
+              }
+              reader.readAsDataURL(e.target.files[i]);     
+            }
+          }
+  }
+
+
+	});
+		
+
+
+</script>

@@ -1,0 +1,60 @@
+<% provide(:title, @group.name) %>
+<div class="row">
+  <aside class="span7">
+    <section>
+      <%=  cl_image_tag(@group.photo.pic_url(:thumb_medium), class:"image_al_c1 thumbnail", id:"#{@group.photo.id}") %>
+      <h4>
+        <%= @group.name %>
+      </h4>
+      <small><%= @group.description %></small>
+    </section>
+    <section>
+        <div class="center" id="follow_form">
+          <% if @group.privacy? %>
+          <br>
+          <%= link_to "Send request",'', class: "uibutton icon secure" %>
+          <% else %>
+            <% if @group.following?(current_user, @group) %>
+              <%= render 'unfollow', :group => @group %>
+            <% else %>
+              <%= render 'follow', :group => @group %>
+            <% end %>
+          <% end %>
+          
+        </div>
+    </section>
+    <section>
+            <% unless @group.User.nil? %> <br>
+            <b id="followers" class="stat">
+              Admin  
+            </b>
+           
+            <div class="user_avatars">
+                <%= link_to gravatar_for(@group.User, size: 30), @group.User, :title => @group.User.name %>
+            </div>
+           <% end %>
+          
+    </section>  
+    <section>
+      <%= render 'shared/group_stats' %>
+      <% if @users.any? %>
+        <div class="user_avatars">
+          <% @users.each do |user| %>
+            <%= link_to gravatar_for(user, size: 30), user, :title => user.name %>
+          <% end %>
+        </div>
+      <% end %>
+    </section>
+
+  </aside>
+  <div class="span12">
+  	 <%= render 'follow_form' if signed_in? %>
+    <% if @group.posts.any? %>
+      <h3>Posts (<%= @group.posts.count %>)</h3>
+      <ol class="microposts">
+        <%= render @posts %>
+      </ol>
+      <%= will_paginate @posts %>
+    <% end %>
+  </div>
+</div>
