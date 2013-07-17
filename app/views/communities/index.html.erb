@@ -1,0 +1,138 @@
+<% provide(:title, 'ComUnity') %>
+
+<div id="main">
+  <h1>ComUnity</h1>
+  <%= link_to "Create ComUnity", '#', id: "ComUnity1",  class: " pull-left uibutton icon add" %>
+  <br><br>
+<h3>Selected ComUnity</h3>
+
+<ul class="grid backColor"> 
+<% unless @selected_community.nil? %> 
+           <%= render :partial => '/communities/community', :locals =>{:community => @selected_community} %>
+           <% end %>
+</ul>
+
+<h3>My ComUnities</h3>
+
+<ul class="grid backColor"> 
+<% unless @communities.nil? %> 
+           <%= render @communities %>
+           <% end %>
+</ul>
+
+<h3>Public ComUnities (Suggested)</h3>
+
+<ul class="grid backColor">
+	<% unless @public_communities.nil? %> 
+    <% @public_communities.each do |comUnity| %>
+        <%= render :partial => '/communities/community', :locals =>{:community => comUnity} %>
+    <% end %>
+    <% end %>
+
+</ul>
+
+
+</div>
+        <div id="modal" style="display:none" >
+          <div id="modal-from-dom" class="modal hide fade in" style="display: block;">
+          	<%= form_for( @community, remote: true, :html => {:multipart => true}) do |f| %>
+            <div class="modal-header">
+              <a href="#" id="closeX" class="close">×</a>
+              <h3>Create ComUnity</h3>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+				  <div class="span6 offset3 ">
+				    
+				    	 <%= render 'shared/error_messages', object: f.object %>
+				      <%= f.label :name %>
+				      <%= f.text_field :name %>
+
+				      <%= f.label :description %>
+				      <%= f.text_field :description %>
+				                    
+
+              <%= f.fields_for :photo, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
+                 
+              <%= photo_form.file_field :pic, id: "pic",style: "width:1px; height:1px; padding:0px;  left:0px;" %>  
+              <% end %>
+                   
+          <canvas id="imageCanvas" style = "border: 1px solid #ddd; padding:5px; align:center" >select an image</canvas>
+       
+				  </div>
+				</div>   
+	         </div>
+            <div class="modal-footer" >
+              <%= f.submit "Create my ComUnity", class: "btn primary pull-right", id: "crtComUnity" %>  
+            </div>
+            <% end %>
+          </div>
+          
+        </div>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		$("#ComUnity1").click(function(){
+			$('#modal').modal('show');
+		});
+		$("#closeX").click(function(){
+        	$('#modal').modal('hide');
+        });
+
+		$("#crtComUnity").click(function(){
+        	$('#modal').modal('hide');
+        });
+
+
+    var imageLoader = document.getElementById('pic');
+    imageLoader.addEventListener('change', handleImage, false);
+    $("#imageCanvas").click(function(){
+        $("#pic").click();
+    });
+        var canvas = document.getElementById('imageCanvas');
+    var ctx = canvas.getContext('2d');
+    ctx.font="30px Arial";
+    ctx.fillText("Select an image",10,50);
+
+  function handleImage(e){
+    var canvas = document.getElementById('imageCanvas');
+    var ctx = canvas.getContext('2d');
+    var iCnt=0;
+    var files = e.target.files;
+    canvas.width = 300;
+    canvas.height = 155*(Math.ceil(files.length/4));
+    for( var i = 0, len = files.length; i < len; i++) 
+          {
+          if(files[i])
+            {
+              var reader = new FileReader();
+              reader.onload = function(event){
+                var img = new Image();
+
+                img.onload = function(){
+                  var ratioPx = 150;
+                  var sWidth =ratioPx;
+                  var ratio = img.width/sWidth;
+                  var sHeight = img.height/ratio;   
+                    if(sHeight>ratioPx){
+                       sHeight =ratioPx;
+                       ratio = img.height/sHeight;
+                       sWidth = img.width/ratio;  
+                    }
+                  ctx.drawImage(img, 155*(iCnt%4),155*(Math.floor(iCnt/4)),sWidth,sHeight);
+                  //ctx.drawImage(img,0,0,sWidth,sHeight);
+                  iCnt++;
+                }
+                img.src = event.target.result;
+              }
+              reader.readAsDataURL(e.target.files[i]);     
+            }
+          }
+  }
+
+
+	});
+		
+
+
+</script>

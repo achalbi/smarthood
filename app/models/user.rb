@@ -23,6 +23,8 @@ class User < OmniAuth::Identity::Models::ActiveRecord
   has_many :followers, through: :reverse_relationships, source: :follower
   has_many :user_groups, dependent: :destroy
   has_many :groups, :through => :user_groups
+  has_many :communities, :through => :usercommunities
+  has_many :usercommunities, dependent: :destroy
 
   has_many :events, dependent: :destroy
   has_many :event_editor_users, dependent: :destroy

@@ -1,0 +1,8 @@
+<% @user ||= current_user %>
+<div class="stats">
+  <a href="">
+    <b id="followers" class="stat">
+      <%= @community.users.count %> followers  
+    </b>
+  </a>
+</div>

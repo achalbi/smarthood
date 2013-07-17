@@ -1,0 +1,39 @@
+<li style="width:130px;">
+<div  class="img_zoom"  style="margin:10px; float:left;">
+<% unless community.photo.nil? %>
+  <div  class="img_zoom" id="div-img_<%= community.photo.id %>">
+         <%= link_to cl_image_tag(community.photo.pic_url(:smaller), class:"image_al_c1 thumbnail", id:"#{community.photo.id}"), "/communities/#{community.id}", remote: true,   style:"cursor:pointer;"%>
+          </div>
+<% end %>
+
+  <span >
+    <%= link_to community.name, community %>    
+  </span>
+<span class="timestamp">
+  <% unless community.description.nil? %>
+   <% if community.description.length > 17 %>
+    <%= community.description.slice! 0..17 %>...
+    <% else %>
+    <%= community.description %>
+   <% end %>
+  <% end %>
+  </span>
+
+  <% if community.following?(current_user, community) %>
+      <%= render 'setactive', :@community => community %>
+  <% end %>
+
+  <!-- <span class="red_color"><br>Private group</span>
+    <% unless community.user.nil? %> <br>
+   <span class="green_color">Owner</span> 
+    <%= link_to community.user.name, community.user %> 
+   <% end %>
+  <div class="center">
+
+  <br><br>
+  <%= link_to "Send request",'', class: "uibutton icon secure" %>
+
+  
+  </div>-->
+  </div>
+  </li>

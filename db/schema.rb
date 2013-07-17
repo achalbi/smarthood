@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130515140552) do
+ActiveRecord::Schema.define(:version => 20130605144503) do
 
   create_table "activities", :force => true do |t|
     t.string   "title"
@@ -74,6 +74,16 @@ ActiveRecord::Schema.define(:version => 20130515140552) do
   end
 
   add_index "comments", ["user_id", "created_at", "post_id"], :name => "index_comments_on_user_id_and_created_at_and_post_id"
+
+  create_table "communities", :force => true do |t|
+    t.integer  "community_id"
+    t.integer  "user_id"
+    t.integer  "photo_id"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+    t.string   "name"
+    t.text     "description"
+  end
 
   create_table "event_editor_groups", :force => true do |t|
     t.integer  "event_id"
@@ -242,13 +252,22 @@ ActiveRecord::Schema.define(:version => 20130515140552) do
   create_table "user_groups", :force => true do |t|
     t.integer  "user_id"
     t.integer  "group_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+    t.integer  "community_id"
   end
 
   add_index "user_groups", ["group_id"], :name => "index_user_groups_on_group_id"
   add_index "user_groups", ["user_id", "group_id"], :name => "index_user_groups_on_user_id_and_group_id", :unique => true
   add_index "user_groups", ["user_id"], :name => "index_user_groups_on_user_id"
+
+  create_table "usercommunities", :force => true do |t|
+    t.integer  "community_id"
+    t.integer  "user_id"
+    t.string   "status"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+  end
 
   create_table "users", :force => true do |t|
     t.string   "name"

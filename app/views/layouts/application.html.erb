@@ -31,7 +31,7 @@
                 <h3>Menu</h3>
           <ul>
             <li class="active"><%= link_to "Home", root_path %></li>
-            
+            <li><%= link_to "ComUnity", communities_path %><span style="display:none"><%= link_to "", communities_path, id: 'home_comunity' %></span></li>
             <li><%= link_to "Users", users_path %></li>
             <li><%= link_to "Create Events", new_event_path %></li>
             <li><%= link_to "All Events", events_path %></li>
@@ -42,15 +42,19 @@
             <li><%= link_to "Group post", posts_path %></li>
 
           </ul>
-        
+          
+
       </div>
       </aside> 
+
         <div data-role="page" class="pages" id="home">
           
           
           <div data-role="content" id="ctn">
             <div id="content">
-            <%= yield %>
+              <div id="mainHome">
+                  <%= yield %>
+              </div>
             </div>
             <%= render 'layouts/footer' %>
             <%= debug(params) if Rails.env.development? %>

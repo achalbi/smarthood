@@ -6,6 +6,7 @@ class Group < ActiveRecord::Base
 
   has_many :user_groups, dependent: :destroy
   has_many :users, :through => :user_groups
+  has_many :communities, :through => :user_groups
 
   has_many :groupposts, dependent: :destroy
   has_many :posts, :through => :groupposts

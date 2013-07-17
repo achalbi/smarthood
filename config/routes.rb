@@ -1,7 +1,6 @@
 EMS::Application.routes.draw do
 
 
-
   #get "authentication/index"
 
   #get "authentication/create"
@@ -36,6 +35,13 @@ EMS::Application.routes.draw do
       get :updates,:delete_photos
     end
   end
+
+  resources :communities do
+    member do
+      post :setactive
+    end
+  end 
+   
   resources :shares
   #match '/delete_photos', to: 'albums#delete_photos'
 

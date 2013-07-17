@@ -21,7 +21,7 @@ class AlbumsController < ApplicationController
    
       respond_to do |format|
          format.html {  }
-         format.js {render  :locals => { :album => @album, :album_list => @album }  }
+         format.js {  }
       end
   end
 
