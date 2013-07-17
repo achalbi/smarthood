@@ -26,7 +26,9 @@ before_filter :signed_in_user, only: [:create, :destroy]
     end
     if @community.save
       flash[:success] = "community created!"
-      @community.follow!(current_user, @community.id)
+      @usercommunity = @community.follow!(current_user, @community.id)
+      @usercommunity.status="active"
+      @usercommunity.save
       # redirect_to :action => :index
     else
     	flash[:error] = "community not created!"

@@ -1,5 +1,5 @@
 class Community < ActiveRecord::Base
-  attr_accessible :community_id, :photo_id, :photo_attributes, :name, :description
+  attr_accessible :community_id, :photo_id, :photo_attributes, :name, :description, :status
 
     belongs_to :user
     belongs_to :photo
