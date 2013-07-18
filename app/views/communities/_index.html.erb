@@ -15,9 +15,11 @@
 <h3>My ComUnities</h3>
 
 <ul class="grid backColor"> 
-<% unless @communities.nil? %> 
-           <%= render @communities %>
-           <% end %>
+  <% unless @my_communities.nil? %> 
+    <% @my_communities.each do |comUnity1| %>
+        <%= render :partial => '/communities/community', :locals =>{:community => comUnity1} %>
+    <% end %>
+  <% end %>
 </ul>
 
 <h3>Public ComUnities (Suggested)</h3>

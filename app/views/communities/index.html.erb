@@ -15,17 +15,19 @@
 <h3>My ComUnities</h3>
 
 <ul class="grid backColor"> 
-<% unless @communities.nil? %> 
-           <%= render @communities %>
-           <% end %>
+<% unless @my_communities.nil? %> 
+               <% @my_communities.each do |comUnity1| %>
+        <%= render :partial => '/communities/community', :locals =>{:community => comUnity1} %>
+        <% end %>
+<% end %>
 </ul>
 
 <h3>Public ComUnities (Suggested)</h3>
 
 <ul class="grid backColor">
 	<% unless @public_communities.nil? %> 
-    <% @public_communities.each do |comUnity| %>
-        <%= render :partial => '/communities/community', :locals =>{:community => comUnity} %>
+    <% @public_communities.each do |comUnity2| %>
+        <%= render :partial => '/communities/community', :locals =>{:community => comUnity2} %>
     <% end %>
     <% end %>
 
@@ -35,7 +37,7 @@
 </div>
         <div id="modal" style="display:none" >
           <div id="modal-from-dom" class="modal hide fade in" style="display: block;">
-          	<%= form_for( @community, remote: true, :html => {:multipart => true}) do |f| %>
+          	<%= form_for( @communities, remote: true, :html => {:multipart => true}) do |f| %>
             <div class="modal-header">
               <a href="#" id="closeX" class="close">×</a>
               <h3>Create ComUnity</h3>
