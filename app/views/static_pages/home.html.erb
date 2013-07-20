@@ -1,5 +1,6 @@
 <% provide(:title, 'Home') %>
 <% if signed_in? %>
+  <% if is_community_active? %>
   <div class="row">
     <aside class="span6">
       <span class="span6">
@@ -21,7 +22,13 @@
       <div id="gp_div" style="display: none"> <%= render 'shared/group_feed' %> </div>
 
     </div>
-  </div>  
+  </div> 
+  <% else %>
+    <script type="text/javascript">
+    window.location.href="/communities" 
+  </script>
+  <% end %>
+
 <% else %>
 <div class="center hero-unit container-fluid canvas">
   <span class="center hero-unit span10">

@@ -39,10 +39,11 @@ before_filter :signed_in_user, only: [:create, :destroy]
     else
     	flash[:error] = "community not created!"
     end 
-     # respond_to do |format|
-     #    format.html { redirect_to :action => :index   }
-     #    format.js {redirect_to :action => :index, format: 'js'  }
-     # end
+      respond_to do |format|
+         format.html { redirect_to :action => :index   }
+         format.js {render :js => "window.location.href = '#{home_page}'"}
+      end
+
   end
 
   def setactive

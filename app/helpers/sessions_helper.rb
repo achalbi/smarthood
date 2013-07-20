@@ -41,4 +41,23 @@ module SessionsHelper
       end
     end
 
+  def is_community_active?
+        @uc = Usercommunity.where(['status=? and user_id=?','active',current_user.id])[0]
+        unless @uc.nil?
+          @selected_community = Community.find(Usercommunity.where(['status=? and user_id=?','active',current_user.id])[0].community_id)
+        end
+        !@selected_community.nil?
+  end
+
+  def home_page
+    if is_community_active?
+      return root_path
+    else
+      return communities_path
+    end
+  end
+
+  def active_community
+    Community.find(Usercommunity.where(['status=? and user_id=?','active',current_user.id])[0].community_id)
+  end
 end
