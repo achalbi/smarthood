@@ -95,6 +95,7 @@ class EventsController < ApplicationController
     end
 
     def index
+      @event = Event.new
       @events = Event.scoped
       @events = Event.between(params['start'], params['end']) if (params['start'] && params['end'])
       @events = @events.paginate(page: params[:page], :per_page => 8)

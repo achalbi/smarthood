@@ -1,6 +1,7 @@
 <% provide(:title, 'Events') %>
 <h1>Events</h1>
 <%= link_to "List view", '#', id: "list_view",  class: "btn primary pull-right marginRight15" %>
+  <%= link_to "Create Event", '#', id: "create_event",  class: " pull-left uibutton icon add" %>
 <%= link_to "FullCalendar view", '#', id: "fullCalendar_view",  class: "btn primary pull-right marginRight15" %>
 <br>	
 <br>
@@ -23,8 +24,84 @@
 	<div id='calendar_events'></div></div>
 
 
+<div id="modal" style="display:none" >
+          <div id="modal-from-dom" class="modal hide fade in" style="display: block;">
+            <%= form_for( @event, remote: true, :html => {:multipart => true}) do |f| %>
+            <div class="modal-header">
+              <a href="#" id="closeX" class="close">×</a>
+              <h3>Create Event</h3>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+          <div class="span8 offset1 ">
+            
+               <%= render 'shared/error_messages', object: f.object %>
+               <div class="center_block clearfix">
+                  <%= f.label :title %>
+                  <div class="input">
+                  <%= f.text_field :title %></div>
+                </div>
+
+                <div class="center_block clearfix">
+                  <%= f.label :description %>
+                  <div class="input">
+                  <%= f.text_field :description %></div>
+                </div>
+
+                <div class="center_block clearfix">
+                  <%= f.label :location %>
+                  <div class="input">
+                  <%= f.text_field :location %></div>
+                </div>
+
+                <div class="center_block clearfix">
+                   <%= label_tag :all_day %>
+                  <div class="input">
+                  <%= f.check_box :all_day %></div>
+                </div>
+                <div class="center_block clearfix">
+                  <%= label_tag :privacy %>
+                  <div class="input">
+                  <%= f.check_box :privacy %></div>
+                </div> 
+
+                  <div class="center_block clearfix">
+                  <%= label_tag :starts_at %>
+                  <div class="input">
+                  <%= f.text_field :starts_at %></div>
+                </div>
+
+                <div class="center_block clearfix">
+                  <%= label_tag :ends_at %>
+                  <div class="input">
+                  <%= f.text_field :ends_at %></div>
+                </div> 
+                         
+          </div>
+        </div>   
+           </div>
+            <div class="modal-footer" >
+              <%= f.submit "Create Event", class: "btn primary pull-right", id: "crtEvent" %>  
+            </div>
+            <% end %>
+          </div>
+          
+        </div>
+
 <script type="text/javascript">
 $(document).ready(function() {
+
+  $("#create_event").click(function(){
+      $('#modal').modal('show');
+    });
+    $("#closeX").click(function(){
+          $('#modal').modal('hide');
+        });
+
+    $("#crtEvent").click(function(){
+          $('#modal').modal('hide');
+        });
+
 	$('#list_view').click(function(){
 		$('#event_list').show();
 		$('#calendar_upper').hide();
@@ -152,5 +229,43 @@ updateEvent = function(the_event) {
   });
 
 };*/
+
+
+
+var startDateTextBox = $("#event_starts_at");
+var endDateTextBox = $("#event_ends_at");
+
+startDateTextBox.datetimepicker({ 
+  onClose: function(dateText, inst) {
+    if (endDateTextBox.val() != '') {
+      var testStartDate = startDateTextBox.datetimepicker('getDate');
+      var testEndDate = endDateTextBox.datetimepicker('getDate');
+      if (testStartDate > testEndDate)
+        endDateTextBox.datetimepicker('setDate', testStartDate);
+    }
+    else {
+      endDateTextBox.val(dateText);
+    }
+  },
+  onSelect: function (selectedDateTime){
+    endDateTextBox.datetimepicker('option', 'minDate', startDateTextBox.datetimepicker('getDate') );
+  }
+});
+endDateTextBox.datetimepicker({ 
+  onClose: function(dateText, inst) {
+    if (startDateTextBox.val() != '') {
+      var testStartDate = startDateTextBox.datetimepicker('getDate');
+      var testEndDate = endDateTextBox.datetimepicker('getDate');
+      if (testStartDate > testEndDate)
+        startDateTextBox.datetimepicker('setDate', testEndDate);
+    }
+    else {
+      startDateTextBox.val(dateText);
+    }
+  },
+  onSelect: function (selectedDateTime){
+    startDateTextBox.datetimepicker('option', 'maxDate', endDateTextBox.datetimepicker('getDate') );
+  }
+});
 
 </script>
