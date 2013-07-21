@@ -16,6 +16,7 @@
 //= require jquery-ui
 //= require bootstrap
 //= require jquery.remotipart
+//= require fullcalendar
 
 //= require_tree .
 //= require_tree ../../../vendor/assets/javascripts/lightview/.

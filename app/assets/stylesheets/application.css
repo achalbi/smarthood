@@ -15,4 +15,8 @@
  *= require_tree ../../../vendor/assets/.
  *= require_tree ../../../vendor/assets/stylesheets/sidemenu/.
  *= require_tree ../../../vendor/assets/stylesheets/fancybox/.
+ *= require fullcalendar
  */
+
+
+/* fullcalendar.print*/
