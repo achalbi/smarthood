@@ -11,10 +11,10 @@
 // GO AFTER THE REQUIRES BELOW.
 //
 
+//= require bootstrap
 //= require jquery
 //= require jquery_ujs
 //= require jquery-ui
-//= require bootstrap
 //= require jquery.remotipart
 //= require fullcalendar
 

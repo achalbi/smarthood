@@ -42,7 +42,9 @@ class EventsController < ApplicationController
 
    	def create
       @event = current_user.events.build(params[:event])
+=begin
   
+
 
         if !params[:invite_groups].nil?
           @invited_groups = Group.find(params[:invite_groups].keys.collect(&:to_i))  
@@ -81,7 +83,9 @@ class EventsController < ApplicationController
 
         end
         
-       
+rescue Exception => e
+  
+=end    
 
       respond_to do |format|
       if @event.save

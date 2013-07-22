@@ -50,6 +50,9 @@ module SessionsHelper
   end
 
   def home_page
+    if current_user.nil?
+      return root_path
+    end
     if is_community_active?
       return root_path
     else
