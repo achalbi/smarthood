@@ -2,7 +2,7 @@
 <table class="container_full" width="1200px">
 	<tr>
 		<td colspan="6" >
-			<h1 >Create event</h1>
+			<h1>Edit event</h1>
 		</td>
 	</tr>
 <tr>
@@ -18,31 +18,55 @@
 	  	</div>
 	</td>
 	<td class="span1 clear-float"></td>
-	<td>
+	<td class="span8 offset1 ">
 
 		
 		<div class="">
-		      <%= form_for(@event) do |f| %>
+		      <%= form_for(@event, remote: true) do |f| %>
 		    	 <%= render 'shared/error_messages', object: f.object %>
-		      <%= f.label :title %>
-		      <%= f.text_field :title %>
+		   	<div class="span8 offset1 ">
+		      <div class="center_block clearfix">
+                  <%= f.label :title %>
+                  <div class="input">
+                  <%= f.text_field :title %></div>
+                </div>
 
-		      <%= f.label :description %>
-		      <%= f.text_field :description %>
+                <div class="center_block clearfix">
+                  <%= f.label :description %>
+                  <div class="input">
+                  <%= f.text_field :description %></div>
+                </div>
 
-		      <%= f.label :location %>
-		      <%= f.text_field :location %>
-		      
-		      <%= f.check_box :all_day %>
-		      <%= label_tag :all_day %>
+                <div class="center_block clearfix">
+                  <%= f.label :location %>
+                  <div class="input">
+                  <%= f.text_field :location %></div>
+                </div>
 
-		      <%= f.check_box :privacy %>
-		      <%= label_tag :privacy %>
-		      <div class="span3 overrideClass"	>
-		      <%= label_tag :starts_at %>
-		      <%= f.text_field :starts_at%>
-		      <%= label_tag :ends_at %>
-		      <%= f.text_field :ends_at %>
+                <div class="center_block clearfix">
+                   <%= label_tag :all_day %>
+                  <div class="input">
+                  <%= f.check_box :all_day %></div>
+                </div>
+                <div class="center_block clearfix">
+                  <%= label_tag :privacy %>
+                  <div class="input">
+                  <%= f.check_box :privacy %></div>
+                </div> 
+
+                  <div class="center_block clearfix">
+                  <%= label_tag :starts_at %>
+                  <div class="input">
+                  <%= f.text_field :starts_at %></div>
+                </div>
+
+                <div class="center_block clearfix">
+                  <%= label_tag :ends_at %>
+                  <div class="input">
+                  <%= f.text_field :ends_at %></div>
+                </div> 
+                <%= f.submit "Update my event", class: "btn primary pull-right" %>
+               </div>     
 		  	  </div>
 
 		  	   <div style="display: none">
@@ -56,12 +80,11 @@
 			        <% end %>
 		      </div>			  	  
 
-		      <%= f.submit "Update my event", class: "btn primary" %>
+		      
 		    <% end %>
 		 		</div>
 	</td>
 	<td class="span1"></td>
-	<td>
     	<td class="span6">
 		<div  >
 			<h2>Editors</h2>

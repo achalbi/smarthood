@@ -249,7 +249,8 @@ startDateTextBox.datetimepicker({
   },
   onSelect: function (selectedDateTime){
     endDateTextBox.datetimepicker('option', 'minDate', startDateTextBox.datetimepicker('getDate') );
-  }
+  },
+  dateFormat: "dd/mm/yy"
 });
 endDateTextBox.datetimepicker({ 
   onClose: function(dateText, inst) {
@@ -265,7 +266,8 @@ endDateTextBox.datetimepicker({
   },
   onSelect: function (selectedDateTime){
     startDateTextBox.datetimepicker('option', 'maxDate', endDateTextBox.datetimepicker('getDate') );
-  }
+  },
+  dateFormat: "dd/mm/yy"
 });
 
 </script>

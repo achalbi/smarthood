@@ -3,7 +3,6 @@
 	<tr>
 		<td colspan="6" >
 			<h1 ><%= @event.title %></h1>
-			  <%= link_to "Create Activity", '#', id: "create_activity",  class: " pull-left uibutton icon add" %>
 			<%= link_to "Edit", edit_event_path, id: "edit",  class: "btn primary pull-right" %>
 		</td>
 	</tr>
@@ -74,18 +73,19 @@
 		  	<td>
 		  	       <h3>
 				    
+				     <a href="#" id="crt_link">Create Activity</a>
 				      <% if @event.activities.any? %>
-				      
-				     <a href="#" id="act_link"> Activities (<%= @event.activities.count %>)</a> |
+				      |
+				     <a href="#" id="act_link"> Activities (<%= @event.activities.count %>)</a>
 				      <% end %>
 
 				      <% if !@posts.nil? %>
-				      
+				      |
 				     <a href="#" id="post_link"> Posts (<%= @posts.count %>)</a>
 				      <% end %>
 				    </h3>
-<!--
-		<div id="crt_act">
+
+				    <div id="crt_act">
 		    <%= form_for([@event.activities.build], remote: true) do |f| %>
 		    <%= f.hidden_field :event_id %>
 		    	 <%= render 'shared/error_messages', object: f.object %>
@@ -103,72 +103,13 @@
 		      <%= f.text_field :starts_at %>
 		      <!--
 		      <%= f.datetime_select(:starts_at, :prompt => {:day => 'Choose day', :month => 'Choose month', :year => 'Choose year'}) %>
-		  		--/>
+		  		-->
 		      <%= label_tag :ends_at %>
 		      <%= f.text_field :ends_at %>
 		  	  </div>
 		      <%= f.submit "Create an activity", class: "btn primary" %>
 		    <% end %>
 		</div>
-
--->
-	<div id="crt_act">
-	<div id="modal" style="display:none" >
-          <div id="modal-from-dom" class="modal hide fade in" style="display: block;">
-            <%= form_for( [@event.activities.build], remote: true) do |f| %>
-            <div class="modal-header">
-              <a href="#" id="closeX" class="close">×</a>
-              <h3>Create Activity</h3>
-            </div>
-            <div class="modal-body">
-              <div class="row">
-          <div class="span8 offset1 ">
-            <%= f.hidden_field :event_id %>
-               <%= render 'shared/error_messages', object: f.object %>
-               <div class="center_block clearfix">
-                  <%= f.label :title %>
-                  <div class="input">
-                  <%= f.text_field :title %></div>
-                </div>
-
-                <div class="center_block clearfix">
-                  <%= f.label :description %>
-                  <div class="input">
-                  <%= f.text_field :description %></div>
-                </div>
-
-                <div class="center_block clearfix">
-                  <%= f.label :location %>
-                  <div class="input">
-                  <%= f.text_field :location %></div>
-                </div>
-
-                  <div class="center_block clearfix">
-                  <%= label_tag :starts_at %>
-                  <div class="input">
-                  <%= f.text_field :starts_at %></div>
-                </div>
-
-                <div class="center_block clearfix">
-                  <%= label_tag :ends_at %>
-                  <div class="input">
-                  <%= f.text_field :ends_at %></div>
-                </div> 
-                         
-          </div>
-        </div>   
-           </div>
-            <div class="modal-footer" >
-              <%= f.submit "Create Activity", class: "btn primary pull-right", id: "crtActivity" %>  
-            </div>
-            <% end %>
-          </div>
-          
-        </div>
-    </div>
-
-
-
 		    <div id="event_activities">
 		    	
 		    	<%= render @activities %>
@@ -251,19 +192,6 @@ $("#my_posts").hide();
 		$("#my_posts").show();
 
 	});
-
-
-  $("#create_activity").click(function(){
-      $('#modal').modal('show');
-    });
-    $("#closeX").click(function(){
-          $('#modal').modal('hide');
-        });
-
-    $("#crtActivity").click(function(){
-          $('#modal').modal('hide');
-        });
-
 });
 
 
