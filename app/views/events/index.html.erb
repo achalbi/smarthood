@@ -182,7 +182,20 @@ var updateEvent;
       });
 		$('#calendar_events').hide();
 		$('#h3Cal').hide();
+    $('#calendar_events').fullCalendar('render');
+    var count=0;
+    var myVar=setInterval(function(){
+      $('#calendar_events').fullCalendar('render');
+      count++;
+      if (count>5) {
+        clearInterval(myVar);
+      };},1000);
+
+
+
   });
+
+
 
 updateEvent = function(the_event) {
 
