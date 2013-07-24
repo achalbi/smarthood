@@ -21,7 +21,7 @@ class Event < ActiveRecord::Base
 	validates :creator, presence: true
 
   scope :between, lambda {|starts_at, ends_at|
-    {:conditions => ["? < starts_at < ?", Event.format_date(starts_at), Event.format_date(ends_at)] }
+    {:conditions => ["starts_at between ? and ?", Event.format_date(starts_at), Event.format_date(ends_at)] }
   }
 
   # need to override the json view to return what full_calendar is expecting.
