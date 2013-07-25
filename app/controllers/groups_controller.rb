@@ -1,5 +1,5 @@
 class GroupsController < ApplicationController
-include PhotosHelper
+include PhotosHelper, GroupsHelper
 before_filter :signed_in_user, only: [:create, :destroy]
 	
   def new
@@ -7,7 +7,8 @@ before_filter :signed_in_user, only: [:create, :destroy]
   end
   def index
     @group = Group.new
-    @groups = Group.where(:id => current_user.user_groups.collect(&:group_id)) 
+   # @groups = Group.where(:id => current_user.user_groups.collect(&:group_id)) 
+    @groups = active_community_user_groups
     @public_groups = Group.where(['id  NOT IN (?) AND privacy  = ?' , current_user.user_groups.collect(&:group_id), false]) 
     @private_groups = Group.where(['id  NOT IN (?) AND privacy  = ?' , current_user.user_groups.collect(&:group_id), true])
   end
@@ -18,6 +19,7 @@ before_filter :signed_in_user, only: [:create, :destroy]
     if @group.photo.nil?
      @group.photo = defaultPhoto('new_group')
     end
+    @group.community_id = active_community.id
     if @group.save
       flash[:success] = "Group created!"
       @group.follow!(current_user, @group.id)

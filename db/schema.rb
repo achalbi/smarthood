@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130605144503) do
+ActiveRecord::Schema.define(:version => 20130725164005) do
 
   create_table "activities", :force => true do |t|
     t.string   "title"
@@ -149,8 +149,9 @@ ActiveRecord::Schema.define(:version => 20130605144503) do
     t.datetime "starts_at"
     t.datetime "ends_at"
     t.boolean  "all_day"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+    t.integer  "community_id"
   end
 
   add_index "events", ["creator", "created_at", "starts_at", "ends_at"], :name => "index_events_on_creator_and_created_at_and_starts_at_and_ends_at"
@@ -171,9 +172,10 @@ ActiveRecord::Schema.define(:version => 20130605144503) do
     t.text     "description"
     t.boolean  "privacy"
     t.integer  "User_id"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
     t.integer  "photo_id"
+    t.integer  "community_id"
   end
 
   add_index "groups", ["User_id"], :name => "index_groups_on_User_id"
