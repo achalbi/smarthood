@@ -88,14 +88,14 @@ rescue Exception => e
 =end    
       @event.community_id = active_community.id
       respond_to do |format|
-      if @event.save
-        format.html { redirect_to @event, :success => 'Event was successfully created.' }
-        format.json { render :json => @event, :status => :created, :location => @event }
-      else
-        format.html { render :action => "new" }
-        format.json { render :json => @event.errors, :status => :unprocessable_entity }
+        if @event.save
+          format.html { redirect_to @event, :success => 'Event was successfully created.' }
+          format.json { render :json => @event, :status => :created, :location => @event }
+        else
+          format.html { render :action => "new" }
+          format.json { render :json => @event.errors, :status => :unprocessable_entity }
+        end
       end
-    end
     end
 
     def index
@@ -103,8 +103,12 @@ rescue Exception => e
       @events = Event.scoped
       @events = @events.between(params['start'], params['end']) if (params['start'] && params['end'])
       @events = @events.where('community_id = ?',active_community.id)
-      @events = @events.paginate(page: params[:page], :per_page => 8)
-       respond_to do |format|
+      @upcoming_events = @events.where("starts_at > ?",Time.current.tomorrow.to_date)
+      @past_events = @events.where("starts_at < ? and ends_at < ?",Time.current.to_date,Time.current.to_date)
+      @today_events = @events.where("starts_at BETWEEN ? AND ?",Time.current.to_date,Time.current.tomorrow.to_date)
+      @events = @events.paginate(page: params[:page], :per_page => 5)
+    # debugger
+      respond_to do |format|
         format.html # index.html.erb
         format.json { render :json => @events }
       end

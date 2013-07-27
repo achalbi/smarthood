@@ -8,16 +8,48 @@
 <br>
 <div id="event_list">
 
-<h3>List view</h3>
-<%= will_paginate @events %>
-
-<ul class="users">
-  <%= render @events %>
+<ul class="tabs">
+  <li class="active" id="today_events_li"><a ><h4>Today's Events</h4></a></li>
+  <li id="upcoming_events_li"><a ><h4>Upcoming Events</h4></a></li>
+  <li id="past_events_li"><a ><h4>Previous Events</h4></a></li>
 </ul>
 
-<%= will_paginate @events %>
+<div id="upcoming_events">  
+<h3>Upcoming Events</h3>
+<ul class="users" id="upcoming_events_ul" >
+  <% unless @upcoming_events.blank? %>
+    <% @upcoming_events.each do |upcoming_event| %>
+      <%= render :partial => 'events/event', :locals => {:event => upcoming_event} %>
+    <% end %>
+  <% end %>  
+</ul>
+
 <br>
+</div>
+<div id="past_events">
+<h3>Previous Events</h3>
+<ul class="users" id="past_events_ul">
+  <% unless @past_events.blank? %>
+    <% @past_events.each do |past_event| %>
+      <%= render :partial => 'events/event', :locals => {:event => past_event} %> 
+    <% end %>
+  <% end %>
+</ul>
 <br>
+</div>
+<div id="today_events">
+<h3>Events happening today</h3>
+<ul class="users" id="today_events_ul ">
+  <% unless @today_events.blank? %>
+    <% @today_events.each do |today_event| %>
+      <%= render :partial => 'events/event', :locals => {:event => today_event} %> 
+    <% end %>
+  <% end %>
+</ul>
+<br>
+</div>
+</div>
+
 </div>
 <div id='calendar_upper' class="marginRight15">
 <h3 id="h3Cal">Calendar view</h3><br>
@@ -88,9 +120,38 @@
           
         </div>
 
+
 <script type="text/javascript">
+
+$('#upcoming_events_li').click(function(){
+  $('#upcoming_events_li').addClass('active');
+  $('#past_events_li').removeClass('active');
+  $('#today_events_li').removeClass('active');
+  $('#upcoming_events').show();
+  $('#past_events').hide();
+  $('#today_events').hide();
+});
+$('#past_events_li').click(function(){
+  $('#upcoming_events_li').removeClass('active');
+  $('#past_events_li').addClass('active');
+  $('#today_events_li').removeClass('active');
+   $('#upcoming_events').hide();
+  $('#past_events').show();
+  $('#today_events').hide();
+});
+$('#today_events_li').click(function(){
+  $('#upcoming_events_li').removeClass('active');
+  $('#past_events_li').removeClass('active');
+  $('#today_events_li').addClass('active');
+   $('#upcoming_events').hide();
+  $('#past_events').hide();
+  $('#today_events').show();
+});
+
 $(document).ready(function() {
 
+  $('#today_events_li').click();
+  
   $("#create_event").click(function(){
       $('#modal').modal('show');
     });
