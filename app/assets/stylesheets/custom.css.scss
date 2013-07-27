@@ -592,3 +592,7 @@ a.disabled {
 .active_hide{
   display:none;
 }
+
+div#event_list ul.tabs li.active{
+  text-shadow: none;
+}
