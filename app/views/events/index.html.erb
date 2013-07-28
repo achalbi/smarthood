@@ -18,9 +18,11 @@
 <h3>Upcoming Events</h3>
 <ul class="users" id="upcoming_events_ul" >
   <% unless @upcoming_events.blank? %>
+    <div id="upcoming_events_page">
     <% @upcoming_events.each do |upcoming_event| %>
       <%= render :partial => 'events/event', :locals => {:event => upcoming_event} %>
     <% end %>
+      </div>  
   <% end %>  
 </ul>
 
@@ -30,9 +32,11 @@
 <h3>Previous Events</h3>
 <ul class="users" id="past_events_ul">
   <% unless @past_events.blank? %>
+  <div id="past_events_page">
     <% @past_events.each do |past_event| %>
       <%= render :partial => 'events/event', :locals => {:event => past_event} %> 
     <% end %>
+  </div>  
   <% end %>
 </ul>
 <br>
@@ -41,9 +45,11 @@
 <h3>Events happening today</h3>
 <ul class="users" id="today_events_ul ">
   <% unless @today_events.blank? %>
+    <div id="today_events_page" class="paginate">
     <% @today_events.each do |today_event| %>
       <%= render :partial => 'events/event', :locals => {:event => today_event} %> 
     <% end %>
+    </div>    
   <% end %>
 </ul>
 <br>
@@ -63,11 +69,14 @@
               <a href="#" id="closeX" class="close">×</a>
               <span style="font-size:20px;line-height: 2;">Create Event</span>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="max-height:550px;">
               <div class="row">
           <div class="span14 ui-front">
             
                <%= render 'shared/error_messages', object: f.object %>
+          <div id="pages">     
+            <div id="page-1">
+              <%= link_to "Next page", '#', id: "next-2",  class: "uibutton icon next pull-right" %>
                <div class="center_block clearfix">
                   <%= f.label :title %>
                   <div class="input">
@@ -106,8 +115,9 @@
                   <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title=>"Description", rows: 3, cols: 75  %> 
                 </div>
                 </div>
-
-
+              </div>  
+              <div id="page-2">
+                <%= link_to "Previous page", '#', id: "prev-1",  class: "uibutton icon prev pull-left" %>
                 <div class="center_block clearfix">
                    <%= label_tag :all_day %>
                   <div class="input">
@@ -118,8 +128,8 @@
                   <div class="input">
                   <%= f.check_box :privacy %></div>
                 </div> 
-
-
+              </div>
+            </div>
                          
           </div>
         </div>   
@@ -135,6 +145,23 @@
 
 <script type="text/javascript">
 
+$('#prev-1').click(function(){
+    $( "#page-1" ).animate({ width: '600px' }, 1000, function() {
+                $(this).show();
+             });
+    $( "#page-2" ).animate({ width: '0px' }, 1000, function() {
+                $(this).hide();
+             });
+
+});
+$('#next-2').click(function(){
+    $( "#page-1" ).animate({ width: '0px' }, 1000, function() {
+                $(this).hide();
+             });
+    $( "#page-2" ).animate({ width: '600px' }, 1000, function() {
+                $(this).show();
+             });
+});
 
 $('#event_address').keydown(function(){
     $('#view_map_link').hide();
@@ -171,7 +198,7 @@ $('#past_events_li').click(function(){
   $('#upcoming_events_li').removeClass('active');
   $('#past_events_li').addClass('active');
   $('#today_events_li').removeClass('active');
-   $('#upcoming_events').hide();
+  $('#upcoming_events').hide();
   $('#past_events').show();
   $('#today_events').hide();
 });
@@ -197,6 +224,7 @@ $('#end_date_remove_link').click(function(){
 $(document).ready(function() {
 
 
+  $('#page-2').hide();
 
   $('#view_map_link').hide();
 
@@ -384,6 +412,63 @@ endDateTextBox.datetimepicker({
     startDateTextBox.datetimepicker('option', 'maxDate', endDateTextBox.datetimepicker('getDate') );
   },
   dateFormat: "dd/mm/yy"
+});
+
+
+
+var currentPage = 1;
+var intervalID = -1000;
+
+function checkScroll() {
+  if (nearBottomOfPage()) {
+    currentPage++;
+ 
+    jQuery.ajax('/events?page=' + currentPage, {asynchronous:true, evalScripts:true, method:'get', success: function(data, textStatus, jqXHR) {
+    console.log("endless request "+ currentPage +"----"+jQuery(data).find('.paginate').html());
+    $('.paginate').append(jQuery(data).find('.paginate').html());
+    if((typeof jQuery(data).find('.paginate').html() == 'undefined' || jQuery(data).find('.paginate').html()==null) || jQuery(data).find('.paginate').html().trim().length == 0){
+      clearInterval(intervalID);
+    }
+  },});
+  }
+}
+
+function nearBottomOfPage() {
+  return scrollDistanceFromBottom() < 50;
+}
+
+function scrollDistanceFromBottom(argument) {
+  return pageHeight() - (window.pageYOffset + self.innerHeight);
+}
+
+function pageHeight() {
+  return Math.max(document.body.scrollHeight, document.body.offsetHeight);
+}
+
+$('document').ready(function(){
+  intervalID = setInterval(checkScroll, 250);
+})
+
+$('#upcoming_events_li').click(function(){
+  $('#upcoming_events_page').addClass('paginate');
+  $('#past_events_page').removeClass('paginate');
+  $('#today_events_page').removeClass('paginate');
+  currentPage = 1;
+  intervalID = setInterval(checkScroll, 250);
+});
+$('#past_events_li').click(function(){
+  $('#upcoming_events_page').removeClass('paginate');
+  $('#past_events_page').addClass('paginate');
+  $('#today_events_page').removeClass('paginate');
+  currentPage = 1;
+  intervalID = setInterval(checkScroll, 250);
+});
+$('#today_events_li').click(function(){
+  $('#upcoming_events_page').removeClass('paginate');
+  $('#past_events_page').removeClass('paginate');
+  $('#today_events_page').addClass('paginate');
+  currentPage = 1;
+  intervalID = setInterval(checkScroll, 250);
 });
 
 </script>

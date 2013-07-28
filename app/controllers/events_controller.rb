@@ -107,11 +107,14 @@ rescue Exception => e
       @past_events = @events.where("starts_at < ? and ends_at < ?",Time.current.to_date,Time.current.to_date)
       @today_events = @events.where("starts_at BETWEEN ? AND ?",Time.current.to_date,Time.current.tomorrow.to_date)
       @events = @events.paginate(page: params[:page], :per_page => 5)
-      ip_loc = Geocoder.search(remote_ip)[0]
+      @upcoming_events = @upcoming_events.paginate(:page => params[:page], :per_page => 5)
+      @today_events = @today_events.paginate(:page => params[:page], :per_page => 5)
+      @past_events = @past_events.paginate(:page => params[:page], :per_page => 5)
+      #ip_loc = Geocoder.search(remote_ip)[0]
      # debugger
-      @event.address = ip_loc.address
-      @event.latitude = ip_loc.latitude
-      @event.longitude = ip_loc.longitude
+     # @event.address = ip_loc.address
+     # @event.latitude = ip_loc.latitude
+     # @event.longitude = ip_loc.longitude
     #  result = request.location
     # debugger
       respond_to do |format|
