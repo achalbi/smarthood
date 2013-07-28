@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130725164005) do
+ActiveRecord::Schema.define(:version => 20130727181449) do
 
   create_table "activities", :force => true do |t|
     t.string   "title"
@@ -152,6 +152,9 @@ ActiveRecord::Schema.define(:version => 20130725164005) do
     t.datetime "created_at",   :null => false
     t.datetime "updated_at",   :null => false
     t.integer  "community_id"
+    t.string   "address"
+    t.float    "latitude"
+    t.float    "longitude"
   end
 
   add_index "events", ["creator", "created_at", "starts_at", "ends_at"], :name => "index_events_on_creator_and_created_at_and_starts_at_and_ends_at"

@@ -11,11 +11,12 @@
 // GO AFTER THE REQUIRES BELOW.
 //
 
-//= require bootstrap
 //= require jquery
 //= require jquery_ujs
-//= require jquery-ui
+//= require jquery.ui.all
 //= require jquery.remotipart
+//= require bootstrap
+//= require autocomplete-rails
 //= require fullcalendar
 
 //= require_tree .

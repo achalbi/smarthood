@@ -22,6 +22,8 @@ gem 'omniauth-identity'
 gem 'simple_form'
 gem 'remotipart'
 gem 'debugger'
+gem "geocoder"
+gem 'rails3-jquery-autocomplete'
 #gem 'node'
 #gem 'metro-rails'
 #gem 'therubyracer'
@@ -47,7 +49,8 @@ group :assets do
   gem 'uglifier', '1.2.3'
 end
 
-gem 'jquery-rails', '2.0.2'
+gem 'jquery-rails'
+gem 'jquery-ui-rails'
 
 group :test do
   gem 'capybara', '1.1.2'

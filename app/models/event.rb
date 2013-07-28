@@ -1,5 +1,8 @@
 class Event < ActiveRecord::Base
-  attr_accessible :all_day, :description, :location, :title, :privacy, :starts_at, :ends_at, :user_id
+  attr_accessible :all_day, :description, :location, :title, :privacy, :starts_at, :ends_at, :user_id, :address, :latitude, :longitude
+
+  geocoded_by :address   # can also be an IP address
+  after_validation :geocode, :if => :address_changed?          # auto-fetch coordinates
 
   belongs_to :User
 
@@ -31,11 +34,11 @@ class Event < ActiveRecord::Base
       :id => self.id,
       :title => self.title,
       :description => self.description || "",
-      :start => starts_at.rfc822,
-      :end => ends_at.rfc822,
+      :start => unless starts_at.blank? then  starts_at.rfc822 else "" end,
+      :end => unless ends_at.blank? then  ends_at.rfc822 else "" end,
       :allDay => self.all_day,
       :recurring => false,
-      :url => Rails.application.routes.url_helpers.event_path(id),
+      #:url => Rails.application.routes.url_helpers.event_path(id),
       #:color => "red"
     }
 

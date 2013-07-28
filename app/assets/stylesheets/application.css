@@ -10,6 +10,8 @@
  *
  *= require_self 
  *= require_tree .
+ *= require jquery.ui.all
+ *= require_tree ../../../vendor/assets/stylesheets
  *= require_tree ../../../vendor/assets/stylesheets/lightview/.
  *= require_tree ../../../vendor/assets/stylesheets/datetime/.
  *= require_tree ../../../vendor/assets/.

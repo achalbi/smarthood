@@ -107,6 +107,12 @@ rescue Exception => e
       @past_events = @events.where("starts_at < ? and ends_at < ?",Time.current.to_date,Time.current.to_date)
       @today_events = @events.where("starts_at BETWEEN ? AND ?",Time.current.to_date,Time.current.tomorrow.to_date)
       @events = @events.paginate(page: params[:page], :per_page => 5)
+      ip_loc = Geocoder.search(remote_ip)[0]
+     # debugger
+      @event.address = ip_loc.address
+      @event.latitude = ip_loc.latitude
+      @event.longitude = ip_loc.longitude
+    #  result = request.location
     # debugger
       respond_to do |format|
         format.html # index.html.erb
@@ -266,6 +272,26 @@ rescue Exception => e
       format.json { head :no_content }
     end
   end
+
+  def search_address
+        @event = Event.new
+        gc = Geocoder.search(params[:address])
+        result = gc.collect do |t|
+          { value: t.address }
+        end
+        respond_to do |format|
+            format.json {render :json => result}
+        end
+  end
+
+  def get_geo_coordinates
+    @event = Event.new
+    gc = Geocoder.search(params[:address])[0]
+      @event.address = gc.address
+      @event.latitude = gc.latitude
+      @event.longitude = gc.longitude
+  end
+
   private
   def sort_column(sort)
 	Group.column_names.include?(sort) ? sort : "name"
@@ -274,4 +300,7 @@ rescue Exception => e
   def sort_direction(direction)
      %w[asc desc].include?(direction) ?  direction : "asc"   
   end  
+
+
+
 end

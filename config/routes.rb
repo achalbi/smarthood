@@ -21,7 +21,7 @@ EMS::Application.routes.draw do
   resources :user_groups
   resources :posts
   resources :comments
-  resources :events
+  #resources :events
   resources :activities
   resources :authentication
   resources :albums do
@@ -60,13 +60,11 @@ EMS::Application.routes.draw do
   end
 
   resources :events do
-    resources :activities
-  end
-
-  resources :events do
     collection  do
-      get :inviteuser, :eventeditors
+      get :inviteuser, :eventeditors, :search_address, :get_geo_coordinates
     end
+    resources :activities
+    
   end
 
   resources :groups do

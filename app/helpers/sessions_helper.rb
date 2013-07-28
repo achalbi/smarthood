@@ -63,4 +63,14 @@ module SessionsHelper
   def active_community
     Community.find(Usercommunity.where(['status=? and user_id=?','active',current_user.id])[0].community_id)
   end
+
+  def remote_ip
+    if request.remote_ip == '127.0.0.1'
+      # Hard coded remote address
+      '117.192.176.246'
+    else
+      request.remote_ip
+    end
+  end
+  
 end
