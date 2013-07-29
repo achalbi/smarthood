@@ -1,0 +1,7 @@
+$('#past_events_paginate').append('<%= render(@events) %>');
+<% if  @events.total_pages > @events.current_page %>
+  checkScroll("past_events_paginate");
+<% else %>
+	$('#loading').remove();
+<% end %>
+

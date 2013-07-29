@@ -23,6 +23,7 @@
       <%= render :partial => 'events/event', :locals => {:event => upcoming_event} %>
     <% end %>
       </div>  
+      <p id="loading">Loading more page results...</p>
   <% end %>  
 </ul>
 
@@ -36,7 +37,9 @@
     <% @past_events.each do |past_event| %>
       <%= render :partial => 'events/event', :locals => {:event => past_event} %> 
     <% end %>
+
   </div>  
+
   <% end %>
 </ul>
 <br>
@@ -50,6 +53,7 @@
       <%= render :partial => 'events/event', :locals => {:event => today_event} %> 
     <% end %>
     </div>    
+    <p id="loading">Loading more page results...</p>
   <% end %>
 </ul>
 <br>
@@ -414,23 +418,54 @@ endDateTextBox.datetimepicker({
   dateFormat: "dd/mm/yy"
 });
 
+var upcoming_events_currentPage = 1;
+var past_events_currentPage = 1;
+var today_events_currentPage = 1;
+
+$('#upcoming_events_li').click(function(){
+  $('#upcoming_events_page').addClass('paginate');
+  $('#past_events_page').removeClass('paginate');
+  $('#today_events_page').removeClass('paginate');
+  checkScroll("upcoming_events_paginate");
+});
+$('#past_events_li').click(function(){
+  checkScroll("past_events_paginate");
+  $('#upcoming_events_page').removeClass('paginate');
+  $('#past_events_page').addClass('paginate');
+  $('#today_events_page').removeClass('paginate');
+});
+$('#today_events_li').click(function(){
+  $('#upcoming_events_page').removeClass('paginate');
+  $('#past_events_page').removeClass('paginate');
+  $('#today_events_page').addClass('paginate');
+  checkScroll("today_events_paginate");
+});
 
 
-var currentPage = 1;
-var intervalID = -1000;
 
-function checkScroll() {
+
+function checkScroll(paginate) {
   if (nearBottomOfPage()) {
-    currentPage++;
- 
-    jQuery.ajax('/events?page=' + currentPage, {asynchronous:true, evalScripts:true, method:'get', success: function(data, textStatus, jqXHR) {
-    console.log("endless request "+ currentPage +"----"+jQuery(data).find('.paginate').html());
-    $('.paginate').append(jQuery(data).find('.paginate').html());
-    if((typeof jQuery(data).find('.paginate').html() == 'undefined' || jQuery(data).find('.paginate').html()==null) || jQuery(data).find('.paginate').html().trim().length == 0){
-      clearInterval(intervalID);
+     var currentPage;
+     if (paginate === "upcoming_events_paginate") {
+        currentPage = upcoming_events_currentPage++;
+     } else if (paginate === "past_events_paginate") {
+        currentPage = past_events_currentPage++;
+     } else if (paginate === "today_events_paginate") {
+        currentPage = today_events_currentPage++;
+     }
+
+    $.ajax({
+      url: '/events/'+paginate+'?page=' + currentPage,
+      type: 'get',
+      dataType : 'script',
+      success: function(data) {
+        //alert('Load was performed.');
+      }
+    });
+  }else{
+      setTimeout("checkScroll("+paginate+")", 250);  
     }
-  },});
-  }
 }
 
 function nearBottomOfPage() {
@@ -446,29 +481,6 @@ function pageHeight() {
 }
 
 $('document').ready(function(){
-  intervalID = setInterval(checkScroll, 250);
-})
-
-$('#upcoming_events_li').click(function(){
-  $('#upcoming_events_page').addClass('paginate');
-  $('#past_events_page').removeClass('paginate');
-  $('#today_events_page').removeClass('paginate');
-  currentPage = 1;
-  intervalID = setInterval(checkScroll, 250);
+  checkScroll("today_events_paginate");
 });
-$('#past_events_li').click(function(){
-  $('#upcoming_events_page').removeClass('paginate');
-  $('#past_events_page').addClass('paginate');
-  $('#today_events_page').removeClass('paginate');
-  currentPage = 1;
-  intervalID = setInterval(checkScroll, 250);
-});
-$('#today_events_li').click(function(){
-  $('#upcoming_events_page').removeClass('paginate');
-  $('#past_events_page').removeClass('paginate');
-  $('#today_events_page').addClass('paginate');
-  currentPage = 1;
-  intervalID = setInterval(checkScroll, 250);
-});
-
 </script>

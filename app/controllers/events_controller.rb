@@ -115,12 +115,33 @@ rescue Exception => e
      # @event.address = ip_loc.address
      # @event.latitude = ip_loc.latitude
      # @event.longitude = ip_loc.longitude
-    #  result = request.location
+     # result = request.location
     # debugger
       respond_to do |format|
         format.html # index.html.erb
         format.json { render :json => @events }
       end
+    end
+
+    def upcoming_events_paginate
+      @events = Event.scoped
+      @events = @events.where('community_id = ?',active_community.id)
+      @upcoming_events = @events.where("starts_at > ?",Time.current.tomorrow.to_date)
+      @events = @upcoming_events.paginate(:page => params[:page], :per_page => 5)
+    end
+
+    def today_events_paginate
+       @events = Event.scoped
+       @events = @events.where('community_id = ?',active_community.id)
+       @today_events = @events.where("starts_at BETWEEN ? AND ?",Time.current.to_date,Time.current.tomorrow.to_date)
+       @events = @today_events.paginate(:page => params[:page], :per_page => 5)
+    end
+
+    def past_events_paginate
+      @events = Event.scoped
+      @events = @events.where('community_id = ?',active_community.id)
+      @past_events = @events.where("starts_at < ? and ends_at < ?",Time.current.to_date,Time.current.to_date)
+      @events = @past_events.paginate(:page => params[:page], :per_page => 5)
     end
 
     def show

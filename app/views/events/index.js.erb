@@ -1,0 +1,21 @@
+$('#upcoming_events_page').append('<%= j render(@events) %>');
+<% if @events.next_page %>
+$('#loading').replaceWith('<%= j will_paginate(@events) %>');
+<% else %>
+$('#loading').remove();
+<% end %>
+
+
+
+$('#content').html("<%= escape_javascript(
+	 @upcoming_events.each do |upcoming_event|
+      render :partial => 'events/event', :locals => {:event => upcoming_event} 
+    end 
+	) %>");  
+
+page.insert_html :bottom, :prducts, :partial => @products
+if @products.total_pages > @products.current_page
+  page.call 'checkScroll'
+else
+  page[:loading].hide
+end
