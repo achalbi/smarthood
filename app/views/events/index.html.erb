@@ -23,7 +23,7 @@
       <%= render :partial => 'events/event', :locals => {:event => upcoming_event} %>
     <% end %>
       </div>  
-      <p id="loading">Loading more page results...</p>
+      <p id="loading_upcoming_events">Loading more page results...</p>
   <% end %>  
 </ul>
 
@@ -39,7 +39,7 @@
     <% end %>
 
   </div>  
-
+    <p id="loading_past_events">Loading more page results...</p>
   <% end %>
 </ul>
 <br>
@@ -53,7 +53,7 @@
       <%= render :partial => 'events/event', :locals => {:event => today_event} %> 
     <% end %>
     </div>    
-    <p id="loading">Loading more page results...</p>
+    <p id="loading_today_events">Loading more page results...</p>
   <% end %>
 </ul>
 <br>
@@ -418,9 +418,12 @@ endDateTextBox.datetimepicker({
   dateFormat: "dd/mm/yy"
 });
 
-var upcoming_events_currentPage = 1;
-var past_events_currentPage = 1;
-var today_events_currentPage = 1;
+var upcoming_events_currentPage = 2;
+var past_events_currentPage = 2;
+var today_events_currentPage = 2;
+var upcoming_event = "upcoming_events_paginate";
+var past_event = "past_events_paginate";
+var today_event = "today_events_paginate";
 
 $('#upcoming_events_li').click(function(){
   $('#upcoming_events_page').addClass('paginate');
@@ -428,12 +431,14 @@ $('#upcoming_events_li').click(function(){
   $('#today_events_page').removeClass('paginate');
   checkScroll("upcoming_events_paginate");
 });
+
 $('#past_events_li').click(function(){
-  checkScroll("past_events_paginate");
   $('#upcoming_events_page').removeClass('paginate');
   $('#past_events_page').addClass('paginate');
   $('#today_events_page').removeClass('paginate');
+  checkScroll('past_events_paginate');
 });
+
 $('#today_events_li').click(function(){
   $('#upcoming_events_page').removeClass('paginate');
   $('#past_events_page').removeClass('paginate');
@@ -442,12 +447,12 @@ $('#today_events_li').click(function(){
 });
 
 
-
-
+var intervalID = -1000;
+ 
 function checkScroll(paginate) {
   if (nearBottomOfPage()) {
-     var currentPage;
-     if (paginate === "upcoming_events_paginate") {
+      var currentPage=0;
+    if (paginate === "upcoming_events_paginate") {
         currentPage = upcoming_events_currentPage++;
      } else if (paginate === "past_events_paginate") {
         currentPage = past_events_currentPage++;
@@ -455,33 +460,40 @@ function checkScroll(paginate) {
         currentPage = today_events_currentPage++;
      }
 
+
+  console.log("endless request "+ currentPage+" " + paginate);
+   
     $.ajax({
       url: '/events/'+paginate+'?page=' + currentPage,
       type: 'get',
       dataType : 'script',
       success: function(data) {
-        //alert('Load was performed.');
-      }
-    });
-  }else{
-      setTimeout("checkScroll("+paginate+")", 250);  
+        console.log('Load was performed.');
+        
+ 
     }
+    });
+
+
+  }else{
+    $('#loading_past_events').hide();
+  }
 }
-
-
+ 
 function nearBottomOfPage() {
-  return scrollDistanceFromBottom() < 50;
+  return scrollDistanceFromBottom() < 10;
 }
-
+ 
 function scrollDistanceFromBottom(argument) {
   return pageHeight() - (window.pageYOffset + self.innerHeight);
 }
-
+ 
 function pageHeight() {
   return Math.max(document.body.scrollHeight, document.body.offsetHeight);
 }
-
+ 
 $('document').ready(function(){
-  checkScroll("today_events_paginate");
+  intervalID = setInterval(checkScroll(today_event), 250);
 });
+
 </script>

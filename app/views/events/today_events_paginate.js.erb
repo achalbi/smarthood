@@ -1,6 +1,8 @@
-$('#today_events_paginate').append('<%=  render(@events) %>');
-<% if @events.next_page %>
-$('#loading').replaceWith('<%=  will_paginate(@events) %>');
+$('#today_events_paginate').append('<%= escape_javascript(render(@events)) %>');
+<% if  @events.total_pages > @events.current_page %>
+console.log("today_events_paginate_true");
+  checkScroll("today_events_paginate"); 
 <% else %>
-$('#loading').remove();
+console.log("today_events_paginate_false");
+	$('#loading').remove();
 <% end %>
