@@ -429,25 +429,26 @@ $('#upcoming_events_li').click(function(){
   $('#upcoming_events_page').addClass('paginate');
   $('#past_events_page').removeClass('paginate');
   $('#today_events_page').removeClass('paginate');
-  checkScroll("upcoming_events_paginate");
-});
+ intervalID = setInterval(checkScroll(upcoming_event), 250);});
 
 $('#past_events_li').click(function(){
   $('#upcoming_events_page').removeClass('paginate');
   $('#past_events_page').addClass('paginate');
   $('#today_events_page').removeClass('paginate');
-  checkScroll('past_events_paginate');
+  checkScroll(past_event);
 });
 
 $('#today_events_li').click(function(){
   $('#upcoming_events_page').removeClass('paginate');
   $('#past_events_page').removeClass('paginate');
   $('#today_events_page').addClass('paginate');
-  checkScroll("today_events_paginate");
+   intervalID = setInterval(checkScroll(today_event), 250);
 });
 
 
-var intervalID = -1000;
+var intervalID1 = -1000;
+var intervalID2 = -1000;
+var intervalID3 = -1000;
  
 function checkScroll(paginate) {
   if (nearBottomOfPage()) {
@@ -462,30 +463,34 @@ function checkScroll(paginate) {
 
 
   console.log("endless request "+ currentPage+" " + paginate);
-   
+  // $('#loading_past_events').show();
+
     $.ajax({
       url: '/events/'+paginate+'?page=' + currentPage,
       type: 'get',
       dataType : 'script',
       success: function(data) {
-        console.log('Load was performed.');
-        
+      //$('#loading_past_events').hide();
  
     }
     });
 
 
-  }else{
-    $('#loading_past_events').hide();
   }
 }
  
 function nearBottomOfPage() {
-  return scrollDistanceFromBottom() < 10;
+  return scrollDistanceFromBottom() < 50;
 }
  
 function scrollDistanceFromBottom(argument) {
+  console.log(pageHeight());
+  console.log(window.pageYOffset);
+  console.log((window.pageYOffset + self.innerHeight));
+  console.log("--------");
+
   return pageHeight() - (window.pageYOffset + self.innerHeight);
+
 }
  
 function pageHeight() {
@@ -493,7 +498,9 @@ function pageHeight() {
 }
  
 $('document').ready(function(){
-  intervalID = setInterval(checkScroll(today_event), 250);
+ // intervalID1 = setInterval(checkScroll(upcoming_event), 250);
+  checkScroll(past_event);
+ // intervalID3 = setInterval(checkScroll(today_event), 250);
 });
 
 </script>

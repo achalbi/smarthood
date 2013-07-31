@@ -43,7 +43,9 @@ class UsersController < ApplicationController
   end
 
   def index
-    @users = active_community.users.paginate(page: params[:page], :per_page => 8)
+    sleep 1
+    #@users = active_community.users.paginate(page: params[:page], :per_page => 8)
+    @users = User.paginate(page: params[:page], :per_page => 2)
   end
 
     def destroy

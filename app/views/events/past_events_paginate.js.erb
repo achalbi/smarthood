@@ -1,10 +1,6 @@
 $('#past_events_page').append('<%= escape_javascript(render(@events)) %>');
-console.log('<%= escape_javascript(@events.current_page.to_s) %>');
 <% if  @events.total_pages > @events.current_page %>
-	console.log('<%= escape_javascript(@events.current_page.to_s) %>');
   checkScroll("past_events_paginate");  
 <% else %>
- console.log("loading removed");
-	$('#loading_past_events').remove();
+setTimeout("checkScroll('past_events_paginate')", 250);
 <% end %>
-

@@ -1,10 +1,48 @@
 <% provide(:title, 'All users') %>
 <h1>All users</h1>
 
-<%= will_paginate %>
-
 <ul class="users">
-  <%= render @users %>
+	<div class="ressources">
+  		<%= render @users %>
+	</div>
+	<p id="loading_page">Loading more page results...</p>
 </ul>
 
-<%= will_paginate %>
+
+<script type="text/javascript">
+
+var currentPage = 1;
+var intervalID = -1000;
+ 
+function checkScroll() {
+  if (nearBottomOfPage()) {
+    currentPage++;
+  console.log("endless request "+ currentPage);
+  $('#loading_page').show();
+    jQuery.ajax('/users?page=' + currentPage, {asynchronous:true, evalScripts:true, method:'get', success: function(data, textStatus, jqXHR) {
+		$('.ressources').append($(data).find('.ressources').html());
+		$('#loading_page').hide();
+		if((typeof jQuery(data).find('.ressources').html() == 'undefined' ||jQuery(data).find('.ressources').html() == null) || jQuery(data).find('.ressources').html().trim().length == 0){
+			clearInterval(intervalID);
+
+		}
+	},});
+  }
+}
+ 
+function nearBottomOfPage() {
+  return scrollDistanceFromBottom() < 50;
+}
+ 
+function scrollDistanceFromBottom(argument) {
+  return pageHeight() - (window.pageYOffset + self.innerHeight);
+}
+ 
+function pageHeight() {
+  return Math.max(document.body.scrollHeight, document.body.offsetHeight);
+}
+ 
+$('document').ready(function(){
+	intervalID = setInterval(checkScroll, 250);
+})
+</script>
