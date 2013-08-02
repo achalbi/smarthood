@@ -1,8 +1,3 @@
-$('#today_events_page').append('<%= escape_javascript(render(@events)) %>');
-<% if  @events.total_pages > @events.current_page %>
-console.log("today_events_paginate_true");
-  checkScroll("today_events_paginate"); 
-<% else %>
-console.log("today_events_paginate_false");
-	$('#loading').remove();
-<% end %>
+<div id="today_events_page" class="today_events_paginate">
+<%= render(@events) %>
+</div>

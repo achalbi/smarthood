@@ -1,6 +1,1 @@
-$('#past_events_page').append('<%= escape_javascript(render(@events)) %>');
-<% if  @events.total_pages > @events.current_page %>
-  checkScroll("past_events_paginate");  
-<% else %>
-setTimeout("checkScroll('past_events_paginate')", 250);
-<% end %>
+<%= render(@events) %>

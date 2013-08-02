@@ -18,12 +18,12 @@
 <h3>Upcoming Events</h3>
 <ul class="users" id="upcoming_events_ul" >
   <% unless @upcoming_events.blank? %>
-    <div id="upcoming_events_page">
+    <div id="upcoming_events_page" class="upcoming_events_paginate">
     <% @upcoming_events.each do |upcoming_event| %>
       <%= render :partial => 'events/event', :locals => {:event => upcoming_event} %>
     <% end %>
       </div>  
-      <p id="loading_upcoming_events">Loading more page results...</p>
+      <p id="loading_upcoming_events_paginate">Loading more page results...</p>
   <% end %>  
 </ul>
 
@@ -33,13 +33,13 @@
 <h3>Previous Events</h3>
 <ul class="users" id="past_events_ul">
   <% unless @past_events.blank? %>
-  <div id="past_events_page">
+  <div id="past_events_page" class="past_events_paginate">
     <% @past_events.each do |past_event| %>
       <%= render :partial => 'events/event', :locals => {:event => past_event} %> 
     <% end %>
 
   </div>  
-    <p id="loading_past_events">Loading more page results...</p>
+    <p id="loading_past_events_paginate">Loading more page results...</p>
   <% end %>
 </ul>
 <br>
@@ -48,12 +48,12 @@
 <h3>Events happening today</h3>
 <ul class="users" id="today_events_ul ">
   <% unless @today_events.blank? %>
-    <div id="today_events_page" class="paginate">
+    <div id="today_events_page" class="today_events_paginate">
     <% @today_events.each do |today_event| %>
       <%= render :partial => 'events/event', :locals => {:event => today_event} %> 
     <% end %>
     </div>    
-    <p id="loading_today_events">Loading more page results...</p>
+    <p id="loading_today_events_paginate">Loading more page results...</p>
   <% end %>
 </ul>
 <br>
@@ -418,9 +418,15 @@ endDateTextBox.datetimepicker({
   dateFormat: "dd/mm/yy"
 });
 
+
 var upcoming_events_currentPage = 2;
 var past_events_currentPage = 2;
 var today_events_currentPage = 2;
+
+var intervalID_U = -1000;
+var intervalID_P = -1000;
+var intervalID_T = -1000;
+
 var upcoming_event = "upcoming_events_paginate";
 var past_event = "past_events_paginate";
 var today_event = "today_events_paginate";
@@ -429,53 +435,49 @@ $('#upcoming_events_li').click(function(){
   $('#upcoming_events_page').addClass('paginate');
   $('#past_events_page').removeClass('paginate');
   $('#today_events_page').removeClass('paginate');
- intervalID = setInterval(checkScroll(upcoming_event), 250);});
+   intervalID_U = setInterval(callCheckScroll, 250);
+});
 
 $('#past_events_li').click(function(){
   $('#upcoming_events_page').removeClass('paginate');
   $('#past_events_page').addClass('paginate');
   $('#today_events_page').removeClass('paginate');
-  checkScroll(past_event);
+   intervalID_P = setInterval(callCheckScroll, 250);
 });
 
 $('#today_events_li').click(function(){
   $('#upcoming_events_page').removeClass('paginate');
   $('#past_events_page').removeClass('paginate');
+  $('#today_events_page').removeClass('paginate');
   $('#today_events_page').addClass('paginate');
-   intervalID = setInterval(checkScroll(today_event), 250);
+ //  intervalID_T = setInterval(callCheckScroll, 250);
 });
 
-
-var intervalID1 = -1000;
-var intervalID2 = -1000;
-var intervalID3 = -1000;
- 
 function checkScroll(paginate) {
   if (nearBottomOfPage()) {
       var currentPage=0;
+      var intervalID;
     if (paginate === "upcoming_events_paginate") {
         currentPage = upcoming_events_currentPage++;
+        intervalID = intervalID_U;
      } else if (paginate === "past_events_paginate") {
         currentPage = past_events_currentPage++;
+        intervalID = intervalID_P;
      } else if (paginate === "today_events_paginate") {
         currentPage = today_events_currentPage++;
+        intervalID = intervalID_T;
      }
 
-
   console.log("endless request "+ currentPage+" " + paginate);
-  // $('#loading_past_events').show();
-
-    $.ajax({
-      url: '/events/'+paginate+'?page=' + currentPage,
-      type: 'get',
-      dataType : 'script',
-      success: function(data) {
-      //$('#loading_past_events').hide();
- 
-    }
-    });
-
-
+  $('#loading_'+paginate).show();
+    jQuery.ajax('/events/'+paginate+'?page=' + currentPage, {asynchronous:true, evalScripts:true, method:'get', success: function(data, textStatus, jqXHR) {
+    $('#loading_'+paginate).hide();
+    console.log(data);
+    $('.'+paginate).append(data);
+    if(data==null || data == ''){
+      clearInterval(intervalID);
+    } 
+    },});
   }
 }
  
@@ -484,23 +486,25 @@ function nearBottomOfPage() {
 }
  
 function scrollDistanceFromBottom(argument) {
-  console.log(pageHeight());
-  console.log(window.pageYOffset);
-  console.log((window.pageYOffset + self.innerHeight));
-  console.log("--------");
-
   return pageHeight() - (window.pageYOffset + self.innerHeight);
-
 }
  
 function pageHeight() {
   return Math.max(document.body.scrollHeight, document.body.offsetHeight);
 }
+
+function callCheckScroll(){
+  if($("#upcoming_events_page").hasClass('paginate')){
+    checkScroll(upcoming_event)
+  }else if($("#past_events_page").hasClass('paginate')){
+    checkScroll(past_event)
+  }else if($("#today_events_page").hasClass('paginate')){
+    checkScroll(today_event)
+  }
+}
  
 $('document').ready(function(){
- // intervalID1 = setInterval(checkScroll(upcoming_event), 250);
-  checkScroll(past_event);
- // intervalID3 = setInterval(checkScroll(today_event), 250);
+ intervalID_T = setInterval(checkScroll, 250, today_event);
 });
 
 </script>

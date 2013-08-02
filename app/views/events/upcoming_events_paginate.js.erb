@@ -1,7 +1,0 @@
-$('#upcoming_events_page').append('<%=  render(@events) %>');
-<% if @events.next_page %>
-$('#loading').replaceWith('<%=  will_paginate(@events) %>');
-<% else %>
-$('#loading').remove();
-<% end %>
-

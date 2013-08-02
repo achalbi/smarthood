@@ -107,11 +107,9 @@ rescue Exception => e
       @past_events = @events.where("starts_at < ? and ends_at < ?",Time.current.to_date,Time.current.to_date)
       @today_events = @events.where("starts_at BETWEEN ? AND ?",Time.current.to_date,Time.current.tomorrow.to_date)
       @events = @events.paginate(page: params[:page], :per_page => 5)
-      @upcoming_events = @upcoming_events.paginate(:page => params[:page], :per_page => 1)
-      @today_events = @today_events.paginate(:page => params[:page], :per_page => 1)
-      @past_events = @past_events.paginate(:page => params[:page], :per_page => 1)
-      @upcoming_events = @past_events
-      @today_events = @past_events
+      @upcoming_events = @upcoming_events.paginate(:page => params[:page], :per_page => 5)
+      @today_events = @today_events.paginate(:page => params[:page], :per_page => 5)
+      @past_events = @past_events.paginate(:page => params[:page], :per_page => 5)
       #ip_loc = Geocoder.search(remote_ip)[0]
      #debugger
 
@@ -130,23 +128,21 @@ rescue Exception => e
       @events = Event.scoped
       @events = @events.where('community_id = ?',active_community.id)
       @upcoming_events = @events.where("starts_at > ?",Time.current.tomorrow.to_date)
-      @events = @upcoming_events.paginate(:page => params[:page], :per_page => 1)
+      @events = @upcoming_events.paginate(:page => params[:page], :per_page => 5)
     end
 
     def today_events_paginate
        @events = Event.scoped
        @events = @events.where('community_id = ?',active_community.id)
-      # @today_events = @events.where("starts_at BETWEEN ? AND ?",Time.current.to_date,Time.current.tomorrow.to_date)
-      # @events = @today_events.paginate(:page => params[:page], :per_page => 1)
-      @past_events = @events.where("starts_at < ? and ends_at < ?",Time.current.to_date,Time.current.to_date)
-      @events = @past_events.paginate(:page => params[:page], :per_page => 1)
+       @today_events = @events.where("starts_at BETWEEN ? AND ?",Time.current.to_date,Time.current.tomorrow.to_date)
+       @events = @today_events.paginate(:page => params[:page], :per_page => 5)
     end
 
     def past_events_paginate
       @events = Event.scoped
       @events = @events.where('community_id = ?',active_community.id)
       @past_events = @events.where("starts_at < ? and ends_at < ?",Time.current.to_date,Time.current.to_date)
-      @events = @past_events.paginate(:page => params[:page], :per_page => 1)
+      @events = @past_events.paginate(:page => params[:page], :per_page => 5)
     end
 
     def show
