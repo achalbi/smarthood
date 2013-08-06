@@ -17,6 +17,7 @@
 //= require jquery.remotipart
 //= require bootstrap
 //= require autocomplete-rails
+//= require jquery.tokeninput
 //= require fullcalendar
 
 //= require_tree .

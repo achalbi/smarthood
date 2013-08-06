@@ -1,10 +1,19 @@
 class Event < ActiveRecord::Base
-  attr_accessible :all_day, :description, :location, :title, :privacy, :starts_at, :ends_at, :user_id, :address, :latitude, :longitude
+  attr_accessible :all_day, :description, :location, :title, :privacy, :starts_at, :ends_at, :user_id, :address, :latitude, :longitude,:photo_id, :photo_attributes, :user_tokens, :eventdetails_attributes
 
   geocoded_by :address   # can also be an IP address
   after_validation :geocode, :if => :address_changed?          # auto-fetch coordinates
+  has_many :eventdetails, :dependent => :destroy
+  belongs_to :creator, class_name: "User"
+  belongs_to :photo
+  accepts_nested_attributes_for :photo
+  accepts_nested_attributes_for :eventdetails
 
-  belongs_to :User
+  attr_reader :user_tokens
+  
+  def user_tokens=(ids)
+    self.user_ids = ids.split(",")
+  end
 
   has_many :activities, class_name: "Activity", dependent: :destroy
   has_many :event_invited_users, dependent: :destroy
@@ -41,11 +50,13 @@ class Event < ActiveRecord::Base
       #:url => Rails.application.routes.url_helpers.event_path(id),
       #:color => "red"
     }
-
   end
 
   def self.format_date(date_time)
     Time.zone.at(date_time.to_i).to_formatted_s(:db)
   end
 
+  def self.search(search)
+      search.present? and all(:conditions => [ 'name LIKE ?', "%#{search.strip}%" ])
+  end
 end

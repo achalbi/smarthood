@@ -105,7 +105,7 @@
                 <div class="center_block clearfix">
                   <%= f.label :location %>
                   <div class="input ">
-                  <%= f.text_field :address, :placeholder => :location, :size => 43, class: 'events_with_autocomplete inherit_width', 'data-autocompleteUrl' => search_address_events_path,  :update_elements => {:id => '#id_element', :email => '#email_id_element'} %>&nbsp;&nbsp;&nbsp;
+                  <%= f.text_field :address, :placeholder => :location, :size => 43, class: 'events_with_autocomplete inherit_width', 'data-autocompleteUrl' => search_address_events_path %>&nbsp;&nbsp;&nbsp;
                 
                   <%= link_to "View map", '#', id: "view_map_link",  class: "uibutton icon prev" %>
                 </div>
@@ -137,7 +137,6 @@
                 <%= f.fields_for :photo, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
                  
                 <%= photo_form.file_field :pic, id: "pic",style: "width:1px; height:1px; padding:0px;  left:0px;" %>  
-
                 <% end %>
                    
                 <canvas id="imageCanvas" style = "border: 1px solid #ddd; padding:5px; align:center" >select an image</canvas>
@@ -147,13 +146,24 @@
                   <%= f.label "Search by Name:" %>
                   <div class="input ">
                      <%= f.text_field :location, :placeholder => "Search user or group", :size => 43, class: 'eventdetails_with_autocomplete inherit_width', 'data-autocomplete_eventdetailUrl' => search_user_group_events_path %>&nbsp;&nbsp;&nbsp;
-                  </div>
-                  <div class="center_block clearfix">
-                  <%= f.label "Search User by Name:" %>
-                  <div class="input ">
-                     <%= f.text_field :user_tokens, :placeholder => "Search user", :size => 43,  id: "search_name" %>&nbsp;&nbsp;&nbsp;
-                  </div>
+
+               <!--   <%= f.fields_for :eventdetail, Eventdetail.new, :child_index => 'NEW_RECORD' do |eventdetail_form| %>
+                 
+                  <%= eventdetail_form.file_field :pic, id: "pic",style: "width:1px; height:1px; padding:0px;  left:0px;" %>  
+                  <% end %>
+                 <%= f.text_field :address, :placeholder => :location, :size => 43, class: 'events_with_autocomplete inherit_width', 'data-autocompleteUrl' => search_address_events_path %>&nbsp;&nbsp;&nbsp;
+                
+                  <%= link_to "View map", '#', id: "view_map_link",  class: "uibutton icon prev" %>-->
                 </div>
+                <!-- <div style="display:none">
+                  <% @invite_groups.each do |group| %>
+                  <%= check_box_tag "p_invite_groups[#{group.id}]", group.id %>
+                  <%= group.name %>
+                  <% end %>
+                </div>
+                <div class="input" id="view_map">
+                
+                </div>-->
                 </div>
               </div>
             </div>
@@ -247,14 +257,6 @@ $('#end_date_remove_link').click(function(){
   $('#end_date_add_link').show();
 });
 
-  $(function() {
-  $("#search_name").tokenInput("/events/search_auto", {
-    crossDomain: false,
-   // prePopulate: $(".eventdetails_with_autocomplete").data("pre"),
-    theme: "facebook"
-  });
-});
-
 
 $(document).ready(function() {
 
@@ -286,10 +288,10 @@ $(document).ready(function() {
         minLength: 2,
         source: function(request, response) {
           return $.ajax({
-            url: "/events/search_user_group",
+            url: $('.eventdetails_with_autocomplete').data('autocomplete_eventdetailUrl'),
             dataType: "json",
             data: {starts_at: "", ends_at: "",
-              location: request.term
+              location: request.term, event: "<%= @event.to_json %>"
             },
             success: function(data) {
               return response(data);
@@ -298,8 +300,6 @@ $(document).ready(function() {
         }
       });
     });
-
-
 
 
   $('#today_events_li').click();

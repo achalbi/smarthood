@@ -1,5 +1,6 @@
 class EventsController < ApplicationController
 	helper_method :sort_column, :sort_direction
+  autocomplete :name, :extra_data => [:email]
 
   def new
     @group_ids = nil
@@ -89,7 +90,7 @@ rescue Exception => e
       @event.community_id = active_community.id
       respond_to do |format|
         if @event.save
-          format.html { redirect_to @event, :success => 'Event was successfully created.' }
+          format.html { redirect_to :action => :show, format: 'js', :success => 'Event was successfully created.' }
           format.json { render :json => @event, :status => :created, :location => @event }
         else
           format.html { render :action => "new" }
@@ -123,6 +124,15 @@ rescue Exception => e
         format.json { render :json => @events }
       end
     end
+
+      def search_auto
+        @users = User.where("name like ?", "%#{params[:q]}%")
+        debugger
+        respond_to do |format|
+          format.html
+          format.json { render :json => @users.map(&:attributes) }
+        end
+      end
 
     def upcoming_events_paginate
       @events = Event.scoped
@@ -303,6 +313,18 @@ rescue Exception => e
         gc = Geocoder.search(params[:address])
         result = gc.collect do |t|
           { value: t.address }
+        end
+        respond_to do |format|
+            format.json {render :json => result}
+        end
+  end
+
+    def search_user_group
+        @event = Event.new
+        @user = User.search(params[:location], nil)
+        #@group = Group.search(params[:location])
+        result = @user.collect do |t|
+          { value: t.name }
         end
         respond_to do |format|
             format.json {render :json => result}

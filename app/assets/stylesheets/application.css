@@ -18,6 +18,8 @@
  *= require_tree ../../../vendor/assets/stylesheets/sidemenu/.
  *= require_tree ../../../vendor/assets/stylesheets/fancybox/.
  *= require fullcalendar
+ *= require font-awesome
+ *= require token-input-facebook
  */
 
 

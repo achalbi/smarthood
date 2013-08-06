@@ -27,6 +27,14 @@ class UsersController < ApplicationController
   	end	
   end
 
+  def search_auto
+    @users = User.where("name like ?", "%#{params[:q]}%")
+    respond_to do |format|
+      format.html
+      format.json { render :json => @users.map(&:attributes) }
+    end
+  end
+
  def edit
     @user = User.find(params[:id])
   end
@@ -66,6 +74,14 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     @users = @user.followers.paginate(page: params[:page], :per_page => 8)
     render 'show_follow'
+  end
+
+  def search_user
+    @users = User.where("name like ?", "%#{params[:q]}%")
+    respond_to do |format|
+      format.html
+      format.json { render :json => @users.map(&:attributes) }
+    end
   end
 
  private

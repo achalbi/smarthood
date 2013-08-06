@@ -59,9 +59,15 @@ EMS::Application.routes.draw do
     end
   end
 
+    resources :users do
+      collection do
+        get :search_auto
+      end
+    end
+
   resources :events do
     collection  do
-      get :inviteuser, :eventeditors, :search_address, :get_geo_coordinates, :upcoming_events_paginate, :today_events_paginate, :past_events_paginate
+      get :inviteuser, :eventeditors, :search_address, :get_geo_coordinates, :upcoming_events_paginate, :today_events_paginate, :past_events_paginate, :search_user_group, :search_auto
     end
     resources :activities  
   end

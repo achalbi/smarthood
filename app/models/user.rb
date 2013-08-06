@@ -41,6 +41,8 @@ class User < OmniAuth::Identity::Models::ActiveRecord
   accepts_nested_attributes_for :photos, :allow_destroy => true
   
   has_many :albums, dependent: :destroy
+  has_many :eventdetails, :dependent => :destroy
+
 
   before_save { |user| user.email = email.downcase }
   before_save :create_remember_token

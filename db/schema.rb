@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130727181449) do
+ActiveRecord::Schema.define(:version => 20130803081547) do
 
   create_table "activities", :force => true do |t|
     t.string   "title"
@@ -140,6 +140,16 @@ ActiveRecord::Schema.define(:version => 20130727181449) do
   add_index "event_invited_users", ["event_id"], :name => "index_event_invited_users_on_event_id"
   add_index "event_invited_users", ["user_id"], :name => "index_event_invited_users_on_user_id"
 
+  create_table "eventdetails", :force => true do |t|
+    t.integer  "event_id"
+    t.integer  "user_id"
+    t.integer  "group_id"
+    t.boolean  "is_admin"
+    t.string   "status"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
   create_table "events", :force => true do |t|
     t.string   "title"
     t.text     "description"
@@ -155,6 +165,7 @@ ActiveRecord::Schema.define(:version => 20130727181449) do
     t.string   "address"
     t.float    "latitude"
     t.float    "longitude"
+    t.integer  "photo_id"
   end
 
   add_index "events", ["creator", "created_at", "starts_at", "ends_at"], :name => "index_events_on_creator_and_created_at_and_starts_at_and_ends_at"
