@@ -1,5 +1,6 @@
 class EventsController < ApplicationController
-	helper_method :sort_column, :sort_direction
+  include UsersHelper
+  helper_method :sort_column, :sort_direction
   autocomplete :name, :extra_data => [:email]
 
   def new
@@ -127,10 +128,16 @@ rescue Exception => e
 
       def search_auto
         @users = User.where("name like ?", "%#{params[:q]}%")
-        debugger
+       # debugger
+       @users_pp = []
+       @users.each do |user|
+         user[:profile_pic] =  gravatar_for_url(user, size: 40)
+         @users_pp << user
+       end
+      # debugger
         respond_to do |format|
           format.html
-          format.json { render :json => @users.map(&:attributes) }
+          format.json { render :json => @users_pp.map(&:attributes) }
         end
       end
 

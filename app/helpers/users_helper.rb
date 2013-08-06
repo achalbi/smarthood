@@ -32,4 +32,20 @@ module UsersHelper
     image_tag(gravatar_url, alt: user.name, class: "gravatar")
   end
   
+    def gravatar_for_url(user, options = { size: 50 })
+    gravatar_url = ""
+    size = options[:size]
+    unless user.authentications.first.nil?
+      if user.authentications.first.provider == 'facebook'
+        gravatar_url = "http://graph.facebook.com/#{user.authentications.first.username}/picture?width=#{size}&height=#{size}"
+      else
+      gravatar_id = Digest::MD5::hexdigest(user.email.downcase)
+      gravatar_url = "https://secure.gravatar.com/avatar/#{gravatar_id}?s=#{size}"        
+      end
+    else
+      gravatar_id = Digest::MD5::hexdigest(user.email.downcase)
+      gravatar_url = "https://secure.gravatar.com/avatar/#{gravatar_id}?s=#{size}"
+    end
+    return gravatar_url
+  end
 end

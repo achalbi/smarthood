@@ -10,8 +10,8 @@
 #
 
 class User < OmniAuth::Identity::Models::ActiveRecord
-  attr_accessible :name, :email, :password, :password_confirmation, :photo, :photo_file_name, :photo_content_type, :photo_file_size, :photo_updated_at, :photos_attributes, :pic
-
+  attr_accessible :name, :email, :password, :password_confirmation, :photo, :photo_file_name, :photo_content_type, :photo_file_size, :photo_updated_at, :photos_attributes, :pic, :profile_pic
+  attr_accessor :profile_pic
 
   has_secure_password
   has_many :microposts, dependent: :destroy
