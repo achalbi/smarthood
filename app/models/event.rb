@@ -1,5 +1,5 @@
 class Event < ActiveRecord::Base
-  attr_accessible :all_day, :description, :location, :title, :privacy, :starts_at, :ends_at, :user_id, :address, :latitude, :longitude,:photo_id, :photo_attributes, :user_tokens, :eventdetails_attributes
+  attr_accessible :all_day, :description, :location, :title, :privacy, :starts_at, :ends_at, :user_id, :address, :latitude, :longitude,:photo_id, :photo_attributes, :user_tokens, :eventdetails_attributes, :group_tokens
 
   geocoded_by :address   # can also be an IP address
   after_validation :geocode, :if => :address_changed?          # auto-fetch coordinates
@@ -14,7 +14,11 @@ class Event < ActiveRecord::Base
   def user_tokens=(ids)
     self.user_ids = ids.split(",")
   end
-
+  attr_reader :group_tokens
+  
+  def group_tokens=(ids)
+    self.group_ids = ids.split(",")
+  end
   has_many :activities, class_name: "Activity", dependent: :destroy
   has_many :event_invited_users, dependent: :destroy
   has_many :invited_users, class_name: "User", :through => :event_invited_users, source: "user"

@@ -126,18 +126,31 @@ rescue Exception => e
       end
     end
 
-      def search_auto
+      def search_auto_user
         @users = User.where("name like ?", "%#{params[:q]}%")
-       # debugger
-       @users_pp = []
-       @users.each do |user|
-         user[:profile_pic] =  gravatar_for_url(user, size: 40)
-         @users_pp << user
+        # debugger
+        @users_pp = []
+        @users.each do |user|
+        user[:profile_pic] =  gravatar_for_url(user, size: 40)
+        @users_pp << user
        end
       # debugger
         respond_to do |format|
           format.html
           format.json { render :json => @users_pp.map(&:attributes) }
+        end
+      end
+
+      def search_auto_group
+        @groups = Group.where("name like ?", "%#{params[:q]}%")
+        @groups_pp = []
+        @groups.each do |group|
+        group[:profile_pic] = group.photo.pic_url(:smaller)
+        @groups_pp << group
+       end
+        respond_to do |format|
+          format.html
+          format.json { render :json => @groups_pp.map(&:attributes) }
         end
       end
 
