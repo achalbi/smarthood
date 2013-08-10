@@ -4,18 +4,18 @@ class Event < ActiveRecord::Base
   geocoded_by :address   # can also be an IP address
   after_validation :geocode, :if => :address_changed?          # auto-fetch coordinates
   has_many :eventdetails, :dependent => :destroy
-  belongs_to :creator, class_name: "User"
+  belongs_to :User
   belongs_to :photo
   accepts_nested_attributes_for :photo
   accepts_nested_attributes_for :eventdetails
 
   attr_reader :user_tokens
-  
+  attr_accessor :user_ids
   def user_tokens=(ids)
     self.user_ids = ids.split(",")
   end
   attr_reader :group_tokens
-  
+  attr_accessor :group_ids
   def group_tokens=(ids)
     self.group_ids = ids.split(",")
   end

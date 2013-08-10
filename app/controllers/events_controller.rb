@@ -88,10 +88,25 @@ class EventsController < ApplicationController
 rescue Exception => e
   
 =end    
+      #debugger
+      @ed_user = @event.user_ids
+      @ed_group = @event.group_ids
+      @ed_user.each do |user_id|
+        @user_ed = Eventdetail.new
+        @user_ed.is_admin=false
+        @user_ed.user = User.find(user_id)
+        @event.eventdetails << @user_ed
+      end
+      @ed_group.each do |group_id|
+        @group_ed = Eventdetail.new
+        @group_ed.is_admin = false
+        @group_ed.group = Group.find(group_id)
+        @event.eventdetails << @group_ed
+      end
       @event.community_id = active_community.id
       respond_to do |format|
         if @event.save
-          format.html { redirect_to :action => :show, format: 'js', :success => 'Event was successfully created.' }
+          format.html { redirect_to @event, format: 'js', :success => 'Event was successfully created.' }
           format.json { render :json => @event, :status => :created, :location => @event }
         else
           format.html { render :action => "new" }
@@ -177,6 +192,19 @@ rescue Exception => e
 
     def show
     @event = Event.find(params[:id])
+    @ad_eds = @event.eventdetails.where(is_admin: 'true' )
+    @non_ad_eds = @event.eventdetails.where(is_admin: 'false')
+    @groups = @non_ad_eds.pluck(:group_id)
+    @users = @non_ad_eds.pluck(:user_id)
+    @admin_groups = @ad_eds.pluck(:group_id)
+    @admin_users = @ad_eds.pluck(:user_id)
+    @inv_groups = Group.where(['id IN (?)', @groups])
+    @ad_groups = Group.where(['id IN (?)', @admin_groups])
+    @inv_users = User.where(['id IN (?)', @users])
+    @ad_users = User.where(['id IN (?)', @admin_users])
+    #debugger
+
+=begin
     @evt = Event.find(params[:id])
     @activities = @evt.activities
     @group_ids = nil
@@ -257,7 +285,9 @@ rescue Exception => e
                 @my_posts << post
             end
         end
-        
+rescue Exception => e
+  
+=end         
     respond_to do |format|
       format.html # show.html.erb
       format.json { render :json => @event }

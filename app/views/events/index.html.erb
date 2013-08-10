@@ -105,7 +105,7 @@
                 <div class="center_block clearfix">
                   <%= f.label :location %>
                   <div class="input ">
-                  <%= f.text_field :address, :placeholder => :location, :size => 43, class: 'events_with_autocomplete inherit_width', 'data-autocompleteUrl' => search_address_events_path,  :update_elements => {:id => '#id_element', :email => '#email_id_element'} %>&nbsp;&nbsp;&nbsp;
+                  <%= f.text_field :address, :placeholder => :location, :size => 43, class: 'events_with_autocomplete inherit_width', 'data-autocompleteUrl' => search_address_events_path %>&nbsp;&nbsp;&nbsp;
                 
                   <%= link_to "View map", '#', id: "view_map_link",  class: "uibutton icon prev" %>
                 </div>
@@ -136,16 +136,17 @@
                      <%= f.text_field :group_tokens, id: "search_group" %>
                   </div>
                 </div>
-
+                <!--
                 <div class="center_block clearfix">
                    <%= label_tag :all_day %>
                   <div class="input">
                   <%= f.check_box :all_day %></div>
-                </div>
+                </div>-->
                 <div class="center_block clearfix">
                   <%= label_tag :privacy %>
                   <div class="input">
-                  <%= f.check_box :privacy %></div>
+                    <%= f.select :privacy, options_for_select([["Public", "public"], ["Members", "members"], ["Private", "private"]]) %>
+                  </div>
                 </div> <br>
                 <div class="center_block clearfix">
                 <%= label_tag "Add picture:" %>

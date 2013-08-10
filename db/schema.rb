@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130803081547) do
+ActiveRecord::Schema.define(:version => 20130808170738) do
 
   create_table "activities", :force => true do |t|
     t.string   "title"
@@ -154,7 +154,7 @@ ActiveRecord::Schema.define(:version => 20130803081547) do
     t.string   "title"
     t.text     "description"
     t.string   "location"
-    t.boolean  "privacy"
+    t.string   "privacy"
     t.integer  "creator"
     t.datetime "starts_at"
     t.datetime "ends_at"
@@ -168,7 +168,7 @@ ActiveRecord::Schema.define(:version => 20130803081547) do
     t.integer  "photo_id"
   end
 
-  add_index "events", ["creator", "created_at", "starts_at", "ends_at"], :name => "index_events_on_creator_and_created_at_and_starts_at_and_ends_at"
+  add_index "events", ["creator", "created_at", "starts_at", "ends_at"], :name => "inx_evnts"
 
   create_table "groupposts", :force => true do |t|
     t.integer  "post_id"

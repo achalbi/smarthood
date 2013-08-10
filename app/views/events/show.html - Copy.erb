@@ -1,0 +1,307 @@
+<% provide(:title, 'Event') %>
+<table class="container_full" width="1200px">
+	<tr>
+		<td colspan="6" >
+			<h1 ><%= @event.title %></h1>
+			  <%= link_to "Create Activity", '#', id: "create_activity",  class: " pull-left uibutton icon add" %>
+			<%= link_to "Edit", edit_event_path, id: "edit",  class: "btn primary pull-right" %>
+		</td>
+	</tr>
+<tr>
+
+	<td class="text_top">
+		<br>
+		<br>
+		<br>
+		
+		<div class="text_top">
+		      <b class="bold_font">Description : </b>
+		      <%= @event.description %>
+		      <br>
+		      <b class="bold_font">Location : </b>
+		      <%= @event.location %>
+		      <br>
+		      <b class="bold_font">All day : </b>
+		      <%= @event.all_day? ? "True" : "False" %>
+		      <br>
+
+		      <b class="bold_font">Privacy : </b>
+		      <%= @event.privacy? ? "True" : "False" %>
+		      <br>
+		      <% if !@event.starts_at.nil? %>
+		      <b class="bold_font">Start : </b>
+		      <%= @event.starts_at.to_formatted_s(:long) %>
+		      <% end %>
+		      <br>
+		      <% if !@event.ends_at.nil? %>
+		      <b class="bold_font">End : </b>
+		      <%= @event.ends_at.to_formatted_s(:long) %>
+		      <br>
+		  	  <% end %>
+		  	  <br>	
+		  	  <aside class="span6">
+				    <section>
+				      <span>&nbsp;&nbsp;&nbsp;
+				      	<a href="#" id="my_post_link">view my posts</a>
+				     </section>
+				    <section>
+				    <% if !@inv_users.nil? %>
+				      <% if @inv_users.any? %>
+				           <h3>Invited users</h3>
+				        <div class="user_avatars">
+				          <% @inv_users.each do |user| %>
+				            <%= link_to gravatar_for(user, size: 40), user %>
+				          <% end %>
+				        </div>
+				      <% end %>
+				    <% end %>
+				    </section>
+				    <section>
+
+				    <% if !@ed_users.nil? %>
+				      <% if @ed_users.any? %>
+				      <h3>Editors</h3>
+				        <div class="user_avatars">
+				          <% @ed_users.each do |user| %>
+				            <%= link_to gravatar_for(user, size: 40), user %>
+				          <% end %>
+				        </div>
+				      <% end %>
+				    <% end %>
+				    </section>
+				  </aside>
+		  	</td>
+		  	<td>
+		  	       <h3>
+				    
+				      <% if @event.activities.any? %>
+				      
+				     <a href="#" id="act_link"> Activities (<%= @event.activities.count %>)</a> |
+				      <% end %>
+
+				      <% if !@posts.nil? %>
+				      
+				     <a href="#" id="post_link"> Posts (<%= @posts.count %>)</a>
+				      <% end %>
+				    </h3>
+<!--
+		<div id="crt_act">
+		    <%= form_for([@event.activities.build], remote: true) do |f| %>
+		    <%= f.hidden_field :event_id %>
+		    	 <%= render 'shared/error_messages', object: f.object %>
+		      <%= f.label :name %>
+		      <%= f.text_field :title %>
+
+		      <%= f.label :description %>
+		      <%= f.text_field :description %>
+
+		      <%= f.label :location %>
+		      <%= f.text_field :location %>
+
+		      <div class="span3 overrideClass"	>
+		      <%= label_tag :starts_at %>
+		      <%= f.text_field :starts_at %>
+		      <!--
+		      <%= f.datetime_select(:starts_at, :prompt => {:day => 'Choose day', :month => 'Choose month', :year => 'Choose year'}) %>
+		  		--/>
+		      <%= label_tag :ends_at %>
+		      <%= f.text_field :ends_at %>
+		  	  </div>
+		      <%= f.submit "Create an activity", class: "btn primary" %>
+		    <% end %>
+		</div>
+
+-->
+	<div id="crt_act">
+	<div id="modal" style="display:none" >
+          <div id="modal-from-dom" class="modal hide fade in" style="display: block;">
+            <%= form_for( [@event.activities.build], remote: true) do |f| %>
+            <div class="modal-header">
+              <a href="#" id="closeX" class="close">×</a>
+              <h3>Create Activity</h3>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+          <div class="span8 offset1 ">
+            <%= f.hidden_field :event_id %>
+               <%= render 'shared/error_messages', object: f.object %>
+               <div class="center_block clearfix">
+                  <%= f.label :title %>
+                  <div class="input">
+                  <%= f.text_field :title %></div>
+                </div>
+
+                <div class="center_block clearfix">
+                  <%= f.label :description %>
+                  <div class="input">
+                  <%= f.text_field :description %></div>
+                </div>
+
+                <div class="center_block clearfix">
+                  <%= f.label :location %>
+                  <div class="input">
+                  <%= f.text_field :location %></div>
+                </div>
+
+                  <div class="center_block clearfix">
+                  <%= label_tag :starts_at %>
+                  <div class="input">
+                  <%= f.text_field :starts_at %></div>
+                </div>
+
+                <div class="center_block clearfix">
+                  <%= label_tag :ends_at %>
+                  <div class="input">
+                  <%= f.text_field :ends_at %></div>
+                </div> 
+                         
+          </div>
+        </div>   
+           </div>
+            <div class="modal-footer" >
+              <%= f.submit "Create Activity", class: "btn primary pull-right", id: "crtActivity" %>  
+            </div>
+            <% end %>
+          </div>
+          
+        </div>
+    </div>
+
+
+
+		    <div id="event_activities">
+		    	
+		    	<%= render @activities %>
+		    </div>
+		    <div id="posts">
+		    <% if !@posts.nil? %>
+		    	<% @posts.each do |post| %>
+             <%= render :partial => 'posts/post', :locals => {:post => post} %>
+             <% end %>
+             <% end %>
+		    </div>
+
+		    <div id="my_posts">
+		    <% if !@my_posts.nil? %>
+		    <h2>My posts (<%= @my_posts.count %>)</h2>
+		    	<% @my_posts.each do |post| %>
+             <%= render :partial => 'posts/post', :locals => {:post => post} %>
+             <% end %>
+             <% end %>
+		    </div>
+		 		</div>
+	</td>
+	<td class="span1"></td>
+</tr>
+</table>
+<% @event.invited_groups.each do |group| %>
+<script type="text/javascript">
+$("#gp_"+<%= group.id %>).click();
+</script>
+<% end %>
+<% @event.editor_groups.each do |group| %>
+<script type="text/javascript">
+$("#ed_gp_"+<%= group.id %>).click();
+</script>
+<% end %>
+<% @event.invited_users.each do |user| %>
+<script type="text/javascript">
+$("#usr_"+<%= user.id %>).click();
+</script>
+<% end %>
+<% @event.editor_users.each do |user| %>
+<script type="text/javascript">
+$("#ed_usr_"+<%= user.id %>).click();
+</script>
+<% end %>
+
+<script type="text/javascript">
+
+$(document).ready(function(){
+$("#crt_act").show();
+$("#event_activities").hide();
+$("#posts").hide();
+$("#my_posts").hide();
+
+	$("#crt_link").click(function(){
+		$("#crt_act").show();
+		$("#event_activities").hide();
+		$("#posts").hide();	
+		$("#my_posts").hide();
+
+	});
+	$("#act_link").click(function(){
+		$("#crt_act").hide();
+		$("#event_activities").show();
+		$("#posts").hide();	
+		$("#my_posts").hide();
+
+	});
+	$("#post_link").click(function(){
+		$("#crt_act").hide();
+		$("#event_activities").hide();
+		$("#posts").show();	
+		$("#my_posts").hide();
+
+	});
+	$("#my_post_link").click(function(){
+		$("#crt_act").hide();
+		$("#event_activities").hide();
+		$("#posts").hide();	
+		$("#my_posts").show();
+
+	});
+
+
+  $("#create_activity").click(function(){
+      $('#modal').modal('show');
+    });
+    $("#closeX").click(function(){
+          $('#modal').modal('hide');
+        });
+
+    $("#crtActivity").click(function(){
+          $('#modal').modal('hide');
+        });
+
+});
+
+
+
+
+var startDateTextBox = $("#activity_starts_at");
+var endDateTextBox = $("#activity_ends_at");
+
+startDateTextBox.datetimepicker({ 
+	onClose: function(dateText, inst) {
+		if (endDateTextBox.val() != '') {
+			var testStartDate = startDateTextBox.datetimepicker('getDate');
+			var testEndDate = endDateTextBox.datetimepicker('getDate');
+			if (testStartDate > testEndDate)
+				endDateTextBox.datetimepicker('setDate', testStartDate);
+		}
+		else {
+			endDateTextBox.val(dateText);
+		}
+	},
+	onSelect: function (selectedDateTime){
+		endDateTextBox.datetimepicker('option', 'minDate', startDateTextBox.datetimepicker('getDate') );
+	}
+});
+endDateTextBox.datetimepicker({ 
+	onClose: function(dateText, inst) {
+		if (startDateTextBox.val() != '') {
+			var testStartDate = startDateTextBox.datetimepicker('getDate');
+			var testEndDate = endDateTextBox.datetimepicker('getDate');
+			if (testStartDate > testEndDate)
+				startDateTextBox.datetimepicker('setDate', testEndDate);
+		}
+		else {
+			startDateTextBox.val(dateText);
+		}
+	},
+	onSelect: function (selectedDateTime){
+		startDateTextBox.datetimepicker('option', 'maxDate', endDateTextBox.datetimepicker('getDate') );
+	}
+});
+</script>

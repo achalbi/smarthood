@@ -1,0 +1,58 @@
+<div class="stats">
+  <section>
+    <a href="<%= %>">
+      <strong id="following" class="stat">
+        <%= ad_users.count %>
+      </strong>
+      <%="Moderator".pluralize(ad_users.count) %>
+      <br>
+      <% ad_users.each do |ad_user| %>
+       <%= gravatar_for ad_user, size: 25 %>
+      <% end %>
+    </a>
+  </section>
+  <section>
+      <a href="<%= %>">
+      <strong id="following" class="stat">
+        <%= ad_groups.count %>
+      </strong>
+      <%="Group Moderator".pluralize(ad_groups.count) %>
+      <br>
+      <% ad_groups.each do |ad_group| %>
+        <%=  cl_image_tag(ad_group.photo.pic_url(:smallest_half), class:" thumbnail", id:"#{ad_group.photo.id}") %>
+      <% end %>
+    </a>
+  </section>
+  <section>
+    <a href="<%=  %>">
+      <strong id="followers" class="stat">
+        <%= inv_users.count %>
+      </strong>
+      <%="Invited Guest".pluralize(inv_users.count) %>
+      <br>
+      <% inv_users.each do |inv_user| %>
+       <%= gravatar_for inv_user, size: 25 %>
+      <% end %>
+    </a>
+  </section>
+  <section>
+    <a href="<%=  %>">
+      <strong id="followers" class="stat">
+        <%= inv_groups.count %>
+      </strong>
+      <%="Invited Group".pluralize(inv_groups.count) %>
+      <br>
+      <% inv_groups.each do |inv_group| %>
+       <%=  cl_image_tag(inv_group.photo.pic_url(:smallest_half), class:" thumbnail", id:"#{inv_group.photo.id}") %>
+
+      <% end %>
+    </a>
+  </section>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function(){
+  $('.gravatar').addClass('thumbnail');  
+});
+
+</script>
