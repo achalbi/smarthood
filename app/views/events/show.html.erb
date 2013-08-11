@@ -12,8 +12,8 @@
     
       <%= render partial: 'shared/event_stats', locals: {ad_users: @ad_users, inv_users: @inv_users, ad_groups: @ad_groups, inv_groups: @inv_groups} %>
    </aside>
-   <aside id="right" style="float: right;width:220px;">
-        <%= image_tag "http://maps.google.com/maps/api/staticmap?size=400x200&sensor=true&zoom=15&markers=#{@event.latitude}%2C#{@event.longitude}" %>
+   <aside id="right" style="float: right;width:220px;margin-right:10px;">
+        <%= image_tag "http://maps.google.com/maps/api/staticmap?size=400x200&sensor=true&zoom=14&markers=#{@event.latitude}%2C#{@event.longitude}" %>
     </aside>
 <div id="event_list" class="span14">
 	<ul class="tabs">
@@ -30,6 +30,7 @@
 	</div>
 	<div id="activity_events">  
 		<h3>Activity</h3>
+    <%= link_to "Create Activity", '#', id: "create_activity",  class: " pull-right uibutton icon add" %>
 			<ul class="users" id="activity_events_ul" >
 			</ul>
 		<br>
@@ -42,6 +43,59 @@
 	</div>
 
 </div>
+
+<div id="crt_act">
+  <div id="modal" style="display:none" >
+          <div id="modal-from-dom" class="modal hide fade in" style="display: block;">
+            <%= form_for( [@event.activities.build], remote: true) do |f| %>
+            <div class="modal-header">
+              <a href="#" id="closeX" class="close">×</a>
+              <h3>Create Activity</h3>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+          <div class="span8 offset1 ">
+            <%= f.hidden_field :event_id %>
+               <%= render 'shared/error_messages', object: f.object %>
+               <div class="center_block clearfix">
+                  <%= f.label :title %>
+                  <div class="input">
+                  <%= f.text_field :title %></div>
+                </div>
+                <div class="center_block clearfix">
+                  <%= f.label :description %>
+                  <div class="input">
+                  <%= f.text_field :description %></div>
+                </div>
+                <div class="center_block clearfix">
+                  <%= f.label :location %>
+                  <div class="input">
+                  <%= f.text_field :location %></div>
+                </div>
+                <div class="center_block clearfix">
+                  <%= label_tag :starts_at %>
+                  <div class="input">
+                  <%= f.text_field :starts_at %></div>
+                </div>
+
+                <div class="center_block clearfix">
+                  <%= label_tag :ends_at %>
+                  <div class="input">
+                  <%= f.text_field :ends_at %></div>
+                </div> 
+                         
+          </div>
+        </div>   
+           </div>
+            <div class="modal-footer" >
+              <%= f.submit "Create Activity", class: "btn primary pull-right", id: "crtActivity" %>  
+            </div>
+            <% end %>
+          </div>
+          
+        </div>
+    </div>
+
 
 <script type="text/javascript">
 $('#posts_events_li').click(function(){
@@ -72,6 +126,56 @@ $('#photos_events_li').click(function(){
 
 $(document).ready(function(){
 	$('#activity_events').hide();
-  	$('#photos_events').hide();
+  $('#photos_events').hide();
+  $("#crt_act").show();
+
+
+    $("#create_activity").click(function(){
+      $('#modal').modal('show');
+    });
+    $("#closeX").click(function(){
+          $('#modal').modal('hide');
+        });
+    $("#crtActivity").click(function(){
+          $('#modal').modal('hide');
+        });
+});
+
+
+
+var startDateTextBox = $("#activity_starts_at");
+var endDateTextBox = $("#activity_ends_at");
+
+startDateTextBox.datetimepicker({ 
+  onClose: function(dateText, inst) {
+    if (endDateTextBox.val() != '') {
+      var testStartDate = startDateTextBox.datetimepicker('getDate');
+      var testEndDate = endDateTextBox.datetimepicker('getDate');
+      if (testStartDate > testEndDate)
+        endDateTextBox.datetimepicker('setDate', testStartDate);
+    }
+    else {
+      endDateTextBox.val(dateText);
+    }
+  },
+  onSelect: function (selectedDateTime){
+    endDateTextBox.datetimepicker('option', 'minDate', startDateTextBox.datetimepicker('getDate') );
+  }
+});
+endDateTextBox.datetimepicker({ 
+  onClose: function(dateText, inst) {
+    if (startDateTextBox.val() != '') {
+      var testStartDate = startDateTextBox.datetimepicker('getDate');
+      var testEndDate = endDateTextBox.datetimepicker('getDate');
+      if (testStartDate > testEndDate)
+        startDateTextBox.datetimepicker('setDate', testEndDate);
+    }
+    else {
+      startDateTextBox.val(dateText);
+    }
+  },
+  onSelect: function (selectedDateTime){
+    startDateTextBox.datetimepicker('option', 'maxDate', endDateTextBox.datetimepicker('getDate') );
+  }
 });
 </script>
