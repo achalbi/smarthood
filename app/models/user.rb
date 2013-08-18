@@ -42,6 +42,7 @@ class User < OmniAuth::Identity::Models::ActiveRecord
   
   has_many :albums, dependent: :destroy
   has_many :eventdetails, :dependent => :destroy
+  has_many :activitydetails, :dependent => :destroy
 
 
   before_save { |user| user.email = email.downcase }

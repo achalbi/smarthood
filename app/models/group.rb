@@ -16,7 +16,8 @@ class Group < ActiveRecord::Base
   
   has_many :event_editor_groups, dependent: :destroy
   has_many :events_editor, class_name: "Event", :through => :event_editor_groups
-  has_many :eventdetail, :dependent => :destroy
+  has_many :eventdetails, :dependent => :destroy
+  has_many :activitydetails, :dependent => :destroy
 
   validates :User_id, presence: true
 

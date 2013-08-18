@@ -167,7 +167,40 @@ rescue Exception => e
           format.html
           format.json { render :json => @groups_pp.map(&:attributes) }
         end
+      end 
+
+    def search_selected_user
+        @event = Event.find(params[:id])
+        @ur_ids = @event.eventdetails.pluck(:user_id)
+        @urs = User.where(['id IN (?)', @ur_ids])
+        @users = @urs.where("name like ?", "%#{params[:q]}%")
+        @users_pp = []
+        @users.each do |user|
+        user[:profile_pic] =  gravatar_for_url(user, size: 40)
+        @users_pp << user
+        
       end
+      respond_to do |format|
+          format.html
+          format.json { render :json => @users_pp.map(&:attributes) }
+        end
+    end
+
+    def search_selected_group
+      @event = Event.find(params[:id])
+      @grp_ids = @event.eventdetails.pluck(:group_id)
+      @grps = Group.where(['id IN (?)', @grp_ids])
+      @groups = @grps.where("name like ?", "%#{params[:q]}%")
+      @groups_pp = []
+      @groups.each do |group|
+        group[:profile_pic] = group.photo.pic_url(:smaller)
+        @groups_pp << group
+      end
+        respond_to do |format|
+          format.html
+          format.json { render :json => @groups_pp.map(&:attributes) }
+        end
+      end 
 
     def upcoming_events_paginate
       @events = Event.scoped
@@ -202,6 +235,32 @@ rescue Exception => e
     @ad_groups = Group.where(['id IN (?)', @admin_groups])
     @inv_users = User.where(['id IN (?)', @users])
     @ad_users = User.where(['id IN (?)', @admin_users])
+    @activities = @event.activities
+
+    @ur_ids = @event.eventdetails.pluck(:user_id)
+        @urs = User.where(['id IN (?)', @ur_ids])
+        @users = @urs.where("name like ?", "%#{params[:q]}%")
+        @users_pp = []
+      @users.each do |user|
+        user[:profile_pic] =  gravatar_for_url(user, size: 40)
+        @users_pp << user
+      end
+
+    @grp_ids = @event.eventdetails.pluck(:group_id)
+    @grps = Group.where(['id IN (?)', @grp_ids])
+    @groups = @grps.where("name like ?", "%#{params[:q]}%")
+      @groups_pp = []
+      @groups.each do |group|
+        group[:profile_pic] = group.photo.pic_url(:smaller)
+        @groups_pp << group
+      end
+
+      @posts = []
+       if !@activities.nil?
+            @activities.each do |activity|
+                @posts |= activity.posts
+            end
+       end
     #debugger
 
 =begin

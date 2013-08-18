@@ -5,9 +5,23 @@ class ActivitiesController < ApplicationController
     def create
     @et = Event.find(params[:activity][:event_id])
     @activity = @et.activities.build(params[:activity])
+
+      @act_user = @activity.user_ids
+      @act_group = @activity.group_ids
+      @act_user.each do |user_id|
+        @user_act = Activitydetail.new
+        @user_act.user = User.find(user_id)
+        @activity.activitydetails << @user_act
+      end
+      @act_group.each do |group_id|
+        @group_act = Activitydetail.new
+        @group_act.group = Group.find(group_id)
+        @activity.activitydetails << @group_act
+      end
+    
     @activity.save
-    @evt = Event.find(params[:activity][:event_id])
-    @activities = @evt.activities
+   # @event = Event.find(params[:activity][:event_id])
+    @activities = @et.activities
     flash[:success] = "Activity created!"
     respond_to do |format|
          format.html { redirect_to root_path }

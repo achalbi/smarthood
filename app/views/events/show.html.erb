@@ -4,35 +4,124 @@
   <aside class="span6">
     <section>
       <%=  cl_image_tag(@event.photo.pic_url(:thumb), class:" thumbnail", id:"#{@event.photo.id}") %>
-      <h4>
+      <h3>
         <%= @event.title %>
-      </h4>
-      <small><%= @event.description %></small>
+      </h3>
     </section>
-    
-      <%= render partial: 'shared/event_stats', locals: {ad_users: @ad_users, inv_users: @inv_users, ad_groups: @ad_groups, inv_groups: @inv_groups} %>
+    <section>
+      <h4>Activities <%= link_to "", '#', id: "create_activity",  class: " pull-right uibutton icon add",:title => "Add Activity" %></h4>
+      <div id="event_activities">    
+          <%= render @activities %>
+      </div>
+    </section>
+      
    </aside>
    <aside id="right" style="float: right;width:220px;margin-right:10px;">
-        <%= image_tag "http://maps.google.com/maps/api/staticmap?size=400x200&sensor=true&zoom=14&markers=#{@event.latitude}%2C#{@event.longitude}" %>
+      <%= render partial: 'shared/event_stats', locals: {ad_users: @ad_users, inv_users: @inv_users, ad_groups: @ad_groups, inv_groups: @inv_groups} %>
     </aside>
 <div id="event_list" class="span14">
 	<ul class="tabs">
-	  <li class="active" id="posts_events_li"><a ><h4>Timeline</h4></a></li>
-	  <li id="activity_events_li"><a ><h4>Activities</h4></a></li>
+	  <li class="active" id="posts_events_li"><a ><h4>Posts (<%= @posts.count %>)</h4></a></li>
+	  <li id="activity_events_li"><a ><h4>About</h4></a></li>
 	  <li id="photos_events_li"><a ><h4>Photos</h4></a></li>
 	</ul>
 
-	<div id="posts_events">  
-		<h3>Timeline</h3>
-			<ul class="users" id="posts_events_ul" >
+	   <div id="posts_events">  
+      <ul class="users" id="posts_events_ul" >
+            <div id="posts">
+              <% if !@posts.nil? %>
+                <% @posts.each do |post| %>
+                  <%= render :partial => 'posts/post', :locals => {:post => post} %>
+                <% end %>
+              <% end %>
+            </div>
+			
 			</ul>
 		<br>
 	</div>
 	<div id="activity_events">  
-		<h3>Activity</h3>
-    <%= link_to "Create Activity", '#', id: "create_activity",  class: " pull-right uibutton icon add" %>
-			<ul class="users" id="activity_events_ul" >
+    <p><h4>Description : <small><%= @event.description %></small></h4></p>
+		<% if  @event.starts_at.to_formatted_s(:long) == @event.ends_at.to_formatted_s(:long) %>
+      <p><h4>Time : <%= @event.starts_at.to_formatted_s(:long)  %></h4></p>
+    <% else %>
+      <p><h4>Time : <%= @event.starts_at.to_formatted_s(:long)  %> - <%= @event.ends_at.to_formatted_s(:long)  %></h4></p>
+    <% end %>    	
+    <p><h4>Location : <%= @event.address %></h4></p>
+      <%= render :partial => "events/maps", :locals => { :location => @event } %>
+     <p><h4>Privacy : <%= @event.privacy %></h4></p>
+      <ul class="users" id="activity_events_ul" >
+        <h3>Admins</h3>
+        <h6>Individuals</h6>
+        <% @ad_users.each do |user|%>
+        <li style="width:130px;float:left;">
+          <%= gravatar_for user, size: 52 %>
+          <%= link_to user.name, user %>
+        </li>
+        <% end %>
+        <li style="clear:both;"></li>
+        <h6>Groups</h6>
+        <% @ad_groups.each do |group|%>
+        <li style="width:130px;float:left;">
+              <div  class="img_zoom"  style="margin:10px; float:left;">
+              <% unless group.photo.nil? %>
+                <div  class="img_zoom" id="div-img_<%= group.photo.id %>">
+                       <%= link_to cl_image_tag(group.photo.pic_url(:smallest), class:"image_al_c1 thumbnail", id:"#{group.photo.id}"), "/groups/#{group.id}", remote: true,   style:"cursor:pointer;"%>
+                        </div>
+              <% end %>
+              <span>
+                  <%= link_to group.name, group %>                   
+              </span>
+              <span class="timestamp">
+                <% if group.description.length > 17 %>
+                  <%= group.description.slice! 0..17 %>...
+                  <% else %>
+                  <%= group.description %>
+                  <% end %>
+                </span>
+
+                </div>
+
+        </li>
+         <% end %>
+         <li style="clear:both;"></li>
+        <h3>Invitees</h3>
+        <h6>Individuals</h6>
+        <% @inv_users.each do |user|%>
+        <li style="width:130px;float:left;">
+          <%= gravatar_for user, size: 52 %>
+          <%= link_to user.name, user %>
+        </li>
+        <% end %>
+        <li style="clear:both;"></li>
+        <h6>Groups</h6>
+        <% @inv_groups.each do |group|%>
+        
+        <li style="width:130px; float:left;">
+              <div  class="img_zoom"  style="margin:10px; float:left;">
+              <% unless group.photo.nil? %>
+                <div  class="img_zoom" id="div-img_<%= group.photo.id %>">
+                       <%= link_to cl_image_tag(group.photo.pic_url(:smallest), class:"image_al_c1 thumbnail", id:"#{group.photo.id}"), "/groups/#{group.id}", remote: true,   style:"cursor:pointer;"%>
+                        </div>
+              <% end %>
+              <span>
+                  <%= link_to group.name, group %>                   
+              </span>
+              <span class="timestamp">
+                <% if group.description.length > 17 %>
+                  <%= group.description.slice! 0..17 %>...
+                  <% else %>
+                  <%= group.description %>
+                  <% end %>
+                </span>
+
+                </div>
+
+        </li>
+        <% end %>
+
 			</ul>
+
+
 		<br>
 	</div>
 	<div id="photos_events">  
@@ -46,44 +135,77 @@
 
 <div id="crt_act">
   <div id="modal" style="display:none" >
-          <div id="modal-from-dom" class="modal hide fade in" style="display: block;">
+          <div id="modal-from-dom" class="modal hide fade in" style="display: block;width:700px;">
             <%= form_for( [@event.activities.build], remote: true) do |f| %>
             <div class="modal-header">
               <a href="#" id="closeX" class="close">×</a>
               <h3>Create Activity</h3>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="max-height:550px;">
               <div class="row">
-          <div class="span8 offset1 ">
+          <div class="span14 ui-front">
             <%= f.hidden_field :event_id %>
                <%= render 'shared/error_messages', object: f.object %>
-               <div class="center_block clearfix">
+
+                              <div class="center_block clearfix">
                   <%= f.label :title %>
                   <div class="input">
-                  <%= f.text_field :title %></div>
+                  <%= f.text_field :title, :placeholder=>"Title" %></div>
+                </div>
+                <div id="page-1">
+                <div class="center_block clearfix">
+                  <%= label_tag :starts_at %>
+                  <div class="input">
+                  <%= f.text_field :starts_at, :placeholder => "Time" ,:value => @event.starts_at %>&nbsp;&nbsp;&nbsp;
+                <a id="end_date_add_link" class="uibutton icon add">End Date</a>
+                </div>
+                </div>
+                <div class="center_block clearfix" id="end_date">
+                  <%= label_tag :ends_at %>
+                  <div class="input">
+                    <%= f.text_field :ends_at ,:value => @event.ends_at %>&nbsp;&nbsp;&nbsp;
+                   <a id="end_date_remove_link" class="uibutton icon prev">Remove</a>
+                  </div>
+                </div> 
+
+                <div class="center_block clearfix">
+                  <%= f.label :location %>
+                  <div class="input ">
+                  <%= f.text_field :address, :placeholder => :location, :size => 43, class: 'events_with_autocomplete inherit_width',:value => @event.address , 'data-autocompleteUrl' => search_address_events_path %>&nbsp;&nbsp;&nbsp;
+                
+                  <%= link_to "View map", '#', id: "view_map_link",  class: "uibutton icon prev" %>
+                </div>
+                <div class="input" id="view_map">
+                
+                </div>
                 </div>
                 <div class="center_block clearfix">
                   <%= f.label :description %>
                   <div class="input">
-                  <%= f.text_field :description %></div>
+                  <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title=>"Description", rows: 3, cols: 75  %> 
+                </div>
                 </div>
                 <div class="center_block clearfix">
-                  <%= f.label :location %>
+                  <%= label_tag :privacy %>
                   <div class="input">
-                  <%= f.text_field :location %></div>
+                    <%= f.select :privacy, options_for_select([["Event invitees", "Event invitees"], ["Custom", "Custom"]]) %>
+                  </div>
+                </div>
+              </div> 
+              <div id="page-2">
+                 <div class="center_block clearfix"><br>
+                  <%= f.label "Invite by User name:" %>
+                  <div class="input ui-front">
+                     <%= f.text_field :user_tokens, id: "search_user","data-pre" => @users_pp.map(&:attributes).to_json %>
+                  </div>
                 </div>
                 <div class="center_block clearfix">
-                  <%= label_tag :starts_at %>
-                  <div class="input">
-                  <%= f.text_field :starts_at %></div>
+                  <%= f.label "Invite by Group Name:" %>
+                  <div class="input ui-front">
+                     <%= f.text_field :group_tokens, id: "search_group","data-pre" => @groups_pp.map(&:attributes).to_json %>
+                  </div>
                 </div>
-
-                <div class="center_block clearfix">
-                  <%= label_tag :ends_at %>
-                  <div class="input">
-                  <%= f.text_field :ends_at %></div>
-                </div> 
-                         
+              </div>       
           </div>
         </div>   
            </div>
@@ -129,6 +251,7 @@ $(document).ready(function(){
   $('#photos_events').hide();
   $("#crt_act").show();
 
+  $("#page-2").hide();
 
     $("#create_activity").click(function(){
       $('#modal').modal('show');
@@ -139,6 +262,30 @@ $(document).ready(function(){
     $("#crtActivity").click(function(){
           $('#modal').modal('hide');
         });
+
+    $('#end_date').hide();
+
+    $('#view_map_link').hide();
+
+    $(function() {
+      return $('.events_with_autocomplete').autocomplete({
+        minLength: 2,
+        source: function(request, response) {
+          return $.ajax({
+            url: $('.events_with_autocomplete').data('autocompleteurl'),
+            dataType: "json",
+            data: {starts_at: "", ends_at: "",
+              address: request.term, event: "<%= @event.to_json %>"
+            },
+            success: function(data) {
+              return response(data);
+            }
+          });
+        }
+      });
+    });
+
+    
 });
 
 
@@ -178,4 +325,78 @@ endDateTextBox.datetimepicker({
     startDateTextBox.datetimepicker('option', 'maxDate', endDateTextBox.datetimepicker('getDate') );
   }
 });
+
+
+
+$('#activity_address').keydown(function(){
+    $('#view_map_link').hide();
+    $('#view_map').hide();
+});
+
+$('#view_map_link').click(function(){
+    var address = "/events/get_geo_coordinates?address="+$('#activity_address').val();
+    // $.get(address,"script");
+     $.ajax({
+      type: "GET",
+      url: address,
+      dataType: "script"
+    }); 
+});
+
+$('a.ui-corner-all').live("click", function(){
+  if($('#activity_address').val()!=""){
+    $('#view_map_link').show();
+  }else{
+    $('#view_map_link').hide();
+  }
+});
+
+
+$('#end_date_add_link').click(function(){
+  $('#end_date').show();
+  $('#end_date_add_link').hide();
+});
+$('#end_date_remove_link').click(function(){
+  $('#end_date').hide();
+  $('#end_date_add_link').show();
+});
+
+  $(function() {
+  $("#search_user").tokenInput("/events/<%= @event.id %>/search_selected_user", {
+    crossDomain: false,
+    prePopulate: $("#search_user").data("pre"),
+    theme: "facebook",
+        resultsFormatter: function(item){ return "<li>" + "<img src='" + item.profile_pic + "' title='" + item.name + "' height='30px' width='30px' />" + "<div style='display: inline-block; padding-left: 10px;'><div class='full_name'>" + item.name + " " + ""+ "</div><div class='email'>" + item.email + "</div></div></li>" },
+        tokenFormatter: function(item) { return  "<li>" + "<img src='" + item.profile_pic + "' title='" + item.name + "' height='30px' width='30px' />" + "<div style='display: inline-block; padding-left: 10px;'><div class='full_name'>" + item.name +"</div></div></li>" },
+        preventDuplicates: true ,
+        zindex: 11001,
+        hintText: "Type in a user name",
+  });
+});
+
+  $(function() {
+  $("#search_group").tokenInput("/events/<%= @event.id %>/search_selected_group", {
+    crossDomain: false,
+    prePopulate: $("#search_group").data("pre"),
+    theme: "facebook",
+        resultsFormatter: function(item){ return "<li>" + "<img src='" + item.profile_pic + "' title='" + item.name + "' height='30px' width='30px' />" + "<div style='display: inline-block; padding-left: 10px;'><div class='full_name'>" + item.name + " " + ""+ "</div><div class='email'>" + item.description + "</div></div></li>" },
+        tokenFormatter: function(item) { return  "<li>" + "<img src='" + item.profile_pic + "' title='" + item.name + "' height='30px' width='30px' />" + "<div style='display: inline-block; padding-left: 10px;'><div class='full_name'>" + item.name +"</div></div></li>" },
+        preventDuplicates: true ,
+        zindex: 11001,
+        hintText: "Type in a group name",
+  });
+});
+
+
+  $( "#activity_privacy" ).change(function () {
+    var str = "";
+    $("#activity_privacy option:selected" ).each(function() {
+      if($(this).text()=="Custom"){
+        $("#page-2").show();
+      }else{
+        $("#page-2").hide();
+      }
+    });
+  });
+
 </script>
