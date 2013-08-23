@@ -4,6 +4,27 @@ class AlbumsController < ApplicationController
   end
 
   def create
+    
+        @album = current_user.albums.build(params[:album])
+          # @album.user = current_user
+        @share = Share.new
+        @album.save
+        params[:photos][:pic].each do |pic|
+          @photo = Photo.new
+            @photo.pic = pic
+            @album.photos << @photo
+        end
+        @album.save
+          flash[:success] = "Album created"
+        #debugger
+    
+      respond_to do |format|
+         format.html {  }
+         format.js {  }
+      end
+  end
+=begin
+  def create_from_photos
     unless params[:photo].nil?
          @photos = Photo.find(params[:photo].keys.collect(&:to_i))  
           @album = current_user.albums.build(params[:album])
@@ -17,14 +38,14 @@ class AlbumsController < ApplicationController
     else
       flash[:notice] = "Please select atleast 1 photo..."
       
-    end
+    end 
    
       respond_to do |format|
          format.html {  }
          format.js {  }
       end
   end
-
+=end
   def destroy
     @camera_roll = current_user.photos.order('created_at DESC').all
     @album = Album.find(params[:id])

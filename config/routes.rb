@@ -35,6 +35,12 @@ EMS::Application.routes.draw do
       get :updates,:delete_photos
     end
   end
+  
+  resources :activities do
+    collection do
+      post :create_album
+    end
+  end
 
   resources :communities do
     member do

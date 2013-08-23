@@ -84,4 +84,29 @@ class ActivitiesController < ApplicationController
     @ed_users = @ed_users.uniq
     @inv_users = @inv_users.uniq
   end
+
+
+  def create_album
+     @activity = Activity.find(params[:id])
+    @album = current_user.albums.build(params[:album])
+          # @album.user = current_user
+        @album.save
+        params[:photos][:pic].each do |pic|
+          @photo = Photo.new
+            @photo.pic = pic
+            @album.photos << @photo
+        end
+        @album.save
+        @activity.albums << @album
+        @activity.save
+        debugger
+          flash[:success] = "Album created"
+        #debugger
+    
+      respond_to do |format|
+         format.html {  }
+         format.js {  }
+      end
+  end
+
 end

@@ -89,6 +89,11 @@ rescue Exception => e
   
 =end    
       #debugger
+      @activity = Activity.new
+      @activity.title="Main"
+      @activity.description = "Event's main activity"
+      @activity.save
+      @event.activities << @activity
       @ed_user = @event.user_ids
       @ed_group = @event.group_ids
       @ed_user.each do |user_id|
@@ -225,8 +230,9 @@ rescue Exception => e
 
     def show
     @event = Event.find(params[:id])
-    @ad_eds = @event.eventdetails.where(is_admin: 'true' )
-    @non_ad_eds = @event.eventdetails.where(is_admin: 'false')
+    @album = Album.new
+    @ad_eds = @event.eventdetails.where(is_admin: true )
+    @non_ad_eds = @event.eventdetails.where(is_admin: false)
     @groups = @non_ad_eds.pluck(:group_id)
     @users = @non_ad_eds.pluck(:user_id)
     @admin_groups = @ad_eds.pluck(:group_id)
@@ -236,7 +242,9 @@ rescue Exception => e
     @inv_users = User.where(['id IN (?)', @users])
     @ad_users = User.where(['id IN (?)', @admin_users])
     @activities = @event.activities
-
+    @activity = @event.activities.where(["title = ?", "Main"]).first
+    @albums = @activity.albums
+    @share = Share.new
     @ur_ids = @event.eventdetails.pluck(:user_id)
         @urs = User.where(['id IN (?)', @ur_ids])
         @users = @urs.where("name like ?", "%#{params[:q]}%")

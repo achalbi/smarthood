@@ -12,45 +12,56 @@
         </div>
       </div>
       </div>
-      <%= form_for(@album, remote: true, :html => {:multipart => true}) do  |f| %> 
         <div id="modal" style="display:none" >
-          <div id="modal-from-dom" class="modal hide fade in" style="display: block;">
+          <div id="modal-from-dom" class="modal hide fade in" style="display: block;width:700px;">
+      <%= form_for(@album, remote: true, :html => {:multipart => true}) do  |f| %> 
             <div class="modal-header">
               <a href="#" id="closeX" class="close">×</a>
               <h3>Create album</h3>
             </div>
-            <div class="modal-body">
-              <div class="span9" style="margin-left:100px;" >
+            <div class="modal-body" style="max-height:450px;">
+              <div class="row">
+              <div class="span14 ui-front "  >
             
              <%= render 'shared/error_messages', object: f.object %>
-             <br>
-              <%= f.label "title: " %>
-              <%= f.text_field :title %>
-              <br>
-              <%= f.label "description:" %>
-              <%= f.text_area :description, placeholder: "Album description...", :rows=>2, :cols=>40 %>
-              <span class=" overrideClass"><br><br>
+                <div class="center_block clearfix pull-left">
+                  <%= f.label :title %>
+                  <div class="input">
+                    <%= f.text_field :title, :placeholder=>"Title" %>
+                  </div>
+                </div>
+
+              <div class="center_block clearfix pull-left">
+                  <%= f.label :description %>
+                  <div class="input">
+                  <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title=>"Description", rows: 3, cols: 75  %> 
+                </div>
+                </div>
+              <span class=" overrideClass">
+              <div class="center_block clearfix pull-left">
               <%= f.label "privacy:" %>
-              <%= f.select :privacy, ["Public", "Follower", "Private"] %>
-              
+              <div class="input">
+                <%= f.select :privacy, ["Public", "Follower", "Private"] %>
+                </div>
+              </div>
               </span>
             <br><br>
-               <%= f.fields_for :photos, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
+               <%= fields_for :photos, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
                  
               <%= photo_form.file_field :pic, id: "pic1", :multiple => true, style: "width:1px; height:1px; padding:0px;  left:0px;" %>  
               <% end %>
                    
-          <canvas id="imageCanvas1" style = "border: 1px solid #ddd; padding:5px; align:center" >select an image</canvas>
-       
+          <canvas id="imageCanvas1" style = "border: 1px solid #ddd; padding:5px; align:center" >select a photo</canvas>
+             </div>
             </div>
             </div>
             <div class="modal-footer" >
-              <%= f.submit "Create my group", class: "btn primary pull-right", id: "crtGrp" %> 
+              <%= f.submit "Create Album", class: "btn primary pull-right", id: "crtGrp" %> 
             </div>
+        <% end %>
           </div>
           
         </div>
-        <% end %>
 
 <% unless @albums.nil? %>
 
@@ -108,14 +119,14 @@ $("#addTo").click(function(){
     var canvas = document.getElementById('imageCanvas1');
     var ctx = canvas.getContext('2d');
     ctx.font="30px Arial";
-    ctx.fillText("Select an image",10,50);
+    ctx.fillText("Select a photo",10,50);
 
   function handleImage(e){
     var canvas = document.getElementById('imageCanvas1');
     var ctx = canvas.getContext('2d');
     var iCnt=0;
     var files = e.target.files;
-    canvas.width = 300;
+    canvas.width = 600;
     canvas.height = 155*(Math.ceil(files.length/4));
     for( var i = 0, len = files.length; i < len; i++) 
           {

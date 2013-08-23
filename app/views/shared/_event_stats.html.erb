@@ -19,7 +19,7 @@
       <%="Group Moderator".pluralize(ad_groups.count) %>
       <br>
       <% ad_groups.each do |ad_group| %>
-        <%=  cl_image_tag(ad_group.photo.pic_url(:smallest_half), class:" thumbnail", id:"#{ad_group.photo.id}") %>
+        <%=  cl_image_tag(ad_group.photo.pic_url(:smallest_half), class:" thumbnail gravatar", id:"#{ad_group.photo.id}") %>
       <% end %>
     </a>
   </section>
@@ -43,7 +43,7 @@
       <%="Invited Group".pluralize(inv_groups.count) %>
       <br>
       <% inv_groups.each do |inv_group| %>
-       <%=  cl_image_tag(inv_group.photo.pic_url(:smallest_half), class:" thumbnail", id:"#{inv_group.photo.id}") %>
+       <%=  cl_image_tag(inv_group.photo.pic_url(:smallest_half), class:" thumbnail gravatar", id:"#{inv_group.photo.id}") %>
 
       <% end %>
     </a>
