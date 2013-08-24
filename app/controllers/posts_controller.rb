@@ -15,8 +15,18 @@ class PostsController < ApplicationController
         @post = @activity.posts.build(params[:post])
         @post.user = current_user
         @post.save
+        #debugger
+        unless params[:photo].nil?
+          @post.photos << current_user.photos.build(params[:photo])
+          @post.save
+        end
         @activity.posts << @post
-        redirect_to @activity
+        @posts = @activity.posts.order("id DESC").all
+        @post =Post.new
+      respond_to do |format|
+         format.html { redirect_to @activity, format: 'js' }
+         format.js {  }
+      end
     else
       
     if params[:user_groups].nil?
@@ -52,8 +62,12 @@ class PostsController < ApplicationController
   end
 
   def destroy
+    @id = @post.id 
     @post.destroy
-    redirect_to root_url
+    respond_to do |format|
+         format.html { redirect_to @activity, format: 'js' }
+         format.js { }
+    end
   end
 
   private

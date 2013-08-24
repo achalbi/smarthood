@@ -1,0 +1,3 @@
+$("#posts").html("<%= escape_javascript(render( :partial => 'posts/activity_post', :locals => {:post => @post}, :activity => @activity )) %><br><br><%= escape_javascript(render( partial: 'posts/post', locals: {posts: @posts, activity: @activity} )) %>");
+$("#activity_events").html("<%= escape_javascript(render partial: 'events/about', locals: {ad_users: @ad_users, inv_users: @inv_users, ad_groups: @ad_groups, inv_groups: @inv_groups, event: @event}) %>")
+$("#photos_events").html("<%= escape_javascript(render partial: 'events/albums', locals: {activity: @activity, albums: @albums, album: @album}) %>")

@@ -1,0 +1,83 @@
+ <p><h4>Description : <small><%= event.description %></small></h4></p>
+		<% if  event.starts_at.to_formatted_s(:long) == event.ends_at.to_formatted_s(:long) %>
+      <p><h4>Time : <%= event.starts_at.to_formatted_s(:long)  %></h4></p>
+    <% else %>
+      <p><h4>Time : <%= event.starts_at.to_formatted_s(:long)  %> - <%= event.ends_at.to_formatted_s(:long)  %></h4></p>
+    <% end %>    	
+    <p><h4>Location : <%= event.address %></h4></p>
+      <%= render :partial => "events/maps", :locals => { :location => event } %>
+     <p><h4>Privacy : <%= event.privacy %></h4></p>
+      <ul class="users" id="activity_events_ul" >
+        <h3>Admins</h3>
+        <h6>Individuals</h6>
+        <% ad_users.each do |user|%>
+        <li style="width:130px;float:left;">
+          <%= gravatar_for user, size: 52 %>
+          <%= link_to user.name, user %>
+        </li>
+        <% end %>
+        <li style="clear:both;"></li>
+        <h6>Groups</h6>
+        <% ad_groups.each do |group|%>
+        <li style="width:130px;float:left;">
+              <div  class="img_zoom"  style="margin:10px; float:left;">
+              <% unless group.photo.nil? %>
+                <div  class="img_zoom" id="div-img_<%= group.photo.id %>">
+                       <%= link_to cl_image_tag(group.photo.pic_url(:smallest), class:"image_al_c1 thumbnail", id:"#{group.photo.id}"), "/groups/#{group.id}", remote: true,   style:"cursor:pointer;"%>
+                        </div>
+              <% end %>
+              <span>
+                  <%= link_to group.name, group %>                   
+              </span>
+              <span class="timestamp">
+                <% if group.description.length > 17 %>
+                  <%= group.description.slice! 0..17 %>...
+                  <% else %>
+                  <%= group.description %>
+                  <% end %>
+                </span>
+
+                </div>
+
+        </li>
+         <% end %>
+         <li style="clear:both;"></li>
+        <h3>Invitees</h3>
+        <h6>Individuals</h6>
+        <% inv_users.each do |user|%>
+        <li style="width:130px;float:left;">
+          <%= gravatar_for user, size: 52 %>
+          <%= link_to user.name, user %>
+        </li>
+        <% end %>
+        <li style="clear:both;"></li>
+        <h6>Groups</h6>
+        <% inv_groups.each do |group|%>
+        
+        <li style="width:130px; float:left;">
+              <div  class="img_zoom"  style="margin:10px; float:left;">
+              <% unless group.photo.nil? %>
+                <div  class="img_zoom" id="div-img_<%= group.photo.id %>">
+                       <%= link_to cl_image_tag(group.photo.pic_url(:smallest), class:"image_al_c1 thumbnail", id:"#{group.photo.id}"), "/groups/#{group.id}", remote: true,   style:"cursor:pointer;"%>
+                        </div>
+              <% end %>
+              <span>
+                  <%= link_to group.name, group %>                   
+              </span>
+              <span class="timestamp">
+                <% if group.description.length > 17 %>
+                  <%= group.description.slice! 0..17 %>...
+                  <% else %>
+                  <%= group.description %>
+                  <% end %>
+                </span>
+
+                </div>
+
+        </li>
+        <% end %>
+
+			</ul>
+
+
+		<br>

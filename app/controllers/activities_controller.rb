@@ -10,11 +10,13 @@ class ActivitiesController < ApplicationController
       @act_group = @activity.group_ids
       @act_user.each do |user_id|
         @user_act = Activitydetail.new
+        @user_act.is_admin=false
         @user_act.user = User.find(user_id)
         @activity.activitydetails << @user_act
       end
       @act_group.each do |group_id|
         @group_act = Activitydetail.new
+        @group_act.is_admin = false
         @group_act.group = Group.find(group_id)
         @activity.activitydetails << @group_act
       end
@@ -44,16 +46,18 @@ class ActivitiesController < ApplicationController
     @activity = Activity.find(params[:id]) 
     @event = Event.find(@activity.event_id)
     @post = Post.new
+    @posts = @activity.posts.order("id DESC").all
+=begin    
     @invited_groups_users=[]
     @editor_groups_users=[]
     @invited_groups = @event.invited_groups
     @invited_groups.group.each do |invited_group|
-    @invited_groups_users |= invited_group.users
+      @invited_groups_users |= invited_group.users
     end
 
     @editor_groups = @event.editor_groups
     @editor_groups.group.each do |editor_group|
-    @editor_groups_users |= editor_group.users
+      @editor_groups_users |= editor_group.users
     end
 
     @inv_users = []
@@ -83,6 +87,24 @@ class ActivitiesController < ApplicationController
     end
     @ed_users = @ed_users.uniq
     @inv_users = @inv_users.uniq
+=end
+
+    @ad_eds = @activity.activitydetails.where(is_admin: true )
+    @non_ad_eds = @activity.activitydetails.where(is_admin: false)
+    @groups = @non_ad_eds.pluck(:group_id)
+    @users = @non_ad_eds.pluck(:user_id)
+    @admin_groups = @ad_eds.pluck(:group_id)
+    @admin_users = @ad_eds.pluck(:user_id)
+    @inv_groups = Group.where(['id IN (?)', @groups])
+    @ad_groups = Group.where(['id IN (?)', @admin_groups])
+    @inv_users = User.where(['id IN (?)', @users])
+    @ad_users = User.where(['id IN (?)', @admin_users])
+    @album = Album.new
+    @albums = @activity.albums
+    #debugger
+    unless @activity.is_admin
+      @event = @activity
+    end
   end
 
 
@@ -99,7 +121,8 @@ class ActivitiesController < ApplicationController
         @album.save
         @activity.albums << @album
         @activity.save
-        debugger
+        @albums = @activity.albums
+        @album = Album.new
           flash[:success] = "Album created"
         #debugger
     

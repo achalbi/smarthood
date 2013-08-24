@@ -1,5 +1,5 @@
 class Activity < ActiveRecord::Base
-  attr_accessible :description, :event_id, :location, :title, :starts_at, :ends_at, :address, :latitude, :longitude, :privacy, :user_tokens, :group_tokens
+  attr_accessible :description, :event_id, :location, :title, :starts_at, :ends_at, :address, :latitude, :longitude, :privacy, :user_tokens, :group_tokens, :is_admin
 
   geocoded_by :address   # can also be an IP address
   after_validation :geocode, :if => :address_changed?          # auto-fetch coordinates

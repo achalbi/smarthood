@@ -3,7 +3,7 @@
 
 <ol>
     <span class="user">
-      <%= link_to activity.title, activity %>
+      <%= link_to activity.title, activity, remote: true %>
     </span>
      <span class="content"><%= activity.description %></span>
      <span class="timestamp">

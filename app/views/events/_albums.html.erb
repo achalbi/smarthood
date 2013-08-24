@@ -1,0 +1,146 @@
+          <div id="gallery"  >
+                          
+              <% unless albums.nil? %>
+                    <div id="gallery1" class="span16 pull-left">
+                       <ul id="grid" >    
+                       <li>
+                        <div id="upload_pics"  style = "border:2px dashed #ddd; width:85px; height:85px; padding:10px;  left:40px; text-align:middle; z-index: 1;  cursor:pointer;  float:left; margin-bottom:25px;
+                        " class="bgClrChg">  <h5> Create Album </h5>
+                        </div>
+                       </li>               
+                       <% albums.each do |album| %>
+                       <% unless album.photos[0].nil? %>
+                        <li>
+                        <div  class="img_zoom" >
+                         <%= link_to cl_image_tag(album.photos[0].pic_url(:smaller), class:"image_al_c thumbnail") , album, class:"albumLink", remote: true %>
+                           <h5 style="float:right;"><%= link_to album.title, album, class:"albumLink", remote: true %></h5>
+                      </div>
+                      </li>
+                    <% end %> 
+                    <% end %>
+                    </ul>
+                    </div>
+                     
+               <% end %>  
+          </div>
+			<ul class="users" id="photos_events_ul" >
+			</ul>
+      <div id="modal1" style="display:none" >
+          <div id="modal-from-dom1" class="modal hide fade in" style="display: block;width:700px;">
+      <%= form_for(album, url: create_album_activities_path, remote: true, :html => {:multipart => true}) do  |f| %> 
+            <div class="modal-header">
+              <a href="#" id="closeX" class="close">×</a>
+              <h3>Create album</h3>
+            </div>
+            <div class="modal-body" style="max-height:450px;">
+              <div class="row">
+              <div class="span14 ui-front "  >
+            
+             <%= render 'shared/error_messages', object: f.object %>
+                <div class="center_block clearfix pull-left">
+                  <%= f.label :title %>
+                  <div class="input">
+                    <%= f.text_field :title, :placeholder=>"Title" %>
+                  </div>
+                </div>
+
+              <div class="center_block clearfix pull-left">
+                  <%= f.label :description %>
+                  <div class="input">
+                  <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title=>"Description", rows: 3, cols: 75  %> 
+                </div>
+                </div>
+              <span class="overrideClass">
+              <div class="center_block clearfix pull-left">
+              <%= f.label "privacy:" %>
+              <div class="input">
+                <%= f.select :privacy, ["Public", "Follower", "Private"] %>
+                </div>
+              </div>
+              </span>
+            <br><br>
+               <%= fields_for :photos, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
+                 
+              <%= photo_form.file_field :pic, id: "pic1", :multiple => true, style: "width:1px; height:1px; padding:0px;  left:0px;" %>  
+              <% end %>
+              <%= hidden_field_tag :type, "event" %>
+              <%= hidden_field_tag :id, activity.id %>
+              <div class="center_block clearfix pull-left clear">
+               <div class="ui-front">    
+                  <canvas id="imageCanvas1" style = "border: 1px solid #ddd; padding:5px; align:center" >select photos</canvas>
+                </div>
+              </div>
+             </div>
+            </div>
+            </div>
+            <div class="modal-footer" >
+              <%= f.submit "Create Album", class: "btn primary pull-right", id: "crtAlb" %> 
+            </div>
+        <% end %>
+          </div>
+          
+        </div>  
+
+
+        <script type="text/javascript">
+          $("#upload_pics").click(function(){
+            $('#modal1').modal('show');
+          });
+          $("#closeX").click(function(){
+                $('#modal1').modal('hide');
+              });
+
+          $("#crtAlb").click(function(){
+                $('#modal1').modal('hide');
+              });
+
+
+          var imageLoader = document.getElementById('pic1');
+            imageLoader.addEventListener('change', handleImage, false);
+            $("#imageCanvas1").click(function(){
+                $("#pic1").click();
+            });
+                
+            var canvas = document.getElementById('imageCanvas1');
+            var ctx = canvas.getContext('2d');
+            ctx.font="30px Arial";
+            ctx.fillText("Select photos",10,50);
+
+          function handleImage(e){
+            var canvas = document.getElementById('imageCanvas1');
+            var ctx = canvas.getContext('2d');
+            var iCnt=0;
+            var files = e.target.files;
+            canvas.width = 600;
+            canvas.height = 155*(Math.ceil(files.length/4));
+            for( var i = 0, len = files.length; i < len; i++) 
+                  {
+                  if(files[i])
+                    {
+                      var reader = new FileReader();
+                      reader.onload = function(event){
+                        var img = new Image();
+
+                        img.onload = function(){
+                          var ratioPx = 150;
+                          var sWidth =ratioPx;
+                          var ratio = img.width/sWidth;
+                          var sHeight = img.height/ratio;   
+                            if(sHeight>ratioPx){
+                               sHeight =ratioPx;
+                               ratio = img.height/sHeight;
+                               sWidth = img.width/ratio;  
+                            }
+                          ctx.drawImage(img, 155*(iCnt%4),155*(Math.floor(iCnt/4)),sWidth,sHeight);
+                          //ctx.drawImage(img,0,0,sWidth,sHeight);
+                          iCnt++;
+                        }
+                        img.src = event.target.result;
+                      }
+                      reader.readAsDataURL(e.target.files[i]);     
+                    }
+                  }
+          }
+
+
+        </script>

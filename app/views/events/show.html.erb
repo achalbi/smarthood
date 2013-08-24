@@ -3,10 +3,12 @@
 <div class="row">
   <aside class="span6">
     <section>
-      <%=  cl_image_tag(@event.photo.pic_url(:thumb), class:" thumbnail", id:"#{@event.photo.id}") %>
-      <h3>
-        <%= @event.title %>
-      </h3>
+      <div  class="img_zoom" >
+           <%= link_to cl_image_tag(@event.photo.pic_url(:thumb), class:" thumbnail albumLink", id:"#{@event.photo.id}") , @event, class:"albumLink", remote: true %>
+             <h2 class="pull-left"><%= link_to @event.title, @event, class:"albumLink", remote: true %></h2>
+        </div>
+
+
     </section>
     <section>
       <h4>Activities <%= link_to "", '#', id: "create_activity",  class: " pull-right uibutton icon add",:title => "Add Activity" %></h4>
@@ -19,198 +21,36 @@
    <aside id="right" style="float: right;width:220px;margin-right:10px;">
       <%= render partial: 'shared/event_stats', locals: {ad_users: @ad_users, inv_users: @inv_users, ad_groups: @ad_groups, inv_groups: @inv_groups} %>
     </aside>
-<div id="event_list" class="span14">
-	<ul class="tabs">
-	  <li class="active" id="posts_events_li"><a ><h4>Posts (<%= @posts.count %>)</h4></a></li>
-	  <li id="activity_events_li"><a ><h4>About</h4></a></li>
-	  <li id="photos_events_li"><a ><h4>Photos</h4></a></li>
-	</ul>
+<div id="event_list" class="span13">
+  <ul class="tabs">
+    <li class="active" id="posts_events_li"><a href="#"><h4>Posts</h4></a></li>
+    <li id="activity_events_li"><a ><h4>About</h4></a></li>
+    <li id="photos_events_li"><a ><h4>Photos</h4></a></li>
+  </ul>
 
-	   <div id="posts_events">  
+     <div id="posts_events">  
       <ul class="users" id="posts_events_ul" >
-            <div id="posts">
-              <% if !@posts.nil? %>
-                <% @posts.each do |post| %>
-                  <%= render :partial => 'posts/post', :locals => {:post => post} %>
-                <% end %>
-              <% end %>
+            <div id="posts" style="overflow:auto;">
+                
+            <%= render :partial => 'posts/activity_post', :locals => {:post => @post}, :activity => @activity %>
+            <br><br>
+                <%= render partial: 'posts/post', locals: {posts: @posts, activity: @activity}  %>
+               
             </div>
-			
-			</ul>
-		<br>
-	</div>
-	<div id="activity_events">  
-    <p><h4>Description : <small><%= @event.description %></small></h4></p>
-		<% if  @event.starts_at.to_formatted_s(:long) == @event.ends_at.to_formatted_s(:long) %>
-      <p><h4>Time : <%= @event.starts_at.to_formatted_s(:long)  %></h4></p>
-    <% else %>
-      <p><h4>Time : <%= @event.starts_at.to_formatted_s(:long)  %> - <%= @event.ends_at.to_formatted_s(:long)  %></h4></p>
-    <% end %>    	
-    <p><h4>Location : <%= @event.address %></h4></p>
-      <%= render :partial => "events/maps", :locals => { :location => @event } %>
-     <p><h4>Privacy : <%= @event.privacy %></h4></p>
-      <ul class="users" id="activity_events_ul" >
-        <h3>Admins</h3>
-        <h6>Individuals</h6>
-        <% @ad_users.each do |user|%>
-        <li style="width:130px;float:left;">
-          <%= gravatar_for user, size: 52 %>
-          <%= link_to user.name, user %>
-        </li>
-        <% end %>
-        <li style="clear:both;"></li>
-        <h6>Groups</h6>
-        <% @ad_groups.each do |group|%>
-        <li style="width:130px;float:left;">
-              <div  class="img_zoom"  style="margin:10px; float:left;">
-              <% unless group.photo.nil? %>
-                <div  class="img_zoom" id="div-img_<%= group.photo.id %>">
-                       <%= link_to cl_image_tag(group.photo.pic_url(:smallest), class:"image_al_c1 thumbnail", id:"#{group.photo.id}"), "/groups/#{group.id}", remote: true,   style:"cursor:pointer;"%>
-                        </div>
-              <% end %>
-              <span>
-                  <%= link_to group.name, group %>                   
-              </span>
-              <span class="timestamp">
-                <% if group.description.length > 17 %>
-                  <%= group.description.slice! 0..17 %>...
-                  <% else %>
-                  <%= group.description %>
-                  <% end %>
-                </span>
-
-                </div>
-
-        </li>
-         <% end %>
-         <li style="clear:both;"></li>
-        <h3>Invitees</h3>
-        <h6>Individuals</h6>
-        <% @inv_users.each do |user|%>
-        <li style="width:130px;float:left;">
-          <%= gravatar_for user, size: 52 %>
-          <%= link_to user.name, user %>
-        </li>
-        <% end %>
-        <li style="clear:both;"></li>
-        <h6>Groups</h6>
-        <% @inv_groups.each do |group|%>
-        
-        <li style="width:130px; float:left;">
-              <div  class="img_zoom"  style="margin:10px; float:left;">
-              <% unless group.photo.nil? %>
-                <div  class="img_zoom" id="div-img_<%= group.photo.id %>">
-                       <%= link_to cl_image_tag(group.photo.pic_url(:smallest), class:"image_al_c1 thumbnail", id:"#{group.photo.id}"), "/groups/#{group.id}", remote: true,   style:"cursor:pointer;"%>
-                        </div>
-              <% end %>
-              <span>
-                  <%= link_to group.name, group %>                   
-              </span>
-              <span class="timestamp">
-                <% if group.description.length > 17 %>
-                  <%= group.description.slice! 0..17 %>...
-                  <% else %>
-                  <%= group.description %>
-                  <% end %>
-                </span>
-
-                </div>
-
-        </li>
-        <% end %>
-
-			</ul>
-
-
-		<br>
-	</div>
-	<div id="photos_events">  
-		
+      
+      </ul>
+    <br>
+  </div>
+  <div id="activity_events">  
+   <%= render partial: 'events/about', locals: {ad_users: @ad_users, inv_users: @inv_users, ad_groups: @ad_groups, inv_groups: @inv_groups, event: @event} %>
+  </div>
+  <div id="photos_events">  
+    
+    <%= render partial: 'events/albums', locals: {activity: @activity, albums: @albums, album: @album} %>
 
     
-          <div id="gallery"  >
-                          
-              <% unless @albums.nil? %>
-                    <div id="gallery1" class="span16 pull-left">
-                       <ul id="grid" >    
-                       <li>
-                        <div id="upload_pics"  style = "border:2px dashed #ddd; width:85px; height:85px; padding:10px;  left:40px; text-align:middle; z-index: 1;  cursor:pointer;  float:left; margin-bottom:25px;
-                        " class="bgClrChg">  <h5> Create Album </h5>
-                        </div>
-                       </li>               
-                       <% @albums.each do |album| %>
-                       <% unless album.photos[0].nil? %>
-                        <li>
-                        <div  class="img_zoom" >
-                         <%= link_to cl_image_tag(album.photos[0].pic_url(:smaller), class:"image_al_c thumbnail") , album, class:"albumLink", remote: true %>
-                           <h5 style="float:right;"><%= link_to album.title, album, class:"albumLink", remote: true %></h5>
-                      </div>
-                      </li>
-                    <% end %> 
-                    <% end %>
-                    </ul>
-                    </div>
-                     
-               <% end %>  
-          </div>
-			<ul class="users" id="photos_events_ul" >
-			</ul>
-      <div id="modal1" style="display:none" >
-          <div id="modal-from-dom1" class="modal hide fade in" style="display: block;width:700px;">
-      <%= form_for(@album, url: create_album_activities_path, remote: true, :html => {:multipart => true}) do  |f| %> 
-            <div class="modal-header">
-              <a href="#" id="closeX" class="close">×</a>
-              <h3>Create album</h3>
-            </div>
-            <div class="modal-body" style="max-height:450px;">
-              <div class="row">
-              <div class="span14 ui-front "  >
-            
-             <%= render 'shared/error_messages', object: f.object %>
-                <div class="center_block clearfix pull-left">
-                  <%= f.label :title %>
-                  <div class="input">
-                    <%= f.text_field :title, :placeholder=>"Title" %>
-                  </div>
-                </div>
 
-              <div class="center_block clearfix pull-left">
-                  <%= f.label :description %>
-                  <div class="input">
-                  <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title=>"Description", rows: 3, cols: 75  %> 
-                </div>
-                </div>
-              <span class="overrideClass">
-              <div class="center_block clearfix pull-left">
-              <%= f.label "privacy:" %>
-              <div class="input">
-                <%= f.select :privacy, ["Public", "Follower", "Private"] %>
-                </div>
-              </div>
-              </span>
-            <br><br>
-               <%= fields_for :photos, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
-                 
-              <%= photo_form.file_field :pic, id: "pic1", :multiple => true, style: "width:1px; height:1px; padding:0px;  left:0px;" %>  
-              <% end %>
-              <%= hidden_field_tag :type, "event" %>
-              <%= hidden_field_tag :id, @activity.id %>
-              <div class="center_block clearfix pull-left clear">
-               <div class="ui-front">    
-                  <canvas id="imageCanvas1" style = "border: 1px solid #ddd; padding:5px; align:center" >select photos</canvas>
-                </div>
-              </div>
-             </div>
-            </div>
-            </div>
-            <div class="modal-footer" >
-              <%= f.submit "Create Album", class: "btn primary pull-right", id: "crtAlb" %> 
-            </div>
-        <% end %>
-          </div>
-          
-        </div>  
-	</div>
+  </div>
 
 </div>
 
@@ -328,7 +168,7 @@ $('#photos_events_li').click(function(){
 
 
 $(document).ready(function(){
-	$('#activity_events').hide();
+  $('#activity_events').hide();
   $('#photos_events').hide();
   $("#crt_act").show();
 

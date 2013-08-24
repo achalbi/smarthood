@@ -92,6 +92,7 @@ rescue Exception => e
       @activity = Activity.new
       @activity.title="Main"
       @activity.description = "Event's main activity"
+      @activity.is_admin = true
       @activity.save
       @event.activities << @activity
       @ed_user = @event.user_ids
@@ -242,7 +243,7 @@ rescue Exception => e
     @inv_users = User.where(['id IN (?)', @users])
     @ad_users = User.where(['id IN (?)', @admin_users])
     @activities = @event.activities
-    @activity = @event.activities.where(["title = ?", "Main"]).first
+    @activity = @event.activities.where(is_admin: true).first
     @albums = @activity.albums
     @share = Share.new
     @ur_ids = @event.eventdetails.pluck(:user_id)
@@ -265,12 +266,14 @@ rescue Exception => e
 
       @posts = []
        if !@activities.nil?
-            @activities.each do |activity|
+            @activities.each do |activity|#
                 @posts |= activity.posts
             end
+            @posts =@posts.sort_by{|e| -e[:id]}
        end
-    #debugger
 
+    #debugger
+    @post = Post.new
 =begin
     @evt = Event.find(params[:id])
     @activities = @evt.activities
@@ -358,6 +361,7 @@ rescue Exception => e
     respond_to do |format|
       format.html # show.html.erb
       format.json { render :json => @event }
+      format.js
     end
  end
 
