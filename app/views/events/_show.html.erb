@@ -42,6 +42,7 @@
 		<br>
 	</div>
 	<div id="activity_events">  
+    <%= link_to "edit", '#', id: "edit_event",  class: " pull-right uibutton icon edit",:title => "Edit" %>
    <%= render partial: 'events/about', locals: {ad_users: @ad_users, inv_users: @inv_users, ad_groups: @ad_groups, inv_groups: @inv_groups, event: @event} %>
 	</div>
 	<div id="photos_events">  
@@ -140,6 +141,121 @@
     </div>
 
 
+
+
+
+<div id="modal2" style="display:none;" >
+          <div id="modal-from-dom2" class="modal hide fade in" style="display: block;width:700px;">
+            <%= form_for( @event, remote: true, :html => {:multipart => true}) do |f| %>
+            <div class="modal-header">
+              <a href="#" id="close2X" class="close">×</a>
+              <span style="font-size:20px;line-height: 2;">Create Event</span>
+            </div>
+            <div class="modal-body" style="max-height:550px;">
+              <div class="row">
+          <div class="span14 ui-front">
+            
+               <%= render 'shared/error_messages', object: f.object %>
+          <div id="pages2">     
+            <div id="page2-1">
+              <%= link_to "Next page", '#', id: "next2-2",  class: "uibutton icon next pull-right" %>
+               <div class="center_block clearfix">
+                  <%= f.label :title %>
+                  <div class="input">
+                  <%= f.text_field :title, :placeholder=>"Title" %></div>
+                </div>
+
+                <div class="center_block clearfix">
+                  <%= label_tag :starts_at %>
+                  <div class="input">
+                  <%= f.text_field :starts_at, :placeholder => "Time" %>&nbsp;&nbsp;&nbsp;
+                <a id="end_date_add_link2" class="uibutton icon add">End Date</a>
+                </div>
+                </div>
+                <div class="center_block clearfix" id="end_date2">
+                  <%= label_tag :ends_at %>
+                  <div class="input">
+                    <%= f.text_field :ends_at %>&nbsp;&nbsp;&nbsp;
+                   <a id="end_date_remove_link2" class="uibutton icon prev">Remove</a>
+                  </div>
+                </div> 
+
+                <div class="center_block clearfix">
+                  <%= f.label :location %>
+                  <div class="input ">
+                  <%= f.text_field :address, :placeholder => :location, :size => 43, class: 'events_with_autocomplete inherit_width', 'data-autocompleteUrl' => search_address_events_path %>&nbsp;&nbsp;&nbsp;
+                
+                  <%= link_to "View map", '#', id: "view_map_link2",  class: "uibutton icon prev" %>
+                </div>
+                <div class="input" id="view_map2">
+                
+                </div>
+                </div>
+                <div class="center_block clearfix">
+                  <%= f.label :description %>
+                  <div class="input">
+                  <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title=>"Description", rows: 3, cols: 75  %> 
+                </div>
+                </div>
+              </div>  
+              <div id="page2-2">
+                <%= link_to "Previous page", '#', id: "prev2-1",  class: "uibutton icon prev pull-left" %>
+                <br><br>
+
+                 <div class="center_block clearfix"><br>
+                  <%= f.label "Invite by User name:" %>
+                  <div class="input ui-front">
+                     <%= f.text_field :user_tokens, id: "search_user_evt","data-pre" => @users_pp.map(&:attributes).to_json %>
+                  </div>
+                </div>
+                <div class="center_block clearfix">
+                  <%= f.label "Invite by Group Name:" %>
+                  <div class="input ui-front">
+                     <%= f.text_field :group_tokens, id: "search_group_evt","data-pre" => @groups_pp.map(&:attributes).to_json %>
+                  </div>
+                </div>
+                <!--
+                <div class="center_block clearfix">
+                   <%= label_tag :all_day %>
+                  <div class="input">
+                  <%= f.check_box :all_day %></div>
+                </div>-->
+                <div class="center_block clearfix">
+                  <%= label_tag :privacy %>
+                  <div class="input">
+                    <%= f.select :privacy, options_for_select([["Public", "public"], ["Members", "members"], ["Private", "private"]]) %>
+                  </div>
+                </div> <br>
+                <div class="center_block clearfix">
+                <%= label_tag "Change picture:" %>
+                <%= f.fields_for :photo, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
+                 
+                <%= photo_form.file_field :pic, id: "pic2",style: "width:1px; height:1px; padding:0px;  left:0px;" %>  
+
+                <% end %>
+                <div class="input"> 
+                <%= cl_image_tag(@event.photo.pic_url(:small), class:" thumbnail albumLink", id:"event_pic", style: "cursor:pointer;") %>   
+                <canvas id="imageCanvas2" style = "border: 1px solid #ddd; padding:5px; align:center; width:200px;display:none;" >select new image</canvas>
+                </div>
+              </div>
+
+
+              </div>
+            </div>
+                         
+          </div>
+        </div>   
+           </div>
+            <div class="modal-footer" >
+              <%= f.submit "Update", class: "btn primary pull-right", id: "updEvent" %>  
+            </div>
+            <% end %>
+          </div>
+          
+        </div>
+
+
+
 <script type="text/javascript">
 $('#posts_events_li').click(function(){
   $('#posts_events_li').addClass('active');
@@ -173,6 +289,7 @@ $(document).ready(function(){
   $("#crt_act").show();
 
   $("#page-2").hide();
+
 
     $("#create_activity").click(function(){
       $('#modal').modal('show');
@@ -378,6 +495,203 @@ $('#end_date_remove_link').click(function(){
     $("#crtAlb").click(function(){
           $('#modal1').modal('hide');
         });
+
+
+
+
+//-------------edit event-------------------------
+
+
+$('#prev2-1').click(function(){
+    $( "#page2-1" ).animate({ width: '600px' }, 1000, function() {
+                $(this).show();
+             });
+    $( "#page2-2" ).animate({ width: '0px' }, 1000, function() {
+                $(this).hide();
+             });
+
+});
+$('#next2-2').click(function(){
+    $( "#page2-1" ).animate({ width: '0px' }, 1000, function() {
+                $(this).hide();
+             });
+    $( "#page2-2" ).animate({ width: '600px' }, 1000, function() {
+                $(this).show();
+             });
+});
+
+$('#event_address').keydown(function(){
+    $('#view_map_link2').hide();
+    $('#view_map2').hide();
+});
+
+$('#view_map_link2').click(function(){
+    var address = "/events/get_geo_coordinates?address="+$('#event_address').val();
+    // $.get(address,"script");
+     $.ajax({
+      type: "GET",
+      url: address,
+      dataType: "script"
+    }); 
+});
+
+$('a.ui-corner-all').live("click", function(){
+  if($('#event_address').val()!=""){
+    $('#view_map_link2').show();
+  }else{
+    $('#view_map_link2').hide();
+  }
+});
+
+
+$('#end_date_add_link2').click(function(){
+  $('#end_date2').show();
+  $('#end_date_add_link2').hide();
+});
+$('#end_date_remove_link2').click(function(){
+  $('#end_date2').hide();
+  $('#end_date_add_link2').show();
+});
+
+  $(function() {
+  $("#search_user_evt").tokenInput("/events/search_auto_user", {
+    crossDomain: false,
+   // prePopulate: $(".eventdetails_with_autocomplete").data("pre"),
+    theme: "facebook",
+        resultsFormatter: function(item){ return "<li>" + "<img src='" + item.profile_pic + "' title='" + item.name + "' height='30px' width='30px' />" + "<div style='display: inline-block; padding-left: 10px;'><div class='full_name'>" + item.name + " " + ""+ "</div><div class='email'>" + item.email + "</div></div></li>" },
+        tokenFormatter: function(item) { return  "<li>" + "<img src='" + item.profile_pic + "' title='" + item.name + "' height='30px' width='30px' />" + "<div style='display: inline-block; padding-left: 10px;'><div class='full_name'>" + item.name +"</div></div></li>" },
+        preventDuplicates: true ,
+        zindex: 11001,
+        hintText: "Type in a user name",
+  });
+});
+
+  $(function() {
+  $("#search_group_evt").tokenInput("/events/search_auto_group", {
+    crossDomain: false,
+   // prePopulate: $(".eventdetails_with_autocomplete").data("pre"),
+    theme: "facebook",
+        resultsFormatter: function(item){ return "<li>" + "<img src='" + item.profile_pic + "' title='" + item.name + "' height='30px' width='30px' />" + "<div style='display: inline-block; padding-left: 10px;'><div class='full_name'>" + item.name + " " + ""+ "</div><div class='email'>" + item.description + "</div></div></li>" },
+        tokenFormatter: function(item) { return  "<li>" + "<img src='" + item.profile_pic + "' title='" + item.name + "' height='30px' width='30px' />" + "<div style='display: inline-block; padding-left: 10px;'><div class='full_name'>" + item.name +"</div></div></li>" },
+        preventDuplicates: true ,
+        zindex: 11001,
+        hintText: "Type in a group name",
+  });
+});
+
+$(document).ready(function() {
+
+
+  $('#page2-2').hide();
+
+  $('#view_map_link2').hide();
+
+
+    $("#event_pic").click(function(){
+      $('#event_pic').hide();
+      $('#pic2').click();
+      $('#imageCanvas2').show();
+    });
+
+
+    $(function() {
+      return $('.events_with_autocomplete').autocomplete({
+        minLength: 2,
+        source: function(request, response) {
+          return $.ajax({
+            url: $('.events_with_autocomplete').data('autocompleteurl'),
+            dataType: "json",
+            data: {starts_at: "", ends_at: "",
+              address: request.term, event: "<%= @event.to_json %>"
+            },
+            success: function(data) {
+              return response(data);
+            }
+          });
+        }
+      });
+    });
+
+    $(function() {
+      return $('.eventdetails_with_autocomplete').autocomplete({
+        minLength: 2,
+        source: function(request, response) {
+          return $.ajax({
+            url: "/events/search_user_group",
+            dataType: "json",
+            data: {starts_at: "", ends_at: "",
+              location: request.term
+            },
+            success: function(data) {
+              return response(data);
+            }
+          });
+        }
+      });
+    });
+
+
+
+});
+
+$("#edit_event").click(function(){
+      $('#modal2').modal('show');
+    });
+    $("#close2X").click(function(){
+          $('#modal2').modal('hide');
+        });
+
+    $("#updEvent").click(function(){
+          $('#modal2').modal('hide');
+        });
+
+
+
+      var imageLoader = document.getElementById('pic2');
+    imageLoader.addEventListener('change', handleImage, false);
+    $("#imageCanvas2").click(function(){
+        $("#pic2").click();
+    });
+        var canvas = document.getElementById('imageCanvas2');
+    var ctx = canvas.getContext('2d');
+    ctx.font="30px Arial";
+    ctx.fillText("Add Event picture",10,50);
+
+  function handleImage(e){
+    var canvas = document.getElementById('imageCanvas2');
+    var ctx = canvas.getContext('2d');
+    var iCnt=0;
+    var files = e.target.files;
+    canvas.width = 180;
+    canvas.height = 155*(Math.ceil(files.length/4));
+    for( var i = 0, len = files.length; i < len; i++) 
+          {
+          if(files[i])
+            {
+              var reader = new FileReader();
+              reader.onload = function(event){
+                var img = new Image();
+
+                img.onload = function(){
+                  var ratioPx = 150;
+                  var sWidth =ratioPx;
+                  var ratio = img.width/sWidth;
+                  var sHeight = img.height/ratio;   
+                    if(sHeight>ratioPx){
+                       sHeight =ratioPx;
+                       ratio = img.height/sHeight;
+                       sWidth = img.width/ratio;  
+                    }
+                  ctx.drawImage(img, 155*(iCnt%4),155*(Math.floor(iCnt/4)),sWidth,sHeight);
+                  //ctx.drawImage(img,0,0,sWidth,sHeight);
+                  iCnt++;
+                }
+                img.src = event.target.result;
+              }
+              reader.readAsDataURL(e.target.files[i]);     
+            }
+          }
+  }
 
 
 

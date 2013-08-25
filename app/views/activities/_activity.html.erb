@@ -1,16 +1,20 @@
-<br>
+<% unless activity.is_admin %>
+<li class="sidetabs" style="list-style-type: none;padding:5px; margin:5px;">
+
+      <h6><%= link_to  activity.title, activity, id: "act_#{activity.id}", remote: true %></h6>
+
+     <span class="content"><%= activity.description %><br></span>  
+</li>
+<%= link_to(activity, remote: true) do %>
+<% end %>
+<% end %>
+<script type="text/javascript">
+
+$(".sidetabs").click(function(){
+  $(".sidetabs").removeClass('sidetabs_selected');
+  $(this).addClass('sidetabs_selected');
+  $(this).next('a').click();
+});
 
 
-<ol>
-    <span class="user">
-      <%= link_to activity.title, activity, remote: true %>
-    </span>
-     <span class="content"><%= activity.description %></span>
-     <span class="timestamp">
-      Created <%= time_ago_in_words(activity.created_at) %> ago.
-    </span>
-  
-</ol>
-
-
-
+</script>

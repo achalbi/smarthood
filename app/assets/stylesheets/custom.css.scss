@@ -600,3 +600,17 @@ div#event_list ul.tabs li.active{
 .inherit_width{
   width: inherit;
 }
+
+.tabs li>a{
+ cursor:pointer; 
+}
+
+.sidetabs {
+ cursor:pointer; 
+ background-color: #f2f2f2;
+ &:hover { background-color: #d0d0d0; }
+}
+
+.sidetabs_selected{
+  background-color: #d0d0d0;
+}

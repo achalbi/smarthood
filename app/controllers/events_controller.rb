@@ -274,6 +274,7 @@ rescue Exception => e
 
     #debugger
     @post = Post.new
+    @comment = Comment.new
 =begin
     @evt = Event.find(params[:id])
     @activities = @evt.activities
@@ -405,14 +406,44 @@ rescue Exception => e
   # PUT /events/1.json
   def update
     @event = Event.find(params[:id])
+    @event.update_attributes(params[:event])
+    @ad_eds = @event.eventdetails.where(is_admin: true )
+    @non_ad_eds = @event.eventdetails.where(is_admin: false)
+    @groups = @non_ad_eds.pluck(:group_id)
+    @users = @non_ad_eds.pluck(:user_id)
+    @admin_groups = @ad_eds.pluck(:group_id)
+    @admin_users = @ad_eds.pluck(:user_id)
+    @inv_groups = Group.where(['id IN (?)', @groups])
+    @ad_groups = Group.where(['id IN (?)', @admin_groups])
+    @inv_users = User.where(['id IN (?)', @users])
+    @ad_users = User.where(['id IN (?)', @admin_users])
+    @ur_ids = @event.eventdetails.pluck(:user_id)
+        @urs = User.where(['id IN (?)', @ur_ids])
+        @users = @urs.where("name like ?", "%#{params[:q]}%")
+        @users_pp = []
+      @users.each do |user|
+        user[:profile_pic] =  gravatar_for_url(user, size: 40)
+        @users_pp << user
+      end
+
+    @grp_ids = @event.eventdetails.pluck(:group_id)
+    @grps = Group.where(['id IN (?)', @grp_ids])
+    @groups = @grps.where("name like ?", "%#{params[:q]}%")
+      @groups_pp = []
+      @groups.each do |group|
+        group[:profile_pic] = group.photo.pic_url(:smaller)
+        @groups_pp << group
+      end    
 
     respond_to do |format|
       if @event.update_attributes(params[:event])
         format.html { redirect_to @event, :notice => 'Event was successfully updated.' }
         format.json { head :no_content }
+        format.js {}
       else
         format.html { render :action => "edit" }
         format.json { render :json => @event.errors, :status => :unprocessable_entity }
+        format.js {}
       end
     end
   end

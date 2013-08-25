@@ -1,6 +1,6 @@
-<%= form_for(@post, remote: true,  :html => {:multipart => true}) do |f| %>
   <div id="image" style="display:block">
-    <div id="textarea_div" style="resize: both;border: 1px solid #d4dae8;overflow: hidden;">
+    <div id="textarea_div" style="resize: both;border: 1px solid #d4dae8;overflow: hidden;background-color:#f2f2f2;">
+<%= form_for(@post, remote: true,  :html => {:multipart => true}) do |f| %>
     <%= render 'shared/error_messages', object: f.object %>
                 <%= fields_for :photo, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
                  
@@ -8,15 +8,15 @@
 
                 <% end %>
                  <div class=" pull-left">
-                    <%= f.text_area :content, placeholder: "Compose new post...", :rows=>5, class: "span11" %>
-                 <canvas id="imageCanvas" style = "border: 1px solid #ddd; padding:5px; align:center;" width="83px" height="68px">Add pictures</canvas>
+                    <%= f.text_area :content, placeholder: "Compose new post...", :rows=>6, class: "span10" %>
+                 <canvas id="imageCanvas" style = "border: 1px solid #ddd; padding:2px; align:center;cursor:pointer; background-color:#ffffff;" width="132px" height="88px">Add pictures</canvas>
                 </div> 
-      </div>
-</div>
  <%= f.submit "Post", class: "btn primary pull-right" %>
   <%= hidden_field_tag :type, "activity" %>  
   <%= hidden_field_tag :activity, @activity.id %>
 <% end %>
+      </div>
+</div>
 
 
 <script type="text/javascript">
@@ -40,17 +40,17 @@ $("#remove_image").click(function(){
     });
         var canvas = document.getElementById('imageCanvas');
     var ctx = canvas.getContext('2d');
-    ctx.font="10pt tahoma ";
+    ctx.font="8pt tahoma ";
     ctx.fillStyle = 'grey';
-    ctx.fillText("Add pictures",6,30);
+    ctx.fillText("Add picture",35,46);
 
   function handleImage(e){
     var canvas = document.getElementById('imageCanvas');
     var ctx = canvas.getContext('2d');
     var iCnt=0;
     var files = e.target.files;
-    canvas.width = 130;
-    canvas.height = 90*(Math.ceil(files.length/1));
+    canvas.width = 132;
+    canvas.height = 88*(Math.ceil(files.length/1));
     for( var i = 0, len = files.length; i < len; i++) 
           {
           if(files[i])

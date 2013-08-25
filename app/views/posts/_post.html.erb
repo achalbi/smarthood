@@ -43,7 +43,9 @@
                                            title: post.content %>
         <% end %>
        
-
+          <div id="postId_<%= post.id %>" class="comments">
+              <%= render :partial => "comments/comment", :locals => { :comment => @comment, :post => post} %>
+          </div>
       </li>
       </td>
       </tr>

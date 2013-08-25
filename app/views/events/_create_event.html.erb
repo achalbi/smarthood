@@ -1,0 +1,110 @@
+
+
+<div id="modal" style="display:none;" >
+          <div id="modal-from-dom" class="modal hide fade in" style="display: block;width:700px;">
+            <%= form_for( event, remote: true, :html => {:multipart => true}) do |f| %>
+            <div class="modal-header">
+              <a href="#" id="closeX" class="close">×</a>
+              <span style="font-size:20px;line-height: 2;">Create Event</span>
+            </div>
+            <div class="modal-body" style="max-height:550px;">
+              <div class="row">
+          <div class="span14 ui-front">
+            
+               <%= render 'shared/error_messages', object: f.object %>
+          <div id="pages">     
+            <div id="page-1">
+              <%= link_to "Next page", '#', id: "next-2",  class: "uibutton icon next pull-right" %>
+               <div class="center_block clearfix">
+                  <%= f.label :title %>
+                  <div class="input">
+                  <%= f.text_field :title, :placeholder=>"Title" %></div>
+                </div>
+
+                <div class="center_block clearfix">
+                  <%= label_tag :starts_at %>
+                  <div class="input">
+                  <%= f.text_field :starts_at, :placeholder => "Time" %>&nbsp;&nbsp;&nbsp;
+                <a id="end_date_add_link" class="uibutton icon add">End Date</a>
+                </div>
+                </div>
+                <div class="center_block clearfix" id="end_date">
+                  <%= label_tag :ends_at %>
+                  <div class="input">
+                    <%= f.text_field :ends_at %>&nbsp;&nbsp;&nbsp;
+                   <a id="end_date_remove_link" class="uibutton icon prev">Remove</a>
+                  </div>
+                </div> 
+
+                <div class="center_block clearfix">
+                  <%= f.label :location %>
+                  <div class="input ">
+                  <%= f.text_field :address, :placeholder => :location, :size => 43, class: 'events_with_autocomplete inherit_width', 'data-autocompleteUrl' => search_address_events_path %>&nbsp;&nbsp;&nbsp;
+                
+                  <%= link_to "View map", '#', id: "view_map_link",  class: "uibutton icon prev" %>
+                </div>
+                <div class="input" id="view_map">
+                
+                </div>
+                </div>
+                <div class="center_block clearfix">
+                  <%= f.label :description %>
+                  <div class="input">
+                  <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title=>"Description", rows: 3, cols: 75  %> 
+                </div>
+                </div>
+              </div>  
+              <div id="page-2">
+                <%= link_to "Previous page", '#', id: "prev-1",  class: "uibutton icon prev pull-left" %>
+                <br>
+
+                 <div class="center_block clearfix"><br>
+                  <%= f.label "Invite by User name:" %>
+                  <div class="input ui-front">
+                     <%= f.text_field :user_tokens, id: "search_user" %>
+                  </div>
+                </div>
+                <div class="center_block clearfix">
+                  <%= f.label "Invite by Group Name:" %>
+                  <div class="input ui-front">
+                     <%= f.text_field :group_tokens, id: "search_group" %>
+                  </div>
+                </div>
+                <!--
+                <div class="center_block clearfix">
+                   <%= label_tag :all_day %>
+                  <div class="input">
+                  <%= f.check_box :all_day %></div>
+                </div>-->
+                <div class="center_block clearfix">
+                  <%= label_tag :privacy %>
+                  <div class="input">
+                    <%= f.select :privacy, options_for_select([["Public", "public"], ["Members", "members"], ["Private", "private"]]) %>
+                  </div>
+                </div> <br>
+                <div class="center_block clearfix">
+                <%= label_tag "Add picture:" %>
+                <%= f.fields_for :photo, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
+                 
+                <%= photo_form.file_field :pic, id: "pic",style: "width:1px; height:1px; padding:0px;  left:0px;" %>  
+
+                <% end %>
+                <div class="input">    
+                <canvas id="imageCanvas" style = "border: 1px solid #ddd; padding:5px; align:center; width:200px;" >select an image</canvas>
+                </div>
+              </div>
+
+
+              </div>
+            </div>
+                         
+          </div>
+        </div>   
+           </div>
+            <div class="modal-footer" >
+              <%= f.submit "Create Event", class: "btn primary pull-right", id: "crtEvent" %>  
+            </div>
+            <% end %>
+          </div>
+          
+        </div>

@@ -1,10 +1,9 @@
 <br>
-<% post.comments.each do |comment| %>
-<ol>
-<%= link_to gravatar_for(comment.user, size: 30), comment.user %>
-    <span class="user">
-      <%= link_to comment.user.name, comment.user %>
-    </span>
+<% post.comments.reverse_each do |comment| %>
+<% unless comment.id.nil? %>
+  
+<ol style="padding:0;margin:0;width:400px" >
+<%= link_to gravatar_for(comment.user, size: 30), comment.user, title: current_user.name%>
      <span class="content"><%= comment.content %></span>
      <span class="timestamp">
       Posted <%= time_ago_in_words(comment.created_at) %> ago.
@@ -15,12 +14,9 @@
 <% end %>  
 </ol>
 <% end %>
-<ol>
-<%= link_to gravatar_for(current_user, size: 30), current_user %>
-    <span class="user">
-      <%= link_to current_user.name, current_user %>
-    </span>
-
+<% end %>
+<ol style="padding:0;margin:0;width:400px">
+<%= link_to gravatar_for(current_user, size: 30), current_user, title: current_user.name , style: "padding:5px"%>
 <%= form_for [post.comments.build], remote: true do |f| %>
   <%= f.hidden_field :post_id %>
   <%= render 'shared/error_messages', object: f.object %>
