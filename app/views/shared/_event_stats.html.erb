@@ -1,5 +1,7 @@
-<div class="stats">
-  <section>
+<div >
+  <div id="moderatorDiv" class="bgClrChg" style="mragin:10px;padding:10px;">
+    <%= link_to "edit", '#', id: "moderator",  class: "uibutton icon edit pull-right" %><br><br>
+  <section class="stats">
     <a href="<%= %>">
       <strong id="following" class="stat">
         <%= ad_users.count %>
@@ -11,7 +13,7 @@
       <% end %>
     </a>
   </section>
-  <section>
+  <section class="stats">
       <a href="<%= %>">
       <strong id="following" class="stat">
         <%= ad_groups.count %>
@@ -23,7 +25,10 @@
       <% end %>
     </a>
   </section>
-  <section>
+</div>
+  <div id="inviteDiv" class="bgClrChg" style="mragin:10px;padding:10px;">
+  <%= link_to "add", '#', id: "invite",  class: "uibutton icon add pull-right" %><br><br>
+  <section class="stats">
     <a href="<%=  %>">
       <strong id="followers" class="stat">
         <%= inv_users.count %>
@@ -35,7 +40,7 @@
       <% end %>
     </a>
   </section>
-  <section>
+  <section class="stats">
     <a href="<%=  %>">
       <strong id="followers" class="stat">
         <%= inv_groups.count %>
@@ -49,10 +54,96 @@
     </a>
   </section>
 </div>
+</div>
+ <%= form_for( @event, remote: true, :html => {:multipart => true}) do |f| %>
+<div id="modal3" style="display:none;" >
+          <div id="modal-from-dom3" class="modal hide fade in" style="display: block;width:700px;">
+            <div class="modal-header">
+              <a href="#" id="close3X" class="close">×</a>
+              <span style="font-size:20px;line-height: 2;">Edit Invitees</span>
+            </div>
+            <div class="modal-body" style="max-height:550px;">
+              <div class="row">
+          <div class="span14 ui-front">
+            
+               <%= render 'shared/error_messages', object: f.object %>
+                          <br><br>
+
+                 <div class="center_block clearfix"><br>
+                  <%= f.label "Invite by User name:" %>
+                  <div class="input ui-front">
+                     <%= f.text_field :user_tokens, id: "search_user_evt1" %>
+                  </div>
+                </div>
+                <div class="center_block clearfix">
+                  <%= f.label "Invite by Group Name:" %>
+                  <div class="input ui-front">
+                     <%= f.text_field :group_tokens, id: "search_group_evt1" %>
+                  </div>
+                </div>                        
+          </div>
+        </div>   
+           </div>
+            <div class="modal-footer" >
+              <%= f.submit "Update", class: "btn primary pull-right", id: "updEventInv" %>  
+            </div>
+          </div>
+          
+        </div>
+<% end %>
 
 <script type="text/javascript">
 $(document).ready(function(){
   $('.gravatar').addClass('thumbnail');  
+  $('#invite').toggle();
+  $('#moderator').toggle();
+    $('#moderatorDiv').hover(function(){
+      $('#moderator').toggle();
+      },function(){
+      $('#moderator').toggle();
+    });
+    $('#inviteDiv').hover(function(){
+      $('#invite').toggle();
+      },function(){
+      $('#invite').toggle();
+    });
+    $("#invite").click(function(){
+      $('#modal3').modal('show');
+    });
+    $("#close3X").click(function(){
+          $('#modal3').modal('hide');
+        });
+
+    $("#updEventInv").click(function(){
+          $('#modal3').modal('hide');
+        });
+});
+
+
+  $(function() {
+  $("#search_user_evt1").tokenInput("/events/search_auto_user", {
+    crossDomain: false,
+   // prePopulate: $(".eventdetails_with_autocomplete").data("pre"),
+    theme: "facebook",
+        resultsFormatter: function(item){ return "<li>" + "<img src='" + item.profile_pic + "' title='" + item.name + "' height='30px' width='30px' />" + "<div style='display: inline-block; padding-left: 10px;'><div class='full_name'>" + item.name + " " + ""+ "</div><div class='email'>" + item.email + "</div></div></li>" },
+        tokenFormatter: function(item) { return  "<li>" + "<img src='" + item.profile_pic + "' title='" + item.name + "' height='30px' width='30px' />" + "<div style='display: inline-block; padding-left: 10px;'><div class='full_name'>" + item.name +"</div></div></li>" },
+        preventDuplicates: true ,
+        zindex: 11001,
+        hintText: "Type in a user name",
+  });
+});
+
+  $(function() {
+  $("#search_group_evt1").tokenInput("/events/search_auto_group", {
+    crossDomain: false,
+   // prePopulate: $(".eventdetails_with_autocomplete").data("pre"),
+    theme: "facebook",
+        resultsFormatter: function(item){ return "<li>" + "<img src='" + item.profile_pic + "' title='" + item.name + "' height='30px' width='30px' />" + "<div style='display: inline-block; padding-left: 10px;'><div class='full_name'>" + item.name + " " + ""+ "</div><div class='email'>" + item.description + "</div></div></li>" },
+        tokenFormatter: function(item) { return  "<li>" + "<img src='" + item.profile_pic + "' title='" + item.name + "' height='30px' width='30px' />" + "<div style='display: inline-block; padding-left: 10px;'><div class='full_name'>" + item.name +"</div></div></li>" },
+        preventDuplicates: true ,
+        zindex: 11001,
+        hintText: "Type in a group name",
+  });
 });
 
 </script>

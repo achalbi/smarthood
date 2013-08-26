@@ -142,14 +142,12 @@
 
 
 
-
-
+ <%= form_for( @event, remote: true, :html => {:multipart => true}) do |f| %>
 <div id="modal2" style="display:none;" >
           <div id="modal-from-dom2" class="modal hide fade in" style="display: block;width:700px;">
-            <%= form_for( @event, remote: true, :html => {:multipart => true}) do |f| %>
             <div class="modal-header">
               <a href="#" id="close2X" class="close">×</a>
-              <span style="font-size:20px;line-height: 2;">Create Event</span>
+              <span style="font-size:20px;line-height: 2;">Edit Event</span>
             </div>
             <div class="modal-body" style="max-height:550px;">
               <div class="row">
@@ -201,7 +199,7 @@
               <div id="page2-2">
                 <%= link_to "Previous page", '#', id: "prev2-1",  class: "uibutton icon prev pull-left" %>
                 <br><br>
-
+                <!--
                  <div class="center_block clearfix"><br>
                   <%= f.label "Invite by User name:" %>
                   <div class="input ui-front">
@@ -214,7 +212,7 @@
                      <%= f.text_field :group_tokens, id: "search_group_evt","data-pre" => @groups_pp.map(&:attributes).to_json %>
                   </div>
                 </div>
-                <!--
+                
                 <div class="center_block clearfix">
                    <%= label_tag :all_day %>
                   <div class="input">
@@ -235,7 +233,7 @@
                 <% end %>
                 <div class="input"> 
                 <%= cl_image_tag(@event.photo.pic_url(:small), class:" thumbnail albumLink", id:"event_pic", style: "cursor:pointer;") %>   
-                <canvas id="imageCanvas2" style = "border: 1px solid #ddd; padding:5px; align:center; width:200px;display:none;" >select new image</canvas>
+                <canvas id="imageCanvas2" style = "border: 1px solid #ddd; padding:5px; align:center; width:200px;display:none;cursor:pointer" >select new image</canvas>
                 </div>
               </div>
 
@@ -249,10 +247,10 @@
             <div class="modal-footer" >
               <%= f.submit "Update", class: "btn primary pull-right", id: "updEvent" %>  
             </div>
-            <% end %>
           </div>
           
         </div>
+            <% end %>
 
 
 
@@ -585,7 +583,7 @@ $(document).ready(function() {
   $('#page2-2').hide();
 
   $('#view_map_link2').hide();
-
+  $('#end_date_add_link2').hide();
 
     $("#event_pic").click(function(){
       $('#event_pic').hide();
@@ -655,7 +653,7 @@ $("#edit_event").click(function(){
         var canvas = document.getElementById('imageCanvas2');
     var ctx = canvas.getContext('2d');
     ctx.font="30px Arial";
-    ctx.fillText("Add Event picture",10,50);
+    ctx.fillText("Change picture",10,50);
 
   function handleImage(e){
     var canvas = document.getElementById('imageCanvas2');

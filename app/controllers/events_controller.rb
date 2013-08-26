@@ -406,6 +406,25 @@ rescue Exception => e
   # PUT /events/1.json
   def update
     @event = Event.find(params[:id])
+    @event_temp = current_user.events.build(params[:event])
+    @ed_user = @event_temp.user_ids
+    @ed_group = @event_temp.group_ids
+      @ed_user.each do |user_id|
+        @user_ed = Eventdetail.new
+        @user_ed.is_admin=false
+          if @event.eventdetails.pluck(:user_id).detect {|n| n==user_id}.nil?
+            @user_ed.user = User.find(user_id)
+            @event.eventdetails << @user_ed
+          end
+      end
+      @ed_group.each do |group_id|
+        @group_ed = Eventdetail.new
+        @group_ed.is_admin = false
+          if @event.eventdetails.pluck(:group_id).detect {|n| n==group_id}.nil?
+            @group_ed.group = Group.find(group_id)
+            @event.eventdetails << @group_ed
+          end
+      end
     @event.update_attributes(params[:event])
     @ad_eds = @event.eventdetails.where(is_admin: true )
     @non_ad_eds = @event.eventdetails.where(is_admin: false)
