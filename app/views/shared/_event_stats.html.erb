@@ -2,7 +2,7 @@
   <div id="moderatorDiv" class="bgClrChg" style="mragin:10px;padding:10px;">
     <%= link_to "edit", '#', id: "moderator",  class: "uibutton icon edit pull-right" %><br><br>
   <section class="stats">
-    <a href="<%= %>">
+    <a href="#">
       <strong id="following" class="stat">
         <%= ad_users.count %>
       </strong>
@@ -14,7 +14,7 @@
     </a>
   </section>
   <section class="stats">
-      <a href="<%= %>">
+      <a href="#">
       <strong id="following" class="stat">
         <%= ad_groups.count %>
       </strong>
@@ -29,7 +29,7 @@
   <div id="inviteDiv" class="bgClrChg" style="mragin:10px;padding:10px;">
   <%= link_to "add", '#', id: "invite",  class: "uibutton icon add pull-right" %><br><br>
   <section class="stats">
-    <a href="<%=  %>">
+    <a href="#">
       <strong id="followers" class="stat">
         <%= inv_users.count %>
       </strong>
@@ -41,7 +41,7 @@
     </a>
   </section>
   <section class="stats">
-    <a href="<%=  %>">
+    <a href="#">
       <strong id="followers" class="stat">
         <%= inv_groups.count %>
       </strong>
@@ -60,7 +60,7 @@
           <div id="modal-from-dom3" class="modal hide fade in" style="display: block;width:700px;">
             <div class="modal-header">
               <a href="#" id="close3X" class="close">×</a>
-              <span style="font-size:20px;line-height: 2;">Edit Invitees</span>
+              <span style="font-size:20px;line-height: 2;">Add Invitees</span>
             </div>
             <div class="modal-body" style="max-height:550px;">
               <div class="row">
@@ -92,6 +92,77 @@
         </div>
 <% end %>
 
+
+ <%= form_for( @event, remote: true, :html => {:multipart => true}) do |f| %>
+<div id="modal4" style="display:none;" >
+          <div id="modal-from-dom4" class="modal hide fade in" style="display: block;width:700px;">
+            <div class="modal-header">
+              <a href="#" id="close4X" class="close">×</a>
+              <span style="font-size:20px;line-height: 2;">Edit Moderators</span>
+            </div>
+            <div class="modal-body" style="max-height:350px;">
+              <div class="row">
+          <div class="span14 ui-front">
+            
+               <%= render 'shared/error_messages', object: f.object %>
+                          <br><br>
+
+                 <aside class="pull-left">
+                  <section>
+                        <h2 style="margin-left:65px;padding:3px;">Users</h2>
+                      <ul class="user" style="overflow:auto;">
+                        <% @mod_users.each do |user| %>
+                            <ol>
+                              <div style="background-color:#f0f0f0;padding:5px;" class="span5">
+                                  <%= link_to user.name, "#" %>
+                                  <%= gravatar_for user, size: 25 %>
+                                <div style="margin-right:10px;" class="pull-right">
+                                  <%= check_box_tag 'user_ids[]', user.id %>
+                                </div>
+                              </div>
+                                  
+                            </ol>
+                            <br><br>
+                            <br><br>
+                        <% end %>
+                      </ul>     
+                  </section>
+                 </aside>
+                 <aside class="pull-right">
+                  <section>
+                    <h2 style="margin-left:65px;">Groups</h2>
+                    <ul class="user">
+                        <% @groups.each do |group| %>
+                          <ol >
+                             <div style="background-color:#f0f0f0;padding:5px;" class="span5">
+                              <%=  cl_image_tag(group.photo.pic_url(:smallest_half), class:" thumbnail gravatar", id:"#{group.photo.id}") %>
+                              <%= link_to group.name, "#"%>
+                             <div style="margin-right:10px;" class="pull-right">
+                              <%= check_box_tag 'group_ids[]', group.id %>
+                              </div>
+                            </div>
+                          </ol>
+                              <br><br>
+                              <br><br>
+                        <% end %>
+                      </ul>
+                  </section>
+                 </aside>
+                                       
+          </div>
+        </div>   
+           </div>
+            <div class="modal-footer" >
+              <%= f.submit "Update", class: "btn primary pull-right", id: "updEventAdm" %>  
+            </div>
+          </div>
+          
+        </div>
+<% end %>
+
+
+
+
 <script type="text/javascript">
 $(document).ready(function(){
   $('.gravatar').addClass('thumbnail');  
@@ -116,6 +187,17 @@ $(document).ready(function(){
 
     $("#updEventInv").click(function(){
           $('#modal3').modal('hide');
+        });
+
+    $("#moderator").click(function(){
+      $('#modal4').modal('show');
+    });
+    $("#close4X").click(function(){
+          $('#modal4').modal('hide');
+        });
+
+    $("#updEventAdm").click(function(){
+          $('#modal4').modal('hide');
         });
 });
 

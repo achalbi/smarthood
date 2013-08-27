@@ -254,7 +254,6 @@ rescue Exception => e
         user[:profile_pic] =  gravatar_for_url(user, size: 40)
         @users_pp << user
       end
-
     @grp_ids = @event.eventdetails.pluck(:group_id)
     @grps = Group.where(['id IN (?)', @grp_ids])
     @groups = @grps.where("name like ?", "%#{params[:q]}%")
@@ -263,7 +262,10 @@ rescue Exception => e
         group[:profile_pic] = group.photo.pic_url(:smaller)
         @groups_pp << group
       end
-
+    @mod_users = @inv_users
+      @grps.each do |group|
+        @mod_users |= group.users
+      end
       @posts = []
        if !@activities.nil?
             @activities.each do |activity|#
@@ -407,8 +409,26 @@ rescue Exception => e
   def update
     @event = Event.find(params[:id])
     @event_temp = current_user.events.build(params[:event])
+    unless params[:user_ids].nil?
+      @users_ids = params[:user_ids]
+        @users_ids.each do |usr_id|
+          @evt_dts_u = @event.eventdetails.find_by_user_id(usr_id)
+          @evt_dts_u.is_admin=true
+          @evt_dts_u.save
+        end
+    end
+    unless params[:group_ids].nil?
+       @groups_ids = params[:group_ids]
+        @groups_ids.each do |grp_id|
+          @evt_dts_g=@event.eventdetails.find_by_group_id(grp_id)
+          @evt_dts_g.is_admin=true
+          @evt_dts_g.save
+        end
+    end
+
     @ed_user = @event_temp.user_ids
     @ed_group = @event_temp.group_ids
+    unless @ed_user.nil? 
       @ed_user.each do |user_id|
         @user_ed = Eventdetail.new
         @user_ed.is_admin=false
@@ -417,6 +437,8 @@ rescue Exception => e
             @event.eventdetails << @user_ed
           end
       end
+    end
+    unless @ed_group.nil? 
       @ed_group.each do |group_id|
         @group_ed = Eventdetail.new
         @group_ed.is_admin = false
@@ -425,6 +447,7 @@ rescue Exception => e
             @event.eventdetails << @group_ed
           end
       end
+    end
     @event.update_attributes(params[:event])
     @ad_eds = @event.eventdetails.where(is_admin: true )
     @non_ad_eds = @event.eventdetails.where(is_admin: false)
@@ -454,6 +477,10 @@ rescue Exception => e
         @groups_pp << group
       end    
 
+      @mod_users = @inv_users
+      @grps.each do |group|
+        @mod_users |= group.users
+      end
     respond_to do |format|
       if @event.update_attributes(params[:event])
         format.html { redirect_to @event, :notice => 'Event was successfully updated.' }

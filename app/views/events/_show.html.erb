@@ -10,8 +10,8 @@
 
 
     </section>
-    <section>
-      <h4>Activities <%= link_to "", '#', id: "create_activity",  class: " pull-right uibutton icon add",:title => "Add Activity" %></h4>
+    <section style="background-color:#e5e5e5;padding:10px;">
+      <h3>Activities <%= link_to "", '#', id: "create_activity",  class: " pull-right uibutton icon add",:title => "Add Activity" %></h3>
       <div id="event_activities">    
           <%= render @activities %>
       </div>
@@ -19,7 +19,9 @@
       
    </aside>
    <aside id="right" style="float: right;width:220px;margin-right:10px;">
+    <div id="event_stats">
       <%= render partial: 'shared/event_stats', locals: {ad_users: @ad_users, inv_users: @inv_users, ad_groups: @ad_groups, inv_groups: @inv_groups} %>
+    </div>
     </aside>
 <div id="event_list" class="span13">
 	<ul class="tabs">

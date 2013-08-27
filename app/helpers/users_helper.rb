@@ -19,6 +19,7 @@ module UsersHelper
     gravatar_url = ""
     size = options[:size]
     unless user.authentications.first.nil?
+      size = (size.to_i-5).to_s
       if user.authentications.first.provider == 'facebook'
         gravatar_url = "http://graph.facebook.com/#{user.authentications.first.username}/picture?width=#{size}&height=#{size}"
       else
