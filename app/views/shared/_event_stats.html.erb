@@ -1,57 +1,64 @@
 <div >
   <div id="moderatorDiv" class="bgClrChg" style="mragin:10px;padding:10px;">
-    <%= link_to "edit", '#', id: "moderator",  class: "uibutton icon edit pull-right" %><br><br>
+    <h5>Moderators<%= link_to "edit", '#', id: "moderator",  class: "uibutton icon edit pull-right" %></h5> 
   <section class="stats">
-    <a href="#">
+    <a href="#" id="ad_users_a">
       <strong id="following" class="stat">
         <%= ad_users.count %>
       </strong>
-      <%="Moderator".pluralize(ad_users.count) %>
-      <br>
-      <% ad_users.each do |ad_user| %>
-       <%= gravatar_for ad_user, size: 25 %>
-      <% end %>
+      <%="Member".pluralize(ad_users.count) %>
     </a>
+      <br><br>
+      <div id="ad_users_div">
+        <% ad_users.each do |ad_user| %>
+         <%= gravatar_for ad_user, size: 25 %>
+        <% end %>
+      </div>
   </section>
   <section class="stats">
-      <a href="#">
+      <a href="#" id="ad_groups_a">
       <strong id="following" class="stat">
         <%= ad_groups.count %>
       </strong>
-      <%="Group Moderator".pluralize(ad_groups.count) %>
-      <br>
+      <%="Group".pluralize(ad_groups.count) %>
+      </a>
+     <br><br>
+      <div id="ad_groups_div">
       <% ad_groups.each do |ad_group| %>
         <%=  cl_image_tag(ad_group.photo.pic_url(:smallest_half), class:" thumbnail gravatar", id:"#{ad_group.photo.id}") %>
       <% end %>
-    </a>
+    </div>
   </section>
 </div>
   <div id="inviteDiv" class="bgClrChg" style="mragin:10px;padding:10px;">
-  <%= link_to "add", '#', id: "invite",  class: "uibutton icon add pull-right" %><br><br>
+  <h5>Invitees<%= link_to "add", '#', id: "invite",  class: "uibutton icon add pull-right" %></h5>
   <section class="stats">
-    <a href="#">
+    <a href="#" id="inv_users_a">
       <strong id="followers" class="stat">
         <%= inv_users.count %>
       </strong>
-      <%="Invited Guest".pluralize(inv_users.count) %>
-      <br>
+      <%="Member".pluralize(inv_users.count) %>
+    </a>
+      <br><br>
+      <div id="inv_users_div">
       <% inv_users.each do |inv_user| %>
        <%= gravatar_for inv_user, size: 25 %>
       <% end %>
-    </a>
+    </div>
   </section>
   <section class="stats">
-    <a href="#">
+    <a href="#" id="inv_groups_a">
       <strong id="followers" class="stat">
         <%= inv_groups.count %>
       </strong>
-      <%="Invited Group".pluralize(inv_groups.count) %>
-      <br>
+      <%="Group".pluralize(inv_groups.count) %>
+    </a>
+      <br><br>
+      <div id="inv_groups_div">
       <% inv_groups.each do |inv_group| %>
        <%=  cl_image_tag(inv_group.photo.pic_url(:smallest_half), class:" thumbnail gravatar", id:"#{inv_group.photo.id}") %>
-
       <% end %>
-    </a>
+    </div>
   </section>
 </div>
 </div>
@@ -168,11 +175,13 @@ $(document).ready(function(){
   $('.gravatar').addClass('thumbnail');  
   $('#invite').toggle();
   $('#moderator').toggle();
+
     $('#moderatorDiv').hover(function(){
       $('#moderator').toggle();
       },function(){
       $('#moderator').toggle();
     });
+
     $('#inviteDiv').hover(function(){
       $('#invite').toggle();
       },function(){
@@ -199,7 +208,27 @@ $(document).ready(function(){
     $("#updEventAdm").click(function(){
           $('#modal4').modal('hide');
         });
+    $('#ad_users_div').hide();
+    $('#ad_groups_div').hide();
+    $('#inv_users_div').hide();
+    $('#inv_groups_div').hide();
+
+
+
 });
+
+    $('#ad_users_a').click(function(){
+      $('#ad_users_div').toggle('slow')
+    });
+    $('#ad_groups_a').click(function(){
+      $('#ad_groups_div').toggle('slow')
+    });
+    $('#inv_users_a').click(function(){
+      $('#inv_users_div').toggle('slow')
+    });
+    $('#inv_groups_a').click(function(){
+      $('#inv_groups_div').toggle('slow')
+    });
 
 
   $(function() {

@@ -614,3 +614,9 @@ div#event_list ul.tabs li.active{
 .sidetabs_selected{
   background-color: #d0d0d0;
 }
+
+roundCorner {
+    -moz-border-radius: 7px;
+    -webkit-border-radius: 7px;
+    border-radius: 7px;
+}

@@ -1,7 +1,7 @@
-          <div id="gallery"  >
+          <div id="gallery" >
                           
               <% unless albums.nil? %>
-                    <div id="gallery1" class="span16 pull-left">
+                    <div id="gallery1" class="span12 pull-left">
                        <ul id="grid" >    
                        <li>
                         <div id="upload_pics"  style = "border:2px dashed #ddd; width:85px; height:85px; padding:10px;  left:40px; text-align:middle; z-index: 1;  cursor:pointer;  float:left; margin-bottom:25px;
@@ -25,11 +25,11 @@
           </div>
 			<ul class="users" id="photos_events_ul" >
 			</ul>
-      <div id="modal1" style="display:none" >
-          <div id="modal-from-dom1" class="modal hide fade in" style="display: block;width:700px;">
+      <div id="modal5" style="display:none" >
+          <div id="modal-from-dom5" class="modal hide fade in" style="display: block;width:700px;">
       <%= form_for(album, url: create_album_activities_path, remote: true, :html => {:multipart => true}) do  |f| %> 
             <div class="modal-header">
-              <a href="#" id="closeX" class="close">×</a>
+              <a href="#" id="close5X" class="close">×</a>
               <h3>Create album</h3>
             </div>
             <div class="modal-body" style="max-height:450px;">
@@ -61,13 +61,13 @@
             <br><br>
                <%= fields_for :photos, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
                  
-              <%= photo_form.file_field :pic, id: "pic1", :multiple => true, style: "width:1px; height:1px; padding:0px;  left:0px;" %>  
+              <%= photo_form.file_field :pic, id: "pic5", :multiple => true, style: "width:1px; height:1px; padding:0px;  left:0px;" %>  
               <% end %>
               <%= hidden_field_tag :type, "event" %>
               <%= hidden_field_tag :id, activity.id %>
               <div class="center_block clearfix pull-left clear">
                <div class="ui-front">    
-                  <canvas id="imageCanvas1" style = "border: 1px solid #ddd; padding:5px; align:center" >select photos</canvas>
+                  <canvas id="imageCanvas5" style = "border: 1px solid #ddd; padding:5px; align:center" >select photos</canvas>
                 </div>
               </div>
              </div>
@@ -84,30 +84,30 @@
 
         <script type="text/javascript">
           $("#upload_pics").click(function(){
-            $('#modal1').modal('show');
+            $('#modal5').modal('show');
           });
-          $("#closeX").click(function(){
-                $('#modal1').modal('hide');
+          $("#close5X").click(function(){
+                $('#modal5').modal('hide');
               });
 
           $("#crtAlb").click(function(){
-                $('#modal1').modal('hide');
+                $('#modal5').modal('hide');
               });
 
 
-          var imageLoader = document.getElementById('pic1');
+          var imageLoader = document.getElementById('pic5');
             imageLoader.addEventListener('change', handleImage, false);
-            $("#imageCanvas1").click(function(){
-                $("#pic1").click();
+            $("#imageCanvas5").click(function(){
+                $("#pic5").click();
             });
                 
-            var canvas = document.getElementById('imageCanvas1');
+            var canvas = document.getElementById('imageCanvas5');
             var ctx = canvas.getContext('2d');
             ctx.font="30px Arial";
             ctx.fillText("Select photos",10,50);
 
           function handleImage(e){
-            var canvas = document.getElementById('imageCanvas1');
+            var canvas = document.getElementById('imageCanvas5');
             var ctx = canvas.getContext('2d');
             var iCnt=0;
             var files = e.target.files;

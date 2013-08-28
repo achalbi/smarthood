@@ -28,7 +28,7 @@
     <%= form_for  @album, :url => { :action => "edit" },  :method => :get, remote: true do  |f| %>
     <div id="floater-wrapper">
       <div id="floater" >
-        <div  class="well span14 pull-left" ><h4 ><a href="#" style="float:left;"><%= @album.title %></a>
+        <div  class="well span12 pull-left" ><h4 ><a href="#" style="float:left;"><%= @album.title %></a>
           <div style="margin-right:120px;"  >
             <span style="clear:both;" ></span>
             <%= link_to "Edit", '#', id: "edit",  class: "btn secondary pull-right " , style:"margin-left:10px"%>
@@ -92,7 +92,7 @@
       </div>
     </div>
     <span style="clear:both;" ></span>
-    <div id="gallery1" class="pull-left span16" >
+    <div id="gallery1" class="pull-left span12" >
       <ul id="grid">
       <div id="gallery3">
         <% @album.photos.each do |photo| %>

@@ -4,14 +4,19 @@
   <aside class="span6">
     <section>
       <div  class="img_zoom" >
-           <%= link_to cl_image_tag(@event.photo.pic_url(:thumb), class:" thumbnail albumLink", id:"#{@event.photo.id}") , @event, class:"albumLink", remote: true %>
-             <h2 class="pull-left"><%= link_to @event.title, @event, class:"albumLink", remote: true %></h2>
+             <h1 class="pull-left" style="margin-left:10px;font-size:20px;">
+              <div id="albumLink">
+              <%= link_to @event.title, @event, class:"albumLink", remote: true %>
+              </div>
+            </h1>
+           <%= link_to cl_image_tag(@event.photo.pic_url(:thumb_medium), class:"roundCorner albumLink", id:"#{@event.photo.id}") , @event, class:"albumLink roundCorner", remote: true %>
         </div>
 
 
     </section>
-    <section style="background-color:#e5e5e5;padding:10px;">
-      <h3>Activities <%= link_to "", '#', id: "create_activity",  class: " pull-right uibutton icon add",:title => "Add Activity" %></h3>
+    <section id="activity_span" style="background-color:#e5e5e5;padding:10px;" class="well">
+      <h2 id="act_h"><span  class="pull-left" style="margin-left:10px;font-size:19px;">Activities</span> <%= link_to "add", '#', id: "create_activity",  class: " pull-right uibutton icon add",:title => "Add Activity" %></h2>
+      <span style="clear:both"></span>
       <div id="event_activities">    
           <%= render @activities %>
       </div>
@@ -47,13 +52,9 @@
     <%= link_to "edit", '#', id: "edit_event",  class: " pull-right uibutton icon edit",:title => "Edit" %>
    <%= render partial: 'events/about', locals: {ad_users: @ad_users, inv_users: @inv_users, ad_groups: @ad_groups, inv_groups: @inv_groups, event: @event} %>
 	</div>
-	<div id="photos_events">  
-		
+	<div id="photos_events">  	
     <%= render partial: 'events/albums', locals: {activity: @activity, albums: @albums, album: @album} %>
-
-    
-
-	</div>
+  </div>
 
 </div>
 
@@ -437,6 +438,7 @@ $('#end_date_remove_link').click(function(){
     });
   });
 
+/*
   var imageLoader = document.getElementById('pic1');
     imageLoader.addEventListener('change', handleImage, false);
     $("#imageCanvas1").click(function(){
@@ -496,7 +498,7 @@ $('#end_date_remove_link').click(function(){
           $('#modal1').modal('hide');
         });
 
-
+*/
 
 
 //-------------edit event-------------------------
@@ -581,6 +583,13 @@ $('#end_date_remove_link2').click(function(){
 
 $(document).ready(function() {
 
+    $('#create_activity').hide();
+   
+    $('#activity_span').hover(function(){
+      $('#create_activity').toggle();
+      },function(){
+      $('#create_activity').toggle();
+    });
 
   $('#page2-2').hide();
 
