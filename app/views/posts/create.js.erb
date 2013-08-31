@@ -1,1 +1,1 @@
-$("#posts").html("<%= escape_javascript(render( :partial => 'posts/activity_post', :locals => {:post => @post}, :activity => @activity )) %><br><br><%= escape_javascript(render( partial: 'posts/post', locals: {posts: @posts, activity: @activity} )) %>");
+$("#posts").html("<%= escape_javascript(render( :partial => 'posts/activity_post', :locals => {:post => @post}, :activity => @activity )) %><br><br><div id='div_post' class='resources'><%= escape_javascript(render( partial: 'posts/post', locals: {posts: @posts, activity: @activity} )) %></div>");

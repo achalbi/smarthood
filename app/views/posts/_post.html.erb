@@ -5,18 +5,14 @@
       <div class="pull-left">
         <section class="grid">
           <li>
-          <%= link_to gravatar_for(post.user), post.user, title: post.user.name %>
+          <%= link_to gravatar_for(post.user), post.user, title: post.user.name, style:"border-bottom:0px;" %>
           </li>
         </section>
       </div>
       </td>
-
       <td>
-      <li style="border-top: 0px;" id="<%= post.id %>" class="pull-left">
-        <div id="gallery2">
-        <ul id="grid">
-          <% post.photos.each do |photo| %>
-            <li>
+         <% post.photos.each do |photo| %>
+            <li style="border-top: 0px;">
             <div  class="img_zoom" >
           <a href="<%= photo.pic_url %>" rel="rettyPhoto[<%= post.id %>]" class="lightview" 
          data-lightview-group="thumbnail-<%= post.id %>" 
@@ -26,9 +22,9 @@
           </li>
         
         <% end %>
-        </ul>
+        
+        <div style="background-color:#f0f0f0;padding:5px;">
         <span class="content"><%= post.content %></span>
-        </div>
         <% unless post.activities[0].nil? %>
           <% unless post.activities[0].is_admin %>
             <span class="content">Activity: <%= post.activities[0].title %></span>
@@ -42,11 +38,12 @@
                                            data: { confirm: "You sure?" },
                                            title: post.content %>
         <% end %>
-       
+        </div>
+       <br>
           <div id="postId_<%= post.id %>" class="comments">
               <%= render :partial => "comments/comment", :locals => { :comment => @comment, :post => post} %>
           </div>
-      </li>
+
       </td>
       </tr>
       </table>

@@ -32,9 +32,12 @@ class Event < ActiveRecord::Base
   has_many :event_editor_groups, dependent: :destroy
   has_many :editor_groups, class_name: "Group", :through => :event_editor_groups, source: "group"
 
-	validates :title, presence: true
+  has_many :activityposts, dependent: :destroy
+  has_many :posts, :through => :activityposts
+	
 	validates :description, presence: true
-	validates :creator, presence: true
+  validates :creator, presence: true
+  validates :title,  presence: true, length: { maximum: 50 }, uniqueness: { case_sensitive: false }
 
   scope :between, lambda {|starts_at, ends_at|
     {:conditions => ["starts_at between ? and ?", Event.format_date(starts_at), Event.format_date(ends_at)] }

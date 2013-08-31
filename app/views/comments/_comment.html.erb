@@ -1,32 +1,45 @@
-<br>
+
+<div style="background-color:#f5f5f5;" class="comments thumbnail img_zoom">
 <% post.comments.reverse_each do |comment| %>
 <% unless comment.id.nil? %>
   
-<ol style="padding:0;margin:0;width:400px" >
-<%= link_to gravatar_for(comment.user, size: 30), comment.user, title: current_user.name%>
+<ol style="padding:5px;margin:0;width:400px" class="comments_ol_<%= post.id %>">
+<%= link_to gravatar_for(comment.user, size: 30), comment.user, title: current_user.name %>
      <span class="content"><%= comment.content %></span>
      <span class="timestamp">
       Posted <%= time_ago_in_words(comment.created_at) %> ago.
     </span>
      <% if current_user?(comment.user) %>
-    <%= link_to "delete", comment, method: :delete, remote: true, data: { confirm: "You sure?" },title: comment.content %>
-  
-<% end %>  
+        <%= link_to "delete", comment, method: :delete, remote: true, data: { confirm: "You sure?" },title: comment.content %>
+     <% end %>  
+     <br><br>
 </ol>
 <% end %>
 <% end %>
-<ol style="padding:0;margin:0;width:400px">
-<%= link_to gravatar_for(current_user, size: 30), current_user, title: current_user.name , style: "padding:5px"%>
+<% if post.comments.count > 3 %>
+<a class="pull-right" id="cmnts_<%= post.id %>" style="cursor:pointer;margin-right:5px;" >Show more...</a>
+<% end %>
+<ol style="padding:5px;margin:0;width:400px">
+<%= link_to gravatar_for(current_user, size: 30), current_user, title: current_user.name , style: "padding:5px" %>
 <%= form_for [post.comments.build], remote: true do |f| %>
-  <%= f.hidden_field :post_id %>
-  <%= render 'shared/error_messages', object: f.object %>
-  <br>
-  <div class="field">
     <%= f.text_field :content, placeholder: "Comment...", class: "xxlarge" %>
-  </div>
+    <%= f.hidden_field :post_id %>
   <div style="display:none">
   <%= f.submit "Post", class: "btn primary "  %>
   </div>
 <% end %>
                                 
 </ol>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function(){
+  $('.gravatar').addClass('thumbnail');
+});
+$(".comments_ol_<%= post.id %>").hide();
+$(".comments_ol_<%= post.id %>:lt(3)").show();
+$("#cmnts_<%= post.id %>").click(function(){
+  $(".comments_ol_<%= post.id %>").show('slow');
+  $("#cmnts_<%= post.id %>").hide();
+});
+</script>

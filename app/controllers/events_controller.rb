@@ -44,6 +44,10 @@ class EventsController < ApplicationController
 
    	def create
       @event = current_user.events.build(params[:event])
+      if @event.start_at.nil?
+        @event.starts_at = time.zone.now
+        @event.ends_at = time.zone.now
+      end
 =begin
   
 
@@ -229,6 +233,17 @@ rescue Exception => e
       @events = @past_events.paginate(:page => params[:page], :per_page => 5)
     end
 
+    def post_paginate
+      @activity = Activity.find(params[:id])
+      @event = Event.find(params[:event_id])
+      @activities = @event.activities
+      if @activity.is_admin
+        @posts = @event.posts.paginate(:page => params[:page], :per_page => 4)
+      else
+       @posts = @activity.posts.paginate(:page => params[:page], :per_page => 4)
+      end 
+    end
+
     def show
     @event = Event.find(params[:id])
     @album = Album.new
@@ -266,15 +281,8 @@ rescue Exception => e
       @grps.each do |group|
         @mod_users |= group.users
       end
-      @posts = []
-       if !@activities.nil?
-            @activities.each do |activity|#
-                @posts |= activity.posts
-            end
-            @posts =@posts.sort_by{|e| -e[:id]}
-       end
-
-    #debugger
+      @activities = @event.activities
+      @posts = @event.posts.paginate(:page => params[:page], :per_page => 4)
     @post = Post.new
     @comment = Comment.new
 =begin

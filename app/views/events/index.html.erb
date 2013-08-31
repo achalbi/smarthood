@@ -8,13 +8,12 @@
 <div id="event_list">
 
 <ul class="tabs">
-  <li class="active" id="today_events_li"><a ><h4>Today's Events</h4></a></li>
+  <li class="active" id="today_events_li"><a ><h4>Events Today</h4></a></li>
   <li id="upcoming_events_li"><a ><h4>Upcoming Events</h4></a></li>
   <li id="past_events_li"><a ><h4>Previous Events</h4></a></li>
 </ul>
 
 <div id="upcoming_events">  
-<h3>Upcoming Events</h3>
 <ul class="users" id="upcoming_events_ul" >
   <% unless @upcoming_events.blank? %>
     <div id="upcoming_events_page" class="upcoming_events_paginate">
@@ -29,7 +28,6 @@
 <br>
 </div>
 <div id="past_events">
-<h3>Previous Events</h3>
 <ul class="users" id="past_events_ul">
   <% unless @past_events.blank? %>
   <div id="past_events_page" class="past_events_paginate">
@@ -44,7 +42,6 @@
 <br>
 </div>
 <div id="today_events">
-<h3>Events happening today</h3>
 <ul class="users" id="today_events_ul ">
   <% unless @today_events.blank? %>
     <div id="today_events_page" class="today_events_paginate">

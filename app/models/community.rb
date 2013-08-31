@@ -1,5 +1,5 @@
 class Community < ActiveRecord::Base
-  attr_accessible :community_id, :photo_id, :photo_attributes, :name, :description, :status
+  attr_accessible :community_id, :photo_id, :photo_attributes, :name, :description, :status, :privacy
 
     belongs_to :user
     belongs_to :photo
@@ -10,7 +10,8 @@ class Community < ActiveRecord::Base
     has_many :usercommunities, dependent: :destroy
 
     accepts_nested_attributes_for :photo
-	validates :user_id, presence: true
+	  validates :user_id, presence: true
+    validates :name,  presence: true, length: { maximum: 50 }, uniqueness: { case_sensitive: false }
 
   def following?(user, community)
    @usercommunity = user.usercommunities.find_by_community_id(community.id)

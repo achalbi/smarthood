@@ -1,5 +1,5 @@
 class Post < ActiveRecord::Base
-  attr_accessible :content, :user_id, :photo, :photo_file_name, :photo_content_type, :photo_file_size, :photo_updated_at, :photos_attributes, :pic
+  attr_accessible :content, :user_id, :photo, :photo_file_name, :photo_content_type, :photo_file_size, :photo_updated_at, :photos_attributes, :pic, :event_id
 
 
   belongs_to :user
@@ -12,6 +12,7 @@ class Post < ActiveRecord::Base
 
   has_many :activityposts, dependent: :destroy
   has_many :activities, :through => :activityposts
+  has_one :event, :through => :activityposts
 
   has_many :albums, :as => :albumable
   

@@ -15,12 +15,12 @@ class PostsController < ApplicationController
         @post = @activity.posts.build(params[:post])
         @post.user = current_user
         @post.save
-        #debugger
         unless params[:photo].nil?
           @post.photos << current_user.photos.build(params[:photo])
           @post.save
         end
         @activity.posts << @post
+        @post.activityposts[0].update_attributes(:event_id => @activity.event_id)
         @posts = @activity.posts.order("id DESC").all
         @post =Post.new
       respond_to do |format|

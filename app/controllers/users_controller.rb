@@ -53,7 +53,7 @@ class UsersController < ApplicationController
   def index
     sleep 1
     #@users = active_community.users.paginate(page: params[:page], :per_page => 8)
-    @users = User.paginate(page: params[:page], :per_page => 2)
+    @users = User.paginate(page: params[:page], :per_page => 8)
   end
 
     def destroy

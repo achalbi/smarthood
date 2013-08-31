@@ -41,8 +41,10 @@
               	
         		<%= render :partial => 'posts/activity_post', :locals => {:post => @post}, :activity => @activity %>
         		<br><br>
+              <div id="div_post" class="resources">
                 <%= render partial: 'posts/post', locals: {posts: @posts, activity: @activity}  %>
-               
+              </div>
+               <div id="loading_page" class="center" ><img src="http://res.cloudinary.com/rashi/image/upload/v1377924529/loading7_gvb06y.gif"></div>
             </div>
 			
 			</ul>
@@ -701,6 +703,43 @@ $("#edit_event").click(function(){
             }
           }
   }
+
+var currentPage = 1;
+var intervalID = -1000;
+ 
+function checkScroll_post() {
+  if (nearBottomOfPage()) {
+    currentPage++;
+  $('#loading_page').show();
+    jQuery.ajax('/events/post_paginate?id=<%= @activity.id %>&event_id=<%= @event.id %>&page=' + currentPage, {asynchronous:true, evalScripts:true, method:'get', success: function(data, textStatus, jqXHR) {
+      $('#loading_page').hide();
+    if($(data).find('.grid').html()==null || $(data).find('.grid').html() == ''){
+     // console.log("-1-"+ $(data).find('.grid').html()+"-1-");
+      clearInterval(intervalID);
+      clearInterval(intervalID-1);
+    }else{
+    $('.resources').append(data);
+    }
+  },});
+  }
+}
+ 
+function nearBottomOfPage() {
+  return scrollDistanceFromBottom() < 50;
+}
+ 
+function scrollDistanceFromBottom(argument) {
+  return pageHeight() - (window.pageYOffset + self.innerHeight);
+}
+ 
+function pageHeight() {
+  return Math.max(document.body.scrollHeight, document.body.offsetHeight);
+}
+ 
+$('document').ready(function(){
+  intervalID = setInterval(checkScroll_post, 250);
+})
+
 
 
 

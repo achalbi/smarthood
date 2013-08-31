@@ -19,6 +19,7 @@
 //= require autocomplete-rails
 //= require jquery.tokeninput
 //= require fullcalendar
+//= require jquery.lazy-images
 
 //= require_tree .
 //= require_tree ../../../vendor/assets/javascripts/lightview/.

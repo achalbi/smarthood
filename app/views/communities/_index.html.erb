@@ -1,10 +1,16 @@
-<% provide(:title, 'ComUnity') %>
+ <% provide(:title, 'Community') %>
 
 <div id="main">
-  <h1>ComUnity</h1>
-  <%= link_to "Create ComUnity", '#', id: "ComUnity1",  class: " pull-left uibutton icon add" %>
+
+
+  <h3>Selected Community</h3>
+  Community Name :   <%= @selected_community.name %>
+  <br>
+  Description :   <%= @selected_community.description %>
+  <%= link_to "Create Community", '#', id: "ComUnity1",  class: " pull-right uibutton icon add" %>
+  
   <br><br>
-<h3>Selected ComUnity</h3>
+
 
 <ul class="grid backColor"> 
 <% unless @selected_community.nil? %> 
@@ -12,79 +18,170 @@
            <% end %>
 </ul>
 
-<h3>My ComUnities</h3>
 
-<ul class="grid backColor"> 
-  <% unless @my_communities.nil? %> 
-    <% @my_communities.each do |comUnity1| %>
+<div id="Comm_list">
+
+<ul class="tabs">
+  <li class="active" id="my_comm_li"><a ><h4>My Communities</h4></a></li>
+  <li id="suggested_comm_li"><a ><h4>Suggested communities</h4></a></li>
+</ul>
+
+<div id="my_comm">  
+<ul class="grid backColor" id="my_comm_ul"> 
+<% unless @my_communities.nil? %> 
+               <% @my_communities.each do |comUnity1| %>
         <%= render :partial => '/communities/community', :locals =>{:community => comUnity1} %>
-    <% end %>
-  <% end %>
+        <% end %>
+<% end %>
 </ul>
+<br>
+</div>
 
-<h3>Public ComUnities (Suggested)</h3>
 
-<ul class="grid backColor">
-	<% unless @public_communities.nil? %> 
-    <% @public_communities.each do |comUnity| %>
-        <%= render :partial => '/communities/community', :locals =>{:community => comUnity} %>
+<div id="suggested_comm">
+<ul class="grid backColor" id="suggested_comm_ul">
+<% unless @public_communities.nil? %> 
+    <% @public_communities.each do |comUnity2| %>
+        <%= render :partial => '/communities/community', :locals =>{:community => comUnity2} %>
     <% end %>
-    <% end %>
+<% end %>
 
 </ul>
+<br>
+</div>
+
+</div>
+
+<div id="modal" style="display:none;" >
+    <div id="modal-from-dom" class="modal hide fade in" style="display: block;width:700px;">
+        <%= form_for( @communities, remote: true, :html => {:multipart => true}) do |f| %>
+        <div class="modal-header">
+            <a href="#" id="closeX" class="close">×</a>
+            <span style="font-size:20px;line-height: 2;">Create Community</span>
+        </div>
+        
+        <div class="modal-body" style="max-height:550px;">
+            <div class="row">
+                <div class="span14 ui-front">
+                <%= render 'shared/error_messages', object: f.object %>
+        
+                <div id="pages">     
+                    <div id="page-1">
+                        <%= link_to "Next page", '#', id: "next-2",  class: "uibutton icon next pull-right" %>
+                        <div class="center_block clearfix">
+                            <%= f.label :name %>
+                            <div class="input">
+                                <%= f.text_field :name, :placeholder=>"Name" %>
+                            </div>
+                        </div>    
+
+               
+
+                        <div class="center_block clearfix">
+                            <%= f.label :location %>
+                            <div class="input ">
+                                <%= link_to "View map", '#', id: "view_map_link",  class: "uibutton icon prev" %>
+                            </div>
+                            <div class="input" id="view_map">
+                            </div>
+                        </div>
+                
+                        <div class="center_block clearfix">
+                            <%= f.label :description %>
+                            <div class="input">
+                                <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title=>"Description", rows: 3, cols: 75  %> 
+                            </div>
+                        </div>
+                        <div class="center_block clearfix">
+                            <%= label_tag "Add picture:" %>
+                            <%= f.fields_for :photo, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
+                            <%= photo_form.file_field :pic, id: "pic",style: "width:1px; height:1px; padding:0px;  left:0px;" %>  
+                            <% end %>
+                            <div class="input">    
+                                <canvas id="imageCanvas" style = "border: 1px solid #ddd; padding:5px; align:center; width:200px;" >select an image</canvas>
+                            </div>
+                        </div>
+                    </div>
+                           
+                    <div id="page-2">
+                        <%= link_to "Previous page", '#', id: "prev-1",  class: "uibutton icon prev pull-left" %>
+                        <br>
+                        <div class="center_block clearfix">
+                            <%= label_tag :privacy %>
+                            <div class="input">
+                                <%= f.select :privacy, options_for_select([["Open", "open"], ["Closed", "closed"], ["Secret", "secret"]]) %>
+                            </div>
+                        </div> 
+                       
+                        <br>
+                
+                        
+                    </div>
+                </div>
+            </div>
+        </div>   
+    </div>
+    <div class="modal-footer" >
+        <%= f.submit "Create Community", class: "btn primary pull-right", id: "crtComUnity" %>  
+    </div>
+    <% end %>
+</div>
+          
+
 
 
 </div>
-        <div id="modal" style="display:none" >
-          <div id="modal-from-dom" class="modal hide fade in" style="display: block;">
-          	<%= form_for( @community, remote: true, :html => {:multipart => true}) do |f| %>
-            <div class="modal-header">
-              <a href="#" id="closeX" class="close">×</a>
-              <h3>Create ComUnity</h3>
-            </div>
-            <div class="modal-body">
-              <div class="row">
-				  <div class="span6 offset3 ">
-				    
-				    	 <%= render 'shared/error_messages', object: f.object %>
-				      <%= f.label :name %>
-				      <%= f.text_field :name %>
-
-				      <%= f.label :description %>
-				      <%= f.text_field :description %>
-				                    
-
-              <%= f.fields_for :photo, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
-                 
-              <%= photo_form.file_field :pic, id: "pic",style: "width:1px; height:1px; padding:0px;  left:0px;" %>  
-              <% end %>
-                   
-          <canvas id="imageCanvas" style = "border: 1px solid #ddd; padding:5px; align:center" >select an image</canvas>
-       
-				  </div>
-				</div>   
-	         </div>
-            <div class="modal-footer" >
-              <%= f.submit "Create my ComUnity", class: "btn primary pull-right", id: "crtComUnity" %>  
-            </div>
-            <% end %>
-          </div>
-          
-        </div>
 
 <script type="text/javascript">
-	$(document).ready(function(){
-		$("#ComUnity1").click(function(){
-			$('#modal').modal('show');
-		});
-		$("#closeX").click(function(){
-        	$('#modal').modal('hide');
+    $(document).ready(function(){
+    
+    $('#page-2').hide();
+
+  
+    $("#ComUnity1").click(function(){
+      $('#modal').modal('show');
+    });
+    $("#closeX").click(function(){
+          $('#modal').modal('hide');
         });
 
-		$("#crtComUnity").click(function(){
-        	$('#modal').modal('hide');
+    $("#crtComUnity").click(function(){
+          $('#modal').modal('hide');
         });
 
+ $('#suggested_comm_li').click(function(){
+            $('#suggested_comm_li').addClass('active');
+            $('#my_comm_li').removeClass('active');
+            $('#suggested_comm').show();
+            $('#my_comm').hide();
+        });
+
+
+        $('#my_comm_li').click(function(){
+            $('#suggested_comm_li').removeClass('active');
+            $('#my_comm_li').addClass('active');
+            $('#suggested_comm').hide();
+            $('#my_comm').show();
+        });
+
+
+$('#prev-1').click(function(){
+    $( "#page-1" ).animate({ width: '600px' }, 1000, function() {
+                $(this).show();
+             });
+    $( "#page-2" ).animate({ width: '0px' }, 1000, function() {
+                $(this).hide();
+             });
+
+});
+$('#next-2').click(function(){
+    $( "#page-1" ).animate({ width: '0px' }, 1000, function() {
+                $(this).hide();
+             });
+    $( "#page-2" ).animate({ width: '600px' }, 1000, function() {
+                $(this).show();
+             });
+});
 
     var imageLoader = document.getElementById('pic');
     imageLoader.addEventListener('change', handleImage, false);
@@ -133,8 +230,7 @@
   }
 
 
-	});
-		
-
-
+  });
+    
+       
 </script>
