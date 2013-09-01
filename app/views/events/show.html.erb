@@ -4,24 +4,29 @@
   <aside class="span6">
     <section>
       <div  class="img_zoom" >
-           <%= link_to cl_image_tag(@event.photo.pic_url(:thumb), class:" thumbnail albumLink", id:"#{@event.photo.id}") , @event, class:"albumLink", remote: true %>
-             <h2 class="pull-left"><%= link_to @event.title, @event, class:"albumLink", remote: true %></h2>
+             <h4 class="pull-left" style="margin-left:10px;font-size:18px;">
+              <div id="albumLink">
+              <%= link_to @event.title, @event, class:"albumLink", remote: true %>
+              </div>
+            </h4>
+           <%= link_to cl_image_tag(@event.photo.pic_url(:thumb_medium), class:"roundCorner albumLink", id:"#{@event.photo.id}") , @event, class:"albumLink roundCorner", remote: true %>
         </div>
 
 
     </section>
-    <section>
-      <h4>Activities <%= link_to "", '#', id: "create_activity",  class: " pull-right uibutton icon add",:title => "Add Activity" %></h4>
-      <div id="event_activities"> 
-          <ul class="users">
-            <%= render @activities %>
-          </ul>
+    <section id="activity_span" style="background-color:#e5e5e5;padding:10px;" class="well">
+      <h2 id="act_h"><span  class="pull-left" style="margin-left:10px;font-size:19px;">Activities</span> <%= link_to "add", '#', id: "create_activity",  class: " pull-right uibutton icon add",:title => "Add Activity" %></h2>
+      <span style="clear:both"></span>
+      <div id="event_activities">    
+          <%= render @activities %>
       </div>
     </section>
       
    </aside>
    <aside id="right" style="float: right;width:220px;margin-right:10px;">
+    <div id="event_stats">
       <%= render partial: 'shared/event_stats', locals: {ad_users: @ad_users, inv_users: @inv_users, ad_groups: @ad_groups, inv_groups: @inv_groups} %>
+    </div>
     </aside>
 <div id="event_list" class="span13">
   <ul class="tabs">
@@ -36,24 +41,21 @@
                 
             <%= render :partial => 'posts/activity_post', :locals => {:post => @post}, :activity => @activity %>
             <br><br>
+              <div id="div_post" class="resources">
                 <%= render partial: 'posts/post', locals: {posts: @posts, activity: @activity}  %>
-               
+              </div>
+              <p id="activity_id" class='active_hide'><%= @activity.id %></p>
+               <div id="loading_page" class="center" ><img src="http://res.cloudinary.com/rashi/image/upload/v1377924529/loading7_gvb06y.gif"></div>
             </div>
       
       </ul>
     <br>
   </div>
-  <div id="activity_events"> 
-  
-    <%= link_to "edit", '#', id: "edit_event",  class: " pull-right uibutton icon edit",:title => "Edit" %>
+  <div id="activity_events">  
    <%= render partial: 'events/about', locals: {ad_users: @ad_users, inv_users: @inv_users, ad_groups: @ad_groups, inv_groups: @inv_groups, event: @event} %>
   </div>
-  <div id="photos_events">  
-    
+  <div id="photos_events">    
     <%= render partial: 'events/albums', locals: {activity: @activity, albums: @albums, album: @album} %>
-
-    
-
   </div>
 
 </div>
@@ -96,7 +98,7 @@
                 <div class="center_block clearfix">
                   <%= f.label :location %>
                   <div class="input ">
-                  <%= f.text_field :address, :placeholder => :location, :size => 43, class: 'activities_with_autocomplete inherit_width',:value => @event.address , 'data-autocompleteUrl' => search_address_events_path %>&nbsp;&nbsp;&nbsp;
+                  <%= f.text_field :address, :placeholder => :location, :size => 43, class: 'events_with_autocomplete inherit_width',:value => @event.address , 'data-autocompleteUrl' => search_address_events_path %>&nbsp;&nbsp;&nbsp;
                 
                   <%= link_to "View map", '#', id: "view_map_link",  class: "uibutton icon prev" %>
                 </div>
@@ -145,21 +147,21 @@
 
 
 
+ <%= form_for( @event, remote: true, :html => {:multipart => true}) do |f| %>
 <div id="modal2" style="display:none;" >
           <div id="modal-from-dom2" class="modal hide fade in" style="display: block;width:700px;">
-            <%= form_for( event, remote: true, :html => {:multipart => true}) do |f| %>
             <div class="modal-header">
               <a href="#" id="close2X" class="close">×</a>
-              <span style="font-size:20px;line-height: 2;">Create Event</span>
+              <span style="font-size:20px;line-height: 2;">Edit Event</span>
             </div>
             <div class="modal-body" style="max-height:550px;">
               <div class="row">
           <div class="span14 ui-front">
             
                <%= render 'shared/error_messages', object: f.object %>
-          <div id="pages">     
-            <div id="page-1">
-              <%= link_to "Next page", '#', id: "next-2",  class: "uibutton icon next pull-right" %>
+          <div id="pages2">     
+            <div id="page2-1">
+              <%= link_to "Next page", '#', id: "next2-2",  class: "uibutton icon next pull-right" %>
                <div class="center_block clearfix">
                   <%= f.label :title %>
                   <div class="input">
@@ -170,14 +172,14 @@
                   <%= label_tag :starts_at %>
                   <div class="input">
                   <%= f.text_field :starts_at, :placeholder => "Time" %>&nbsp;&nbsp;&nbsp;
-                <a id="end_date_add_link" class="uibutton icon add">End Date</a>
+                <a id="end_date_add_link2" class="uibutton icon add">End Date</a>
                 </div>
                 </div>
-                <div class="center_block clearfix" id="end_date">
+                <div class="center_block clearfix" id="end_date2">
                   <%= label_tag :ends_at %>
                   <div class="input">
                     <%= f.text_field :ends_at %>&nbsp;&nbsp;&nbsp;
-                   <a id="end_date_remove_link" class="uibutton icon prev">Remove</a>
+                   <a id="end_date_remove_link2" class="uibutton icon prev">Remove</a>
                   </div>
                 </div> 
 
@@ -186,9 +188,9 @@
                   <div class="input ">
                   <%= f.text_field :address, :placeholder => :location, :size => 43, class: 'events_with_autocomplete inherit_width', 'data-autocompleteUrl' => search_address_events_path %>&nbsp;&nbsp;&nbsp;
                 
-                  <%= link_to "View map", '#', id: "view_map_link",  class: "uibutton icon prev" %>
+                  <%= link_to "View map", '#', id: "view_map_link2",  class: "uibutton icon prev" %>
                 </div>
-                <div class="input" id="view_map">
+                <div class="input" id="view_map2">
                 
                 </div>
                 </div>
@@ -199,10 +201,10 @@
                 </div>
                 </div>
               </div>  
-              <div id="page-2">
-                <%= link_to "Previous page", '#', id: "prev-1",  class: "uibutton icon prev pull-left" %>
-                <br>
-
+              <div id="page2-2">
+                <%= link_to "Previous page", '#', id: "prev2-1",  class: "uibutton icon prev pull-left" %>
+                <br><br>
+                <!--
                  <div class="center_block clearfix"><br>
                   <%= f.label "Invite by User name:" %>
                   <div class="input ui-front">
@@ -215,7 +217,7 @@
                      <%= f.text_field :group_tokens, id: "search_group_evt","data-pre" => @groups_pp.map(&:attributes).to_json %>
                   </div>
                 </div>
-                <!--
+                
                 <div class="center_block clearfix">
                    <%= label_tag :all_day %>
                   <div class="input">
@@ -228,14 +230,15 @@
                   </div>
                 </div> <br>
                 <div class="center_block clearfix">
-                <%= label_tag "Add picture:" %>
+                <%= label_tag "Change picture:" %>
                 <%= f.fields_for :photo, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
                  
                 <%= photo_form.file_field :pic, id: "pic2",style: "width:1px; height:1px; padding:0px;  left:0px;" %>  
 
                 <% end %>
-                <div class="input">    
-                <canvas id="imageCanvas2" style = "border: 1px solid #ddd; padding:5px; align:center; width:200px;" >select new image</canvas>
+                <div class="input"> 
+                <%= cl_image_tag(@event.photo.pic_url(:small), class:" thumbnail albumLink", id:"event_pic", style: "cursor:pointer;") %>   
+                <canvas id="imageCanvas2" style = "border: 1px solid #ddd; padding:5px; align:center; width:200px;display:none;cursor:pointer" >select new image</canvas>
                 </div>
               </div>
 
@@ -249,10 +252,11 @@
             <div class="modal-footer" >
               <%= f.submit "Update", class: "btn primary pull-right", id: "updEvent" %>  
             </div>
-            <% end %>
           </div>
           
         </div>
+            <% end %>
+
 
 
 <script type="text/javascript">
@@ -289,6 +293,7 @@ $(document).ready(function(){
 
   $("#page-2").hide();
 
+
     $("#create_activity").click(function(){
       $('#modal').modal('show');
     });
@@ -304,11 +309,11 @@ $(document).ready(function(){
     $('#view_map_link').hide();
 
     $(function() {
-      return $('.activities_with_autocomplete').autocomplete({
+      return $('.events_with_autocomplete').autocomplete({
         minLength: 2,
         source: function(request, response) {
           return $.ajax({
-            url: $('.activities_with_autocomplete').data('autocompleteurl'),
+            url: $('.events_with_autocomplete').data('autocompleteurl'),
             dataType: "json",
             data: {starts_at: "", ends_at: "",
               address: request.term, event: "<%= @event.to_json %>"
@@ -435,6 +440,7 @@ $('#end_date_remove_link').click(function(){
     });
   });
 
+/*
   var imageLoader = document.getElementById('pic1');
     imageLoader.addEventListener('change', handleImage, false);
     $("#imageCanvas1").click(function(){
@@ -486,7 +492,7 @@ $('#end_date_remove_link').click(function(){
   $("#upload_pics").click(function(){
       $('#modal1').modal('show');
     });
-    $("#close1X").click(function(){
+    $("#closeX").click(function(){
           $('#modal1').modal('hide');
         });
 
@@ -494,34 +500,36 @@ $('#end_date_remove_link').click(function(){
           $('#modal1').modal('hide');
         });
 
+*/
+
 
 //-------------edit event-------------------------
 
 
-$('#prev-1').click(function(){
-    $( "#page-1" ).animate({ width: '600px' }, 1000, function() {
+$('#prev2-1').click(function(){
+    $( "#page2-1" ).animate({ width: '600px' }, 1000, function() {
                 $(this).show();
              });
-    $( "#page-2" ).animate({ width: '0px' }, 1000, function() {
+    $( "#page2-2" ).animate({ width: '0px' }, 1000, function() {
                 $(this).hide();
              });
 
 });
-$('#next-2').click(function(){
-    $( "#page-1" ).animate({ width: '0px' }, 1000, function() {
+$('#next2-2').click(function(){
+    $( "#page2-1" ).animate({ width: '0px' }, 1000, function() {
                 $(this).hide();
              });
-    $( "#page-2" ).animate({ width: '600px' }, 1000, function() {
+    $( "#page2-2" ).animate({ width: '600px' }, 1000, function() {
                 $(this).show();
              });
 });
 
 $('#event_address').keydown(function(){
-    $('#view_map_link').hide();
-    $('#view_map').hide();
+    $('#view_map_link2').hide();
+    $('#view_map2').hide();
 });
 
-$('#view_map_link').click(function(){
+$('#view_map_link2').click(function(){
     var address = "/events/get_geo_coordinates?address="+$('#event_address').val();
     // $.get(address,"script");
      $.ajax({
@@ -533,24 +541,24 @@ $('#view_map_link').click(function(){
 
 $('a.ui-corner-all').live("click", function(){
   if($('#event_address').val()!=""){
-    $('#view_map_link').show();
+    $('#view_map_link2').show();
   }else{
-    $('#view_map_link').hide();
+    $('#view_map_link2').hide();
   }
 });
 
 
-$('#end_date_add_link').click(function(){
-  $('#end_date').show();
-  $('#end_date_add_link').hide();
+$('#end_date_add_link2').click(function(){
+  $('#end_date2').show();
+  $('#end_date_add_link2').hide();
 });
-$('#end_date_remove_link').click(function(){
-  $('#end_date').hide();
-  $('#end_date_add_link').show();
+$('#end_date_remove_link2').click(function(){
+  $('#end_date2').hide();
+  $('#end_date_add_link2').show();
 });
 
   $(function() {
-  $("#search_user").tokenInput("/events/search_auto_user", {
+  $("#search_user_evt").tokenInput("/events/search_auto_user", {
     crossDomain: false,
    // prePopulate: $(".eventdetails_with_autocomplete").data("pre"),
     theme: "facebook",
@@ -563,7 +571,7 @@ $('#end_date_remove_link').click(function(){
 });
 
   $(function() {
-  $("#search_group").tokenInput("/events/search_auto_group", {
+  $("#search_group_evt").tokenInput("/events/search_auto_group", {
     crossDomain: false,
    // prePopulate: $(".eventdetails_with_autocomplete").data("pre"),
     theme: "facebook",
@@ -577,10 +585,25 @@ $('#end_date_remove_link').click(function(){
 
 $(document).ready(function() {
 
+    $('#create_activity').hide();
+   
+    $('#activity_span').hover(function(){
+      $('#create_activity').toggle();
+      },function(){
+      $('#create_activity').toggle();
+    });
 
-  $('#page-2').hide();
+  $('#page2-2').hide();
 
-  $('#view_map_link').hide();
+  $('#view_map_link2').hide();
+  $('#end_date_add_link2').hide();
+
+    $("#event_pic").click(function(){
+      $('#event_pic').hide();
+      $('#pic2').click();
+      $('#imageCanvas2').show();
+    });
+
 
     $(function() {
       return $('.events_with_autocomplete').autocomplete({
@@ -638,12 +661,12 @@ $("#edit_event").click(function(){
       var imageLoader = document.getElementById('pic2');
     imageLoader.addEventListener('change', handleImage, false);
     $("#imageCanvas2").click(function(){
-        $("#pic").click();
+        $("#pic2").click();
     });
         var canvas = document.getElementById('imageCanvas2');
     var ctx = canvas.getContext('2d');
     ctx.font="30px Arial";
-    ctx.fillText("Add Event picture",10,50);
+    ctx.fillText("Change picture",10,50);
 
   function handleImage(e){
     var canvas = document.getElementById('imageCanvas2');
@@ -681,6 +704,55 @@ $("#edit_event").click(function(){
           }
   }
 
+var currentPage = 1;
+var intervalID = -1000;
+ 
+function checkScroll_post() {
+  if (nearBottomOfPage()) {
+    currentPage++;
+  $('#loading_page').show();
+    jQuery.ajax('/events/post_paginate?id='+$('#activity_id').html()+'&event_id=<%= @event.id %>&page=' + currentPage, {asynchronous:true, evalScripts:true, method:'get', success: function(data, textStatus, jqXHR) {
+      $('#loading_page').hide();
+    if($(data).find('.grid').html()==null || $(data).find('.grid').html() == ''){
+     // console.log("-1-"+ $(data).find('.grid').html()+"-1-");
+      clearInterval(intervalID);
+      clearInterval(intervalID-1);
+    }else{
+    $('.resources').append(data);
+    }
+  },});
+  }
+}
+ 
+function nearBottomOfPage() {
+  return scrollDistanceFromBottom() < 50;
+}
+ 
+function scrollDistanceFromBottom(argument) {
+  return pageHeight() - (window.pageYOffset + self.innerHeight);
+}
+ 
+function pageHeight() {
+  return Math.max(document.body.scrollHeight, document.body.offsetHeight);
+}
+ 
+$('document').ready(function(){
+  intervalID = setInterval(checkScroll_post, 250);
+})
 
+
+$('.pop_up').popover({
+    html: true,
+    trigger: 'manual',
+    placement: 'left',
+    delay: { hide: 500},
+    template: ' <div class="popover"><div class="pop_div"><div class="arrow1" stlye="margin-right:10px;"></div><div class="popover-inner"  ><h3 class="popover-title" ></h3><div class="popover-content" ><p></p><br></div></div></div></div>'
+});
+
+  $(".pop_up").hover(function(){
+      $(this).popover('show');        
+  },function(){
+      $(this).popover('hide');        
+  });
 
 </script>

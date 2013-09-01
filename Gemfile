@@ -27,6 +27,7 @@ gem 'rails3-jquery-autocomplete'
 gem "font-awesome-rails"
 gem 'jquery-tokeninput-rails'
 gem 'jquery-lazy-images'
+#gem 'autogrow-textarea-rails'
 #gem 'node'
 #gem 'metro-rails'
 #gem 'therubyracer'

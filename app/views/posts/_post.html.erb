@@ -5,7 +5,9 @@
       <div class="pull-left">
         <section class="grid">
           <li>
-          <%= link_to gravatar_for(post.user), post.user, title: post.user.name, style:"border-bottom:0px;" %>
+            <a href="/users/<%=post.user.id %>/" data-remote="true" style="cursor:pointer;border:0px;padding:0px;" class="pop_up" rel="popover" data-content='<%= gravatar_for post.user, size: 100 %>' data-original-title="<%= post.user.name %>" >
+                    <%= gravatar_for post.user, size: 50 %>
+            </a>
           </li>
         </section>
       </div>
@@ -60,4 +62,20 @@ $('.img_zoom1 img').load(function() {
         height: $(this).data('height') * (e.type === 'mouseenter' ? 1.08 : 1)
     });
 });
+
+
+$('.pop_up').popover({
+    html: true,
+    trigger: 'manual',
+    placement: 'left',
+    delay: { hide: 500},
+    template: ' <div class="popover"><div class="pop_div"><div class="arrow1" stlye="margin-right:10px;"></div><div class="popover-inner"  ><h3 class="popover-title" ></h3><div class="popover-content" ><p></p><br></div></div></div></div>'
+});
+
+  $(".pop_up").hover(function(){
+      $(this).popover('show');        
+  },function(){
+      $(this).popover('hide');        
+  });
+
 </script>

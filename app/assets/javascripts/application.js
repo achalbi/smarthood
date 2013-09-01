@@ -29,5 +29,3 @@
 //= require_tree ../../../vendor/assets/javascripts/sidemenu/.
 //= require_tree ../../../vendor/assets/javascripts/fancybox/.
 
-
-

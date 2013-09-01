@@ -1,9 +1,11 @@
+<div id="aboutDiv">
+ <%= link_to "edit", '#', id: "edit_event",  class: " pull-right uibutton icon edit",:title => "Edit" %>
  <p><h4>Description : <small><%= event.description %></small></h4></p>
-		<% if  event.starts_at.to_formatted_s(:long) == event.ends_at.to_formatted_s(:long) %>
+    <% if  event.starts_at.to_formatted_s(:long) == event.ends_at.to_formatted_s(:long) %>
       <p><h4>Time : <%= event.starts_at.to_formatted_s(:long)  %></h4></p>
     <% else %>
       <p><h4>Time : <%= event.starts_at.to_formatted_s(:long)  %> - <%= event.ends_at.to_formatted_s(:long)  %></h4></p>
-    <% end %>    	
+    <% end %>     
     <p><h4>Location : <%= event.address %></h4></p>
       <%= render :partial => "events/maps", :locals => { :location => event } %>
      <p><h4>Privacy : <%= event.privacy %></h4></p>
@@ -87,7 +89,18 @@
         </li>
         <% end %>
 
-			</ul>
+      </ul>
 
 
-		<br>
+    <br>
+</div>
+    <script type="text/javascript">
+    $(document).ready(function(){
+      $('#edit_event').toggle();
+    });
+    $('#aboutDiv').hover(function(){
+      $('#edit_event').toggle();
+      },function(){
+      $('#edit_event').toggle();
+    });
+    </script>

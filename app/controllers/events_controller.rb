@@ -44,9 +44,11 @@ class EventsController < ApplicationController
 
    	def create
       @event = current_user.events.build(params[:event])
-      if @event.start_at.nil?
-        @event.starts_at = time.zone.now
-        @event.ends_at = time.zone.now
+      if @event.starts_at.nil?
+        @event.starts_at = Time.zone.now
+      end
+      if @event.ends_at.nil?
+        @event.ends_at = Time.zone.now
       end
 =begin
   
@@ -127,12 +129,14 @@ rescue Exception => e
 
     def index
       @event = Event.new
+      @event.starts_at = Time.zone.now
+      @event.ends_at = Time.zone.now
       @events = Event.scoped
       @events = @events.between(params['start'], params['end']) if (params['start'] && params['end'])
       @events = @events.where('community_id = ?',active_community.id)
-      @upcoming_events = @events.where("starts_at > ?",Time.current.tomorrow.to_date)
-      @past_events = @events.where("starts_at < ? and ends_at < ?",Time.current.to_date,Time.current.to_date)
-      @today_events = @events.where("starts_at BETWEEN ? AND ?",Time.current.to_date,Time.current.tomorrow.to_date)
+      @upcoming_events = @events.where("starts_at > ?",Time.current.tomorrow.to_date).order("id DESC")
+      @past_events = @events.where("starts_at < ? and ends_at < ?",Time.current.to_date,Time.current.to_date).order("id DESC")
+      @today_events = @events.where("starts_at BETWEEN ? AND ?",Time.current.to_date,Time.current.tomorrow.to_date).order("id DESC")
       @events = @events.paginate(page: params[:page], :per_page => 5)
       @upcoming_events = @upcoming_events.paginate(:page => params[:page], :per_page => 5)
       @today_events = @today_events.paginate(:page => params[:page], :per_page => 5)
@@ -215,21 +219,21 @@ rescue Exception => e
     def upcoming_events_paginate
       @events = Event.scoped
       @events = @events.where('community_id = ?',active_community.id)
-      @upcoming_events = @events.where("starts_at > ?",Time.current.tomorrow.to_date)
+      @upcoming_events = @events.where("starts_at > ?",Time.current.tomorrow.to_date).order("id DESC")
       @events = @upcoming_events.paginate(:page => params[:page], :per_page => 5)
     end
 
     def today_events_paginate
        @events = Event.scoped
        @events = @events.where('community_id = ?',active_community.id)
-       @today_events = @events.where("starts_at BETWEEN ? AND ?",Time.current.to_date,Time.current.tomorrow.to_date)
+       @today_events = @events.where("starts_at BETWEEN ? AND ?",Time.current.to_date,Time.current.tomorrow.to_date).order("id DESC")
        @events = @today_events.paginate(:page => params[:page], :per_page => 5)
     end
 
     def past_events_paginate
       @events = Event.scoped
       @events = @events.where('community_id = ?',active_community.id)
-      @past_events = @events.where("starts_at < ? and ends_at < ?",Time.current.to_date,Time.current.to_date)
+      @past_events = @events.where("starts_at < ? and ends_at < ?",Time.current.to_date,Time.current.to_date).order("id DESC")
       @events = @past_events.paginate(:page => params[:page], :per_page => 5)
     end
 

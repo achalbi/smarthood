@@ -4,11 +4,11 @@
   <aside class="span6">
     <section>
       <div  class="img_zoom" >
-             <h1 class="pull-left" style="margin-left:10px;font-size:20px;">
+             <h4 class="pull-left" style="margin-left:10px;font-size:18px;">
               <div id="albumLink">
               <%= link_to @event.title, @event, class:"albumLink", remote: true %>
               </div>
-            </h1>
+            </h4>
            <%= link_to cl_image_tag(@event.photo.pic_url(:thumb_medium), class:"roundCorner albumLink", id:"#{@event.photo.id}") , @event, class:"albumLink roundCorner", remote: true %>
         </div>
 
@@ -44,6 +44,7 @@
               <div id="div_post" class="resources">
                 <%= render partial: 'posts/post', locals: {posts: @posts, activity: @activity}  %>
               </div>
+              <p id="activity_id" class='active_hide'><%= @activity.id %></p>
                <div id="loading_page" class="center" ><img src="http://res.cloudinary.com/rashi/image/upload/v1377924529/loading7_gvb06y.gif"></div>
             </div>
 			
@@ -51,7 +52,6 @@
 		<br>
 	</div>
 	<div id="activity_events">  
-    <%= link_to "edit", '#', id: "edit_event",  class: " pull-right uibutton icon edit",:title => "Edit" %>
    <%= render partial: 'events/about', locals: {ad_users: @ad_users, inv_users: @inv_users, ad_groups: @ad_groups, inv_groups: @inv_groups, event: @event} %>
 	</div>
 	<div id="photos_events">  	
@@ -711,7 +711,7 @@ function checkScroll_post() {
   if (nearBottomOfPage()) {
     currentPage++;
   $('#loading_page').show();
-    jQuery.ajax('/events/post_paginate?id=<%= @activity.id %>&event_id=<%= @event.id %>&page=' + currentPage, {asynchronous:true, evalScripts:true, method:'get', success: function(data, textStatus, jqXHR) {
+    jQuery.ajax('/events/post_paginate?id='+$('#activity_id').html()+'&event_id=<%= @event.id %>&page=' + currentPage, {asynchronous:true, evalScripts:true, method:'get', success: function(data, textStatus, jqXHR) {
       $('#loading_page').hide();
     if($(data).find('.grid').html()==null || $(data).find('.grid').html() == ''){
      // console.log("-1-"+ $(data).find('.grid').html()+"-1-");
@@ -741,6 +741,18 @@ $('document').ready(function(){
 })
 
 
+$('.pop_up').popover({
+    html: true,
+    trigger: 'manual',
+    placement: 'left',
+    delay: { hide: 500},
+    template: ' <div class="popover"><div class="pop_div"><div class="arrow1" stlye="margin-right:10px;"></div><div class="popover-inner"  ><h3 class="popover-title" ></h3><div class="popover-content" ><p></p><br></div></div></div></div>'
+});
 
+  $(".pop_up").hover(function(){
+      $(this).popover('show');        
+  },function(){
+      $(this).popover('hide');        
+  });
 
 </script>

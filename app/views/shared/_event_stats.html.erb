@@ -11,7 +11,9 @@
       <br><br>
       <div id="ad_users_div">
         <% ad_users.each do |ad_user| %>
+        <a style="cursor:pointer;border:0px;padding:0px;" class="pop_up" rel="popover" data-content='<%= gravatar_for ad_user, size: 100 %>' data-original-title="<%= ad_user.name %>" >
          <%= gravatar_for ad_user, size: 25 %>
+        </a>
         <% end %>
       </div>
   </section>
@@ -25,7 +27,9 @@
      <br><br>
       <div id="ad_groups_div">
       <% ad_groups.each do |ad_group| %>
+      <a style="cursor:pointer;border:0px;padding:0px;" class="pop_up" rel="popover" data-content='<%= cl_image_tag(ad_group.photo.pic_url(:smaller), class:" thumbnail gravatar", id:"#{ad_group.photo.id}") %><%= ad_group.description %>' data-original-title="<%= ad_group.name %>" >
         <%=  cl_image_tag(ad_group.photo.pic_url(:smallest_half), class:" thumbnail gravatar", id:"#{ad_group.photo.id}") %>
+      </a>
       <% end %>
     </div>
   </section>
@@ -42,7 +46,9 @@
       <br><br>
       <div id="inv_users_div">
       <% inv_users.each do |inv_user| %>
+       <a style="cursor:pointer;border:0px;padding:0px;" class="pop_up" rel="popover" data-content='<%= gravatar_for inv_user, size: 100 %>' data-original-title="<%= inv_user.name %>" >
        <%= gravatar_for inv_user, size: 25 %>
+      </a>
       <% end %>
     </div>
   </section>
@@ -56,7 +62,9 @@
       <br><br>
       <div id="inv_groups_div">
       <% inv_groups.each do |inv_group| %>
+            <a style="cursor:pointer;border:0px;padding:0px;" class="pop_up" rel="popover" data-content='<%= cl_image_tag(inv_group.photo.pic_url(:smaller), class:" thumbnail gravatar", id:"#{inv_group.photo.id}") %><%= inv_group.description %>' data-original-title="<%= inv_group.name %>" >
        <%=  cl_image_tag(inv_group.photo.pic_url(:smallest_half), class:" thumbnail gravatar", id:"#{inv_group.photo.id}") %>
+      </a>
       <% end %>
     </div>
   </section>
@@ -256,5 +264,6 @@ $(document).ready(function(){
         hintText: "Type in a group name",
   });
 });
+
 
 </script>
