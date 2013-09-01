@@ -35,7 +35,7 @@ class Event < ActiveRecord::Base
   has_many :activityposts, dependent: :destroy
   has_many :posts, :through => :activityposts
 	
-	validates :description, presence: true
+	#validates :description, presence: true
   validates :creator, presence: true
   validates :title,  presence: true, length: { maximum: 50 }, uniqueness: { case_sensitive: false }
 

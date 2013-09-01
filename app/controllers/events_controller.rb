@@ -120,8 +120,9 @@ rescue Exception => e
         if @event.save
           format.html { redirect_to @event, format: 'js', :success => 'Event was successfully created.' }
           format.json { render :json => @event, :status => :created, :location => @event }
+          format.js { redirect_to @event, format: 'js', :success => 'Event was successfully created.' }
         else
-          format.html { render :action => "new" }
+          format.html { render :action => "index" }
           format.json { render :json => @event.errors, :status => :unprocessable_entity }
         end
       end
