@@ -8,9 +8,12 @@
     <% end %>     
     <p><h4>Location : <%= event.address %></h4></p>
       <%= render :partial => "events/maps", :locals => { :location => event } %>
-     <p><h4>Privacy : <%= event.privacy %></h4></p>
+     <p><h4>Privacy : <%= event.privacy==1? 'Event Invitees': 'custom' %></h4></p>
       <ul class="users" id="activity_events_ul" >
-        <h4>Moderators</h4>
+        <% if (ad_users.count > 0 || ad_groups.count > 0) %>
+          <h4>Moderators</h4>
+        <% end %>  
+        <% if ad_users.count > 0  %>
         <h6>Members</h6>
         <% ad_users.each do |user|%>
         <li style="width:100px;float:left;">
@@ -23,6 +26,8 @@
         </li>
         <% end %>
         <li style="clear:both;"></li>
+        <% end %> 
+        <% if ad_groups.count > 0  %> 
         <h6>Groups</h6>
         <% ad_groups.each do |group|%>
         <li style="width:100px;float:left;">
@@ -49,19 +54,25 @@
         </li>
          <% end %>
          <li style="clear:both;"></li>
-        <h4>Invitees</h4>
-        <h6>Members</h6>
-        <% inv_users.each do |user|%>
-        <li style="width:100px;float:left;">
-          <div  class="img_zoom" style="float:left;" >
-          <%= gravatar_for user, size: 52 %>
-          </div>
-          <span style="margin:5px;float:left;">
-          <%= link_to user.name, user %>
-          </span>
-        </li>
         <% end %>
-        <li style="clear:both;"></li>
+        <% if (inv_users.count > 0 || inv_groups.count > 0) %> 
+          <h4>Invitees</h4>
+        <% end %>
+        <% if inv_users.count > 0 %>
+          <h6>Members</h6>
+          <% inv_users.each do |user|%>
+          <li style="width:100px;float:left;">
+            <div  class="img_zoom" style="float:left;" >
+            <%= gravatar_for user, size: 52 %>
+            </div>
+            <span style="margin:5px;float:left;">
+            <%= link_to user.name, user %>
+            </span>
+          </li>
+          <% end %>
+          <li style="clear:both;"></li>
+        <% end %>
+        <% if inv_groups.count > 0 %>
         <h6>Groups</h6>
         <% inv_groups.each do |group|%>
         
@@ -88,7 +99,7 @@
 
         </li>
         <% end %>
-
+      <% end %>
       </ul>
 
 
@@ -103,4 +114,15 @@
       },function(){
       $('#edit_event').toggle();
     });
+
+    $("#edit_event").click(function(){
+      $('#modal2').modal('show');
+    });
+    $("#close2X").click(function(){
+          $('#modal2').modal('hide');
+        });
+
+    $("#updEvent").click(function(){
+          $('#modal2').modal('hide');
+        });
     </script>

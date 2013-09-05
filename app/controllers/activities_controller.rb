@@ -5,6 +5,10 @@ class ActivitiesController < ApplicationController
     def create
     @et = Event.find(params[:activity][:event_id])
     @activity = @et.activities.build(params[:activity])
+    if @activity.privacy==1
+
+      
+    else
 
       @act_user = @activity.user_ids
       @act_group = @activity.group_ids
@@ -20,6 +24,8 @@ class ActivitiesController < ApplicationController
         @group_act.group = Group.find(group_id)
         @activity.activitydetails << @group_act
       end
+      
+    end
     
     @activity.save
    # @event = Event.find(params[:activity][:event_id])
@@ -88,17 +94,27 @@ class ActivitiesController < ApplicationController
     @ed_users = @ed_users.uniq
     @inv_users = @inv_users.uniq
 =end
-
-    @ad_eds = @activity.activitydetails.where(is_admin: true )
-    @non_ad_eds = @activity.activitydetails.where(is_admin: false)
+       @ad_eds 
+       @non_ad_eds
+    if @activity.privacy == 1
+     # @ad_eds = @event.eventdetails.where(is_admin: true )
+      @non_ad_eds = @event.eventdetails #.where(is_admin: false)     
+    else
+      @ad_eds = @activity.activitydetails.where(is_admin: true )
+      @non_ad_eds = @activity.activitydetails.where(is_admin: false)   
+    end
     @groups = @non_ad_eds.pluck(:group_id)
     @users = @non_ad_eds.pluck(:user_id)
+    @ad_users=[]
+    @ad_groups=[]
+    unless @ad_eds.nil?
     @admin_groups = @ad_eds.pluck(:group_id)
     @admin_users = @ad_eds.pluck(:user_id)
-    @inv_groups = Group.where(['id IN (?)', @groups])
     @ad_groups = Group.where(['id IN (?)', @admin_groups])
-    @inv_users = User.where(['id IN (?)', @users])
     @ad_users = User.where(['id IN (?)', @admin_users])
+    end
+    @inv_groups = Group.where(['id IN (?)', @groups])
+    @inv_users = User.where(['id IN (?)', @users])
     @album = Album.new
     @albums = @activity.albums
     #debugger

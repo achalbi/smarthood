@@ -41,7 +41,7 @@
               	
         		<%= render :partial => 'posts/activity_post', :locals => {:post => @post}, :activity => @activity %>
         		<br><br>
-              <div id="div_post" class="resources">
+              <div id="div_post" class="resources<%= @activity.id %>">
                 <%= render partial: 'posts/post', locals: {posts: @posts, activity: @activity}  %>
               </div>
               <p id="activity_id" class='active_hide'><%= @activity.id %></p>
@@ -61,9 +61,9 @@
 </div>
 
 <div id="crt_act">
+  <%= form_for( [@event.activities.build], remote: true) do |f| %>
   <div id="modal" style="display:none" >
           <div id="modal-from-dom" class="modal hide fade in" style="display: block;width:700px;">
-            <%= form_for( [@event.activities.build], remote: true) do |f| %>
             <div class="modal-header">
               <a href="#" id="closeX" class="close">×</a>
               <h3>Create Activity</h3>
@@ -115,7 +115,7 @@
                 <div class="center_block clearfix">
                   <%= label_tag :privacy %>
                   <div class="input">
-                    <%= f.select :privacy, options_for_select([["Event invitees", "Event invitees"], ["Custom", "Custom"]]) %>
+                    <%= f.select :privacy, options_for_select([["Event invitees", "1"], ["Custom", "2"]]) %>
                   </div>
                 </div>
               </div> 
@@ -139,10 +139,10 @@
             <div class="modal-footer" >
               <%= f.submit "Create Activity", class: "btn primary pull-right", id: "crtActivity" %>  
             </div>
-            <% end %>
           </div>
           
         </div>
+            <% end %>
     </div>
 
 
@@ -710,15 +710,28 @@ var intervalID = -1000;
 function checkScroll_post() {
   if (nearBottomOfPage()) {
     currentPage++;
+  console.log("--"+intervalID+"---"+$('#activity_id').html());
   $('#loading_page').show();
+  if($('#activity_id').html() == null){
+      clearInterval(intervalID);
+      clearInterval(intervalID-1);
+      for (var i = 1; i < 99999; i++){
+        window.clearInterval(i);
+      }
+      console.log("-null-"+intervalID);
+    }
     jQuery.ajax('/events/post_paginate?id='+$('#activity_id').html()+'&event_id=<%= @event.id %>&page=' + currentPage, {asynchronous:true, evalScripts:true, method:'get', success: function(data, textStatus, jqXHR) {
       $('#loading_page').hide();
-    if($(data).find('.grid').html()==null || $(data).find('.grid').html() == ''){
+    if($(data).find('.grid').html()==null || $(data).find('.grid').html() == '' || $('#activity_id').html()== null){
      // console.log("-1-"+ $(data).find('.grid').html()+"-1-");
       clearInterval(intervalID);
       clearInterval(intervalID-1);
+      for (var i = 1; i < 99999; i++){
+        window.clearInterval(i);
+      }
+      console.log("-1-"+intervalID);
     }else{
-    $('.resources').append(data);
+    $('.resources<%= @activity.id %>').append(data);
     }
   },});
   }
@@ -738,6 +751,7 @@ function pageHeight() {
  
 $('document').ready(function(){
   intervalID = setInterval(checkScroll_post, 250);
+  console.log("init--"+intervalID);
 })
 
 
