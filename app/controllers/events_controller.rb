@@ -1,5 +1,6 @@
 class EventsController < ApplicationController
-  include UsersHelper
+  include UsersHelper, EventsHelper, GroupsHelper 
+  require 'open-uri'
   helper_method :sort_column, :sort_direction
   autocomplete :name, :extra_data => [:email]
 
@@ -118,9 +119,9 @@ rescue Exception => e
       @event.community_id = active_community.id
       respond_to do |format|
         if @event.save
-          format.html { redirect_to @event, format: 'js', :success => 'Event was successfully created.' }
+        #  format.html { redirect_to @event, format: 'js', :success => 'Event was successfully created.' }
           format.json { render :json => @event, :status => :created, :location => @event }
-          format.js { redirect_to @event, format: 'js', :success => 'Event was successfully created.' }
+          format.js { redirect_to(:action => :show, :format => :js, :id => @event.id)} #redirect_to @event, format: :js, :success => 'Event was successfully created.' }
         else
           format.html { render :action => "index" }
           format.json { render :json => @event.errors, :status => :unprocessable_entity }
@@ -132,7 +133,7 @@ rescue Exception => e
       @event = Event.new
       @event.starts_at = Time.zone.now
       @event.ends_at = Time.zone.now
-      @events = Event.scoped
+      @events = active_community_events
       @events = @events.between(params['start'], params['end']) if (params['start'] && params['end'])
       @events = @events.where('community_id = ?',active_community.id)
       @upcoming_events = @events.where("starts_at > ?",Time.current.tomorrow.to_date).order("id DESC")
@@ -172,7 +173,7 @@ rescue Exception => e
       end
 
       def search_auto_group
-        @groups = Group.where("name like ?", "%#{params[:q]}%")
+        @groups = active_community_groups.where("name like ?", "%#{params[:q]}%")
         @groups_pp = []
         @groups.each do |group|
         group[:profile_pic] = group.photo.pic_url(:smaller)
@@ -218,22 +219,19 @@ rescue Exception => e
       end 
 
     def upcoming_events_paginate
-      @events = Event.scoped
-      @events = @events.where('community_id = ?',active_community.id)
+      @events = active_community_events
       @upcoming_events = @events.where("starts_at > ?",Time.current.tomorrow.to_date).order("id DESC")
       @events = @upcoming_events.paginate(:page => params[:page], :per_page => 5)
     end
 
     def today_events_paginate
-       @events = Event.scoped
-       @events = @events.where('community_id = ?',active_community.id)
+       @events = active_community_events
        @today_events = @events.where("starts_at BETWEEN ? AND ?",Time.current.to_date,Time.current.tomorrow.to_date).order("id DESC")
        @events = @today_events.paginate(:page => params[:page], :per_page => 5)
     end
 
     def past_events_paginate
-      @events = Event.scoped
-      @events = @events.where('community_id = ?',active_community.id)
+      @events = active_community_events
       @past_events = @events.where("starts_at < ? and ends_at < ?",Time.current.to_date,Time.current.to_date).order("id DESC")
       @events = @past_events.paginate(:page => params[:page], :per_page => 5)
     end
@@ -290,6 +288,17 @@ rescue Exception => e
       @posts = @event.posts.paginate(:page => params[:page], :per_page => 4)
     @post = Post.new
     @comment = Comment.new
+    if @event.photo.nil?
+      #@photo = Photo.find_by_pic("v1378556932/events_medium_m4h4ww.jpg")
+      if @event.photo.nil?
+      @photo = Photo.new
+      @photo.remote_pic_url = "http://res.cloudinary.com/rashi/image/upload/v1378556932/events_medium_m4h4ww.jpg"
+      @photo.save
+      @event.photo = @photo 
+      end
+       @event.save
+      # debugger
+    end
 =begin
     @evt = Event.find(params[:id])
     @activities = @evt.activities

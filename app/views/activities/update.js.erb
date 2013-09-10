@@ -1,0 +1,3 @@
+$("#activity_events").html("<%= escape_javascript(render partial: 'events/about_activity', locals: {ad_users: @ad_users, inv_users: @inv_users, ad_groups: @ad_groups, inv_groups: @inv_groups, event: @event}) %>")
+$("#albumLink").html("<%= escape_javascript(link_to @event2.title, @event2, class:'albumLink', remote: true) %>: <%=  @activity.title %>");
+$("#event_activities").html("<%= escape_javascript( render @activities) %>");

@@ -368,6 +368,8 @@ for (var i = 1; i < 99999; i++){
 		$('#list_view').show();
 		$('#calendar_events').show();
 		$('#h3Cal').show();
+    $('#calendar_events').fullCalendar('render');
+
 	});
 
 var updateEvent;
@@ -418,18 +420,18 @@ var updateEvent;
       });
 		$('#calendar_events').hide();
 		$('#h3Cal').hide();
-    $('#calendar_events').fullCalendar('render');
-    var count=0;
-    var myVar=setInterval(function(){
-      $('#calendar_events').fullCalendar('render');
-      count++;
-      if (count>15) {
-        clearInterval(myVar);
-      };},1000);
+
 
 
 
   });
+
+  function showEventDetails(event){
+       $.ajax({
+        url: '/events/'+event.id,
+        dataType: 'script'
+      }); 
+  }
 
 
 

@@ -1,4 +1,6 @@
 class ActivitiesController < ApplicationController
+  include UsersHelper
+  
   def new
   end
 
@@ -100,19 +102,33 @@ class ActivitiesController < ApplicationController
      # @ad_eds = @event.eventdetails.where(is_admin: true )
       @non_ad_eds = @event.eventdetails #.where(is_admin: false)     
     else
-      @ad_eds = @activity.activitydetails.where(is_admin: true )
-      @non_ad_eds = @activity.activitydetails.where(is_admin: false)   
+     # @ad_eds = @activity.activitydetails.where(is_admin: true )
+      @non_ad_eds = @activity.activitydetails #.where(is_admin: false)   
     end
     @groups = @non_ad_eds.pluck(:group_id)
     @users = @non_ad_eds.pluck(:user_id)
+     @urs = User.where(['id IN (?)', @users])
+     @users1 = @urs.where("name like ?", "%#{params[:q]}%")
+    @users_pp = []
+      @users1.each do |user|
+        user[:profile_pic] =  gravatar_for_url(user, size: 40)
+        @users_pp << user
+      end
+      @grps = Group.where(['id IN (?)', @groups])
+      @groups1 = @grps.where("name like ?", "%#{params[:q]}%")
+    @groups_pp = []
+      @groups1.each do |group|
+        group[:profile_pic] = group.photo.pic_url(:smaller)
+        @groups_pp << group
+      end
     @ad_users=[]
     @ad_groups=[]
-    unless @ad_eds.nil?
-    @admin_groups = @ad_eds.pluck(:group_id)
-    @admin_users = @ad_eds.pluck(:user_id)
-    @ad_groups = Group.where(['id IN (?)', @admin_groups])
-    @ad_users = User.where(['id IN (?)', @admin_users])
-    end
+   # unless @ad_eds.nil?
+   # @admin_groups = @ad_eds.pluck(:group_id)
+   # @admin_users = @ad_eds.pluck(:user_id)
+   # @ad_groups = Group.where(['id IN (?)', @admin_groups])
+   # @ad_users = User.where(['id IN (?)', @admin_users])
+   # end
     @inv_groups = Group.where(['id IN (?)', @groups])
     @inv_users = User.where(['id IN (?)', @users])
     @album = Album.new
@@ -147,6 +163,60 @@ class ActivitiesController < ApplicationController
          format.html {  }
          format.js {  }
       end
+  end
+  def update
+    @event2 = Event.find(params[:activity][:event_id])
+    @activity =Activity.find(params[:id])
+    @activity.update_attributes(params[:activity])
+    @act_users = @activity.user_ids
+    @activity.activitydetails.where(['user_id Not IN (?)', @act_users]).delete_all
+    @act_groups = @activity.group_ids
+    @activity.activitydetails.where(['group_id Not IN (?)', @act_groups]).delete_all
+    #debugger
+    unless @act_users.nil? 
+      @act_users.each do |user_id|
+        @user_act = Activitydetail.new
+        @user_act.is_admin=false
+          if @activity.activitydetails.pluck(:user_id).detect {|n| n==user_id}.nil?
+            @user_act.user = User.find(user_id)
+            @activity.activitydetails << @user_act
+          end
+      end
+    end
+    unless @act_groups.nil? 
+      @act_groups.each do |group_id|
+        @group_act = Activitydetail.new
+        @group_act.is_admin = false
+          if @activity.activitydetails.pluck(:group_id).detect {|n| n==group_id}.nil?
+            @group_act.group = Group.find(group_id)
+            @activity.activitydetails << @group_act
+          end
+      end
+    end
+    @non_ad_eds = @activity.activitydetails
+    @groups = @non_ad_eds.pluck(:group_id)
+    @users = @non_ad_eds.pluck(:user_id)
+     @urs = User.where(['id IN (?)', @users])
+     @users1 = @urs.where("name like ?", "%#{params[:q]}%")
+    @users_pp = []
+      @users1.each do |user|
+        user[:profile_pic] =  gravatar_for_url(user, size: 40)
+        @users_pp << user
+      end
+      @grps = Group.where(['id IN (?)', @groups])
+      @groups1 = @grps.where("name like ?", "%#{params[:q]}%")
+    @groups_pp = []
+      @groups1.each do |group|
+        group[:profile_pic] = group.photo.pic_url(:smaller)
+        @groups_pp << group
+      end
+    @ad_users = []
+    @ad_groups = []
+    @inv_users = User.where(['id IN (?)', @users])
+    @inv_groups = Group.where(['id IN (?)', @groups])
+    @event = @activity
+    @activities = @event2.activities
+    #debugger
   end
 
 end

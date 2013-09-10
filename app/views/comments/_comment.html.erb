@@ -19,7 +19,7 @@
 <% if post.comments.count > 3 %>
 <a class="pull-right" id="cmnts_<%= post.id %>" style="cursor:pointer;margin-right:5px;" >Show more...</a>
 <% end %>
-<ol style="padding:5px;margin:0;width:438px">
+<ol style="padding:5px;margin:0;width:438px;height:30px;overflow:hidden;">
 <%= gravatar_for(current_user, size: 30) %>
 <%= form_for [post.comments.build], remote: true do |f| %>
     <%= f.text_field :content, placeholder: "Comment...", class: "xxlarge pull-left" %>
