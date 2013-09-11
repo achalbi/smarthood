@@ -1,2 +1,2 @@
-$("#activity_events").html("<%= escape_javascript(link_to 'edit', '#', id: 'edit_event',  class: 'pull-right uibutton icon edit',:title => 'Edit') %><%= escape_javascript(render partial: 'events/about', locals: {ad_users: @ad_users, inv_users: @inv_users, ad_groups: @ad_groups, inv_groups: @inv_groups, event: @event}) %>")
+$("#activity_events").html("<%= escape_javascript(render partial: 'events/about', locals: {ad_users: @ad_users, inv_users: @inv_users, ad_groups: @ad_groups, inv_groups: @inv_groups, event: @event}) %>")
 $("#event_stats").html("<%= escape_javascript( render partial: 'shared/event_stats', locals: {ad_users: @ad_users, inv_users: @inv_users, ad_groups: @ad_groups, inv_groups: @inv_groups} )%>")

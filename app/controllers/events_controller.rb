@@ -282,7 +282,7 @@ rescue Exception => e
       end
     @mod_users = @inv_users
       @grps.each do |group|
-        @mod_users |= group.users
+      #  @mod_users |= group.users
       end
       @activities = @event.activities
       @posts = @event.posts.paginate(:page => params[:page], :per_page => 4)
@@ -435,8 +435,13 @@ rescue Exception => e
       @users_ids = params[:user_ids]
         @users_ids.each do |usr_id|
           @evt_dts_u = @event.eventdetails.find_by_user_id(usr_id)
+          if @evt_dts_u.nil?
+           
+           else
           @evt_dts_u.is_admin=true
           @evt_dts_u.save
+            
+          end
         end
     end
     unless params[:group_ids].nil?
@@ -498,11 +503,11 @@ rescue Exception => e
         group[:profile_pic] = group.photo.pic_url(:smaller)
         @groups_pp << group
       end    
-
       @mod_users = @inv_users
       @grps.each do |group|
-        @mod_users |= group.users
+     #   @mod_users |= group.users
       end
+     # debugger
     respond_to do |format|
       if @event.update_attributes(params[:event])
         format.html { redirect_to @event, :notice => 'Event was successfully updated.' }
