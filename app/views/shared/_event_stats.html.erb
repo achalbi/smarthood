@@ -1,6 +1,8 @@
 <div >
+  <% if (ad_users.count > 0 || ad_groups.count > 0 || @is_event ) %>
   <div id="moderatorDiv" class="bgClrChg" style="mragin:10px;padding:10px;">
     <h5>Moderators<%= link_to "edit", '#', id: "moderator",  class: "uibutton icon edit pull-right" %></h5> 
+  <% if ad_users.count > 0  %>
   <section class="stats">
     <a href="#" id="ad_users_a">
       <strong id="following" class="stat">
@@ -17,6 +19,8 @@
         <% end %>
       </div>
   </section>
+  <% end %>  
+  <% if ad_groups.count > 0  %>
   <section class="stats">
       <a href="#" id="ad_groups_a">
       <strong id="following" class="stat">
@@ -33,7 +37,9 @@
       <% end %>
     </div>
   </section>
-</div>
+  <% end %>  
+  </div>
+  <% end %>
   <div id="inviteDiv" class="bgClrChg" style="mragin:10px;padding:10px;">
   <h5>Invitees<%= link_to "add", '#', id: "invite",  class: "uibutton icon add pull-right" %></h5>
   <section class="stats">
@@ -107,7 +113,7 @@
         </div>
 <% end %>
 
-
+<% if (ad_users.count > 0 || ad_groups.count > 0|| @is_event ) %>
  <%= form_for( @event, remote: true, :html => {:multipart => true}) do |f| %>
 <div id="modal4" style="display:none;" >
           <div id="modal-from-dom4" class="modal hide fade in" style="display: block;width:700px;">
@@ -156,7 +162,24 @@
                               <%= check_box_tag 'group_ids[]', group.id %>
                               </div>
                             </div>
+
                           </ol>
+                          <div style="margin-left:20px;">
+                          <% group.users.each do |user| %>
+                            <ol>
+                              <div style="background-color:#f0f0f0;padding:5px;" class="span4">
+                                  <%= link_to user.name, "#" %>
+                                  <%= gravatar_for user, size: 25 %>
+                                <div style="margin-right:10px;" class="pull-right">
+                                  <%= check_box_tag 'user_ids[]', user.id %>
+                                </div>
+                              </div>
+                                  
+                            </ol>
+                            <br><br>
+                            <br><br>
+                          <% end %>
+                          </div>
                               <br><br>
                               <br><br>
                         <% end %>
@@ -173,8 +196,8 @@
           </div>
           
         </div>
+  <% end %>
 <% end %>
-
 
 
 

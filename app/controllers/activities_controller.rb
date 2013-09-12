@@ -134,6 +134,7 @@ class ActivitiesController < ApplicationController
     @album = Album.new
     @albums = @activity.albums
     #debugger
+    @is_event = false
     @event2 = @event
     unless @activity.is_admin
       @event = @activity
@@ -217,6 +218,7 @@ class ActivitiesController < ApplicationController
     @event = @activity
     @activities = @event2.activities
     #debugger
+    @is_event = false
   end
 
 end

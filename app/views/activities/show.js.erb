@@ -2,3 +2,4 @@ $("#posts").html("<%= escape_javascript(render( :partial => 'posts/activity_post
 $("#activity_events").html("<%= escape_javascript(render partial: 'events/about_activity', locals: {ad_users: @ad_users, inv_users: @inv_users, ad_groups: @ad_groups, inv_groups: @inv_groups, event: @event}) %>")
 $("#photos_events").html("<%= escape_javascript(render partial: 'events/albums', locals: {activity: @activity, albums: @albums, album: @album}) %>")
 $("#albumLink").html("<%= escape_javascript(link_to @event2.title, @event2, class:'albumLink', remote: true) %>: <%=  @activity.title %>");
+$("#event_stats").html("<%= escape_javascript( render partial: 'shared/event_stats', locals: {ad_users: @ad_users, inv_users: @inv_users, ad_groups: @ad_groups, inv_groups: @inv_groups, is_event: @is_event} )%>")

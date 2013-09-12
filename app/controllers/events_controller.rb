@@ -111,10 +111,14 @@ rescue Exception => e
         @event.eventdetails << @user_ed
       end
       @ed_group.each do |group_id|
-        @group_ed = Eventdetail.new
-        @group_ed.is_admin = false
-        @group_ed.group = Group.find(group_id)
-        @event.eventdetails << @group_ed
+        @grp = Group.find(group_id)
+        @grp.users.each do |user|
+          @group_ed = Eventdetail.new
+          @group_ed.is_admin = false
+          @group_ed.group = @grp
+          @group_ed.user = user
+          @event.eventdetails << @group_ed
+        end
       end
       @event.community_id = active_community.id
       respond_to do |format|
@@ -382,7 +386,8 @@ rescue Exception => e
         end
 rescue Exception => e
   
-=end         
+=end 
+    @is_event = true        
     respond_to do |format|
       format.html # show.html.erb
       format.json { render :json => @event }
@@ -467,12 +472,16 @@ rescue Exception => e
     end
     unless @ed_group.nil? 
       @ed_group.each do |group_id|
-        @group_ed = Eventdetail.new
-        @group_ed.is_admin = false
-          if @event.eventdetails.pluck(:group_id).detect {|n| n==group_id}.nil?
-            @group_ed.group = Group.find(group_id)
-            @event.eventdetails << @group_ed
-          end
+       if @event.eventdetails.pluck(:group_id).detect {|n| n==group_id}.nil?
+        @grp = Group.find(group_id)
+        @grp.users.each do |user|
+          @group_ed = Eventdetail.new
+          @group_ed.is_admin = false
+          @group_ed.group = @grp
+          @group_ed.user = user
+          @event.eventdetails << @group_ed
+        end
+       end
       end
     end
     @event.update_attributes(params[:event])
@@ -508,6 +517,7 @@ rescue Exception => e
      #   @mod_users |= group.users
       end
      # debugger
+     @is_event = true
     respond_to do |format|
       if @event.update_attributes(params[:event])
         format.html { redirect_to @event, :notice => 'Event was successfully updated.' }
