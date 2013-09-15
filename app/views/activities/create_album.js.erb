@@ -1,1 +1,2 @@
-$("#photos_events").html("<%= escape_javascript(render partial: 'events/albums', locals: {activity: @activity, albums: @albums, album: @album}) %>")
+$("#evt_album").html("<%= escape_javascript(render partial: 'events/albums', locals: {activity: @activity, albums: @albums, album: @album}) %>")
+$(document).ready(function(){ $('#upload_pics').show();});

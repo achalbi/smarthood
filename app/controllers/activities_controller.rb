@@ -159,7 +159,7 @@ class ActivitiesController < ApplicationController
         @album = Album.new
           flash[:success] = "Album created"
         #debugger
-    
+      @share = Share.new
       respond_to do |format|
          format.html {  }
          format.js {  }

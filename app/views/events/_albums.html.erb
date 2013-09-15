@@ -1,10 +1,11 @@
-          <div id="gallery" >
+          <div id="gallery"  >
+            <div id="evt_album">
                           
               <% unless albums.nil? %>
                     <div id="gallery1" class="span12 pull-left">
                        <ul id="grid" >    
                        <li>
-                        <div id="upload_pics"  style = "border:2px dashed #ddd; width:85px; height:85px; padding:10px;  left:40px; text-align:middle; z-index: 1;  cursor:pointer;  float:left; margin-bottom:25px;
+                        <div id="upload_pics"  style = "border:2px dashed #ddd; width:85px; height:85px; padding:10px;  left:40px; text-align:middle; z-index: 1;  cursor:pointer;  float:left; margin-bottom:25px;display:none;
                         " class="bgClrChg">  <h5> Create Album </h5>
                         </div>
                        </li>               
@@ -23,8 +24,8 @@
                      
                <% end %>  
           </div>
-			<ul class="users" id="photos_events_ul" >
-			</ul>
+      <ul class="users" id="photos_events_ul" >
+      </ul>
       <div id="modal5" style="display:none" >
           <div id="modal-from-dom5" class="modal hide fade in" style="display: block;width:700px;">
       <%= form_for(album, url: create_album_activities_path, remote: true, :html => {:multipart => true}) do  |f| %> 
@@ -59,15 +60,15 @@
               </div>
               </span>
             <br><br>
+              <div class="center_block clearfix pull-left clear">
+               <div class="ui-front">    
                <%= fields_for :photos, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
                  
-              <%= photo_form.file_field :pic, id: "pic5", :multiple => true, style: "width:1px; height:1px; padding:0px;  left:0px;" %>  
+              <%= photo_form.file_field :pic, id: "pic5_#{activity.id.to_s}", :multiple => true, style: "width:1px; height:1px; padding:0px;  left:0px;" %>  
               <% end %>
               <%= hidden_field_tag :type, "event" %>
               <%= hidden_field_tag :id, activity.id %>
-              <div class="center_block clearfix pull-left clear">
-               <div class="ui-front">    
-                  <canvas id="imageCanvas5" style = "border: 1px solid #ddd; padding:5px; align:center" >select photos</canvas>
+                  <canvas id="imageCanvas5<%= activity.id.to_s %>" style = "border: 1px solid #ddd; padding:5px; align:center" >select photos</canvas>
                 </div>
               </div>
              </div>
@@ -79,7 +80,6 @@
         <% end %>
           </div>
           
-        </div>  
 
 
         <script type="text/javascript">
@@ -95,19 +95,19 @@
               });
 
 
-          var imageLoader = document.getElementById('pic5');
+          var imageLoader = document.getElementById('pic5_'+<%= activity.id.to_s %>);
             imageLoader.addEventListener('change', handleImage, false);
-            $("#imageCanvas5").click(function(){
-                $("#pic5").click();
+            $("#imageCanvas5"+<%= activity.id.to_s %>).click(function(){
+                $("#pic5_"+<%= activity.id.to_s %>).click();
             });
                 
-            var canvas = document.getElementById('imageCanvas5');
+            var canvas = document.getElementById('imageCanvas5'+<%= activity.id.to_s %>);
             var ctx = canvas.getContext('2d');
             ctx.font="30px Arial";
             ctx.fillText("Select photos",10,50);
 
           function handleImage(e){
-            var canvas = document.getElementById('imageCanvas5');
+            var canvas = document.getElementById('imageCanvas5'+<%= activity.id.to_s %>);
             var ctx = canvas.getContext('2d');
             var iCnt=0;
             var files = e.target.files;
@@ -144,3 +144,5 @@
 
 
         </script>
+        </div>
+        </div>  
