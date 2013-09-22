@@ -1,5 +1,5 @@
 class Usercommunity < ActiveRecord::Base
-  attr_accessible :community_id, :status, :user_id
+  attr_accessible :community_id, :status, :user_id, :is_admin
 
   belongs_to :community
   belongs_to :user

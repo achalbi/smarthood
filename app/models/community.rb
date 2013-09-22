@@ -1,6 +1,9 @@
 class Community < ActiveRecord::Base
-  attr_accessible :community_id, :photo_id, :photo_attributes, :name, :description, :status, :privacy
+  attr_accessible :community_id, :photo_id, :photo_attributes, :name, :description, :status, :privacy, :address, :latitude, :longitude
 
+  geocoded_by :address   # can also be an IP address
+  after_validation :geocode, :if => :address_changed?          # auto-fetch coordinates
+  
     belongs_to :user
     belongs_to :photo
     

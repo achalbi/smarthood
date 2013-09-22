@@ -1,29 +1,32 @@
-<li style="width:130px;">
-<div  class="img_zoom"  style="margin:10px; float:left;">
+<li >
+<div  class="well"  style="float:left;padding:8px;margin-bottom:0px;">
 <% unless community.photo.nil? %>
   <div  class="img_zoom" id="div-img_<%= community.photo.id %>">
-         <%= link_to cl_image_tag(community.photo.pic_url(:smaller), class:"image_al_c1 thumbnail", id:"#{community.photo.id}"), "/communities/#{community.id}", remote: true,   style:"cursor:pointer;"%>
+         <%= link_to cl_image_tag(community.photo.pic_url(:small), class:"image_al_c1 thumbnail", id:"#{community.photo.id}"), "/communities/#{community.id}", remote: true,   style:"cursor:pointer;"%>
           </div>
 <% end %>
 
   <span >
-    <%= link_to community.name, community %>    
+    <h5><%= link_to community.name, community %></h5>
   </span>
 <span class="timestamp">
   <% unless community.description.nil? %>
-   <% if community.description.length > 17 %>
-    <%= community.description.slice! 0..17 %>...
+   <% if community.description.length > 27 %>
+    <%= community.description.slice! 0..27 %>...
     <% else %>
-    <%= community.description %>
+    <%= community.description %>&nbsp;
    <% end %>
+  <% else %>
+  <%= " " %>
   <% end %>
-  </span>
 
+  </span>
+  <!-- 
   <% if community.following?(current_user, community) %>
       <%= render 'setactive', :@community => community %>
   <% end %>
 
-  <!-- <span class="red_color"><br>Private group</span>
+<span class="red_color"><br>Private group</span>
     <% unless community.user.nil? %> <br>
    <span class="green_color">Owner</span> 
     <%= link_to community.user.name, community.user %> 

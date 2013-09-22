@@ -1,0 +1,117 @@
+<div >
+  <% unless ad_users.nil? %>
+  <% if (ad_users.count > 0) %>
+  <div id="moderatorDiv" class="bgClrChg" style="mragin:10px;padding:10px;">
+    <h5>Moderators<%= link_to "edit", '#', id: "moderator",  class: "uibutton icon edit pull-right" %></h5> 
+    <% if ad_users.count > 0  %>
+    <section class="stats">
+      <a href="#" id="ad_users_a">
+        <strong id="following" class="stat">
+          <%= ad_users.count %>
+        </strong>
+        <%="Member".pluralize(ad_users.count) %>
+      </a>
+      <br><br>
+      <div id="ad_users_div">
+        <% ad_users.each do |ad_user| %>
+        <a style="cursor:pointer;border:0px;padding:0px;" class="pop_up" rel="popover" data-content='<%= gravatar_for ad_user, size: 100 %>' data-original-title="<%= ad_user.name %>" >
+         <%= gravatar_for ad_user, size: 25 %>
+       </a>
+       <% end %>
+     </div>
+   </section>
+   <% end %>  
+
+ </div>
+ <% end %>
+ <% end %> 
+ <% unless inv_users.nil? %> 
+ <div id="inviteDiv" class="bgClrChg" style="mragin:10px;padding:10px;">
+  <h5>Invitees<%= link_to "add", '#', id: "invite",  class: "uibutton icon add pull-right" %></h5>
+  <section class="stats">
+    <a href="#" id="inv_users_a">
+      <strong id="followers" class="stat">
+        <%= inv_users.count %>
+      </strong>
+      <%="Member".pluralize(inv_users.count) %>
+    </a>
+    <br><br>
+    <div id="inv_users_div">
+      <% inv_users.each do |inv_user| %>
+      <a style="cursor:pointer;border:0px;padding:0px;" class="pop_up" rel="popover" data-content='<%= gravatar_for inv_user, size: 100 %>' data-original-title="<%= inv_user.name %>" >
+       <%= gravatar_for inv_user, size: 25 %>
+     </a>
+     <% end %>
+   </div>
+ </section>
+ 
+</div>
+<% end %>
+</div>
+
+
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+  $('.gravatar').addClass('thumbnail');  
+  $('#invite').toggle();
+  $('#moderator').toggle();
+
+  $('#moderatorDiv').hover(function(){
+    $('#moderator').toggle();
+  },function(){
+    $('#moderator').toggle();
+  });
+
+  $('#inviteDiv').hover(function(){
+    $('#invite').toggle();
+  },function(){
+    $('#invite').toggle();
+  });
+  $("#invite").click(function(){
+    $('#modal3').modal('show');
+  });
+  $("#close3X").click(function(){
+    $('#modal3').modal('hide');
+  });
+
+  $("#updEventInv").click(function(){
+    $('#modal3').modal('hide');
+  });
+
+  $("#moderator").click(function(){
+    $('#modal4').modal('show');
+  });
+  $("#close4X").click(function(){
+    $('#modal4').modal('hide');
+  });
+
+  $("#updEventAdm").click(function(){
+    $('#modal4').modal('hide');
+  });
+  $('#ad_users_div').hide();
+  $('#ad_groups_div').hide();
+  $('#inv_users_div').hide();
+  $('#inv_groups_div').hide();
+
+
+
+});
+
+$('#ad_users_a').click(function(){
+  $('#ad_users_div').toggle('slow')
+});
+$('#ad_groups_a').click(function(){
+  $('#ad_groups_div').toggle('slow')
+});
+$('#inv_users_a').click(function(){
+  $('#inv_users_div').toggle('slow')
+});
+$('#inv_groups_a').click(function(){
+  $('#inv_groups_div').toggle('slow')
+});
+
+
+
+</script>

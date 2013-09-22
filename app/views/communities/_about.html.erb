@@ -1,0 +1,273 @@
+<div id="aboutDiv">
+ 
+   <% if community.following?(current_user, community) %>
+      <%= render 'setactive', :@community => community %>
+  <% end %>
+  
+ <%= link_to "edit", '#', id: "edit_comUnity",  class: "marginRight10 pull-right uibutton icon edit",:title => "Edit" %>
+
+ <p><h4>Description : <small><%= community.description %></small></h4></p>
+
+ <p><h4>Location : <%= community.address %></h4></p>
+
+ <%= render :partial => "events/maps", :locals => { :location => community } %><br>
+ <p ><h4 >Host : <span style="margin:5px;">
+      <%= link_to community.user.name, community.user %>
+    </span></h4>
+    <div  class="img_zoom" style="float:left;" >
+      <%= gravatar_for community.user, size: 100 %>
+    </div><br><br><br><br><br><br><br><br>
+   </p>
+ <p><h4>Privacy : <%= community.privacy %></h4></p>
+
+
+<ul class="users" id="activity_events_ul" >
+<% unless ad_users.nil? %>
+  <% if ad_users.count > 0  %>
+  <h4>Moderators</h4>
+  <% end %>  
+  <% if ad_users.count > 0  %>
+  <h6>Members</h6>
+  <% ad_users.each do |user|%>
+  <li style="width:100px;float:left;">
+    <div  class="img_zoom" style="float:left;" >
+      <%= gravatar_for user, size: 52 %>
+    </div>
+    <span style="margin:5px;float:left;">
+      <%= link_to user.name, user %>
+    </span>
+  </li>
+  <% end %>
+  <li style="clear:both;"></li>
+  <% end %> 
+<% end %> 
+<% unless inv_users.nil? %>
+  <% if inv_users.count > 0 %> 
+  <h4>Invitees</h4>
+  <% end %>
+  <% if inv_users.count > 0 %>
+  <h6>Members</h6>
+  <% inv_users.each do |user|%>
+  <li style="width:100px;float:left;">
+    <div  class="img_zoom" style="float:left;" >
+      <%= gravatar_for user, size: 52 %>
+    </div>
+    <span style="margin:5px;float:left;">
+      <%= link_to user.name, user %>
+    </span>
+  </li>
+  <% end %>
+  <li style="clear:both;"></li>
+  <% end %>
+<% end %>
+
+</ul>
+
+
+<br>
+</div>
+
+
+<%= form_for( community, remote: true, :html => {:multipart => true}) do |f| %>
+<div id="modal2" style="display:none;" >
+  <div id="modal-from-dom2" class="modal hide fade in" style="display: block;width:700px;">
+    <div class="modal-header">
+      <a href="#" id="close2X" class="close">×</a>
+      <span style="font-size:20px;line-height: 2;">Edit</span>
+    </div>
+    <div class="modal-body" style="max-height:550px;">
+      <div class="row">
+        <div class="span14 ui-front">
+
+         <%= render 'shared/error_messages', object: f.object %>
+
+         <div class="center_block clearfix">
+          <%= f.label :name %>
+          <div class="input">
+            <%= f.text_field :name, :placeholder=>"Title" %></div>
+          </div>
+
+          <div class="center_block clearfix">
+            <%= f.label :location %>
+            <div class="input ">
+              <%= f.text_field :address, :placeholder => :location, :size => 43, class: 'events_with_autocomplete inherit_width', id: 'community_address2', 'data-autocompleteUrl' => search_address_communities_path %>&nbsp;&nbsp;&nbsp;
+
+              <%= link_to "View map", '#', id: "view_map_link2",  class: "uibutton icon prev" %>
+            </div>
+            <div class="input" id="view_map2">
+
+            </div>
+          </div>
+          <div class="center_block clearfix">
+            <%= f.label :description %>
+            <div class="input">
+              <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title => "Description", rows: 3, cols: 75  %> 
+            </div>
+          </div>
+
+          <div class="center_block clearfix">
+            <%= label_tag :privacy %>
+            <div class="input">
+              <%= f.select :privacy, options_for_select([["Open", "open"], ["Closed", "closed"], ["Secret", "secret"]]) %>
+            </div>
+          </div> <br>
+          <div class="center_block clearfix">
+            <%= label_tag "Change picture:" %>
+            <%= f.fields_for :photo, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
+
+            <%= photo_form.file_field :pic, id: "pic2",style: "width:1px; height:1px; padding:0px;  left:0px;" %>  
+
+            <% end %>
+            <div class="input"> 
+              <% unless community.photo.nil? %>
+              <%= cl_image_tag(community.photo.pic_url(:small), class:" thumbnail albumLink", id:"community_pic", style: "cursor:pointer;") %>   
+              <% end %>
+              <canvas id="imageCanvas2" style = "border: 1px solid #ddd; padding:5px; align:center; width:200px;display:none;cursor:pointer" >select new image</canvas>
+            </div>
+          </div>
+        </div>
+      </div>                 
+    </div>
+    <div class="modal-footer" >
+      <%= f.submit "Update", class: "btn primary pull-right", id: "updComUnity" %>  
+    </div>
+  </div>
+</div>
+<% end %>
+
+<script type="text/javascript">
+
+$(document).ready(function(){
+  $('#edit_comUnity').hide();
+  $('.gravatar').addClass('thumbnail pop_up');  
+  $('#view_map_link2').hide();
+
+});
+
+$('#aboutDiv').hover(function(){
+  $('#edit_comUnity').toggle();
+},function(){
+  $('#edit_comUnity').toggle();
+});
+
+$("#edit_comUnity").click(function(){
+  $('#modal2').modal('show');
+});
+$("#close2X").click(function(){
+  $('#modal2').modal('hide');
+});
+
+$("#updComUnity").click(function(){
+  $('#modal2').modal('hide');
+});
+
+
+$('#community_address2').keydown(function(){
+  $('#view_map_link2').hide();
+  $('#view_map2').hide();
+});
+
+$('#view_map_link').click(function(){
+  var address = "/communities/get_geo_coordinates?address="+$('#community_address2').val();
+  $.ajax({
+    type: "GET",
+    url: address,
+    dataType: "script"
+  }); 
+});
+
+$('a.ui-corner-all').live("click", function(){
+  if($('#community_address2').val()!=""){
+    $('#view_map_link2').show();
+  }else{
+    $('#view_map_link2').hide();
+  }
+});
+
+
+$(function() {
+  return $('.events_with_autocomplete').autocomplete({
+    minLength: 2,
+    source: function(request, response) {
+      return $.ajax({
+        url: $('.events_with_autocomplete').data('autocompleteurl'),
+        dataType: "json",
+        data: {starts_at: "", ends_at: "", address: request.term},
+        success: function(data) {
+          return response(data);
+        }
+      });
+    }
+  });
+});
+
+
+var imageLoader = document.getElementById('pic2');
+imageLoader.addEventListener('change', handleImage, false);
+$("#imageCanvas2").click(function(){
+  $("#pic2").click();
+});
+var canvas = document.getElementById('imageCanvas2');
+var ctx = canvas.getContext('2d');
+ctx.font="30px Arial";
+ctx.fillText("Change picture",10,50);
+
+function handleImage(e){
+  var canvas = document.getElementById('imageCanvas2');
+  var ctx = canvas.getContext('2d');
+  var iCnt=0;
+  var files = e.target.files;
+  canvas.width = 180;
+  canvas.height = 155*(Math.ceil(files.length/4));
+  for( var i = 0, len = files.length; i < len; i++) 
+  {
+    if(files[i])
+    {
+      var reader = new FileReader();
+      reader.onload = function(event){
+        var img = new Image();
+
+        img.onload = function(){
+          var ratioPx = 150;
+          var sWidth =ratioPx;
+          var ratio = img.width/sWidth;
+          var sHeight = img.height/ratio;   
+          if(sHeight>ratioPx){
+           sHeight =ratioPx;
+           ratio = img.height/sHeight;
+           sWidth = img.width/ratio;  
+         }
+         ctx.drawImage(img, 155*(iCnt%4),155*(Math.floor(iCnt/4)),sWidth,sHeight);
+                  //ctx.drawImage(img,0,0,sWidth,sHeight);
+                  iCnt++;
+                }
+                img.src = event.target.result;
+              }
+              reader.readAsDataURL(e.target.files[i]);     
+            }
+          }
+        }
+
+        $('.pop_up').popover({
+          html: true,
+          trigger: 'manual',
+          placement: 'left',
+          delay: { hide: 500},
+          template: ' <div class="popover"><div class="pop_div"><div class="arrow1" stlye="margin-right:10px;"></div><div class="popover-inner"  ><h3 class="popover-title" ></h3><div class="popover-content" ><p></p><br></div></div></div></div>'
+        });
+
+        $(".pop_up").hover(function(){
+          $(this).popover('show');        
+        },function(){
+          $(this).popover('hide');        
+        });
+
+        $("#community_pic").click(function(){
+          $('#community_pic').hide();
+          $('#pic2').click();
+          $('#imageCanvas2').show();
+        });
+
+
+
+        </script>

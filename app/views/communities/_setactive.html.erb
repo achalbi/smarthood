@@ -1,5 +1,2 @@
-<%= form_for(@community, url: setactive_community_path(@community), :method => "post",
-             remote: true) do |f| %>
-
-  <%= f.submit "Set active", class: "btn btn-large" %>
-<% end %>
+<br>
+ <%= link_to "Set active", setactive_community_path(@community), id: "set_comUnity",  class: "marginLeft10 pull-right uibutton icon prev",:title => "Set active", remote: true %>

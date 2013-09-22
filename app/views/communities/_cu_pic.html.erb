@@ -1,0 +1,10 @@
+      <div class="img_zoom" >
+       <h4 class="pull-left" style="margin-left:10px;font-size:18px;">
+        <div id="albumLink">
+          <%= link_to community.name, community, class:"albumLink", remote: true %>
+        </div>
+      </h4>
+      <% unless community.photo.nil? %>
+      <%= link_to cl_image_tag(community.photo.pic_url(:thumb_medium), class:"roundCorner albumLink", id:"#{community.photo.id}") ,community, class:"albumLink roundCorner", remote: true %>
+      <% end %>
+    </div>

@@ -1,224 +1,237 @@
- <% provide(:title, 'Community') %>
+<% provide(:title, @selected_community.name) %>
 
-<div id="main">
+<div class="row">
+  <aside class="span6">
+    <section id="cu_pic">
+      <%= render partial: 'communities/cu_pic', locals: {community: @selected_community} %>
+  </section>
 
+  <section id="comUnity_sec" style="background-color:#e5e5e5;padding:10px;" class="well">
+    <span style="clear:both"></span>
+    <%= link_to "Create Community", '#', id: "ComUnity",  class: " pull-right uibutton icon add" %><br><br>
+    <div id="comUnity_div">    
+      <li class="sidetabs sidetabs_selected" style="list-style-type: none;padding:5px; margin:5px;">
+        <h6><%= link_to  "Active", '#', id: "active_comUnity", remote: true %></h6>
+      </li>
+        <%= link_to "", active_com_communities_path, remote: true %>
+      <li class="sidetabs notActive" style="list-style-type: none;padding:5px; margin:5px;">
+        <h6><%= link_to  "Joined", joined_com_communities_path, id: "joined_comUnity", remote: true %></h6>
+      </li>
+        <%= link_to "", joined_com_communities_path, remote: true %>
+      <li class="sidetabs notActive" style="list-style-type: none;padding:5px; margin:5px;">
+        <h6><%= link_to  "Public", '#', id: public_com_communities_path, remote: true %></h6>
+      </li>
+        <%= link_to "", public_com_communities_path, remote: true %>
+      <li class="sidetabs notActive" style="list-style-type: none;padding:5px; margin:5px;">
+        <h6><%= link_to  "Private", '#', id: private_com_communities_path, remote: true %></h6>
+      </li>
+        <%= link_to "", private_com_communities_path, remote: true %>
 
-  <h3>Selected Community</h3>
-  Community Name :   <%= @selected_community.name %>
-  <br>
-  Description :   <%= @selected_community.description %>
-  <%= link_to "Create Community", '#', id: "ComUnity1",  class: " pull-right uibutton icon add" %>
-  
-  <br><br>
+    </div>
+  </section>
 
-
-<ul class="grid backColor"> 
-<% unless @selected_community.nil? %> 
-           <%= render :partial => '/communities/community', :locals =>{:community => @selected_community} %>
-           <% end %>
-</ul>
-
-
-<div id="Comm_list">
-
-<ul class="tabs">
-  <li class="active" id="my_comm_li"><a ><h4>My Communities</h4></a></li>
-  <li id="suggested_comm_li"><a ><h4>Suggested communities</h4></a></li>
-</ul>
-
-<div id="my_comm">  
-<ul class="grid backColor" id="my_comm_ul"> 
-<% unless @my_communities.nil? %> 
-               <% @my_communities.each do |comUnity1| %>
-        <%= render :partial => '/communities/community', :locals =>{:community => comUnity1} %>
-        <% end %>
-<% end %>
-</ul>
-<br>
-</div>
-
-
-<div id="suggested_comm">
-<ul class="grid backColor" id="suggested_comm_ul">
-<% unless @public_communities.nil? %> 
-    <% @public_communities.each do |comUnity2| %>
-        <%= render :partial => '/communities/community', :locals =>{:community => comUnity2} %>
-    <% end %>
-<% end %>
-
-</ul>
-<br>
-</div>
+</aside>
+<aside id="right" style="float: right;width:220px;margin-right:10px;">
+  <div id="comUnity_stats">
+    <%= render partial: 'shared/comUnity_stats', locals: {ad_users: @ad_users, inv_users: @inv_users} %>
+  </div>
+</aside>
+<div id="comUnity_list" class="span13" style="margin-top:5px;">
+  <div id="about_comUnity" >  
+   <%= render partial: 'communities/about', locals: {ad_users: @ad_users, inv_users: @inv_users, community: @selected_community} %>
+ </div>
 
 </div>
 
+<%= form_for( @community, remote: true, :html => {:multipart => true}) do |f| %>
 <div id="modal" style="display:none;" >
-    <div id="modal-from-dom" class="modal hide fade in" style="display: block;width:700px;">
-        <%= form_for( @communities, remote: true, :html => {:multipart => true}) do |f| %>
-        <div class="modal-header">
-            <a href="#" id="closeX" class="close">×</a>
-            <span style="font-size:20px;line-height: 2;">Create Community</span>
-        </div>
-        
-        <div class="modal-body" style="max-height:550px;">
-            <div class="row">
-                <div class="span14 ui-front">
-                <%= render 'shared/error_messages', object: f.object %>
-        
-                <div id="pages">     
-                    <div id="page-1">
-                        <%= link_to "Next page", '#', id: "next-2",  class: "uibutton icon next pull-right" %>
-                        <div class="center_block clearfix">
-                            <%= f.label :name %>
-                            <div class="input">
-                                <%= f.text_field :name, :placeholder=>"Name" %>
-                            </div>
-                        </div>    
+  <div id="modal-from-dom2" class="modal hide fade in" style="display: block;width:700px;">
+    <div class="modal-header">
+      <a href="#" id="closeX" class="close">×</a>
+      <span style="font-size:20px;line-height: 2;">Create ComUnity</span>
+    </div>
+    <div class="modal-body" style="max-height:550px;">
+      <div class="row">
+        <div class="span14 ui-front">
 
-               
+         <%= render 'shared/error_messages', object: f.object %>
 
-                        <div class="center_block clearfix">
-                            <%= f.label :location %>
-                            <div class="input ">
-                                <%= link_to "View map", '#', id: "view_map_link",  class: "uibutton icon prev" %>
-                            </div>
-                            <div class="input" id="view_map">
-                            </div>
-                        </div>
-                
-                        <div class="center_block clearfix">
-                            <%= f.label :description %>
-                            <div class="input">
-                                <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title=>"Description", rows: 3, cols: 75  %> 
-                            </div>
-                        </div>
-                        <div class="center_block clearfix">
-                            <%= label_tag "Add picture:" %>
-                            <%= f.fields_for :photo, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
-                            <%= photo_form.file_field :pic, id: "pic",style: "width:1px; height:1px; padding:0px;  left:0px;" %>  
-                            <% end %>
-                            <div class="input">    
-                                <canvas id="imageCanvas" style = "border: 1px solid #ddd; padding:5px; align:center; width:200px;" >select an image</canvas>
-                            </div>
-                        </div>
-                    </div>
-                           
-                    <div id="page-2">
-                        <%= link_to "Previous page", '#', id: "prev-1",  class: "uibutton icon prev pull-left" %>
-                        <br>
-                        <div class="center_block clearfix">
-                            <%= label_tag :privacy %>
-                            <div class="input">
-                                <%= f.select :privacy, options_for_select([["Open", "open"], ["Closed", "closed"], ["Secret", "secret"]]) %>
-                            </div>
-                        </div> 
-                       
-                        <br>
-                
-                        
-                    </div>
-                </div>
+         <div class="center_block clearfix">
+          <%= f.label :name %>
+          <div class="input">
+            <%= f.text_field :name, :placeholder=>"Title" %></div>
+          </div>
+
+          <div class="center_block clearfix">
+            <%= f.label :location %>
+            <div class="input ">
+              <%= f.text_field :address, :placeholder => :location, :size => 43, class: 'events_with_autocomplete inherit_width', 'data-autocompleteUrl' => search_address_communities_path %>&nbsp;&nbsp;&nbsp;
+
+              <%= link_to "View map", '#', id: "view_map_link",  class: "uibutton icon prev" %>
             </div>
-        </div>   
+            <div class="input" id="view_map">
+
+            </div>
+          </div>
+          <div class="center_block clearfix">
+            <%= f.label :description %>
+            <div class="input">
+              <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title=>"Description", rows: 3, cols: 75  %> 
+            </div>
+          </div>
+
+
+          <div class="center_block clearfix">
+            <%= label_tag :privacy %>
+            <div class="input">
+              <%= f.select :privacy, options_for_select([["Open", "open"], ["Closed", "closed"], ["Secret", "secret"]]) %>
+            </div>
+          </div> 
+          <div class="center_block clearfix">
+            <%= label_tag "Add picture:" %>
+            <%= f.fields_for :photo, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
+
+            <%= photo_form.file_field :pic, id: "pic",style: "width:1px; height:1px; padding:0px;  left:0px;" %>  
+
+            <% end %>
+            <div class="input">
+              <canvas id="imageCanvas" style = "border: 1px solid #ddd; padding:5px; align:center; width:200px;cursor:pointer" >select new image</canvas>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="modal-footer" >
-        <%= f.submit "Create Community", class: "btn primary pull-right", id: "crtComUnity" %>  
+      <%= f.submit "Create", class: "btn primary pull-right", id: "crtComUnity" %>  
     </div>
-    <% end %>
+  </div>
 </div>
-          
+<% end %>
 
 
-
-</div>
 
 <script type="text/javascript">
-    $(document).ready(function(){
-    
-    $('#page-2').hide();
 
-  
-    $("#ComUnity1").click(function(){
-      $('#modal').modal('show');
-    });
-    $("#closeX").click(function(){
-          $('#modal').modal('hide');
-        });
-
-    $("#crtComUnity").click(function(){
-          $('#modal').modal('hide');
-        });
-
- $('#suggested_comm_li').click(function(){
-            $('#suggested_comm_li').addClass('active');
-            $('#my_comm_li').removeClass('active');
-            $('#suggested_comm').show();
-            $('#my_comm').hide();
-        });
-
-
-        $('#my_comm_li').click(function(){
-            $('#suggested_comm_li').removeClass('active');
-            $('#my_comm_li').addClass('active');
-            $('#suggested_comm').hide();
-            $('#my_comm').show();
-        });
-
-
-$('#prev-1').click(function(){
-    $( "#page-1" ).animate({ width: '600px' }, 1000, function() {
-                $(this).show();
-             });
-    $( "#page-2" ).animate({ width: '0px' }, 1000, function() {
-                $(this).hide();
-             });
-
-});
-$('#next-2').click(function(){
-    $( "#page-1" ).animate({ width: '0px' }, 1000, function() {
-                $(this).hide();
-             });
-    $( "#page-2" ).animate({ width: '600px' }, 1000, function() {
-                $(this).show();
-             });
+$(document).ready(function(){ 
+  $('#suggested_comm').hide();
+  $('#my_comm').hide();
+  $('#view_map_link').hide();
 });
 
-    var imageLoader = document.getElementById('pic');
-    imageLoader.addEventListener('change', handleImage, false);
-    $("#imageCanvas").click(function(){
-        $("#pic").click();
-    });
-        var canvas = document.getElementById('imageCanvas');
-    var ctx = canvas.getContext('2d');
-    ctx.font="30px Arial";
-    ctx.fillText("Select an image",10,50);
 
-  function handleImage(e){
-    var canvas = document.getElementById('imageCanvas');
-    var ctx = canvas.getContext('2d');
-    var iCnt=0;
-    var files = e.target.files;
-    canvas.width = 300;
-    canvas.height = 155*(Math.ceil(files.length/4));
-    for( var i = 0, len = files.length; i < len; i++) 
-          {
-          if(files[i])
-            {
-              var reader = new FileReader();
-              reader.onload = function(event){
-                var img = new Image();
+$(".sidetabs").click(function(){
+  $(".sidetabs").removeClass('sidetabs_selected');
+  $(this).addClass('sidetabs_selected');
+  if($(this).hasClass('notActive')){
+    $('#cu_pic').hide('slow');
+  }else{
+    $('#cu_pic').show('slow');
+  }
+  $(this).next('a').click();
+});
 
-                img.onload = function(){
-                  var ratioPx = 150;
-                  var sWidth =ratioPx;
-                  var ratio = img.width/sWidth;
-                  var sHeight = img.height/ratio;   
-                    if(sHeight>ratioPx){
-                       sHeight =ratioPx;
-                       ratio = img.height/sHeight;
-                       sWidth = img.width/ratio;  
-                    }
-                  ctx.drawImage(img, 155*(iCnt%4),155*(Math.floor(iCnt/4)),sWidth,sHeight);
+
+
+$("#ComUnity").click(function(){
+  $('#modal').modal('show');
+});
+$("#closeX").click(function(){
+  $('#modal').modal('hide');
+});
+
+$("#crtComUnity").click(function(){
+  $('#modal').modal('hide');
+});
+
+/*$('#public_comUnity').click(function(){
+  $('#suggested_comm').show();
+  $('#my_comm').hide();
+  $('#about_comUnity').hide();
+});
+
+
+$('#joined_comUnity').click(function(){
+  $('#suggested_comm').hide();
+  $('#my_comm').show();
+  $('#about_comUnity').hide();
+});
+*/
+
+$('#community_address').keydown(function(){
+  $('#view_map_link').hide();
+  $('#view_map').hide();
+});
+
+$('#view_map_link').click(function(){
+  var address = "/communities/get_geo_coordinates?address="+$('#community_address').val();
+  $.ajax({
+    type: "GET",
+    url: address,
+    dataType: "script"
+  }); 
+});
+
+$('a.ui-corner-all').live("click", function(){
+  if($('#community_address').val()!=""){
+    $('#view_map_link').show();
+  }else{
+    $('#view_map_link').hide();
+  }
+});
+
+
+$(function() {
+  return $('.events_with_autocomplete').autocomplete({
+    minLength: 2,
+    source: function(request, response) {
+      return $.ajax({
+        url: $('.events_with_autocomplete').data('autocompleteurl'),
+        dataType: "json",
+        data: {address: request.term},
+        success: function(data) {
+          return response(data);
+        }
+      });
+    }
+  });
+});
+
+var imageLoader = document.getElementById('pic');
+imageLoader.addEventListener('change', handleImage, false);
+$("#imageCanvas").click(function(){
+  $("#pic").click();
+});
+var canvas = document.getElementById('imageCanvas');
+var ctx = canvas.getContext('2d');
+ctx.font="30px Arial";
+ctx.fillText("Add picture",10,50);
+
+function handleImage(e){
+  var canvas = document.getElementById('imageCanvas');
+  var ctx = canvas.getContext('2d');
+  var iCnt=0;
+  var files = e.target.files;
+  canvas.width = 180;
+  canvas.height = 155*(Math.ceil(files.length/4));
+  for( var i = 0, len = files.length; i < len; i++) 
+  {
+    if(files[i])
+    {
+      var reader = new FileReader();
+      reader.onload = function(event){
+        var img = new Image();
+
+        img.onload = function(){
+          var ratioPx = 150;
+          var sWidth =ratioPx;
+          var ratio = img.width/sWidth;
+          var sHeight = img.height/ratio;   
+          if(sHeight>ratioPx){
+           sHeight =ratioPx;
+           ratio = img.height/sHeight;
+           sWidth = img.width/ratio;  
+         }
+         ctx.drawImage(img, 155*(iCnt%4),155*(Math.floor(iCnt/4)),sWidth,sHeight);
                   //ctx.drawImage(img,0,0,sWidth,sHeight);
                   iCnt++;
                 }
@@ -227,10 +240,20 @@ $('#next-2').click(function(){
               reader.readAsDataURL(e.target.files[i]);     
             }
           }
-  }
+        }
 
 
-  });
-    
-       
-</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+        </script>
