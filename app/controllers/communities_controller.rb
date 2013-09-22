@@ -109,8 +109,13 @@ before_filter :signed_in_user, only: [:create, :destroy]
   end
 
   def public_com
-     @public_communities = Community.where(['id  NOT IN (?)' , current_user.communities.collect(&:id)])   
+     @public_communities = Community.where(['id  NOT IN (?) AND privacy = "open"' , current_user.communities.collect(&:id)])   
      @communities = @public_communities  
+  end
+
+  def private_com
+     @private_communities = Community.where(['id  NOT IN (?) AND privacy = "closed"' , current_user.communities.collect(&:id)])   
+     @communities = @private_communities  
   end
 
   def search_address

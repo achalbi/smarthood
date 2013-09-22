@@ -1,10 +1,16 @@
 <div id="aboutDiv">
- 
-   <% if community.following?(current_user, community) %>
-      <%= render 'setactive', :@community => community %>
+
+ <% if community.following?(current_user, community) %>
+     <%= render 'setactive', :@community => community %>
+ <% else %>
+  <% unless community.user_id == current_user.id %>
+   <%= link_to "Send request",'', class: "uibutton icon secure pull-right" %>
   <% end %>
-  
- <%= link_to "edit", '#', id: "edit_comUnity",  class: "marginRight10 pull-right uibutton icon edit",:title => "Edit" %>
+ <% end %>
+
+ <% if community.following?(current_user, community) || (community.user_id == current_user.id) %>
+    <%= link_to "edit", '#', id: "edit_comUnity",  class: "marginRight10 pull-right uibutton icon edit",:title => "Edit" %>
+ <% end %>
 
  <p><h4>Description : <small><%= community.description %></small></h4></p>
 
@@ -12,17 +18,17 @@
 
  <%= render :partial => "events/maps", :locals => { :location => community } %><br>
  <p ><h4 >Host : <span style="margin:5px;">
-      <%= link_to community.user.name, community.user %>
-    </span></h4>
-    <div  class="img_zoom" style="float:left;" >
-      <%= gravatar_for community.user, size: 100 %>
-    </div><br><br><br><br><br><br><br><br>
-   </p>
- <p><h4>Privacy : <%= community.privacy %></h4></p>
+  <%= link_to community.user.name, community.user %>
+</span></h4>
+<div  class="img_zoom" style="float:left;" >
+  <%= gravatar_for community.user, size: 100 %>
+</div><br><br><br><br><br><br><br><br>
+</p>
+<p><h4>Privacy : <%= community.privacy %></h4></p>
 
 
 <ul class="users" id="activity_events_ul" >
-<% unless ad_users.nil? %>
+  <% unless ad_users.nil? %>
   <% if ad_users.count > 0  %>
   <h4>Moderators</h4>
   <% end %>  
@@ -40,8 +46,8 @@
   <% end %>
   <li style="clear:both;"></li>
   <% end %> 
-<% end %> 
-<% unless inv_users.nil? %>
+  <% end %> 
+  <% unless inv_users.nil? %>
   <% if inv_users.count > 0 %> 
   <h4>Invitees</h4>
   <% end %>
@@ -59,7 +65,7 @@
   <% end %>
   <li style="clear:both;"></li>
   <% end %>
-<% end %>
+  <% end %>
 
 </ul>
 
