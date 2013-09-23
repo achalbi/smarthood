@@ -44,7 +44,7 @@ EMS::Application.routes.draw do
 
   resources :communities do
     member do
-      get :setactive
+      get :setactive, :sendrequest, :join_cu, :acceptrequest
     end
     collection do
       get :active_com , :joined_com, :public_com, :private_com, :search_address, :get_geo_coordinates

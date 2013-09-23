@@ -16,7 +16,7 @@ class Community < ActiveRecord::Base
 	  validates :user_id, presence: true
     validates :name,  presence: true, length: { maximum: 50 }, uniqueness: { case_sensitive: false }
 
-  def following?(user, community)
+  def is_active?(user, community)
    @usercommunity = user.usercommunities.find_by_community_id(community.id)
     unless @usercommunity.nil?
       if @usercommunity.status =="active"
@@ -26,6 +26,28 @@ class Community < ActiveRecord::Base
       end
     end
     
+  end
+
+  def is_public?(current_user)
+       @public_communities = Community.where(['id  NOT IN (?) AND privacy = "open"' , current_user.joined_uc.collect(&:community_id)])   
+      if @public_communities.pluck(:id).detect {|n| n==self.id}.nil?
+        return false
+      else
+       return true
+      end
+  end
+
+  def is_private?(current_user)
+     @private_communities = Community.where(['id  NOT IN (?) AND privacy = "closed"' , current_user.joined_uc.collect(&:community_id)])   
+      if @private_communities.pluck(:id).detect {|n| n==self.id}.nil?
+        return false
+      else
+       return true
+      end
+  end
+
+  def requested_uc
+   @usercommunity = self.usercommunities.where('invitation = "requested"') 
   end
 
   def follow!(user, community_id)

@@ -88,6 +88,10 @@ def feed
     relationships.find_by_followed_id(other_user.id).destroy
   end
 
+  def joined_uc
+   @usercommunity = self.usercommunities.where('invitation = "joined"') 
+  end
+
   def self.search(search, exclude_user)
     if search  
       if exclude_user.nil?

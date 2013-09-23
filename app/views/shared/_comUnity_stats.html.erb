@@ -27,7 +27,7 @@
  <% end %> 
  <% unless inv_users.nil? %> 
  <div id="inviteDiv" class="bgClrChg" style="mragin:10px;padding:10px;">
-  <h5>Invitees<%= link_to "add", '#', id: "invite",  class: "uibutton icon add pull-right" %></h5>
+  <h5>Members<%= link_to "add", '#', id: "invite",  class: "uibutton icon add pull-right" %></h5>
   <section class="stats">
     <a href="#" id="inv_users_a">
       <strong id="followers" class="stat">
@@ -48,7 +48,21 @@
 </div>
 <% end %>
 </div>
-
+<br>
+<% unless requested_users.nil?  %>
+<% if requested_users.count > 0 %>
+<div class="well" style="mragin:10px;padding:10px;" >
+  <h6>Join requests</h6>
+<ul class="users">
+<% requested_users.each do |req_user| %>
+  <li>
+    <%= gravatar_for req_user, size: 50 %> <h5><%= req_user.name %></h5> <%= link_to "Accept", acceptrequest_community_path(community) << "?user_id=#{req_user.id}", id: "accept",  class: "uibutton icon add pull-right", remote: true %>
+  </li>
+<% end %>
+</ul>
+</div>
+<% end %> 
+<% end %> 
 
 
 

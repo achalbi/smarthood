@@ -1,14 +1,14 @@
 <div id="aboutDiv">
 
- <% if community.following?(current_user, community) %>
+ <% if community.is_active?(current_user, community) %>
      <%= render 'setactive', :@community => community %>
- <% else %>
-  <% unless community.user_id == current_user.id %>
-   <%= link_to "Send request",'', class: "uibutton icon secure pull-right" %>
-  <% end %>
+ <% elsif community.is_private?(current_user) %>
+   <%= link_to "Send request", sendrequest_community_path(community), class: "uibutton icon secure pull-right", remote: true %>
+ <% elsif community.is_public?(current_user) %>
+   <%= link_to "Join", join_cu_community_path(community), class: "uibutton icon prev pull-right", remote: true %>
  <% end %>
 
- <% if community.following?(current_user, community) || (community.user_id == current_user.id) %>
+ <% if community.is_active?(current_user, community) || (community.user_id == current_user.id) %>
     <%= link_to "edit", '#', id: "edit_comUnity",  class: "marginRight10 pull-right uibutton icon edit",:title => "Edit" %>
  <% end %>
 
@@ -31,9 +31,6 @@
   <% unless ad_users.nil? %>
   <% if ad_users.count > 0  %>
   <h4>Moderators</h4>
-  <% end %>  
-  <% if ad_users.count > 0  %>
-  <h6>Members</h6>
   <% ad_users.each do |user|%>
   <li style="width:100px;float:left;">
     <div  class="img_zoom" style="float:left;" >
@@ -49,10 +46,7 @@
   <% end %> 
   <% unless inv_users.nil? %>
   <% if inv_users.count > 0 %> 
-  <h4>Invitees</h4>
-  <% end %>
-  <% if inv_users.count > 0 %>
-  <h6>Members</h6>
+  <h4>Members</h4>
   <% inv_users.each do |user|%>
   <li style="width:100px;float:left;">
     <div  class="img_zoom" style="float:left;" >

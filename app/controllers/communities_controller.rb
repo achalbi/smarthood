@@ -22,7 +22,10 @@ before_filter :signed_in_user, only: [:create, :destroy]
     @admin_users = @ad_eds.pluck(:user_id)
     @inv_users = User.where(['id IN (?)', @users])
     @ad_users = User.where(['id IN (?)', @admin_users])
-
+    @requested_users = nil
+    if !@selected_community.nil?
+      @requested_users = User.where(['id IN (?)' , @selected_community.requested_uc.collect(&:user_id)])
+    end
 
   end
 
@@ -39,6 +42,7 @@ before_filter :signed_in_user, only: [:create, :destroy]
       @community.save
       flash[:success] = "community created!"
       @usercommunity = @community.follow!(current_user, @community.id)
+      @usercommunity.invitation="joined"
       @usercommunities = Usercommunity.where(['status=? and user_id=?','active',current_user.id])
         @usercommunities.each do |uc|
           if uc.status=="active"
@@ -68,6 +72,41 @@ before_filter :signed_in_user, only: [:create, :destroy]
   
   end
 
+  def sendrequest
+   @usercommunity = Usercommunity.new 
+   @usercommunity.community_id = params[:id]
+   @usercommunity.user_id = current_user.id
+   @usercommunity.invitation = "requested"
+   @usercommunity.status=""
+   @usercommunity.save
+
+  end
+
+  def acceptrequest
+   @usercommunity = Usercommunity.where(['community_id=? and user_id=?',params[:id],params[:user_id]])[0]
+   @usercommunity.invitation = "joined"
+   @usercommunity.save
+   @community = Community.find(params[:id])
+    @ad_eds = @community.usercommunities.where(is_admin: true )
+    @non_ad_eds = @community.usercommunities.where(is_admin: false)
+    @users = @non_ad_eds.pluck(:user_id)
+    @admin_users = @ad_eds.pluck(:user_id)
+    @inv_users = User.where(['id IN (?)', @users])
+    @ad_users = User.where(['id IN (?)', @admin_users])
+    @requested_users = User.where(['id IN (?)' , @community.requested_uc.collect(&:user_id)])
+    
+  end
+
+  def join_cu
+   @usercommunity = Usercommunity.new 
+   @usercommunity.community_id = params[:id]
+   @usercommunity.user_id = current_user.id
+   @usercommunity.invitation = "joined"
+   @usercommunity.status=""
+   @usercommunity.save
+
+  end
+
   def show
     @community = Community.find(params[:id])
     @user = current_user
@@ -78,6 +117,7 @@ before_filter :signed_in_user, only: [:create, :destroy]
     @admin_users = @ad_eds.pluck(:user_id)
     @inv_users = User.where(['id IN (?)', @users])
     @ad_users = User.where(['id IN (?)', @admin_users])
+    @requested_users = User.where(['id IN (?)' , @community.requested_uc.collect(&:user_id)])
       respond_to do |format|
          format.html {  }
          format.js {  }
@@ -97,24 +137,25 @@ before_filter :signed_in_user, only: [:create, :destroy]
     @admin_users = @ad_eds.pluck(:user_id)
     @inv_users = User.where(['id IN (?)', @users])
     @ad_users = User.where(['id IN (?)', @admin_users])
+    @requested_users = User.where(['id IN (?)' , @community.requested_uc.collect(&:user_id)])
   end
 
   def joined_com
     @my_communities = Community.where(['id IN (?)', current_user.communities.collect(&:id)]) 
     unless Usercommunity.where(['status=? and user_id=?','active',current_user.id])[0].nil?
       @selected_community = Community.find(Usercommunity.where(['status=? and user_id=?','active',current_user.id])[0].community_id)
-      @my_communities = Community.where(['id IN (?) and id!=?', current_user.communities.collect(&:id),@selected_community.id]) 
+      @my_communities = Community.where(['id IN (?) and id!=?', current_user.joined_uc.collect(&:community_id),@selected_community.id]) 
     end 
     @communities = @my_communities  
   end
 
   def public_com
-     @public_communities = Community.where(['id  NOT IN (?) AND privacy = "open"' , current_user.communities.collect(&:id)])   
+     @public_communities = Community.where(['id  NOT IN (?) AND privacy = "open"' , current_user.joined_uc.collect(&:community_id)])   
      @communities = @public_communities  
   end
 
   def private_com
-     @private_communities = Community.where(['id  NOT IN (?) AND privacy = "closed"' , current_user.communities.collect(&:id)])   
+     @private_communities = Community.where(['id  NOT IN (?) AND privacy = "closed"' , current_user.joined_uc.collect(&:community_id)])   
      @communities = @private_communities  
   end
 
