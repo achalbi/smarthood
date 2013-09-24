@@ -47,7 +47,7 @@ class Community < ActiveRecord::Base
   end
 
   def requested_uc
-   @usercommunity = self.usercommunities.where(['invitation = "requested"']) 
+   @usercommunity = self.usercommunities.where(["invitation = 'requested'"]) 
   end
 
   def follow!(user, community_id)
