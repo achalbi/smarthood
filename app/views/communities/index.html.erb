@@ -1,56 +1,71 @@
+<% unless @selected_community.nil? %>
 <% provide(:title, @selected_community.name) %>
-
+<% else %>
+<% provide(:title, "Create ComUnity") %>
+<script type="text/javascript">
+$(document).ready(function(){
+  $('#public_comUnity').click();
+  $('#public_li').addClass('sidetabs_selected');
+});
+</script>
+<% end %>
 <div class="row">
   <aside class="span6">
     <section id="cu_pic">
+    <% unless @selected_community.nil? %>
       <%= render partial: 'communities/cu_pic', locals: {community: @selected_community} %>
-  </section>
+    <% end %>
+    </section>
 
-  <section id="comUnity_sec" style="background-color:#e5e5e5;padding:10px;" class="well">
-    <span style="clear:both"></span>
-    <%= link_to "Create Community", '#', id: "ComUnity",  class: " pull-right uibutton icon add" %><br><br>
-    <div id="comUnity_div">    
-      <li class="sidetabs sidetabs_selected" style="list-style-type: none;padding:5px; margin:5px;">
-        <h6><%= link_to  "Active", '#', id: "active_comUnity", remote: true %></h6>
-      </li>
-        <%= link_to "", active_com_communities_path, remote: true %>
-      <li class="sidetabs notActive" style="list-style-type: none;padding:5px; margin:5px;">
-        <h6><%= link_to  "Joined", joined_com_communities_path, id: "joined_comUnity", remote: true %></h6>
-      </li>
-        <%= link_to "", joined_com_communities_path, remote: true %>
-      <li class="sidetabs notActive" style="list-style-type: none;padding:5px; margin:5px;">
-        <h6><%= link_to  "Public", '#', id: public_com_communities_path, remote: true %></h6>
-      </li>
-        <%= link_to "", public_com_communities_path, remote: true %>
-      <li class="sidetabs notActive" style="list-style-type: none;padding:5px; margin:5px;">
-        <h6><%= link_to  "Private", '#', id: private_com_communities_path, remote: true %></h6>
-      </li>
-        <%= link_to "", private_com_communities_path, remote: true %>
+    <section id="comUnity_sec" style="background-color:#e5e5e5;padding:10px;" class="well">
+      <span style="clear:both"></span>
+      <%= link_to "Create Community", '#', id: "ComUnity",  class: " pull-right uibutton icon add" %><br><br>
+      <div id="comUnity_div">    
+        <% unless @selected_community.nil? %>
+        <li class="sidetabs sidetabs_selected" style="list-style-type: none;padding:5px; margin:5px;">
+          <h6><%= link_to  "Active: " << @selected_community.name , '#', remote: true %></h6>
+        </li>
+        <%= link_to "", active_com_communities_path, id: "active_comUnity", remote: true %>
+        <% end %>
+        <li class="sidetabs notActive" style="list-style-type: none;padding:5px; margin:5px;">
+          <h6><%= link_to  "Joined", "#", remote: true %></h6>
+        </li>
+        <%= link_to "", joined_com_communities_path , id: "joined_comUnity", remote: true %>
+        <li class="sidetabs notActive"id="public_li" style="list-style-type: none;padding:5px; margin:5px;">
+          <h6><%= link_to  "Public", "#",  remote: true %></h6>
+        </li>
+        <%= link_to "", public_com_communities_path,id: "public_comUnity", remote: true %>
+        <li class="sidetabs notActive" style="list-style-type: none;padding:5px; margin:5px;">
+          <h6><%= link_to  "Private", '#', remote: true %></h6>
+        </li>
+        <%= link_to "", private_com_communities_path , id: "private_comUnity", remote: true %>
 
+      </div>
+    </section>
+
+  </aside>
+  <aside id="right" style="float: right;width:220px;margin-right:10px;">
+    <div id="comUnity_stats">
+      <%= render partial: 'shared/comUnity_stats', locals: {ad_users: @ad_users, inv_users: @inv_users, requested_users: @requested_users, community: @selected_community } %>
     </div>
-  </section>
+  </aside>
+  <div id="comUnity_list" class="span13" style="margin-top:5px;">
+    <div id="about_comUnity" >  
+     <%= render partial: 'communities/about', locals: {ad_users: @ad_users, inv_users: @inv_users, community: @selected_community} %>
+   </div>
 
-</aside>
-<aside id="right" style="float: right;width:220px;margin-right:10px;">
-  <div id="comUnity_stats">
-    <%= render partial: 'shared/comUnity_stats', locals: {ad_users: @ad_users, inv_users: @inv_users, requested_users: @requested_users, community: @selected_community } %>
-  </div>
-</aside>
-<div id="comUnity_list" class="span13" style="margin-top:5px;">
-  <div id="about_comUnity" >  
-   <%= render partial: 'communities/about', locals: {ad_users: @ad_users, inv_users: @inv_users, community: @selected_community} %>
  </div>
 
-</div>
-
-<%= form_for( @community, remote: true, :html => {:multipart => true}) do |f| %>
-<div id="modal" style="display:none;" >
+ <%= form_for( @community, remote: true, :html => {:multipart => true}) do |f| %>
+ <div id="modal" style="display:none;" >
   <div id="modal-from-dom2" class="modal hide fade in" style="display: block;width:700px;">
     <div class="modal-header">
       <a href="#" id="closeX" class="close">×</a>
       <span style="font-size:20px;line-height: 2;">Create ComUnity</span>
     </div>
     <div class="modal-body" style="max-height:550px;">
+    <% unless @selected_community.nil? %>
+    <% end %>
       <div class="row">
         <div class="span14 ui-front">
 
@@ -84,7 +99,7 @@
           <div class="center_block clearfix">
             <%= label_tag :privacy %>
             <div class="input">
-              <%= f.select :privacy, options_for_select([["Open", "open"], ["Closed", "closed"], ["Secret", "secret"]]) %>
+              <%= f.select :privacy, options_for_select([["Public", "public"], ["Private", "private"], ["Secret", "secret"]]) %>
             </div>
           </div> 
           <div class="center_block clearfix">

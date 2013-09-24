@@ -1,9 +1,13 @@
+ <% unless community.nil? %>
+
 <div id="aboutDiv">
 
  <% if community.is_active?(current_user, community) %>
      <%= render 'setactive', :@community => community %>
  <% elsif community.is_private?(current_user) %>
-   <%= link_to "Send request", sendrequest_community_path(community), class: "uibutton icon secure pull-right", remote: true %>
+     <% unless community.is_requested?(current_user) %>
+       <%= link_to "Send request", sendrequest_community_path(community), class: "uibutton icon secure pull-right", remote: true %>
+     <% end %>
  <% elsif community.is_public?(current_user) %>
    <%= link_to "Join", join_cu_community_path(community), class: "uibutton icon prev pull-right", remote: true %>
  <% end %>
@@ -108,7 +112,7 @@
           <div class="center_block clearfix">
             <%= label_tag :privacy %>
             <div class="input">
-              <%= f.select :privacy, options_for_select([["Open", "open"], ["Closed", "closed"], ["Secret", "secret"]]) %>
+              <%= f.select :privacy, options_for_select([["Public", "public"], ["Private", "private"], ["Secret", "secret"]]) %>
             </div>
           </div> <br>
           <div class="center_block clearfix">
@@ -271,3 +275,5 @@ function handleImage(e){
 
 
         </script>
+
+<% end %>
