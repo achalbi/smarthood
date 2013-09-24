@@ -150,12 +150,12 @@ def joined_com
 end
 
 def public_com
- @public_communities = Community.where(['id  NOT IN (?) AND privacy = "open"' , current_user.joined_uc.collect(&:community_id)])   
+ @public_communities = Community.where(["id  NOT IN (?) AND privacy ='open'" , current_user.joined_uc.collect(&:community_id)])   
  @communities = @public_communities  
 end
 
 def private_com
- @private_communities = Community.where(['id  NOT IN (?) AND privacy = "closed"' , current_user.joined_uc.collect(&:community_id)])   
+ @private_communities = Community.where(["id  NOT IN (?) AND privacy = 'closed'" , current_user.joined_uc.collect(&:community_id)])   
  @communities = @private_communities  
 end
 

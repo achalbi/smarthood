@@ -29,7 +29,7 @@ class Community < ActiveRecord::Base
   end
 
   def is_public?(current_user)
-       @public_communities = Community.where(['id  NOT IN (?) AND privacy = "open"' , current_user.joined_uc.collect(&:community_id)])   
+       @public_communities = Community.where(["id  NOT IN (?) AND privacy = 'open'" , current_user.joined_uc.collect(&:community_id)])   
       if @public_communities.pluck(:id).detect {|n| n==self.id}.nil?
         return false
       else
@@ -38,7 +38,7 @@ class Community < ActiveRecord::Base
   end
 
   def is_private?(current_user)
-     @private_communities = Community.where(['id  NOT IN (?) AND privacy = "closed"' , current_user.joined_uc.collect(&:community_id)])   
+     @private_communities = Community.where(["id  NOT IN (?) AND privacy = 'closed'" , current_user.joined_uc.collect(&:community_id)])   
       if @private_communities.pluck(:id).detect {|n| n==self.id}.nil?
         return false
       else
