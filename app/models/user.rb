@@ -89,7 +89,7 @@ def feed
   end
 
   def joined_uc
-   @usercommunity = self.usercommunities.where('invitation = "joined"') 
+   @usercommunity = self.usercommunities.where("invitation = 'joined'") 
   end
 
   def self.search(search, exclude_user)
