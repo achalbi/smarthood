@@ -92,6 +92,14 @@ def feed
    @usercommunity = self.usercommunities.where("invitation = 'joined'") 
   end
 
+  def is_cu_admin?(community)
+   if self.usercommunities.where("community_id = ? AND is_admin=?", community.id, true).count > 0
+    return true
+   else
+    return false
+   end
+  end
+  
   def self.search(search, exclude_user)
     if search  
       if exclude_user.nil?

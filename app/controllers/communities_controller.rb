@@ -25,9 +25,9 @@ class CommunitiesController < ApplicationController
       @inv_users = User.where(['id IN (?)', @users])
       @ad_users = User.where(['id IN (?)', @admin_users])
        @requested_users = nil
-       @ucs = @community.usercommunities.where("user_id = ?  AND is_admin=?",current_user, "true" )
+       @ucs = @selected_community.usercommunities.where("user_id = ?  AND is_admin=?",current_user.id, true )
        if @ucs.count > 0
-        @requested_users = User.where(['id IN (?)' , @community.requested_uc.collect(&:user_id)])
+        @requested_users = User.where(['id IN (?)' , @selected_community.requested_uc.collect(&:user_id)])
       end  
     end
 
@@ -44,7 +44,7 @@ class CommunitiesController < ApplicationController
         @community.photo = @photo 
       end
       @community.save
-      flash[:success] = "community created!"
+      #flash[:success] = "community created!"
       @usercommunity = @community.follow!(current_user, @community.id)
       @usercommunity.invitation="joined"
       @usercommunity.is_admin = true
@@ -58,7 +58,7 @@ class CommunitiesController < ApplicationController
       @usercommunity.status="active"
       @usercommunity.save
     else
-    	flash[:error] = "community not created!"
+    #	flash[:error] = "community not created!"
     end 
     respond_to do |format|
      format.html { redirect_to :action => :index   }
@@ -66,6 +66,22 @@ class CommunitiesController < ApplicationController
    end
 
  end
+
+  def update
+    @community = Community.find(params[:id])
+    @community.update_attributes(params[:community])
+     @ad_eds = @community.usercommunities.where(is_admin: true )
+     @non_ad_eds = @community.usercommunities.where(is_admin: false)
+     @users = @non_ad_eds.pluck(:user_id)
+     @admin_users = @ad_eds.pluck(:user_id)
+     @inv_users = User.where(['id IN (?)', @users])
+     @ad_users = User.where(['id IN (?)', @admin_users])
+     @requested_users = nil
+     @ucs = @community.usercommunities.where("user_id = ?  AND is_admin=?",current_user.id, true )
+     if @ucs.count > 0
+      @requested_users = User.where(['id IN (?)' , @community.requested_uc.collect(&:user_id)])
+    end  
+  end
 
  def setactive
    @usercommunity = Usercommunity.where(['status=? and user_id=?','active',current_user.id])[0]
@@ -100,7 +116,25 @@ class CommunitiesController < ApplicationController
    @inv_users = User.where(['id IN (?)', @users])
    @ad_users = User.where(['id IN (?)', @admin_users])
    @requested_users = nil
-   @ucs = @community.usercommunities.where("user_id = ?  AND is_admin=?",current_user, "true" )
+   @ucs = @community.usercommunities.where("user_id = ?  AND is_admin=?",current_user.id, true )
+   if @ucs.count > 0
+    @requested_users = User.where(['id IN (?)' , @community.requested_uc.collect(&:user_id)])
+  end   
+end
+
+ def declinerequest
+   @usercommunity = Usercommunity.where(['community_id=? and user_id=?',params[:id],params[:user_id]])[0]
+   @usercommunity.invitation = "decline"
+   @usercommunity.save
+   @community = Community.find(params[:id])
+   @ad_eds = @community.usercommunities.where(is_admin: true )
+   @non_ad_eds = @community.usercommunities.where(is_admin: false)
+   @users = @non_ad_eds.pluck(:user_id)
+   @admin_users = @ad_eds.pluck(:user_id)
+   @inv_users = User.where(['id IN (?)', @users])
+   @ad_users = User.where(['id IN (?)', @admin_users])
+   @requested_users = nil
+   @ucs = @community.usercommunities.where("user_id = ?  AND is_admin=?",current_user.id, true )
    if @ucs.count > 0
     @requested_users = User.where(['id IN (?)' , @community.requested_uc.collect(&:user_id)])
   end   
@@ -127,7 +161,7 @@ def show
   @inv_users = User.where(['id IN (?)', @users])
   @ad_users = User.where(['id IN (?)', @admin_users])
   @requested_users = nil
-   @ucs = @community.usercommunities.where("user_id = ?  AND is_admin=?",current_user, "true" )
+   @ucs = @community.usercommunities.where("user_id = ?  AND is_admin=?",current_user.id, true )
   if @ucs.count > 0
     @requested_users = User.where(['id IN (?)' , @community.requested_uc.collect(&:user_id)])
   end
@@ -151,7 +185,7 @@ def active_com
   @inv_users = User.where(['id IN (?)', @users])
   @ad_users = User.where(['id IN (?)', @admin_users])
   @requested_users = nil
-   @ucs = @community.usercommunities.where("user_id = ?  AND is_admin=?",current_user, "true" )
+   @ucs = @community.usercommunities.where("user_id = ?  AND is_admin=?",current_user.id, true )
   if @ucs.count > 0
     @requested_users = User.where(['id IN (?)' , @community.requested_uc.collect(&:user_id)])
   end

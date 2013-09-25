@@ -56,7 +56,9 @@
 <ul class="users">
 <% requested_users.each do |req_user| %>
   <li>
-    <%= gravatar_for req_user, size: 50 %> <h5><%= req_user.name %></h5> <%= link_to "Accept", acceptrequest_community_path(community) << "?user_id=#{req_user.id}", id: "accept",  class: "uibutton icon add pull-right", remote: true %>
+    <%= gravatar_for req_user, size: 50 %> <h5><%= req_user.name %></h5>
+    <br><br>
+    <a href="<%= declinerequest_community_path(community) << '?user_id='%><%= req_user.id %>"class="uibutton pull-right" data-remote="true" id="decline"> Decline <i class="icon-remove"></i></a><%= link_to "Accept", acceptrequest_community_path(community) << "?user_id=#{req_user.id}", id: "accept",  class: "uibutton icon add pull-right", remote: true %>
   </li>
 <% end %>
 </ul>
