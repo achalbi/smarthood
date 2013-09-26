@@ -47,7 +47,7 @@ EMS::Application.routes.draw do
       get :setactive, :sendrequest, :join_cu, :acceptrequest, :declinerequest
     end
     collection do
-      get :active_com , :joined_com, :public_com, :private_com, :search_address, :get_geo_coordinates
+      get :active_com , :joined_com, :public_com, :private_com, :moderated_com, :search_address, :get_geo_coordinates
     end
   end 
    

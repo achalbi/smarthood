@@ -26,6 +26,10 @@ $(document).ready(function(){
           <h6><%= link_to  "Active: " << @selected_community.name , '#', remote: true %></h6>
         </li>
         <%= link_to "", active_com_communities_path, id: "active_comUnity", remote: true %>
+       <li class="sidetabs notActive" style="list-style-type: none;padding:5px; margin:5px;">
+          <h6><%= link_to  "Moderated", "#", remote: true %></h6>
+        </li>
+        <%= link_to "", moderated_com_communities_path , id: "moderated_comUnity", remote: true %>
         <% end %>
         <li class="sidetabs notActive" style="list-style-type: none;padding:5px; margin:5px;">
           <h6><%= link_to  "Joined", "#", remote: true %></h6>
@@ -56,7 +60,7 @@ $(document).ready(function(){
 
  </div>
 
- <%= form_for( @community, remote: true, :html => {:multipart => true}) do |f| %>
+ <%= form_for( Community.new, remote: true, :html => {:multipart => true}) do |f| %>
  <div id="modal" style="display:none;" >
   <div id="modal-from-dom2" class="modal hide fade in" style="display: block;width:700px;">
     <div class="modal-header">
@@ -80,11 +84,11 @@ $(document).ready(function(){
           <div class="center_block clearfix">
             <%= f.label :location %>
             <div class="input ">
-              <%= f.text_field :address, :placeholder => :location, :size => 43, class: 'events_with_autocomplete inherit_width', 'data-autocompleteUrl' => search_address_communities_path %>&nbsp;&nbsp;&nbsp;
+              <%= f.text_field :address, :placeholder => :location, :size => 43, class: 'cu_with_autocomplete inherit_width', 'data-autocompleteUrl' => search_address_communities_path, id: "create_community_address" %>&nbsp;&nbsp;&nbsp;
 
-              <%= link_to "View map", '#', id: "view_map_link",  class: "uibutton icon prev" %>
+              <%= link_to "View map", '#', id: "view_map_link_crt",  class: "uibutton icon prev" %>
             </div>
-            <div class="input" id="view_map">
+            <div class="input" id="view_map_crt">
 
             </div>
           </div>
@@ -130,7 +134,7 @@ $(document).ready(function(){
 $(document).ready(function(){ 
   $('#suggested_comm').hide();
   $('#my_comm').hide();
-  $('#view_map_link').hide();
+  $('#view_map_link_crt').hide();
 });
 
 
@@ -170,13 +174,13 @@ $('#joined_comUnity').click(function(){
 });
 */
 
-$('#community_address').keydown(function(){
-  $('#view_map_link').hide();
-  $('#view_map').hide();
+$('#create_community_address').keydown(function(){
+  $('#view_map_link_crt').hide();
+  $('#view_map_crt').hide();
 });
 
-$('#view_map_link').click(function(){
-  var address = "/communities/get_geo_coordinates?address="+$('#community_address').val();
+$('#view_map_link_crt').click(function(){
+  var address = "/communities/get_geo_coordinates?address="+$('#create_community_address').val();
   $.ajax({
     type: "GET",
     url: address,
@@ -185,20 +189,20 @@ $('#view_map_link').click(function(){
 });
 
 $('a.ui-corner-all').live("click", function(){
-  if($('#community_address').val()!=""){
-    $('#view_map_link').show();
+  if($('#create_community_address').val()!=""){
+    $('#view_map_link_crt').show();
   }else{
-    $('#view_map_link').hide();
+    $('#view_map_link_crt').hide();
   }
 });
 
 
 $(function() {
-  return $('.events_with_autocomplete').autocomplete({
+  return $('.cu_with_autocomplete').autocomplete({
     minLength: 2,
     source: function(request, response) {
       return $.ajax({
-        url: $('.events_with_autocomplete').data('autocompleteurl'),
+        url: $('.cu_with_autocomplete').data('autocompleteurl'),
         dataType: "json",
         data: {address: request.term},
         success: function(data) {

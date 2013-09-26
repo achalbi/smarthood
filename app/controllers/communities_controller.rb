@@ -99,6 +99,7 @@ class CommunitiesController < ApplicationController
    @usercommunity.community_id = params[:id]
    @usercommunity.user_id = current_user.id
    @usercommunity.invitation = "requested"
+   @usercommunity.is_admin = false
    @usercommunity.status=""
    @usercommunity.save
 
@@ -145,6 +146,7 @@ def join_cu
  @usercommunity.community_id = params[:id]
  @usercommunity.user_id = current_user.id
  @usercommunity.invitation = "joined"
+ @usercommunity.is_admin = false
  @usercommunity.status=""
  @usercommunity.save
 
@@ -195,9 +197,18 @@ def joined_com
   @my_communities = Community.where(['id IN (?)', current_user.communities.collect(&:id)]) 
   unless Usercommunity.where(['status=? and user_id=?','active',current_user.id])[0].nil?
     @selected_community = Community.find(Usercommunity.where(['status=? and user_id=?','active',current_user.id])[0].community_id)
-    @my_communities = Community.where(['id IN (?) and id!=?', current_user.joined_uc.collect(&:community_id),@selected_community.id]) 
+    @ucs = current_user.usercommunities.where("is_admin=?", true )
+    @communities = Community.where(['id IN (?)', @ucs.collect(&:community_id)]) 
+    @communities << @selected_community
+    @my_communities = Community.where(['id IN (?) and id NOT IN (?)', current_user.joined_uc.collect(&:community_id), @communities.collect(&:id)]) 
   end 
   @communities = @my_communities  
+end
+
+def moderated_com
+  @ucs = current_user.usercommunities.where("is_admin=?", true )
+  @my_mod_communities = Community.where(['id IN (?)', @ucs.collect(&:community_id)]) 
+  @communities = @my_mod_communities
 end
 
 def public_com

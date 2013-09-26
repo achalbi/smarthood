@@ -12,15 +12,15 @@
 <span class="timestamp">
   <% unless community.description.nil? %>
    <% if community.description.length > 27 %>
-    <%= community.description.slice! 0..27 %>...
+    <%= community.description.slice! 0..27 %>...<br>
     <% else %>
     <%= community.description %>&nbsp;
    <% end %>
   <% else %>
   <%= " " %>
   <% end %>
-
+  
+  <span class="pull-right" title="Privacy: <%= community.privacy %>"><%= community.privacy %></span>
   </span>
-
   </div>
   </li>
