@@ -1,7 +1,13 @@
 class Community < ActiveRecord::Base
-  attr_accessible :community_id, :photo_id, :photo_attributes, :name, :description, :status, :privacy, :address, :latitude, :longitude, :req_pending_cnt
+  attr_accessible :community_id, :photo_id, :photo_attributes, :name, :description, :status, :privacy, :address, :latitude, :longitude, :req_pending_cnt, :user_tokens
 
   attr_accessor :req_pending_cnt
+
+  attr_reader :user_tokens
+  attr_accessor :user_ids
+  def user_tokens=(ids)
+    self.user_ids = ids.split(",")
+  end
   geocoded_by :address   # can also be an IP address
   after_validation :geocode, :if => :address_changed?          # auto-fetch coordinates
   

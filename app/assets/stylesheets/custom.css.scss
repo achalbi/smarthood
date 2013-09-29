@@ -623,14 +623,14 @@ roundCorner {
 
 .flash-message {
   &.error {
-        z-index: 9999;
+        z-index: 11001;
         }
   &.notice {
-    z-index: 9999;
+    z-index: 11001;
         }
-  z-index: 9999;
+  z-index: 11001;
         p {
-                z-index: 9999;
+                z-index: 11001;
           }
 }
 

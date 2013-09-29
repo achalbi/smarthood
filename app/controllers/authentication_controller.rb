@@ -8,6 +8,14 @@ class AuthenticationController < ApplicationController
 
   omniauth = request.env["omniauth.auth"]
   authentication = Authentication.find_by_provider_and_uid(omniauth['provider'], omniauth['uid'])
+  session['fb_auth'] = omniauth
+  session['fb_access_token'] = omniauth['credentials']['token']
+  session['fb_error'] = nil
+
+  #if params[:code]
+     # acknowledge code and get access token from FB
+   #  session[:access_token] = session[:oauth].get_access_token(params[:code])
+  #end
 
   if authentication
     flash[:notice] = "Signed in successfully."
@@ -42,6 +50,8 @@ class AuthenticationController < ApplicationController
       #user.apply_omniauth(omniauth)
       user.name = omniauth['info']['name']
       user.email = omniauth['info']['email']
+      user.token = omniauth['credentials']['token']
+
       user.password = rand(36**10).to_s(36)
       user.password_confirmation = user.password
       user.save!

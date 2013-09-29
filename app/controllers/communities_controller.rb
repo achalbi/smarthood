@@ -1,5 +1,5 @@
 class CommunitiesController < ApplicationController
-  include PhotosHelper
+  include PhotosHelper, UsersHelper
   before_filter :signed_in_user, only: [:create, :destroy]
 
   def new
@@ -30,6 +30,7 @@ class CommunitiesController < ApplicationController
         @requested_users = User.where(['id IN (?)' , @selected_community.requested_uc.collect(&:user_id)])
       end  
     end
+    @users_pp = []
     @ucs_all = current_user.usercommunities.where("is_admin=?", true )
     @my_mod_communities = Community.where(['id IN (?)', @ucs_all.collect(&:community_id)]) 
     @requested_users_all = 0
@@ -39,17 +40,17 @@ class CommunitiesController < ApplicationController
   end
 
 
-def create
- @community = current_user.communities.build(params[:community])
- @community.user = current_user
- if @community.save
-  if @community.photo.nil?
-    @photo = Photo.new
-    @photo.remote_pic_url = "http://res.cloudinary.com/rashi/image/upload/v1379775358/comUnity_uxui7t.jpg"
-    @photo.save
-    @community.photo = @photo 
-  end
-  @community.save
+  def create
+   @community = current_user.communities.build(params[:community])
+   @community.user = current_user
+   if @community.save
+    if @community.photo.nil?
+      @photo = Photo.new
+      @photo.remote_pic_url = "http://res.cloudinary.com/rashi/image/upload/v1379775358/comUnity_uxui7t.jpg"
+      @photo.save
+      @community.photo = @photo 
+    end
+    @community.save
       #flash[:success] = "community created!"
       @usercommunity = @community.follow!(current_user, @community.id)
       @usercommunity.invitation="joined"
@@ -196,6 +197,7 @@ def active_com
   @inv_users = User.where(['id IN (?)', @users])
   @ad_users = User.where(['id IN (?)', @admin_users])
   @requested_users = nil
+  @friends = fb_friends
   @ucs = @community.usercommunities.where("user_id = ?  AND is_admin=?",current_user.id, true )
   if @ucs.count > 0
     @requested_users = User.where(['id IN (?)' , @community.requested_uc.collect(&:user_id)])
@@ -219,10 +221,10 @@ def moderated_com
   @communities = []
   @req_pending_cnt = 0
   @my_mod_communities = Community.where(['id IN (?)', @ucs.collect(&:community_id)]) 
-    @my_mod_communities.each do |community|
-      community.req_pending_cnt = User.where(['id IN (?)' , community.requested_uc.collect(&:user_id)]).count
-      @communities << community
-    end
+  @my_mod_communities.each do |community|
+    community.req_pending_cnt = User.where(['id IN (?)' , community.requested_uc.collect(&:user_id)]).count
+    @communities << community
+  end
 end
 
 def public_com
@@ -262,6 +264,86 @@ def get_geo_coordinates
   @community.address = gc.address
   @community.latitude = gc.latitude
   @community.longitude = gc.longitude
+end
+
+def search_app_user
+  @users = User.where("name like ?", "%#{params[:q]}%")
+        # debugger
+        @users_pp = []
+        @users.each do |user|
+          user[:profile_pic] =  gravatar_for_url(user, size: 40)
+          @users_pp << user
+        end
+      # debugger
+      respond_to do |format|
+        format.html
+        format.json { render :json => @users_pp.map(&:attributes) }
+      end
+end
+
+def search_fb_user
+  @friends = fb_friends
+        @users_pp = []
+        @friends.each do |friend|
+          friend[:profile_pic] =  fb_profile_pic_url(friend.id, friend.name, size: 40)
+          if friend.include? params[:q]
+            friend.id = friend.id << "_fb"
+            @users_pp << friend
+          end
+        end
+      # debugger
+      respond_to do |format|
+        format.html
+        format.json { render :json => @users_pp.map(&:attributes) }
+      end
+end
+
+def search_app_fb_user
+  @users = User.where("name like ?", "%#{params[:q]}%")
+        @users_pp = []
+        @users.each do |user|
+          app_user = Array.new(1) { Hash.new }
+          app_user[0]["id"] = user.id
+          app_user[0]["name"] = user.name 
+          app_user[0]["profile_pic"] =  gravatar_for_url(user, size: 40)
+          @users_pp << app_user[0]
+        end
+  @friends = fb_friends
+        @friends.each do |friend|
+          friend["profile_pic"] =  fb_profile_pic_url(friend["id"], size: 40)
+          if friend["name"].downcase.include? params[:q].downcase
+            friend["id"] = friend["id"] << "_fb"
+            @users_pp << friend
+          end
+        end
+      respond_to do |format|
+        format.html
+        format.json { render :json => @users_pp.to_json(:method => ['id', 'name', 'profile_pic']) }
+      end
+end
+
+def invite_app_fb_user
+  @user_ids = params[:community][:user_tokens].split(",")
+  @user_ids.each do |id|
+    if id.include? "_fb"
+      
+    else
+      
+    end
+  end
+
+ @community = Community.find(params[:id])
+ @ad_eds = @community.usercommunities.where(is_admin: true )
+ @non_ad_eds = @community.usercommunities.where(is_admin: false)
+ @users = @non_ad_eds.pluck(:user_id)
+ @admin_users = @ad_eds.pluck(:user_id)
+ @inv_users = User.where(['id IN (?)', @users])
+ @ad_users = User.where(['id IN (?)', @admin_users])
+ @requested_users = nil
+ @ucs = @community.usercommunities.where("user_id = ?  AND is_admin=?",current_user.id, true )
+ if @ucs.count > 0
+  @requested_users = User.where(['id IN (?)' , @community.requested_uc.collect(&:user_id)])
+ end  
 end
 
 end

@@ -52,4 +52,15 @@ module UsersHelper
     end
     return gravatar_url
   end
+
+  def fb_profile_pic_url(id, options = {size: 50})
+    size = options[:size]
+    fb_profile_pic_url = "http://graph.facebook.com/#{id}/picture?width=#{size}&height=#{size}"
+  end
+
+  def fb_profile_pic(id, options = {size: 50})
+    size = options[:size]
+    fb_profile_pic_url = "http://graph.facebook.com/#{id}/picture?width=#{size}&height=#{size}"
+    image_tag(fb_profile_pic_url, alt: name, class: "gravatar")
+  end
 end

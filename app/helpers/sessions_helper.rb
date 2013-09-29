@@ -72,5 +72,16 @@ module SessionsHelper
       request.remote_ip
     end
   end
+
+  def fb_friends
+      @friends = Array.new
+    if session["fb_access_token"].present?
+      graph = Koala::Facebook::GraphAPI.new(session["fb_access_token"]) # Note that i'm using session here
+      # @profile_image = graph.get_picture("me")
+      # @fbprofile = graph.get_object("me")
+      @friends = graph.get_connections("me", "friends")
+    end
+    @friends
+  end
   
 end
