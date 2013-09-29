@@ -21,6 +21,10 @@
   <% end %>
   
   <span class="pull-right" title="Privacy: <%= community.privacy %>"><%= community.privacy %></span>
-  </span>
+  </span><br>
+  <% unless community.req_pending_cnt.nil? %>
+  <span class="pull-right" style="color:orange;font-size:15px;margin:5px;"><%= if community.req_pending_cnt > 0 then community.req_pending_cnt end %></span>
+  <span class="pull-right" style="font-size:10px;margin:7px 0px;"><%= if community.req_pending_cnt > 0 then "Pending req. " end %></span>
+  <% end %>
   </div>
   </li>

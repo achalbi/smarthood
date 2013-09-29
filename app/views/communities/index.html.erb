@@ -27,7 +27,10 @@ $(document).ready(function(){
         </li>
         <%= link_to "", active_com_communities_path, id: "active_comUnity", remote: true %>
        <li class="sidetabs notActive" style="list-style-type: none;padding:5px; margin:5px;">
-          <h6><%= link_to  "Moderated", "#", remote: true %></h6>
+          <h6><%= link_to  "Moderated", "#", remote: true %>
+          <span class="pull-right" style="color:orange;font-size:15px;margin:5px;"><%= if @requested_users_all > 0 then @requested_users_all end %></span>
+        <span class="pull-right" style="font-size:10px;margin:7px 0px;"><%= if @requested_users_all > 0 then "Pending req. " end %></span>
+        </h6>
         </li>
         <%= link_to "", moderated_com_communities_path , id: "moderated_comUnity", remote: true %>
         <% end %>

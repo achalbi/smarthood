@@ -30,20 +30,26 @@ class CommunitiesController < ApplicationController
         @requested_users = User.where(['id IN (?)' , @selected_community.requested_uc.collect(&:user_id)])
       end  
     end
-
+    @ucs_all = current_user.usercommunities.where("is_admin=?", true )
+    @my_mod_communities = Community.where(['id IN (?)', @ucs_all.collect(&:community_id)]) 
+    @requested_users_all = 0
+    @my_mod_communities.each do |community|
+      @requested_users_all += User.where(['id IN (?)' , community.requested_uc.collect(&:user_id)]).count
+    end
   end
 
-  def create
-  	@community = current_user.communities.build(params[:community])
-    @community.user = current_user
-    if @community.save
-      if @community.photo.nil?
-        @photo = Photo.new
-        @photo.remote_pic_url = "http://res.cloudinary.com/rashi/image/upload/v1379775358/comUnity_uxui7t.jpg"
-        @photo.save
-        @community.photo = @photo 
-      end
-      @community.save
+
+def create
+ @community = current_user.communities.build(params[:community])
+ @community.user = current_user
+ if @community.save
+  if @community.photo.nil?
+    @photo = Photo.new
+    @photo.remote_pic_url = "http://res.cloudinary.com/rashi/image/upload/v1379775358/comUnity_uxui7t.jpg"
+    @photo.save
+    @community.photo = @photo 
+  end
+  @community.save
       #flash[:success] = "community created!"
       @usercommunity = @community.follow!(current_user, @community.id)
       @usercommunity.invitation="joined"
@@ -84,6 +90,7 @@ def update
 end
 
 def setactive
+ @uc_count = current_user.usercommunities.where('status=?','active').count
  @usercommunity = Usercommunity.where(['status=? and user_id=?','active',current_user.id])[0]
  unless @usercommunity.nil?
   @usercommunity.status=""
@@ -92,6 +99,9 @@ end
 @usercommunitySel = Usercommunity.where(['community_id=? and user_id=?',params[:id],current_user.id])[0]
 @usercommunitySel.status="active"
 @usercommunitySel.save
+if @uc_count < 1
+  render js: %(window.location.href='#{root_path}')
+end
 end
 
 def sendrequest
@@ -149,7 +159,6 @@ def join_cu
  @usercommunity.is_admin = false
  @usercommunity.status=""
  @usercommunity.save
-
 end
 
 def show
@@ -207,8 +216,13 @@ end
 
 def moderated_com
   @ucs = current_user.usercommunities.where("is_admin=?", true )
+  @communities = []
+  @req_pending_cnt = 0
   @my_mod_communities = Community.where(['id IN (?)', @ucs.collect(&:community_id)]) 
-  @communities = @my_mod_communities
+    @my_mod_communities.each do |community|
+      community.req_pending_cnt = User.where(['id IN (?)' , community.requested_uc.collect(&:user_id)]).count
+      @communities << community
+    end
 end
 
 def public_com
@@ -249,4 +263,5 @@ def get_geo_coordinates
   @community.latitude = gc.latitude
   @community.longitude = gc.longitude
 end
+
 end

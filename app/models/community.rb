@@ -1,6 +1,7 @@
 class Community < ActiveRecord::Base
-  attr_accessible :community_id, :photo_id, :photo_attributes, :name, :description, :status, :privacy, :address, :latitude, :longitude
+  attr_accessible :community_id, :photo_id, :photo_attributes, :name, :description, :status, :privacy, :address, :latitude, :longitude, :req_pending_cnt
 
+  attr_accessor :req_pending_cnt
   geocoded_by :address   # can also be an IP address
   after_validation :geocode, :if => :address_changed?          # auto-fetch coordinates
   
@@ -11,6 +12,7 @@ class Community < ActiveRecord::Base
   has_many :user_groups, dependent: :destroy
   has_many :users, :through => :usercommunities
   has_many :usercommunities, dependent: :destroy
+
 
   accepts_nested_attributes_for :photo
   validates :user_id, presence: true

@@ -52,6 +52,6 @@ EMS::Application.configure do
   :authentication       => 'plain',
   :enable_starttls_auto => true  }
   
-ENV['FACEBOOK_APP_ID'] = "536159993072259";
-ENV['FACEBOOK_SECRET'] = "68fcf96519f8ecaab34473583bbaebb0";
+ENV['FACEBOOK_APP_ID'] = "222770607887849";
+ENV['FACEBOOK_SECRET'] = "a58109d2d01ceff4e8f7086d10abe71f";
 end

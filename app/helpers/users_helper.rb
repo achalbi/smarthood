@@ -4,7 +4,8 @@ module UsersHelper
   def gravatar_for(user)
     gravatar_url = ""
     unless user.authentications.first.nil?
-      if user.authentications.first.provider == 'facebook'
+      auth = user.authentications.find_by_provider('facebook')
+      unless auth.nil?
         gravatar_url = "http://graph.facebook.com/#{user.authentications.first.username}/picture?width=180&height=180"
       end
     else
@@ -19,9 +20,10 @@ module UsersHelper
     gravatar_url = ""
     size = options[:size]
     unless user.authentications.first.nil?
-      size = (size.to_i-5).to_s
-      if user.authentications.first.provider == 'facebook'
-        gravatar_url = "http://graph.facebook.com/#{user.authentications.first.username}/picture?width=#{size}&height=#{size}"
+      size = (size.to_i-10).to_s
+      auth = user.authentications.find_by_provider('facebook')
+      unless auth.nil?
+        gravatar_url = "http://graph.facebook.com/#{auth.username}/picture?width=#{size}&height=#{size}"
       else
       gravatar_id = Digest::MD5::hexdigest(user.email.downcase)
       gravatar_url = "https://secure.gravatar.com/avatar/#{gravatar_id}?s=#{size}"        
@@ -37,8 +39,9 @@ module UsersHelper
     gravatar_url = ""
     size = options[:size]
     unless user.authentications.first.nil?
-      if user.authentications.first.provider == 'facebook'
-        gravatar_url = "http://graph.facebook.com/#{user.authentications.first.username}/picture?width=#{size}&height=#{size}"
+      auth = user.authentications.find_by_provider('facebook')
+    unless auth.nil?
+        gravatar_url = "http://graph.facebook.com/#{auth.username}/picture?width=#{size}&height=#{size}"
       else
       gravatar_id = Digest::MD5::hexdigest(user.email.downcase)
       gravatar_url = "https://secure.gravatar.com/avatar/#{gravatar_id}?s=#{size}"        

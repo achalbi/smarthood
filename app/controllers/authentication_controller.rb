@@ -21,6 +21,10 @@ class AuthenticationController < ApplicationController
     redirect_to authentications_url
   else
     user = User.new
+    @existing_user = User.find_by_email(omniauth['info']['email'])
+    unless @existing_user.nil?
+        user = @existing_user
+    end
     if params[:provider] == 'identity'
         #authentication = Authentication.find_by_uid(authentication.uid)
            if authentication.nil?
