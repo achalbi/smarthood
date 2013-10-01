@@ -49,6 +49,23 @@
 <% end %>
 </div>
 <br>
+<div class="well span4" style="mragin:10px;padding:10px; " >
+  <h6>Invite</h6>
+  <ul class="users">
+
+    <li class=" bgClrChg" style="padding-left:10px;" id="invite_fb">
+      <h4>
+       <a href="#" class=" " data-remote="true" ><i class="icon-facebook-sign"></i> Facebook friends </a>
+     </h4>
+   </li>
+   <li class="bgClrChg"  style="padding-left:10px;" id="invite_cu">
+    <h4>
+     <a href="#" class=" " data-remote="true" ><i class="icon-group"></i> ComUnity users   </a>
+   </h4>
+ </li>
+</ul>
+</div>
+<br>
 <% unless requested_users.nil?  %>
 <% if requested_users.count > 0 %>
 <div class="well" style="mragin:10px;padding:10px;" >
@@ -82,15 +99,15 @@
             <%= f.label "Invite by User name:" %>
             <div class="input ui-front">
               <%= f.text_field :user_tokens, id: "search_user" %>
-           </div>
-         </div>
-       </div>
-     </div>   
-   </div>
-   <div class="modal-footer" >
-    <%= f.submit "Invite", class: "btn primary pull-right", id: "invite_submit" %>  
+            </div>
+          </div>
+        </div>
+      </div>   
+    </div>
+    <div class="modal-footer" >
+      <%= f.submit "Invite", class: "btn primary pull-right", id: "invite_submit" %>  
+    </div>
   </div>
-</div>
 
 </div>
 <% end %>
@@ -136,9 +153,21 @@ $('#inv_users_a').click(function(){
 });
 
 
-$("#invite").click(function(){
-  $('#modal_invite').modal('show');
+$("#invite_cu").on( "click", function() {
+ $('#modal_invite').modal('show');
 });
+
+$("#invite_fb").on( "click", function() {
+  FB.ui({method: 'apprequests',
+    message: 'Join ComUnity: <%=community.name%>, for Next level of Social Networking'
+  }, requestCallback);    
+});
+
+function requestCallback(response)
+{
+ console.log("resp: "+response.to);
+}
+
 $("#close_invite").click(function(){
   $('#modal_invite').modal('hide');
 });

@@ -1,5 +1,5 @@
 class CommunitiesController < ApplicationController
-  include PhotosHelper, UsersHelper
+  include PhotosHelper, UsersHelper, CommunityHelper
   before_filter :signed_in_user, only: [:create, :destroy]
 
   def new
@@ -326,7 +326,13 @@ def invite_app_fb_user
   @user_ids = params[:community][:user_tokens].split(",")
   @user_ids.each do |id|
     if id.include? "_fb"
-      
+    #  message_body = "body"
+    #  message_subject = "subject"
+    #  sender_uid = session['fb_auth']['uid']
+    #  receiver_uid = id.at(0..-4)
+    #  fb_message(sender_uid, receiver_uid, message_body, message_subject)
+    user = Koala::Facebook::API.new(session["fb_access_token"])
+    user.put_object(id.at(0..-4), "apprequests", {:message => "Would you like to be friends?"})
     else
       
     end

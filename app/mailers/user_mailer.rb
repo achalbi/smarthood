@@ -26,4 +26,11 @@ end
   #  attachments.inline['indy.png'] = File.read("#{Rails.root}/public/assets/indy.png")
     mail(:to => email, :subject => "Shared album - #{album.title}")
   end
+
+  def invite_email(email, sender_name, receiver_name)
+    @url  = "https://ems-rashi.herokuapp.com"
+    mail(:to => email, :subject => "Invite request to join ComUnity")
+  end
+
+
 end
