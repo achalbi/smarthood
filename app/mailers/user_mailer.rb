@@ -27,9 +27,9 @@ end
     mail(:to => email, :subject => "Shared album - #{album.title}")
   end
 
-  def invite_email(email, sender_name, receiver_name)
-    @url  = "https://ems-rashi.herokuapp.com"
-    mail(:to => email, :subject => "Invite request to join ComUnity")
+  def invite_email(user)
+    @user = user
+    mail(:to => @user.email, :subject => "Invite request to join ComUnity")
   end
 
 

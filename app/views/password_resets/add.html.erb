@@ -1,0 +1,49 @@
+
+<br><br><br><br><br>
+<%= form_for @user, :url => password_reset_path(params[:id]) do |f| %>
+  <% if @user.errors.any? %>
+    <div class="error_messages">
+      <h2>Form is invalid</h2>
+      <ul>
+        <% for message in @user.errors.full_messages %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+<div class="center_block span8">
+      <div class="center_block clearfix">
+      <%= f.label :name %>
+        <div class="input">
+          <%= f.text_field :name %>
+        </div>
+      </div>
+
+      <div class="center_block clearfix">
+      <%= f.label :email %>
+        <div class="input">
+          <%= f.text_field :email,:readonly => true %>
+        </div>
+      </div>
+
+      <div class="center_block clearfix">
+      <%= f.label :password %>
+        <div class="input">
+          <%= f.password_field :password %>
+        </div>
+      </div>
+
+      <div class="center_block clearfix">
+      <%= f.label :password_confirmation, "Confirm Password" %>
+        <div class="input">
+          <%= f.password_field :password_confirmation %>
+        </div>
+      </div>
+
+      <div class="center_block clearfix">
+        <div class="input">
+          <%= f.submit "Save changes", class: "btn primary" %>
+        </div>
+      </div>      
+</div>
+<% end %>

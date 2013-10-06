@@ -11,6 +11,10 @@
  <% elsif community.is_public?(current_user) %>
    <%= link_to "Join", join_cu_community_path(community), class: "uibutton icon prev pull-right", remote: true %>
  <% end %>
+ 
+  <% if community.is_joined?(current_user, community) %>
+   <%= link_to "Unjoin", unjoin_cu_community_path(community), class: "uibutton icon prev pull-right", remote: true %>
+ <% end %>
 
  <% if current_user.is_cu_admin?(community) %>
     <%= link_to "edit", '#', id: "edit_comUnity",  class: "marginRight10 pull-right uibutton icon edit",:title => "Edit" %>

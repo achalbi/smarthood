@@ -65,6 +65,13 @@ def send_password_reset
   UserMailer.password_reset(self).deliver
 end
 
+def send_token_for_user_to_join
+  generate_token(:password_reset_token)
+  self.password_reset_sent_at = Time.zone.now
+  save!(:validate => false)
+  UserMailer.invite_email(self).deliver
+end
+
 def generate_token(column)
   begin
     self[column] = SecureRandom.urlsafe_base64
@@ -148,8 +155,7 @@ end
 def facebook
   @fb_user ||= FbGraph::User.me(self.authentications.find_by_provider('facebook').token)
 end
- 
- 
+
 protected
  
 def apply_facebook(omniauth)

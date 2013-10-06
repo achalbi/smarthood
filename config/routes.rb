@@ -42,9 +42,15 @@ EMS::Application.routes.draw do
     end
   end
 
+  resources :password_resets do
+    member do
+      get :add
+    end
+  end
+
   resources :communities do
     member do
-      get :setactive, :sendrequest, :join_cu, :acceptrequest, :declinerequest, :search_app_fb_user, :invite_app_fb_user
+      get :setactive, :sendrequest, :join_cu, :acceptrequest, :declinerequest, :search_app_user, :invite_app_user, :invite_fb_friends, :invite_by_email, :unjoin_cu
     end
     collection do
       get :active_com , :joined_com, :public_com, :private_com, :moderated_com, :search_address, :get_geo_coordinates

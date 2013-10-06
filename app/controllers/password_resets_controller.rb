@@ -3,13 +3,13 @@ class PasswordResetsController < ApplicationController
   end
   
   def create
-  user = User.find_by_email(params[:email])
-  if !user.nil?
-  	user.send_password_reset
-  	redirect_to root_url, :notice => "Email sent with password reset instructions."
-  else
-  	render 'new' 
-  end
+    user = User.find_by_email(params[:email])
+    if !user.nil?
+    	user.send_password_reset
+    	redirect_to root_url, :notice => "Email sent with password reset instructions."
+    else
+    	render 'new' 
+    end
   end
 
   def edit
@@ -25,6 +25,10 @@ class PasswordResetsController < ApplicationController
     else
       render 'edit'
     end
+  end
+
+  def add
+    @user = User.find_by_password_reset_token!(params[:id])
   end
 
 end

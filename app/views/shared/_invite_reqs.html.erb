@@ -1,0 +1,21 @@
+
+<% unless communities.nil?  %>
+<% if communities.size > 0 %>
+<div class="well" style="mragin:10px;padding:10px;" >
+  <h6>Invited community requests</h6>
+  <ul class="users">
+    <% communities.each do |community| %>
+    <li>
+        <% unless community.photo.nil? %>
+          <div  class="img_zoom" id="div-img_<%= community.photo.id %>">
+                 <%= link_to cl_image_tag(community.photo.pic_url(:small), class:"image_al_c1 thumbnail", id:"#{community.photo.id}"), "/communities/#{community.id}", remote: true,   style:"cursor:pointer;"%>
+                  </div>
+        <% end %>
+      <br><br>
+      <a href="<%= declinerequest_community_path(community) << '?user_id='%><%= current_user.id %>"class="uibutton pull-right" data-remote="true" id="decline"> Decline <i class="icon-remove"></i></a><%= link_to "Accept", acceptrequest_community_path(community) << "?user_id=#{current_user.id}", id: "accept",  class: "uibutton icon add pull-right", remote: true %>
+    </li>
+    <% end %>
+  </ul>
+</div>
+<% end %> 
+<% end %> 

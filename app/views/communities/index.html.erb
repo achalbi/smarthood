@@ -52,6 +52,9 @@ $(document).ready(function(){
 
   </aside>
   <aside id="right" style="float: right;width:220px;margin-right:10px;">
+    <div id="invited_ComUnity">
+      <%= render partial: 'shared/invite_reqs', locals: {communities: @inv_req_cu } %>
+    </div>
     <div id="comUnity_stats">
       <%= render partial: 'shared/comUnity_stats', locals: {ad_users: @ad_users, inv_users: @inv_users, requested_users: @requested_users, community: @selected_community } %>
     </div>

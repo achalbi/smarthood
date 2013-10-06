@@ -27,7 +27,8 @@
  <% end %> 
  <% unless inv_users.nil? %> 
  <div id="inviteDiv" class="bgClrChg" style="mragin:10px;padding:10px;">
-  <h5>Members<%= link_to "add", '#', id: "invite",  class: "uibutton icon add pull-right" %></h5>
+  <h5>Members</h5>
+  <% link_to "add", '#', id: "invite",  class: "uibutton icon add pull-right" %>
   <section class="stats">
     <a href="#" id="inv_users_a">
       <strong id="followers" class="stat">
@@ -49,23 +50,6 @@
 <% end %>
 </div>
 <br>
-<div class="well span4" style="mragin:10px;padding:10px; " >
-  <h6>Invite</h6>
-  <ul class="users">
-
-    <li class=" bgClrChg" style="padding-left:10px;" id="invite_fb">
-      <h4>
-       <a href="#" class=" " data-remote="true" ><i class="icon-facebook-sign"></i> Facebook friends </a>
-     </h4>
-   </li>
-   <li class="bgClrChg"  style="padding-left:10px;" id="invite_cu">
-    <h4>
-     <a href="#" class=" " data-remote="true" ><i class="icon-group"></i> ComUnity users   </a>
-   </h4>
- </li>
-</ul>
-</div>
-<br>
 <% unless requested_users.nil?  %>
 <% if requested_users.count > 0 %>
 <div class="well" style="mragin:10px;padding:10px;" >
@@ -83,9 +67,31 @@
 <% end %> 
 <% end %> 
 
+<div class="well span4" style="mragin:10px;padding:10px;" >
+  <h6>Invite</h6>
+  <ul class="users">
 
+    <li class="bgClrChg" style="padding-left:10px;" id="invite_fb">
+      <h4>
+       <a href="#" class=" " data-remote="true" ><i class="icon-facebook-sign"></i> Facebook friends </a>
+     </h4>
+   </li>
+   <li class="bgClrChg"  style="padding-left:10px;" id="invite_cu">
+    <h4>
+     <a href="#" class=" " data-remote="true" ><i class="icon-group"></i> ComUnity users   </a>
+   </h4>
+  </li>
+  <li class="bgClrChg"  style="padding-left:10px;" id="invite_email">
+    <h4>
+     <a href="#" class=" " data-remote="true" ><i class="icon-envelope"></i> e-mail </a>
+   </h4>
+ </li>
+</ul>
+</div>
 
-<%= form_for( community, url: invite_app_fb_user_community_path(community), method: :get, remote: true) do |f| %>
+<% unless community.nil? %>
+
+<%= form_for( community, url: invite_app_user_community_path(community), method: :get, remote: true) do |f| %>
 <div id="modal_invite" style="display:none;" >
   <div id="modal-from-dom2" class="modal hide fade in" style="display: block;width:700px;">
     <div class="modal-header">
@@ -115,14 +121,43 @@
 
 
 
-<% unless community.nil? %>
+<%= form_for( community, url: invite_by_email_community_path(community), method: :get, remote: true) do |f| %>
+<div id="modal_invite_email" style="display:none;" >
+  <div id="modal-from-dom2" class="modal hide fade in" style="display: block;width:700px;">
+    <div class="modal-header">
+      <a href="#" id="close_invite_email" class="close">×</a>
+      <span style="font-size:20px;line-height: 2;">Invite</span>
+    </div>
+    <div class="modal-body" style="max-height:550px;">
+      <div class="row">
+        <div class="span14 ui-front">
+          <div class="center_block clearfix"><br>
+            <%= f.label "Invite by e-mail:" %>
+            <div class="input ui-front">
+              <%= f.text_field :user_tokens, id: "search_email" %>
+            </div>
+          </div>
+        </div>
+      </div>   
+    </div>
+    <div class="modal-footer" >
+      <%= f.submit "Invite", class: "btn primary pull-right", id: "invite_email_submit" %>  
+    </div>
+  </div>
+
+</div>
+<% end %>
+
+
+
+
 
 
 
 <script type="text/javascript">
 $(document).ready(function(){
   $('.gravatar').addClass('thumbnail');  
-  $('#invite').hide();
+  //$('#invite').hide();
   $('#moderator').hide();
 
   $('#moderatorDiv').hover(function(){
@@ -131,11 +166,11 @@ $(document).ready(function(){
     $('#moderator').toggle();
   });
 
-  $('#inviteDiv').hover(function(){
+/*  $('#inviteDiv').hover(function(){
     $('#invite').toggle();
   },function(){
     $('#invite').toggle();
-  });
+  });*/
 
   $('#ad_users_div').hide();
   $('#inv_users_div').hide();
@@ -153,20 +188,32 @@ $('#inv_users_a').click(function(){
 });
 
 
-$("#invite_cu").on( "click", function() {
- $('#modal_invite').modal('show');
-});
-
 $("#invite_fb").on( "click", function() {
   FB.ui({method: 'apprequests',
     message: 'Join ComUnity: <%=community.name%>, for Next level of Social Networking'
   }, requestCallback);    
 });
 
+
 function requestCallback(response)
 {
- console.log("resp: "+response.to);
+  if(response!=null){
+ // console.log("resp: "+response.to);
+  for (var i in response.to) {
+        FB.ui({
+          method: 'send',
+          to: response.to[i],
+          link: 'https://ems-rashi.herokuapp.com/',
+        });
+  }
+
+  $.get( '<%= invite_fb_friends_community_path(community) %>', { ids: response.to } );
+  }
 }
+
+$("#invite_cu").on( "click", function() {
+ $('#modal_invite').modal('show');
+});
 
 $("#close_invite").click(function(){
   $('#modal_invite').modal('hide');
@@ -176,9 +223,20 @@ $("#invite_submit").click(function(){
   $('#modal_invite').modal('hide');
 });
 
+$("#invite_email").on( "click", function() {
+ $('#modal_invite_email').modal('show');
+});
+
+$("#close_invite_email").click(function(){
+  $('#modal_invite_email').modal('hide');
+});
+
+$("#invite_email_submit").click(function(){
+  $('#modal_invite_email').modal('hide');
+});
 
 $(function() {
-  $("#search_user").tokenInput("/communities/<%= community.id %>/search_app_fb_user", {
+  $("#search_user").tokenInput("/communities/<%= community.id %>/search_app_user", {
     crossDomain: false,
     theme: "facebook",
     resultsFormatter: function(item){ return "<li>" + "<img src='" + item.profile_pic + "' title='" + item.name + "' height='30px' width='30px' />" + "<div style='display: inline-block; padding-left: 10px;'><div class='full_name'>" + item.name + " " + ""+ "</div></div></li>" },

@@ -18,8 +18,8 @@ class CommunitiesController < ApplicationController
 
     @requested_users = nil
     unless @selected_community.nil?
-      @ad_eds = @selected_community.usercommunities.where(is_admin: true )
-      @non_ad_eds = @selected_community.usercommunities.where(is_admin: false)
+      @ad_eds = @community.usercommunities.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED, true )
+      @non_ad_eds = @community.usercommunities.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED, false)
       @users = @non_ad_eds.pluck(:user_id)
       @admin_users = @ad_eds.pluck(:user_id)
       @inv_users = User.where(['id IN (?)', @users])
@@ -37,6 +37,7 @@ class CommunitiesController < ApplicationController
     @my_mod_communities.each do |community|
       @requested_users_all += User.where(['id IN (?)' , community.requested_uc.collect(&:user_id)]).count
     end
+    @inv_req_cu = Community.where(['id IN (?)' , current_user.communities.where('invitation = ?',Uc_enum::INVITED).collect(&:id)])
   end
 
 
@@ -53,7 +54,7 @@ class CommunitiesController < ApplicationController
     @community.save
       #flash[:success] = "community created!"
       @usercommunity = @community.follow!(current_user, @community.id)
-      @usercommunity.invitation="joined"
+      @usercommunity.invitation= Uc_enum::JOINED
       @usercommunity.is_admin = true
       @usercommunities = Usercommunity.where(['status=? and user_id=?','active',current_user.id])
       @usercommunities.each do |uc|
@@ -77,8 +78,8 @@ end
 def update
   @community = Community.find(params[:id])
   @community.update_attributes(params[:community])
-  @ad_eds = @community.usercommunities.where(is_admin: true )
-  @non_ad_eds = @community.usercommunities.where(is_admin: false)
+  @ad_eds = @community.usercommunities.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED, true )
+  @non_ad_eds = @community.usercommunities.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED, false)
   @users = @non_ad_eds.pluck(:user_id)
   @admin_users = @ad_eds.pluck(:user_id)
   @inv_users = User.where(['id IN (?)', @users])
@@ -109,7 +110,7 @@ def sendrequest
  @usercommunity = Usercommunity.new 
  @usercommunity.community_id = params[:id]
  @usercommunity.user_id = current_user.id
- @usercommunity.invitation = "requested"
+ @usercommunity.invitation = Uc_enum::REQUESTED
  @usercommunity.is_admin = false
  @usercommunity.status=""
  @usercommunity.save
@@ -118,11 +119,11 @@ end
 
 def acceptrequest
  @usercommunity = Usercommunity.where(['community_id=? and user_id=?',params[:id],params[:user_id]])[0]
- @usercommunity.invitation = "joined"
+ @usercommunity.invitation = Uc_enum::JOINED
  @usercommunity.save
  @community = Community.find(params[:id])
- @ad_eds = @community.usercommunities.where(is_admin: true )
- @non_ad_eds = @community.usercommunities.where(is_admin: false)
+ @ad_eds = @community.usercommunities.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED, true )
+ @non_ad_eds = @community.usercommunities.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED, false)
  @users = @non_ad_eds.pluck(:user_id)
  @admin_users = @ad_eds.pluck(:user_id)
  @inv_users = User.where(['id IN (?)', @users])
@@ -136,11 +137,11 @@ end
 
 def declinerequest
  @usercommunity = Usercommunity.where(['community_id=? and user_id=?',params[:id],params[:user_id]])[0]
- @usercommunity.invitation = "decline"
+ @usercommunity.invitation = Uc_enum::MODERATOR_DECLINED
  @usercommunity.save
  @community = Community.find(params[:id])
- @ad_eds = @community.usercommunities.where(is_admin: true )
- @non_ad_eds = @community.usercommunities.where(is_admin: false)
+ @ad_eds = @community.usercommunities.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED, true )
+ @non_ad_eds = @community.usercommunities.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED, false)
  @users = @non_ad_eds.pluck(:user_id)
  @admin_users = @ad_eds.pluck(:user_id)
  @inv_users = User.where(['id IN (?)', @users])
@@ -156,9 +157,15 @@ def join_cu
  @usercommunity = Usercommunity.new 
  @usercommunity.community_id = params[:id]
  @usercommunity.user_id = current_user.id
- @usercommunity.invitation = "joined"
+ @usercommunity.invitation = Uc_enum::JOINED
  @usercommunity.is_admin = false
  @usercommunity.status=""
+ @usercommunity.save
+end
+
+def unjoin_cu
+ @usercommunity = Usercommunity.find_by_community_id(params[:id])
+ @usercommunity.invitation = Uc_enum::UNJOINED
  @usercommunity.save
 end
 
@@ -166,8 +173,8 @@ def show
   @community = Community.find(params[:id])
   @user = current_user
   @users = @community.users
-  @ad_eds = @community.usercommunities.where(is_admin: true )
-  @non_ad_eds = @community.usercommunities.where(is_admin: false)
+  @ad_eds = @community.usercommunities.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED, true )
+  @non_ad_eds = @community.usercommunities.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED, false)
   @users = @non_ad_eds.pluck(:user_id)
   @admin_users = @ad_eds.pluck(:user_id)
   @inv_users = User.where(['id IN (?)', @users])
@@ -190,14 +197,13 @@ def active_com
   end
   @community = @selected_community  
   @users = @community.users
-  @ad_eds = @community.usercommunities.where(is_admin: true )
-  @non_ad_eds = @community.usercommunities.where(is_admin: false)
+  @ad_eds = @community.usercommunities.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED, true )
+  @non_ad_eds = @community.usercommunities.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED, false)
   @users = @non_ad_eds.pluck(:user_id)
   @admin_users = @ad_eds.pluck(:user_id)
   @inv_users = User.where(['id IN (?)', @users])
   @ad_users = User.where(['id IN (?)', @admin_users])
   @requested_users = nil
-  @friends = fb_friends
   @ucs = @community.usercommunities.where("user_id = ?  AND is_admin=?",current_user.id, true )
   if @ucs.count > 0
     @requested_users = User.where(['id IN (?)' , @community.requested_uc.collect(&:user_id)])
@@ -208,10 +214,10 @@ def joined_com
   @my_communities = Community.where(['id IN (?)', current_user.communities.collect(&:id)]) 
   unless Usercommunity.where(['status=? and user_id=?','active',current_user.id])[0].nil?
     @selected_community = Community.find(Usercommunity.where(['status=? and user_id=?','active',current_user.id])[0].community_id)
-    @ucs = current_user.usercommunities.where("is_admin=?", true )
-    @communities = Community.where(['id IN (?)', @ucs.collect(&:community_id)]) 
-    @communities << @selected_community
-    @my_communities = Community.where(['id IN (?) and id NOT IN (?)', current_user.joined_uc.collect(&:community_id), @communities.collect(&:id)]) 
+    @ucs = current_user.usercommunities.where("is_admin=? OR invitation != ?", true, Uc_enum::JOINED )
+    @comm_id = @ucs.collect(&:community_id)
+    @comm_id << @selected_community.id
+    @my_communities = Community.where(['id IN (?) and id NOT IN (?)', current_user.joined_uc.collect(&:community_id), @comm_id]) 
   end 
   @communities = @my_communities  
 end
@@ -267,7 +273,7 @@ def get_geo_coordinates
 end
 
 def search_app_user
-  @users = User.where("name like ?", "%#{params[:q]}%")
+  @users = User.where("name like ? AND id != ?", "%#{params[:q]}%", current_user.id)
         # debugger
         @users_pp = []
         @users.each do |user|
@@ -279,79 +285,116 @@ def search_app_user
         format.html
         format.json { render :json => @users_pp.map(&:attributes) }
       end
-end
+    end
 
-def search_fb_user
-  @friends = fb_friends
-        @users_pp = []
-        @friends.each do |friend|
-          friend[:profile_pic] =  fb_profile_pic_url(friend.id, friend.name, size: 40)
-          if friend.include? params[:q]
-            friend.id = friend.id << "_fb"
-            @users_pp << friend
-          end
+    def search_fb_user
+      @friends = fb_friends
+      @users_pp = []
+      @friends.each do |friend|
+        friend[:profile_pic] =  fb_profile_pic_url(friend.id, friend.name, size: 40)
+        if friend.include? params[:q]
+          friend.id = friend.id << "_fb"
+          @users_pp << friend
         end
+      end
       # debugger
       respond_to do |format|
         format.html
         format.json { render :json => @users_pp.map(&:attributes) }
       end
-end
+    end
 
-def search_app_fb_user
-  @users = User.where("name like ?", "%#{params[:q]}%")
-        @users_pp = []
-        @users.each do |user|
-          app_user = Array.new(1) { Hash.new }
-          app_user[0]["id"] = user.id
-          app_user[0]["name"] = user.name 
-          app_user[0]["profile_pic"] =  gravatar_for_url(user, size: 40)
-          @users_pp << app_user[0]
+    def search_app_fb_user
+      @users = User.where("name like ?", "%#{params[:q]}%")
+      @users_pp = []
+      @users.each do |user|
+        app_user = Array.new(1) { Hash.new }
+        app_user[0]["id"] = user.id
+        app_user[0]["name"] = user.name 
+        app_user[0]["profile_pic"] =  gravatar_for_url(user, size: 40)
+        @users_pp << app_user[0]
+      end
+      @friends = fb_friends
+      @friends.each do |friend|
+        friend["profile_pic"] =  fb_profile_pic_url(friend["id"], size: 40)
+        if friend["name"].downcase.include? params[:q].downcase
+          friend["id"] = friend["id"] << "_fb"
+          @users_pp << friend
         end
-  @friends = fb_friends
-        @friends.each do |friend|
-          friend["profile_pic"] =  fb_profile_pic_url(friend["id"], size: 40)
-          if friend["name"].downcase.include? params[:q].downcase
-            friend["id"] = friend["id"] << "_fb"
-            @users_pp << friend
-          end
-        end
+      end
       respond_to do |format|
         format.html
         format.json { render :json => @users_pp.to_json(:method => ['id', 'name', 'profile_pic']) }
       end
-end
-
-def invite_app_fb_user
-  unless params[:community][:user_tokens].nil?
-    @user_ids = params[:community][:user_tokens].split(",")
-    @user_ids.each do |id|
-      if id.include? "_fb"
-      #  message_body = "body"
-      #  message_subject = "subject"
-      #  sender_uid = session['fb_auth']['uid']
-      #  receiver_uid = id.at(0..-4)
-      #  fb_message(sender_uid, receiver_uid, message_body, message_subject)
-      user = Koala::Facebook::API.new(session["fb_access_token"])
-      user.put_object(id.at(0..-4), "apprequests", {:message => "Would you like to be friends?"})
-      else
-        
-      end
     end
+
+   def invite_app_user
+      unless params[:community][:user_tokens].nil?
+        @user_ids = params[:community][:user_tokens].split(",")
+        @user_ids.each do |id|
+          @user = User.find(id)
+          @usercommunity = Usercommunity.where('community_id=? and user_id=?',params[:id],id)[0]
+         if @usercommunity.empty?
+           @usercommunity = Usercommunity.new 
+           @usercommunity.community_id = params[:id]
+           @usercommunity.user_id = @user.id
+           @usercommunity.is_admin = false
+           @usercommunity.status=""
+           @usercommunity.invitation = Uc_enum::INVITED
+         elsif (@usercommunity.invitation==Uc_enum::REQUESTED || @usercommunity.invitation==Uc_enum::MODERATOR_DECLINED)
+           @usercommunity.invitation = Uc_enum::JOINED
+         elsif @usercommunity.invitation == Uc_enum::USER_DECLINED
+           @usercommunity.invitation = Uc_enum::INVITED
+         end
+           @usercommunity.save
+       end
+      end 
   end
 
- @community = Community.find(params[:id])
- @ad_eds = @community.usercommunities.where(is_admin: true )
- @non_ad_eds = @community.usercommunities.where(is_admin: false)
- @users = @non_ad_eds.pluck(:user_id)
- @admin_users = @ad_eds.pluck(:user_id)
- @inv_users = User.where(['id IN (?)', @users])
- @ad_users = User.where(['id IN (?)', @admin_users])
- @requested_users = nil
- @ucs = @community.usercommunities.where("user_id = ?  AND is_admin=?",current_user.id, true )
- if @ucs.count > 0
-  @requested_users = User.where(['id IN (?)' , @community.requested_uc.collect(&:user_id)])
- end  
-end
+ def invite_fb_friends
+    @fb_uids = params[:ids].split(",")
+    @fb_uids.each do |uid|
+      @user = create_user_to_invite(uid,nil)
+      @usercommunity = Usercommunity.where('community_id=? and user_id=?',params[:id],@user.id)[0]
+      if @usercommunity.empty?
+       @usercommunity = Usercommunity.new 
+       @usercommunity.community_id = params[:id]
+       @usercommunity.user_id = @user.id
+       @usercommunity.is_admin = false
+       @usercommunity.status=""
+       @usercommunity.invitation = Uc_enum::INVITED
+     elsif (@usercommunity.invitation==Uc_enum::REQUESTED || @usercommunity.invitation==Uc_enum::MODERATOR_DECLINED)
+       @usercommunity.invitation = Uc_enum::JOINED
+     elsif @usercommunity.invitation == Uc_enum::USER_DECLINED
+       @usercommunity.invitation = Uc_enum::INVITED
+     end
+       @usercommunity.save
+   end
+ end
+
+ def invite_by_email
+   @email_ids = params[:community][:user_tokens].split(",")
+    @email_ids.each do |eid|
+      @user = create_user_to_invite(nil,eid)
+      if @user.id == current_user.id
+        next
+      end
+      @usercommunity = Usercommunity.where('community_id=? and user_id=?',params[:id],@user.id)[0]
+     if @usercommunity.nil?
+       @usercommunity = Usercommunity.new 
+       @usercommunity.community_id = params[:id]
+       @usercommunity.user_id = @user.id
+       @usercommunity.is_admin = false
+       @usercommunity.status=""
+       @usercommunity.invitation = Uc_enum::INVITED
+     elsif (@usercommunity.invitation==Uc_enum::REQUESTED || @usercommunity.invitation==Uc_enum::MODERATOR_DECLINED)
+       @usercommunity.invitation = Uc_enum::JOINED
+     elsif @usercommunity.invitation == Uc_enum::USER_DECLINED
+       @usercommunity.invitation = Uc_enum::INVITED
+     end
+       @usercommunity.save
+   end
+ end
+
 
 end

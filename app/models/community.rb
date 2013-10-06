@@ -26,16 +26,28 @@ class Community < ActiveRecord::Base
 
   def is_active?(user, community)
     unless user.usercommunities.nil?
-     @usercommunity = community.usercommunities.where("user_id = ?  AND invitation = 'joined'",user )[0]
+     @usercommunity = community.usercommunities.where("user_id = ?  AND invitation = ?",user, Uc_enum::JOINED )[0]
      unless @usercommunity.nil?
-      if @usercommunity.status =="active"
-        return false
-      else
-       return true
+        if @usercommunity.status =="active"
+          return false
+        else
+         return true
+        end
      end
-   end
- end
-end
+    end
+  end
+
+def is_joined?(user, community)
+    unless community.usercommunities.nil?
+     @usercommunity = community.usercommunities.where("user_id = ?  AND invitation = ?",user, Uc_enum::JOINED )
+        if @usercommunity.size > 0
+         return true
+        else
+          return false
+        end
+    end
+    return false
+end  
 
 def is_public?(current_user)
   @public_communities = nil
@@ -68,7 +80,7 @@ end
 
 
   def is_requested?(current_user)
-   @usercommunity = self.usercommunities.where("invitation = 'requested' AND user_id = ?", current_user.id)
+   @usercommunity = self.usercommunities.where("invitation = ? AND user_id = ?", Uc_enum::REQUESTED, current_user.id)
    if @usercommunity.count > 0
      return true
    else
@@ -77,7 +89,7 @@ end
   end
 
 def requested_uc
- @usercommunity = self.usercommunities.where(["invitation = 'requested'"]) 
+ @usercommunity = self.usercommunities.where(["invitation = ?", Uc_enum::REQUESTED]) 
 end
 
 def follow!(user, community_id)
