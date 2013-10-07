@@ -50,7 +50,7 @@ EMS::Application.routes.draw do
 
   resources :communities do
     member do
-      get :setactive, :sendrequest, :join_cu, :acceptrequest, :declinerequest, :search_app_user, :invite_app_user, :invite_fb_friends, :invite_by_email, :unjoin_cu
+      get :setactive, :sendrequest, :join_cu, :acceptrequest, :declinerequest, :search_app_user, :invite_app_user, :invite_fb_friends, :invite_by_email, :unjoin_cu, :add_moderators
     end
     collection do
       get :active_com , :joined_com, :public_com, :private_com, :moderated_com, :search_address, :get_geo_coordinates

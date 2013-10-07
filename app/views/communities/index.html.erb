@@ -56,7 +56,7 @@ $(document).ready(function(){
       <%= render partial: 'shared/invite_reqs', locals: {communities: @inv_req_cu } %>
     </div>
     <div id="comUnity_stats">
-      <%= render partial: 'shared/comUnity_stats', locals: {ad_users: @ad_users, inv_users: @inv_users, requested_users: @requested_users, community: @selected_community } %>
+      <%= render partial: 'shared/comUnity_stats', locals: {ad_users: @ad_users, inv_users: @inv_users, requested_users: @requested_users, community: @selected_community, ucs: @ucs } %>
     </div>
   </aside>
   <div id="comUnity_list" class="span13" style="margin-top:5px;">

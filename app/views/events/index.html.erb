@@ -1,7 +1,12 @@
 <% provide(:title, 'Events') %>
 <%= link_to "List view", '#', id: "list_view",  class: "btn primary pull-right marginRight15" %>
   <%= link_to "Create Event", '#', id: "create_event",  class: " pull-left uibutton icon add" %>
-<%= link_to "Calendar view", '#', id: "fullCalendar_view",  class: "btn primary pull-right marginRight15" %>
+<span class="pull-right marginRight15">
+<%= link_to "Calendar view", '#', id: "fullCalendar_view",  class: "uibutton primary pull-right " %>
+</span>
+<span class="pull-right marginRight15">
+<%= select_tag :events_scope, options_for_select([["All events", "all"], ["Active CU events", "active"], ["My events", "my"]]), :onchange => "$.get('#{events_path}', {'events_scope':this.value} );", class: "large pull-right"  %>
+</span>
 <br>	
 <br>
 <br>

@@ -134,12 +134,12 @@ rescue Exception => e
     end
 
     def index
+      session['events_scope'] = params[:events_scope] 
       @event = Event.new
       @event.starts_at = Time.zone.now
       @event.ends_at = Time.zone.now
       @events = active_community_events
       @events = @events.between(params['start'], params['end']) if (params['start'] && params['end'])
-      @events = @events.where('community_id = ?',active_community.id)
       @upcoming_events = @events.where("starts_at > ?",Time.current.tomorrow.to_date).order("id DESC")
       @past_events = @events.where("starts_at < ? and ends_at < ?",Time.current.to_date,Time.current.to_date).order("id DESC")
       @today_events = @events.where("starts_at BETWEEN ? AND ?",Time.current.to_date,Time.current.tomorrow.to_date).order("id DESC")

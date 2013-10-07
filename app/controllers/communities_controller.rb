@@ -38,6 +38,7 @@ class CommunitiesController < ApplicationController
       @requested_users_all += User.where(['id IN (?)' , community.requested_uc.collect(&:user_id)]).count
     end
     @inv_req_cu = Community.where(['id IN (?)' , current_user.communities.where('invitation = ?',Uc_enum::INVITED).collect(&:id)])
+    @ucs = @selected_community.usercommunities
   end
 
 
@@ -89,6 +90,7 @@ def update
   if @ucs.count > 0
     @requested_users = User.where(['id IN (?)' , @community.requested_uc.collect(&:user_id)])
   end  
+  @ucs = @community.usercommunities
 end
 
 def setactive
@@ -164,7 +166,7 @@ def join_cu
 end
 
 def unjoin_cu
- @usercommunity = Usercommunity.find_by_community_id(params[:id])
+ @usercommunity = current_user.usercommunities.find_by_community_id(params[:id])
  @usercommunity.invitation = Uc_enum::UNJOINED
  @usercommunity.save
 end
@@ -184,6 +186,7 @@ def show
   if @ucs.count > 0
     @requested_users = User.where(['id IN (?)' , @community.requested_uc.collect(&:user_id)])
   end
+  @ucs = @community.usercommunities
   respond_to do |format|
    format.html {  }
    format.js {  }
@@ -208,6 +211,7 @@ def active_com
   if @ucs.count > 0
     @requested_users = User.where(['id IN (?)' , @community.requested_uc.collect(&:user_id)])
   end
+  @ucs = @community.usercommunities
 end
 
 def joined_com
@@ -334,7 +338,7 @@ def search_app_user
         @user_ids.each do |id|
           @user = User.find(id)
           @usercommunity = Usercommunity.where('community_id=? and user_id=?',params[:id],id)[0]
-         if @usercommunity.empty?
+         if @usercommunity.blank?
            @usercommunity = Usercommunity.new 
            @usercommunity.community_id = params[:id]
            @usercommunity.user_id = @user.id
@@ -356,7 +360,7 @@ def search_app_user
     @fb_uids.each do |uid|
       @user = create_user_to_invite(uid,nil)
       @usercommunity = Usercommunity.where('community_id=? and user_id=?',params[:id],@user.id)[0]
-      if @usercommunity.empty?
+      if @usercommunity.blank?
        @usercommunity = Usercommunity.new 
        @usercommunity.community_id = params[:id]
        @usercommunity.user_id = @user.id
@@ -394,6 +398,11 @@ def search_app_user
      end
        @usercommunity.save
    end
+ end
+
+ def add_moderators
+    Usercommunity.where("community_id = ? AND user_id IN (?)", params[:id], params[:user_all_ids]).update_all(is_admin: false)
+    Usercommunity.where("community_id = ? AND user_id IN (?)", params[:id], params[:user_ids]).update_all(is_admin: true)
  end
 
 
