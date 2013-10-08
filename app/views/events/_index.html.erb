@@ -5,7 +5,7 @@
 <%= link_to "Calendar view", '#', id: "fullCalendar_view",  class: "uibutton primary pull-right " %>
 </span>
 <span class="pull-right marginRight15">
-<%= select_tag :events_scope, options_for_select([["All events", "all"], ["Active CU events", "active"], ["My events", "my"]], session['events_scope']), :onchange => "$.get('#{events_path}', {'events_scope':this.value}, null, 'script' );", class: "large pull-right"  %>
+<%= select_tag :events_scope, options_for_select([["All CU events", "all"], ["Active CU events", "active"], ["My events", "my"]], session['events_scope']), :onchange => "$.get('#{events_path}', {'events_scope':this.value}, null, 'script' );", class: "large pull-right"  %>
 </span>
 <br>	
 <br>
