@@ -7,6 +7,10 @@ module EventsHelper
 		elsif session['events_scope'] == 'my'
 			@events = Event.where('id IN (?)', current_user.eventdetails.collect(&:event_id))
 		end
+		puts "----------------"
+		puts session['events_scope']
+		puts @events.collect(&:id)
+		puts "----------------"
 		@events
 	end
 end

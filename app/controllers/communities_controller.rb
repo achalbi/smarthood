@@ -18,8 +18,8 @@ class CommunitiesController < ApplicationController
 
     @requested_users = nil
     unless @selected_community.nil?
-      @ad_eds = @community.usercommunities.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED, true )
-      @non_ad_eds = @community.usercommunities.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED, false)
+      @ad_eds = @selected_community.usercommunities.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED, true )
+      @non_ad_eds = @selected_community.usercommunities.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED, false)
       @users = @non_ad_eds.pluck(:user_id)
       @admin_users = @ad_eds.pluck(:user_id)
       @inv_users = User.where(['id IN (?)', @users])

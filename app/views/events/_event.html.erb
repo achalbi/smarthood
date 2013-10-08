@@ -1,7 +1,11 @@
 <li>
-  <%= link_to event.title, event, remote: true %>
-  <br>
-    <%= event.description %>
-    <br>
-    <br>
+	<% unless event.photo.nil? %>
+	<%= link_to cl_image_tag(event.photo.pic_url(:smallest), class:"roundCorner albumLink thumbnail", id:"#{event.photo.id}") , event, class:"albumLink roundCorner pull-left", remote: true %>
+	<% end %>
+	<span class="margin15 pull-left">
+	<%= link_to event.title, event, remote: true %><br>
+	<%= event.description %>
+	</span>
+	<br>
+	<br>
 </li>

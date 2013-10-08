@@ -123,6 +123,7 @@ rescue Exception => e
       @event.community_id = active_community.id
       respond_to do |format|
         if @event.save
+          @event.eventdetails.create(user_id: current_user.id, is_admin: true)
         #  format.html { redirect_to @event, format: 'js', :success => 'Event was successfully created.' }
           format.json { render :json => @event, :status => :created, :location => @event }
           format.js { redirect_to(:action => :show, :format => :js, :id => @event.id)} #redirect_to @event, format: :js, :success => 'Event was successfully created.' }
@@ -134,7 +135,9 @@ rescue Exception => e
     end
 
     def index
-      session['events_scope'] = params[:events_scope] 
+      unless params[:events_scope].nil?
+        session['events_scope'] = params[:events_scope] 
+      end
       @event = Event.new
       @event.starts_at = Time.zone.now
       @event.ends_at = Time.zone.now
@@ -148,16 +151,15 @@ rescue Exception => e
       @today_events = @today_events.paginate(:page => params[:page], :per_page => 5)
       @past_events = @past_events.paginate(:page => params[:page], :per_page => 5)
       #ip_loc = Geocoder.search(remote_ip)[0]
-     #debugger
 
      # @event.address = ip_loc.address
      # @event.latitude = ip_loc.latitude
      # @event.longitude = ip_loc.longitude
      # result = request.location
-    # debugger
       respond_to do |format|
-        format.html # index.html.erb
+        format.html {session['events_scope'] = 'all'}# index.html.erb
         format.json { render :json => @events }
+        format.js 
       end
     end
 
