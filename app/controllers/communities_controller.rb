@@ -38,7 +38,7 @@ class CommunitiesController < ApplicationController
       @requested_users_all += User.where(['id IN (?)' , community.requested_uc.collect(&:user_id)]).count
     end
     @inv_req_cu = Community.where(['id IN (?)' , current_user.communities.where('invitation = ?',Uc_enum::INVITED).collect(&:id)])
-    @ucs = @selected_community.usercommunities
+    @ucs = @selected_community.usercommunities unless @selected_community.nil?
   end
 
 
