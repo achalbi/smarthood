@@ -330,7 +330,7 @@ $('#view_map_link').click(function(){
     }); 
 });
 
-$('a.ui-corner-all').live("click", function(){
+$('a.ui-corner-all').on("click", function(){
   if($('#activity_address').val()!=""){
     $('#view_map_link').show();
   }else{

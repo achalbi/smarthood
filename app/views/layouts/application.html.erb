@@ -73,7 +73,7 @@
   </div>
   <script type="text/javascript">
   $(function() {
-    $('#menu a').live('click', function() {
+    $('#menu a').on('click', function() {
         $('#content').load(this.href);
         var p = $(this).parent();
         if ($(p).hasClass('active')) {

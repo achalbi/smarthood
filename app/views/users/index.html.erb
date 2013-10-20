@@ -17,7 +17,7 @@ var intervalID = -1000;
 function checkScroll() {
   if (nearBottomOfPage()) {
     currentPage++;
- // console.log("endless request "+ currentPage); touch
+ // console.log("endless request "+ currentPage);
   $('#loading_page').show();
     jQuery.ajax('/users?page=' + currentPage, {asynchronous:true, evalScripts:true, method:'get', success: function(data, textStatus, jqXHR) {
 		$('.ressources').append($(data).find('.ressources').html());
@@ -29,7 +29,7 @@ function checkScroll() {
 	},});
   }
 }
-  
+ 
 function nearBottomOfPage() {
   return scrollDistanceFromBottom() < 50;
 }
