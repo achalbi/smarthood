@@ -17,7 +17,7 @@ var intervalID = -1000;
 function checkScroll() {
   if (nearBottomOfPage()) {
     currentPage++;
- // console.log("endless request "+ currentPage);
+ // console.log("endless request "+ currentPage); touch
   $('#loading_page').show();
     jQuery.ajax('/users?page=' + currentPage, {asynchronous:true, evalScripts:true, method:'get', success: function(data, textStatus, jqXHR) {
 		$('.ressources').append($(data).find('.ressources').html());
