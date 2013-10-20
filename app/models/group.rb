@@ -1,8 +1,16 @@
 class Group < ActiveRecord::Base
   belongs_to :User
   belongs_to :photo
-  attr_accessible :description, :name, :privacy, :photo_attributes
+  attr_accessible :description, :name, :privacy, :photo_attributes, :user_tokens
   accepts_nested_attributes_for :photo
+
+  attr_reader :user_tokens
+  attr_accessor :user_ids
+  def user_tokens=(ids)
+    self.user_ids = ids.split(",")
+  end
+
+  has_many :albums, :as => :albumable
 
   has_many :user_groups, dependent: :destroy
   has_many :users, :through => :user_groups
@@ -27,6 +35,10 @@ class Group < ActiveRecord::Base
   end
   def follow!(user, group_id)
     user.user_groups.create!(group_id: group_id)
+  end
+
+  def follow!(user, group_id, invitation, is_admin)
+    user.user_groups.create!(group_id: group_id, invitation: invitation, is_admin: is_admin)
   end
 
   def self.search(search, exclude_group)

@@ -1,0 +1,21 @@
+
+<% unless groups.nil?  %>
+<% if groups.size > 0 %>
+<div class="well" style="mragin:10px;padding:10px;" >
+  <h6>Invited group requests</h6>
+  <ul class="users">
+    <% groups.each do |group| %>
+    <li>
+        <% unless group.photo.nil? %>
+          <div  class="img_zoom" id="div-img_<%= group.photo.id %>">
+                 <%= link_to cl_image_tag(group.photo.pic_url(:small), class:"image_al_c1 thumbnail", id:"#{group.photo.id}"), "/groups/#{group.id}", remote: true,   style:"cursor:pointer;"%>
+                  </div>
+        <% end %>
+      <br><br>
+      <a href="<%= declinerequest_group_path(group) << '?user_id='%><%= current_user.id %>"class="uibutton pull-right" data-remote="true" id="decline"> Decline <i class="icon-remove"></i></a><%= link_to "Accept", acceptrequest_group_path(group) << "?user_id=#{current_user.id}", id: "accept",  class: "uibutton icon add pull-right", remote: true %>
+    </li>
+    <% end %>
+  </ul>
+</div>
+<% end %> 
+<% end %> 

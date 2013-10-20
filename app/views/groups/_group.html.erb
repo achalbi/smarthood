@@ -21,24 +21,5 @@
     <%= group.description %>
     <% end %>
   </span>
-  <!-- <span class="red_color"><br>Private group</span>
-    <% unless group.User.nil? %> <br>
-   <span class="green_color">Owner</span> 
-    <%= link_to group.User.name, group.User %> 
-   <% end %>
-  <div class="center">
-  <% if group.privacy? %>
-  <br><br>
-  <%= link_to "Send request",'', class: "uibutton icon secure" %>
-  <% else %>
-  <br><br>
-    <% if group.following?(current_user, group) %>
-      <%= render 'unfollow', :group => group %>
-    <% else %>
-      <%= render 'follow', :group => group %>
-    <% end %>
-  <% end %>
-  
-  </div>-->
   </div>
   </li>

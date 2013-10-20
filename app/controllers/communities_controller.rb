@@ -336,12 +336,11 @@ def search_app_user
       unless params[:community][:user_tokens].nil?
         @user_ids = params[:community][:user_tokens].split(",")
         @user_ids.each do |id|
-          @user = User.find(id)
           @usercommunity = Usercommunity.where('community_id=? and user_id=?',params[:id],id)[0]
          if @usercommunity.blank?
            @usercommunity = Usercommunity.new 
            @usercommunity.community_id = params[:id]
-           @usercommunity.user_id = @user.id
+           @usercommunity.user_id = id
            @usercommunity.is_admin = false
            @usercommunity.status=""
            @usercommunity.invitation = Uc_enum::INVITED

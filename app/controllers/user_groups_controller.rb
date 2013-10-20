@@ -5,7 +5,7 @@ class UserGroupsController < ApplicationController
     @user_group = current_user.user_groups.find_by_group_id(params[:user_group][:group_id])
     @group = Group.find(params[:user_group][:group_id])
     
-    @group.follow!(current_user, params[:user_group][:group_id])
+    @group.follow!(current_user, params[:user_group][:group_id], Uc_enum::JOINED, false)
     respond_to do |format|
             format.html { redirect_to 'groups/index' }
             format.js { render  :locals => { :group => @group } }

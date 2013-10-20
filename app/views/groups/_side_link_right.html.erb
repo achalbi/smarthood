@@ -1,0 +1,9 @@
+
+<aside id="right" style="float: right;width:220px;margin-right:10px;">
+  <div id="invited_ComUnity">
+    <%= render partial: 'groups/invite_reqs', locals: {groups: @inv_req } %>
+  </div>
+  <div id="grp_stats">
+    <%= render partial: 'groups/group_stats', locals: {ad_users: @ad_users, inv_users: @inv_users, group: @group, ucs: @ucs } %>
+  </div>
+</aside>

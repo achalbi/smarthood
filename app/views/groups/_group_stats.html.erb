@@ -1,0 +1,200 @@
+<% unless group.id.nil? %>
+<div >
+  <% unless ad_users.nil? %>
+  <% if (ad_users.count > 0) %>
+  <div id="moderatorDiv" class="bgClrChg" style="mragin:10px;padding:10px;">
+    <h5>Moderators<% if @is_admin %><%= link_to "edit", '#', id: "moderator",  class: "uibutton icon edit pull-right" %><% end %></h5> 
+    <% if ad_users.count > 0  %>
+    <section class="stats">
+      <a href="#" id="ad_users_a">
+        <strong id="following" class="stat">
+          <%= ad_users.count %>
+        </strong>
+        <%="Member".pluralize(ad_users.count) %>
+      </a>
+      <br><br>
+      <div id="ad_users_div">
+        <% ad_users.each do |ad_user| %>
+        <a style="cursor:pointer;border:0px;padding:0px;" class="pop_up" rel="popover" data-content='<%= gravatar_for ad_user, size: 100 %>' data-original-title="<%= ad_user.name %>" >
+         <%= gravatar_for ad_user, size: 25 %>
+       </a>
+       <% end %>
+     </div>
+   </section>
+   <% end %>  
+
+ </div>
+ <% end %>
+ <% end %> 
+ <% unless inv_users.nil? %> 
+ <div id="inviteDiv" class="bgClrChg" style="mragin:10px;padding:10px;">
+  <h5>Members<%= link_to "add", '#', id: "invite",  class: "uibutton icon add pull-right" %></h5>
+  <section class="stats">
+    <a href="#" id="inv_users_a">
+      <strong id="followers" class="stat">
+        <%= inv_users.count %>
+      </strong>
+      <%="Member".pluralize(inv_users.count) %>
+    </a>
+    <br><br>
+    <div id="inv_users_div">
+      <% inv_users.each do |inv_user| %>
+      <a style="cursor:pointer;border:0px;padding:0px;" class="pop_up" rel="popover" data-content='<%= gravatar_for inv_user, size: 100 %>' data-original-title="<%= inv_user.name %>" >
+       <%= gravatar_for inv_user, size: 25 %>
+     </a>
+     <% end %>
+   </div>
+ </section>
+ 
+</div>
+<% end %>
+</div>
+<br>
+
+
+<%= form_for( group, url: add_moderators_group_path(group), method: :get, remote: true) do |f| %>
+<div id="modal_add_mod" style="display:none;" >
+  <div id="modal-from-dom__add_mod" class="modal hide fade in" style="display: block;">
+    <div class="modal-header">
+      <a href="#" id="close_add_mod" class="close">×</a>
+      <span style="font-size:20px;line-height: 2;">Edit Moderators</span>
+    </div>
+    <div class="modal-body" style="max-height:350px;">
+      <div class="row">
+        <div class=" ui-front">         
+         <%= render 'shared/error_messages', object: f.object %>
+         <aside class="">
+          <section>
+            <!-- <h2 style="margin-left:65px;padding:3px;">Moderators</h2> -->
+            <ul class="user" style="overflow:auto;">
+              <% @ucs.each do |uc| %>
+              <% user = User.find(uc.user_id) %>
+              <ol>
+                <div style="background-color:#f0f0f0;padding:5px;" class="span5">
+                  <%= link_to user.name, "#" %>
+                  <%= gravatar_for user, size: 25 %>
+                  <div style="margin-right:10px;" class="pull-right">
+                    <%= check_box_tag 'user_ids[]', user.id, uc.is_admin? %>
+                    <%= hidden_field_tag 'user_all_ids[]', user.id %>
+                  </div>
+                </div>
+              </ol>
+              <% end %>
+            </ul>     
+          </section>
+        </aside>
+      </div>
+    </div>   
+  </div>
+  <div class="modal-footer" >
+    <%= f.submit "Update", class: "btn primary pull-right", id: "submit_add_mod" %>  
+  </div>
+</div>
+</div>
+<% end %>
+
+
+
+<%= form_for( group, url: invite_app_user_group_path(group), method: :get, remote: true) do |f| %>
+<div id="modal_invite" style="display:none;" >
+  <div id="modal-from-dom2" class="modal hide fade in" style="display: block;width:700px;">
+    <div class="modal-header">
+      <a href="#" id="close_invite" class="close">×</a>
+      <span style="font-size:20px;line-height: 2;">Invite</span>
+    </div>
+    <div class="modal-body" style="max-height:550px;">
+      <div class="row">
+        <div class="span14 ui-front">
+          <div class="center_block clearfix"><br>
+            <%= f.label "Invite by User name:" %>
+            <div class="input ui-front">
+              <%= f.text_field :user_tokens, id: "search_user" %>
+            </div>
+          </div>
+        </div>
+      </div>   
+    </div>
+    <div class="modal-footer" >
+      <%= f.submit "Invite", class: "btn primary pull-right", id: "invite_submit" %>  
+    </div>
+  </div>
+
+</div>
+<% end %>
+
+
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+  $('.gravatar').addClass('thumbnail');  
+  $('#invite').hide();
+  $('#moderator').hide();
+
+  $('#moderatorDiv').hover(function(){
+    $('#moderator').toggle();
+  },function(){
+    $('#moderator').toggle();
+  });
+
+  $('#inviteDiv').hover(function(){
+    $('#invite').toggle();
+  },function(){
+    $('#invite').toggle();
+  });
+
+  $('#ad_users_div').hide();
+  $('#inv_users_div').hide();
+
+
+
+});
+
+$('#ad_users_a').click(function(){
+  $('#ad_users_div').toggle('slow')
+});
+
+$('#inv_users_a').click(function(){
+  $('#inv_users_div').toggle('slow')
+});
+
+
+
+$("#invite").on( "click", function() {
+ $('#modal_invite').modal('show');
+});
+
+$("#close_invite").click(function(){
+  $('#modal_invite').modal('hide');
+});
+
+$("#invite_submit").click(function(){
+  $('#modal_invite').modal('hide');
+});
+
+$("#moderator").on( "click", function() {
+ $('#modal_add_mod').modal('show');
+});
+
+$("#close_add_mod").click(function(){
+  $('#modal_add_mod').modal('hide');
+});
+
+$("#submit_add_mod").click(function(){
+  $('#modal_add_mod').modal('hide');
+});
+
+$(function() {
+  $("#search_user").tokenInput("/groups/<%= group.id %>/search_app_user", {
+    crossDomain: false,
+    theme: "facebook",
+    resultsFormatter: function(item){ return "<li>" + "<img src='" + item.profile_pic + "' title='" + item.name + "' height='30px' width='30px' />" + "<div style='display: inline-block; padding-left: 10px;'><div class='full_name'>" + item.name + " " + ""+ "</div></div></li>" },
+    tokenFormatter: function(item) { return  "<li>" + "<img src='" + item.profile_pic + "' title='" + item.name + "' height='30px' width='30px' />" + "<div style='display: inline-block; padding-left: 10px;'><div class='full_name'>" + item.name +"</div></div></li>" },
+    preventDuplicates: true ,
+    zindex: 11001,
+    hintText: "Type in a user name",
+  });
+});
+
+</script>
+<% end %>

@@ -40,10 +40,10 @@ class PhotoUploader < CarrierWave::Uploader::Base
 
   # Create different versions of your uploaded files:
   version :smallest_half do
-     process :resize_to_fill => [25, 25]
+     cloudinary_transformation :width =>25, :height => 25, :crop => :fill, :gravity => :faces
    end 
   version :smallest do
-     process :resize_to_fill => [50, 50]
+     cloudinary_transformation :width =>50, :height => 50, :crop => :fill, :gravity => :faces
    end 
   version :smaller do
          cloudinary_transformation :width =>100, :height => 100, :crop => :fill, :gravity => :faces

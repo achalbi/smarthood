@@ -1,5 +1,5 @@
 class UserGroup < ActiveRecord::Base
-  attr_accessible :group_id, :user_id
+  attr_accessible :group_id, :user_id, :invitation, :is_admin
 
   belongs_to :group
   belongs_to :user

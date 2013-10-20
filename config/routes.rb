@@ -17,7 +17,6 @@ EMS::Application.routes.draw do
   resources :password_resets
   resources :microposts, only: [:create, :destroy]
   resources :relationships, only: [:create, :destroy]
-  resources :groups
   resources :user_groups
   resources :posts
   resources :comments
@@ -92,7 +91,11 @@ EMS::Application.routes.draw do
 
   resources :groups do
     member do
-      get :followers
+      get :followers, :add_moderators, :search_app_user,:invite_app_user
+    end
+    collection do
+      get :my, :public, :post_paginate, :group_post, :groups_post_paginate
+      post :create_album
     end
   end
 

@@ -1,0 +1,175 @@
+<div id="aboutDiv">
+ <%= link_to "edit", '#', id: "edit_group",  class: " pull-right uibutton icon edit",:title => "Edit" %>
+ <p><h4>Description : <small><%= group.description %></small></h4></p>
+
+ <p><h4>Privacy : <%= group.privacy? ? 'Private' : 'Public' %></h4></p>
+ <ul class="users" id="activity_groups_ul" >
+  <% if ad_users.count > 0  %>
+  <h4>Moderators</h4>
+  <% ad_users.each do |user|%>
+  <li style="width:100px;float:left;">
+    <div  class="img_zoom" style="float:left;" >
+      <%= gravatar_for user, size: 52 %>
+    </div>
+    <span style="margin:5px;float:left;">
+      <%= link_to user.name, user %>
+    </span>
+  </li>
+  <% end %>
+  <li style="clear:both;"></li>
+  <% end %> 
+
+  <% if inv_users.count > 0 %>
+  <h4>Members</h4>
+  <% inv_users.each do |user|%>
+  <li style="width:100px;float:left;">
+    <div  class="img_zoom" style="float:left;" >
+      <%= gravatar_for user, size: 52 %>
+    </div>
+    <span style="margin:5px;float:left;">
+      <%= link_to user.name, user %>
+    </span>
+  </li>
+  <% end %>
+  <li style="clear:both;"></li>
+  <% end %>
+
+</ul>
+
+
+<br>
+</div>
+
+<%= form_for( @group, remote: true, :html => {:multipart => true}) do |f| %>
+<div id="modal_edit_grp" style="display:none;" >
+  <div id="modal-from-dom2" class="modal hide fade in" style="display: block;width:700px;">
+    <div class="modal-header">
+      <a href="#" id="closeX_edit_grp" class="close">×</a>
+      <span style="font-size:20px;line-height: 2;">Edit Group</span>
+    </div>
+    <div class="modal-body" style="max-height:550px;">
+      <div class="row">
+        <div class="span14 ui-front">
+
+         <%= render 'shared/error_messages', object: f.object %>
+         <div class="center_block clearfix">
+          <%= f.label :name %>
+          <div class="input">
+            <%= f.text_field :name, :placeholder=>"Title" %></div>
+          </div>
+
+          <div class="center_block clearfix">
+            <%= f.label :description %>
+            <div class="input">
+              <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title=>"Description", rows: 3, cols: 75  %> 
+            </div>
+          </div>
+
+          <div class="center_block clearfix">
+            <%= label_tag "Private group:" %>
+            <div class="input">
+              <%= f.check_box :privacy %>
+            </div>
+          </div><br><br>
+
+          <div class="center_block clearfix">
+            <%= label_tag "Change picture:" %>
+            <%= f.fields_for :photo, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
+              <%= photo_form.file_field :pic, id: "pic2",style: "width:1px; height:1px; padding:0px;  left:0px;" %>  
+            <% end %>
+            <div class="input"> 
+              <% unless @group.photo.nil? %>
+              <%= cl_image_tag(@group.photo.pic_url(:small), class:" thumbnail albumLink", id:"group_edit_pic", style: "cursor:pointer;") %>   
+              <% end %>
+              <canvas id="imageCanvas2" style = "border: 1px solid #ddd; padding:5px; align:center; width:200px;display:none;cursor:pointer" >select new image</canvas>
+            </div>
+          </div>  
+
+        </div>
+      </div>   
+    </div>
+    <div class="modal-footer" >
+      <%= f.submit "Update", class: "btn primary pull-right", id: "updGroup" %>  
+    </div>
+  </div>
+</div>
+<% end %>
+
+
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+  $('#edit_group').hide();
+});
+$('#aboutDiv').hover(function(){
+  $('#edit_group').toggle();
+},function(){
+  $('#edit_group').toggle();
+});
+
+$("#edit_group").click(function(){
+      $('#modal_edit_grp').modal('show');
+    });
+    $("#closeX_edit_grp").click(function(){
+          $('#modal_edit_grp').modal('hide');
+        });
+
+    $("#updGroup").click(function(){
+          $('#modal_edit_grp').modal('hide');
+        });
+
+    $("#group_edit_pic").click(function(){
+      $('#group_edit_pic').hide();
+      $('#pic2').click();
+      $('#imageCanvas2').show();
+    });
+
+      var imageLoader = document.getElementById('pic2');
+    imageLoader.addEventListener('change', handleImage, false);
+    $("#imageCanvas2").click(function(){
+        $("#pic2").click();
+    });
+        var canvas = document.getElementById('imageCanvas2');
+    var ctx = canvas.getContext('2d');
+    ctx.font="30px Arial";
+    ctx.fillText("Change picture",10,50);
+
+  function handleImage(e){
+    var canvas = document.getElementById('imageCanvas2');
+    var ctx = canvas.getContext('2d');
+    var iCnt=0;
+    var files = e.target.files;
+    canvas.width = 180;
+    canvas.height = 155*(Math.ceil(files.length/4));
+    for( var i = 0, len = files.length; i < len; i++) 
+          {
+          if(files[i])
+            {
+              var reader = new FileReader();
+              reader.onload = function(event){
+                var img = new Image();
+
+                img.onload = function(){
+                  var ratioPx = 150;
+                  var sWidth =ratioPx;
+                  var ratio = img.width/sWidth;
+                  var sHeight = img.height/ratio;   
+                    if(sHeight>ratioPx){
+                       sHeight =ratioPx;
+                       ratio = img.height/sHeight;
+                       sWidth = img.width/ratio;  
+                    }
+                  ctx.drawImage(img, 155*(iCnt%4),155*(Math.floor(iCnt/4)),sWidth,sHeight);
+                  //ctx.drawImage(img,0,0,sWidth,sHeight);
+                  iCnt++;
+                }
+                img.src = event.target.result;
+              }
+              reader.readAsDataURL(e.target.files[i]);     
+            }
+          }
+  }
+
+
+</script>

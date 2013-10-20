@@ -556,6 +556,11 @@ a.disabled {
    background-color:#e0e0e0;
 }
 
+.bgClrChg2:hover{
+   background-color:#d0d0d0;
+   border-radius:5px;
+}
+
 .marginRight5{
   margin-right: 5px;
 }
@@ -613,6 +618,10 @@ div#event_list ul.tabs li.active{
   text-shadow: none;
 }
 
+ul#group_list ul.tabs li.active{
+  text-shadow: none;
+}
+
 .inherit_width{
   width: inherit;
 }
@@ -630,6 +639,11 @@ div#event_list ul.tabs li.active{
 .sidetabs_selected{
   background-color: #d0d0d0;
 }
+
+.tabs_selected{
+  background-color: #a0a0a0!important;
+}
+
 
 roundCorner {
     -moz-border-radius: 7px;
@@ -653,4 +667,25 @@ roundCorner {
 .margin-padding0{
   margin: 0px;
   padding: 0px;
+}
+
+div#spinner
+{
+    display: none;
+    width:50px;
+    height: 50px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    background:url(loading.gif) no-repeat center #f2f2f2;
+    text-align:center;
+    padding:10px;
+    font:normal 16px Tahoma, Geneva, sans-serif;
+    border:1px solid #666;
+    border-radius:5px;
+    box-shadow: 5px 5px 2px #888888;
+    margin-left: -50px;
+    margin-top: -50px;
+    z-index:2;
+    overflow: auto;
 }

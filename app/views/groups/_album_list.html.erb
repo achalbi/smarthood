@@ -1,0 +1,9 @@
+                        <li>
+                        <div  class="img_zoom" >
+                         <%= link_to cl_image_tag(album.photos[0].pic_url(:smaller), class:"image_al_c thumbnail") , album, class:"albumLink", remote: true %>
+                           <h5 style="float:right;"><%= link_to album.title, album, class:"albumLink", remote: true %></h5>
+                      </div>
+                      </li>
+                      <script type="text/javascript">
+                      	hideProgress();
+                      </script>

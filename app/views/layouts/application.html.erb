@@ -39,10 +39,10 @@
             <!--<li><%= link_to "Create Events", new_event_path %></li>-->
             <li><%= link_to "Events", events_path %></li>
             <li><%= link_to "Photos", photos_path %></li>
-            <li><%= link_to "Groups", groups_path %></li>
+            <li><%= link_to "Groups", groups_path, id: "home_group" %></li>
            <!-- <li><%= link_to "Create group", new_group_path %></li>
-            <li><%= link_to "Follow / Unfollow group", groups_path %></li>-->
-            <li><%= link_to "Group post", posts_path %></li>
+            <li><%= link_to "Follow / Unfollow group", groups_path %></li>
+            <li><%= link_to "Group post", posts_path %></li>-->
             <% end %>
           </ul>
           
@@ -69,6 +69,8 @@
  
 
   </body>
+  <div id="spinner">
+  </div>
   <script type="text/javascript">
   $(function() {
     $('#menu a').live('click', function() {
@@ -87,4 +89,22 @@
 
 
   </script>
+
+  <script type="text/javascript">
+    var spinnerVisible = false;
+    function showProgress() {
+        if (!spinnerVisible) {
+            $("div#spinner").fadeIn("fast");
+            spinnerVisible = true;
+        }
+    };
+    function hideProgress() {
+        if (spinnerVisible) {
+            var spinner = $("div#spinner");
+            spinner.stop();
+            spinner.fadeOut("fast");
+            spinnerVisible = false;
+        }
+    };
+</script>
 </html>

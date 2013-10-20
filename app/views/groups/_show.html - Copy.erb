@@ -1,10 +1,66 @@
 <% provide(:title, @group.name) %>
-<div class="row span7" >
-    <%= render '/groups/side_link_left' %>
-</div>  
+<div class="row">
+  <aside class="span7">
+    <section>
+      <%=  cl_image_tag(@group.photo.pic_url(:thumb_medium), class:"image_al_c1 thumbnail", id:"#{@group.photo.id}") %>
+      <h4>
+        <%= @group.name %>
+      </h4>
+      <small><%= @group.description %></small>
+    </section>
+    <section>
+        <div class="center" id="follow_form">
+          <% if @group.privacy? %>
+          <br>
+          <%= link_to "Send request",'', class: "uibutton icon secure" %>
+          <% else %>
+            <% if @group.following?(current_user, @group) %>
+              <%= render 'unfollow', :group => @group %>
+            <% else %>
+              <%= render 'follow', :group => @group %>
+            <% end %>
+          <% end %>
+          
+        </div>
+    </section>
+    <section>
+            <% unless @group.User.nil? %> <br>
+            <b id="followers" class="stat">
+              Admin  
+            </b>
+           
+            <div class="user_avatars">
+                <%= link_to gravatar_for(@group.User, size: 30), @group.User, :title => @group.User.name %>
+            </div>
+           <% end %>
+          
+    </section>  
+    <section>
+      <%= render 'shared/group_stats' %>
+      <% if @users.any? %>
+        <div class="user_avatars">
+          <% @users.each do |user| %>
+            <%= link_to gravatar_for(user, size: 30), user, :title => user.name %>
+          <% end %>
+        </div>
+      <% end %>
+    </section>
 
-<div>
-<ul id="group_list" class="span13 grid">
+  </aside>
+<div class="">
+  	 <%= render 'follow_form' if signed_in? %>
+    <% if @group.posts.any? %>
+      <h3>Posts (<%= @group.posts.count %>)</h3>
+      <ol class="microposts">
+        <%= render @posts %>
+      </ol>
+      <%= will_paginate @posts %>
+    <% end %>
+  </div>
+</div>
+
+
+<div id="group_list" class="span13">
   <ul class="tabs">
     <li class="active" id="posts_groups_li"><a href="#"><h4>Posts</h4></a></li>
     <li id="about_groups_li"><a ><h4>About</h4></a></li>
@@ -35,12 +91,59 @@
   </div>
 
 </div>
+
+ <%= form_for( @group, remote: true, :html => {:multipart => true}) do |f| %>
+ <div id="modal" style="display:none;" >
+  <div id="modal-from-dom2" class="modal hide fade in" style="display: block;width:700px;">
+    <div class="modal-header">
+      <a href="#" id="closeX" class="close">×</a>
+      <span style="font-size:20px;line-height: 2;">Create Group</span>
+    </div>
+    <div class="modal-body" style="max-height:550px;">
+      <div class="row">
+        <div class="span14 ui-front">
+
+         <%= render 'shared/error_messages', object: f.object %>
+
+         <div class="center_block clearfix">
+          <%= f.label :name %>
+          <div class="input">
+            <%= f.text_field :name, :placeholder=>"Title" %></div>
+          </div>
+
+          <div class="center_block clearfix">
+            <%= f.label :description %>
+            <div class="input">
+              <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title=>"Description", rows: 3, cols: 75  %> 
+            </div>
+          </div>
+
+          <div class="center_block clearfix">
+            <%= label_tag "Private group:" %>
+            <div class="input">
+            <%= f.check_box :privacy %>
+           </div>
+          </div>
+          <div class="center_block clearfix">
+            <%= label_tag "Add picture:" %>
+            <%= f.fields_for :photo, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
+
+            <%= photo_form.file_field :pic, id: "pic",style: "width:1px; height:1px; padding:0px;  left:0px;" %>  
+
+            <% end %>
+            <div class="input">
+              <canvas id="imageCanvas" style = "border: 1px solid #ddd; padding:5px; align:center; width:200px;cursor:pointer" >select new image</canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer" >
+      <%= f.submit "Create", class: "btn primary pull-right", id: "editGroup" %>  
+    </div>
+  </div>
 </div>
-
-<div id="sidebar_right" class="row">
-    <%= render '/groups/side_link_right' %>
-</div>  
-
+<% end %>
 
 
 <script type="text/javascript">
@@ -69,6 +172,17 @@ $('#photos_groups_li').click(function(){
   $('#photos_groups').show();
 });
 
+$("#edit_group").click(function(){
+  $('#modal').modal('show');
+});
+$("#closeX").click(function(){
+  $('#modal').modal('hide');
+});
+
+$("#editGroup").click(function(){
+  $('#modal').modal('hide');
+  showProgress();
+});
 
 
 var currentPage = 1;
@@ -120,7 +234,7 @@ $('document').ready(function(){
   intervalID = setInterval(checkScroll_post, 250);
   $('#about_groups').hide();
   $('#photos_groups').hide();
-  $(".sidetabs").removeClass('sidetabs_selected');
+  console.log("init--"+intervalID);
 })
 
 

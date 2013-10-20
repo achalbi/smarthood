@@ -1,0 +1,19 @@
+<% unless groups.nil? %>
+   <div style="padding:5px;">
+              <% groups.each do |grp| %>
+              <div class="bgClrChg2 well pull-left" style="cursor:pointer;width:140px;margin-right:20px;">
+                  <div style="display:none;" class="pull-left">
+                    <%= check_box_tag 'grp_ids[]', grp.id %>
+                  </div>
+                  <p style="display:none;"><%= grp.id %></p>
+                  <% unless grp.photo.nil? %>
+                      <%= link_to cl_image_tag(grp.photo.pic_url(:smallest), class:"roundCorner albumLink", id:"grp_#{grp.id}") ,"#", class:"albumLink roundCorner", remote: true %>
+                  <% end %><br>
+                  <h5><%=  grp.name %></h5>
+              </div>
+              <% end %>
+  </div>
+<% end %>
+<script type="text/javascript">
+
+</script>
