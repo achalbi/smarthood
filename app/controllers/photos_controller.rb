@@ -6,9 +6,10 @@ class PhotosController < ApplicationController
   
   def new 
   end
+  
   def index
-    @photos = current_user.photos.order('created_at DESC').all
-    @camera_roll = current_user.photos.order('created_at DESC').all
+    @photos = current_user.photos.order("DATE(created_at) DESC").all
+    @camera_roll = @photos.group_by { |t| t.created_at.beginning_of_month }  
     @photo = Photo.new
     @albums = current_user.albums.all
     @album = Album.new

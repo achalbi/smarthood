@@ -3,16 +3,16 @@
                     <div id="gallery1" class="span12 pull-left">
                        <ul id="grid" >    
                        <li style="background-color:#ffffff!important;">
-                        <div id="upload_pics"  style = "border:2px dashed #ddd; width:85px; height:85px; padding:10px;  left:40px; text-align:middle; z-index: 1;  cursor:pointer;  float:left; margin-bottom:25px;
+                        <div id="upload_pics_grp"  style = "border:2px dashed #ddd; width:85px; height:85px; padding:10px;  left:40px; text-align:middle; z-index: 1;  cursor:pointer;  float:left; margin-bottom:25px;
                         " class="bgClrChg">  <h5> Create Album </h5>
                         </div>
                        </li>               
                       <% unless albums.nil? %>
                                <% albums.each do |album| %>
-                               <% unless album.photos[0].nil? %>
-                                  <%= render partial: 'groups/album_list', locals: {album: album} %>
-                            <% end %> 
-                            <% end %>
+                                   <% unless album.photos[0].nil? %>
+                                      <%= render partial: 'groups/album_list', locals: {album: album} %>
+                                   <% end %> 
+                               <% end %>
                        <% end %>  
                     </ul>
                     </div>
@@ -20,9 +20,9 @@
           </div>
       <ul class="users" id="photos_events_ul" >
       </ul>
+      <%= form_for(album, url: create_album_groups_path, remote: true, :html => {:multipart => true}) do  |f| %> 
       <div id="modal5" style="display:none" >
           <div id="modal-from-dom5" class="modal hide fade in" style="display: block;width:700px;">
-      <%= form_for(album, url: create_album_groups_path, remote: true, :html => {:multipart => true}) do  |f| %> 
             <div class="modal-header">
               <a href="#" id="close5X" class="close">×</a>
               <h3>Create album</h3>
@@ -71,13 +71,14 @@
             <div class="modal-footer" >
               <%= f.submit "Create Album", class: "btn primary pull-right", id: "crtAlb" %> 
             </div>
-        <% end %>
           </div>
+        </div>
+      <% end %>
           
 
 
         <script type="text/javascript">
-          $("#upload_pics").click(function(){
+          $("#upload_pics_grp").click(function(){
             $('#modal5').modal('show');
           });
           $("#close5X").click(function(){

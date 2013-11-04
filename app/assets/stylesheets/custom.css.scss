@@ -573,6 +573,14 @@ a.disabled {
   margin-right: 15px;
 }
 
+.marginRight25{
+  margin-right: 25px;
+}
+
+.marginRight50{
+  margin-right: 50px;
+}
+
 .marginLeft5{
   margin-left: 5px;
 }
@@ -585,8 +593,37 @@ a.disabled {
   margin-left: 15px;
 }
 
+.marginLeft25{
+  margin-left: 25px;
+}
+
+.marginLeft50{
+  margin-left: 50px;
+}
+
+.marginLeft75{
+  margin-left: 75px;
+}
+
+
+.marginLeft150{
+  margin-left: 150px;
+}
+.marginLeft160{
+  margin-left: 160px;
+}
+
+
+.marginLeft200{
+  margin-left: 200px;
+}
+
 .margin15{
   margin: 15px;
+}
+
+.padding5{
+  padding: 5px;
 }
 
 
@@ -619,6 +656,10 @@ div#event_list ul.tabs li.active{
 }
 
 ul#group_list ul.tabs li.active{
+  text-shadow: none;
+}
+
+div#camera_rolls ul.tabs li.active{
   text-shadow: none;
 }
 
@@ -688,4 +729,24 @@ div#spinner
     margin-top: -50px;
     z-index:2;
     overflow: auto;
+}
+
+.fancybox-wrap{
+  top:60px!important;
+  buttom:auto;
+}
+
+html{
+  height: 100%;
+}
+body {
+  min-height: 100%;
+}
+
+.placeholder {
+  color: #aaa;
+  }
+
+.token-input{
+  min-width: 200px!important;
 }

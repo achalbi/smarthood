@@ -1,15 +1,18 @@
     <script type="text/javascript">var photoCount = 0;</script>
+    <%= form_for  @share, :url => new_share_path, :method => :get, remote: true do  |f| %>
       <div id="modal" style="display:none" >
           <div id="modal-from-dom" class="modal hide fade in" style="display: block;">
-             <%= form_for  @share, :url => new_share_path, :method => :get, remote: true do  |f| %>
 
             <div class="modal-header">
               <a href="#" id="clsX" class="close">×</a>
-              <h3>Share the album</h3>
+              <h3>Share album</h3>
             </div>
             <div class="modal-body">
-                <%= label_tag 'Email: ' %>
-                <%= text_field_tag 'email' %>
+                      <div class="bs-example bs-email">
+                        <div class="form-group">
+                          <input type="text" class="form-control tokenfields" style="width:480px;" id="tokenfield-m1" name="email" placeholder="Type email and hit tab/enter" />
+                        </div>
+                </div>
                 <%= hidden_field_tag 'type', 'album' %>  
                 <%= hidden_field_tag "id", "#{@album.id}" %>
             </div>
@@ -17,27 +20,19 @@
               <%= link_to "Share", '#', id: "sharelink",  class: "btn primary pull-right " , style:"margin-left:10px"%>
               <%= submit_tag "Share", id: "shareAlb", class: "btn primary", style: "float:right;display:none;"  %> 
             </div>
-
-            <% end %>
           </div>
-          
         </div>
-
-
+    <% end %>
 
     <%= form_for  @album, :url => { :action => "edit" },  :method => :get, remote: true do  |f| %>
-    <div id="floater-wrapper">
-      <div id="floater" >
-        <div  class="well span11 pull-left" ><h4 ><a href="#" style="float:left;"><%= @album.title %></a>
           <div style="margin-right:120px;"  >
-            <span style="clear:both;" ></span>
-            <%= link_to "Edit", '#', id: "edit",  class: "btn secondary pull-right " , style:"margin-left:10px"%>
-            <%= link_to "Cancel", '#', id: "cancel",  class: "btn secondary pull-right ", style:"display:none;margin-left:10px" %>
-            <%= link_to "Share", '#', id: "share",  class: "btn secondary pull-right ", style:"margin-left:10px" %>
-
-
-            <%= link_to "Delete album", @album, id: "delAlbum",  class: "btn danger pull-right ", style:"display:none;", method: :delete, remote: true, data: { confirm: "You sure?" },title: @album.title %>
-              <%= f.submit "Update",  id: "delPhoto",  class: "btn primary pull-right ", style:"display:none;", data: { confirm: "You sure?" } %>
+               <div id="album_indiv" style="margin-left:250px;margin-bottom:0px;">
+                  <ul class="breadcrumb" style="width:667px">
+                    <li><a href="#" class="marginLeft10 marginRight10">Albums</a><span class="divider">/</span> </li>
+                    <li><a href="/albums/<%= @album.id %>" class="marginLeft10"><%= @album.title %></a></li>
+                    <span style="margin-left:475px;"><li><%= link_to "Share", '#', id: "share",  class: "uibutton icon add" %></li></span>
+                  </ul>
+                </div>
               <span id="buttonset" style="display:none;">
                   <input type="checkbox" id="option-fullscreen"><label for="option-fullscreen">Fullscreen</label>
                   <input type="checkbox" id="option-slideshow"><label for="option-slideshow">Slideshow</label>
@@ -83,150 +78,41 @@
                   <option value="vader">Vader</option>
               </select>
               </div>
-
-
-
             </h4>
-          </div>
-        </div>
-      </div>
     </div>
     <span style="clear:both;" ></span>
-    <div id="gallery1" class="pull-left span12" >
+    <div id="gallery1" class="pull-left span17">
       <ul id="grid">
-      <div id="gallery3">
         <% @album.photos.each do |photo| %>
           <li>
-            <div  class="img_zoom" id="div-img_<%= photo.id %>" >
-                <a href="<%= photo.pic_url %>"  class="lightview1 editPhotos"  id="a-img_<%= photo.id %>" rel="group1" data-gallery="gallery"
-               data-lightview-group="thumbnail-" 
-               data-lightview-group-options="controls: 'thumbnails'" , title="<%= @album.title %>">
-                <%= cl_image_tag(photo.pic_url(:smaller), class:"thumbnail")  %></a> 
-            </div>
-          </li>
+                  <a href="<%= photo.pic_url %>"  class="lightview1" rel="group1">
+                  <%= cl_image_tag(photo.pic_url(:small), class:"thumbnail", style: "margin:0px!important;", alt: "http://res.cloudinary.com/rashi/image/upload/v1377921346/RYW-Logo-smaller_rbkszn.png")  %></a> 
+              </li>
+            
         <% end %>
-      </div>
-      <div id="editDiv" style="display:none;" >
-        <div class="span9">
-          <%= render 'shared/error_messages', object: f.object %>
-                <%= f.label "title: " %>
-                <%= f.text_field :title %>
-                <br>
-                <%= f.label "description:" %>
-                <%= f.text_area :description, placeholder: "Album description...", :rows=>2, :cols=>40 %>
-                <span class=" overrideClass"><br><br>
-                <%= f.label "privacy:" %>
-                <%= f.select :privacy, options_for_select([["Public", "public"], ["Follower", "follower"], ["Private", "private"]]) %>
-                
-                </span>
-        </div>
-        <br>
-        <div class="span16"><br><br></div>
-        <% @album.photos.each do |photo| %>
-          <li>
-            <div  class="img_zoom" id="div-img_<%= photo.id %>"  >
-              <a   class=" editPhotos"  id="a-img_edit_<%= photo.id %>" style="cursor:pointer;">
-                <img src="assets/delete.png" id="a-img_chk_<%= photo.id %>" style="z-index: 1;position:absolute;margin-left:150px;display:none;" class"changeDelBtn"/>
-              <%= cl_image_tag(photo.pic_url(:smaller), class:"image_al_c thumbnail", id:"#{photo.id}")  %>
-              </a>
-            </div>
-            <script type="text/javascript"> photoCount++;</script>
-            <div style="display:none;" >
-                    <%= check_box_tag "photo_chk[#{photo.id}]", photo.id %> 
-            </div>
-          </li>
-        <% end %>
-      </div>
+      
       </ul>
     </div>
   </div>
 <% end %>
-    <script type="text/javascript">
+<script type="text/javascript">
         $(document).ready(function(){
-          /*
-             $(this).click(function(e) {
-
-              if($('.editPhotos').hasClass('disabling')){
-               e.preventDefault();
-              } 
-                  //do other stuff when a click happens
-              });*/
-
-            var update_bool = false;
-            $("#edit").click(function(){
-              $("#edit").hide();
-              $("#cancel").show();
-              $("#delAlbum").show();
-              $("#gallery3").hide();
-              $("#editDiv").show();
-            // $("a.lightview").removeAttr("href").css("cursor","pointer");
-            //$('a.editPhotos').addClass('disabling');
-            //$('a.editPhotos').removeClass('lightview');
-           });
-
-           $("#cancel").click(function(){
-            $("#cancel").hide();
-            $("#edit").show();
-            $("#delAlbum").hide();
-            $("#delPhoto").hide();
-            $("#gallery3").show();
-            $("#editDiv").hide();
-            update_bool=false;
-            //$('a.editPhotos').removeClass('disabling');
-            //$('a.editPhotos').addClass('lightview');
-           });
 
            $("#share").click(function(){
-            $('#modal').modal('show');
+              $('#modal').modal('show');
             });
+
            $("#sharelink").click(function(){
-            $('#modal').modal('hide');
-            $("#shareAlb").click();
-            $("#delPhoto").hide();
+              $('#modal').modal('hide');
+              $("#shareAlb").click();
 
             });
+
            $("#clsX").click(function(){
-            $('#modal').modal('hide');
+             $('#modal').modal('hide');
             });
-            var photoMode = 0;
-            
-           $('.image_al_c').click(function(){
-             var id = this.id;
-             
-          //   if($(".img_zoom a").hasClass("disabling")){
 
-
-                 if($("#photo_chk_"+id).is(':checked')){
-                    $("#photo_chk_"+id).prop("checked", false);
-                    $("#a-img_"+id).removeClass("img-selected");
-                    $("#a-img_chk_"+id).hide();
-                    photoMode--;
-
-
-                 }else{
-
-                    $("#photo_chk_"+id).prop("checked", true);
-                    $("#a-img_"+id).addClass("img-selected");
-                    $("#a-img_chk_"+id).show();
-                    photoMode++;
-                  }
-                  if(!update_bool){
-                    if(!(photoMode==0)){
-                      $("#delAlbum").hide();
-                      $("#delPhoto").show();
-                    }else{
-                      $("#delAlbum").show();
-                      $("#delPhoto").hide();
-                    }
-                  }
-
-                    if(photoMode==photoCount){
-                      $("#delAlbum").show();
-                      $("#delPhoto").hide(); 
-                     }
-             // }
-          }); 
-          
+          });
           $("a.lightview1").fancybox({
             'transitionIn'  : 'elastic',
             'transitionOut' : 'elastic',
@@ -234,31 +120,28 @@
             'speedOut'    : 200, 
             'overlayShow' : false
           });
-          $("input").bind("paste",function(){
-              $("#delAlbum").hide();
-              $("#delPhoto").show();
-              update_bool=true;
-          });
-          $("input").change(function(){
-              $("#delPhoto").show();
-              $("#delAlbum").hide();
-              update_bool=true;
-          });  
-          $("textarea").bind("paste",function(){
-              $("#delPhoto").show();
-              $("#delAlbum").hide();
-              update_bool=true;
-          });
-          $("textarea").change(function(){
-              $("#delPhoto").show();
-              $("#delAlbum").hide();
-              update_bool=true;
-          });
-          $("select").change(function(){
-              $("#delPhoto").show();
-              $("#delAlbum").hide();
-              update_bool=true;
-          });
 
-        });
-    </script>
+
+         $('.tokenfields').on('beforeCreateToken', function (e) {
+            var token = e.token.value.split('|')
+            e.token.value = token[1] || token[0]
+            e.token.label = token[1] ? token[0] + ' (' + token[1] + ')' : token[0]
+          }).on('afterCreateToken', function (e) {
+            // Über-simplistic e-mail validation
+            var re = /\S+@\S+\.\S+/
+            var valid = re.test(e.token.value)
+            if (!valid) {
+              $(e.relatedTarget).addClass('invalid')
+            }
+          }).on('beforeEditToken', function (e) {
+            if (e.token.label !== e.token.value) {
+              var label = e.token.label.split(' (')
+              e.token.value = label[0] + '|' + e.token.value
+            }
+          }).on('removeToken', function (e) {
+           // alert('Token removed! Token value was: ' + e.token.value)
+          }).on('preventDuplicateToken', function (e) {
+            alert('Duplicate detected! Token value is: ' + e.token.value)
+          }).tokenfield();
+
+      </script>

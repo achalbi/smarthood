@@ -15,6 +15,7 @@ class AlbumsController < ApplicationController
             @album.photos << @photo
         end
         @album.save
+        #createNotification(sender_id,objecttype,notificationtype, body_html, body_text, href )
           flash[:success] = "Album created"
         #debugger
     
@@ -51,7 +52,10 @@ class AlbumsController < ApplicationController
     @album = Album.find(params[:id])
      @title = @album.title
      Album.find(params[:id]).destroy
-    flash[:success] = "Album: "+@title+" destroyed!"
+    @camera_roll = @camera_roll.group_by { |t| t.created_at.beginning_of_month }  
+    @albums = current_user.albums.all
+    @album = Album.new
+    #flash[:success] = "Album: "+@title+" destroyed!"
     respond_to do |format|
          format.html { redirect_to root_path }
          format.js { render  :locals => { :album => @camera_roll } }
@@ -89,6 +93,7 @@ class AlbumsController < ApplicationController
   
 def edit
     @album = Album.find(params[:id])
+    @share = Share.new
     @photos = Photo.find(params[:photo_chk].keys.collect(&:to_i)) 
        @photos.each do  |photo|
            @album.photoalbums.where(photo_id: photo.id)[0].destroy       

@@ -1,0 +1,164 @@
+<div  id="floater-wrapper1"  >
+      <div id="floater1" class="well span14 pull-left" style="border:10px solid #fff;" ><h4 ><a href="#" style="float:left;">Albums</a>
+
+        </h4>    
+        <div style="margin-right:120px;"  >
+            <span style="clear:both;" ></span>
+            
+        <%= link_to "cancel ", albums_path, remote: true,  id: "cancelAlb",  class: "btn secondary pull-right" , style:"display:none;margin-left:5px;"%>
+        <%= link_to "Create album", '#', id: "addTo",  class: "pull-right uibutton icon add" %>
+
+      <input type="button" value="Update album" id="updateAlbBtn"  class="btn primary " style="display:none;float:right;"  >   
+        </div>
+      </div>
+      </div>
+        <div id="modal" style="display:none" >
+          <div id="modal-from-dom" class="modal hide fade in" style="display: block;width:700px;">
+      <%= form_for(@album, remote: true, :html => {:multipart => true}) do  |f| %> 
+            <div class="modal-header">
+              <a href="#" id="closeX" class="close">×</a>
+              <h3>Create album</h3>
+            </div>
+            <div class="modal-body" style="max-height:450px;">
+              <div class="row">
+              <div class="span14 ui-front "  >
+            
+             <%= render 'shared/error_messages', object: f.object %>
+                <div class="center_block clearfix pull-left">
+                  <%= f.label :title %>
+                  <div class="input">
+                    <%= f.text_field :title, :placeholder=>"Title" %>
+                  </div>
+                </div>
+
+              <div class="center_block clearfix pull-left">
+                  <%= f.label :description %>
+                  <div class="input">
+                  <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title=>"Description", rows: 3, cols: 75  %> 
+                </div>
+                </div>
+              <span class=" overrideClass">
+              <div class="center_block clearfix pull-left">
+              <%= f.label "privacy:" %>
+              <div class="input">
+                <%= f.select :privacy, ["Public", "Follower", "Private"] %>
+                </div>
+              </div>
+              </span>
+            <br><br>
+               <%= fields_for :photos, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
+                 
+              <%= photo_form.file_field :pic, id: "pic1", :multiple => true, style: "width:1px; height:1px; padding:0px;  left:0px;" %>  
+              <% end %>
+                   
+          <canvas id="imageCanvas1" style = "border: 1px solid #ddd; padding:5px; align:center" >select a photo</canvas>
+             </div>
+            </div>
+            </div>
+            <div class="modal-footer" >
+              <%= f.submit "Create Album", class: "btn primary pull-right", id: "crtGrp" %> 
+            </div>
+        <% end %>
+          </div>
+          
+        </div>
+
+<% unless @albums.nil? %>
+
+      <div id="gallery1" class="span16 pull-left">
+         <ul id="grid" >
+          
+         <% @albums.each do |album| %>
+         <% unless album.photos[0].nil? %>
+          <li>
+          <div  class="img_zoom" >
+           <%= link_to cl_image_tag(album.photos[0].pic_url(:smaller), class:"image_al_c thumbnail") , album, class:"albumLink", remote: true %>
+             <h5 style="float:right;"><%= link_to album.title, album, class:"albumLink", remote: true %></h5>
+        </div>
+        </li>
+      <% end %> 
+      <% end %>
+      <li>
+          <div id="upload2"  style = "border:2px dashed #ddd; width:170px; height:180px; padding:10px;  left:40px; text-align:middle; z-index: 1;  cursor:pointer; background: url(/assets/upload-foto.jpg) no-repeat 50%; float:left; margin-bottom:28px;display:none;
+          ">  <h5 > New album</h5>
+          </div>
+          <div style="display:none;">
+            <%= link_to "New album",new_album_path,id: "pics",remote: true %>
+          </div>
+          </li>
+
+      </ul>
+      </div>
+       
+ <% end %>  
+
+ <script type="text/javascript">
+ $(document).ready(function(){
+
+              $("#upload2").click(function(){
+                  $("#pics").click();
+                });
+
+$("#addTo").click(function(){
+      $('#modal').modal('show');
+    });
+    $("#closeX").click(function(){
+          $('#modal').modal('hide');
+        });
+
+    $("#crtGrp").click(function(){
+          $('#modal').modal('hide');
+        });
+
+     var imageLoader = document.getElementById('pic1');
+    imageLoader.addEventListener('change', handleImage, false);
+    $("#imageCanvas1").click(function(){
+        $("#pic1").click();
+    });
+        
+    var canvas = document.getElementById('imageCanvas1');
+    var ctx = canvas.getContext('2d');
+    ctx.font="30px Arial";
+    ctx.fillText("Select a photo",10,50);
+
+  function handleImage(e){
+    var canvas = document.getElementById('imageCanvas1');
+    var ctx = canvas.getContext('2d');
+    var iCnt=0;
+    var files = e.target.files;
+    canvas.width = 600;
+    canvas.height = 155*(Math.ceil(files.length/4));
+    for( var i = 0, len = files.length; i < len; i++) 
+          {
+          if(files[i])
+            {
+              var reader = new FileReader();
+              reader.onload = function(event){
+                var img = new Image();
+
+                img.onload = function(){
+                  var ratioPx = 150;
+                  var sWidth =ratioPx;
+                  var ratio = img.width/sWidth;
+                  var sHeight = img.height/ratio;   
+                    if(sHeight>ratioPx){
+                       sHeight =ratioPx;
+                       ratio = img.height/sHeight;
+                       sWidth = img.width/ratio;  
+                    }
+                  ctx.drawImage(img, 155*(iCnt%4),155*(Math.floor(iCnt/4)),sWidth,sHeight);
+                  //ctx.drawImage(img,0,0,sWidth,sHeight);
+                  iCnt++;
+                }
+                img.src = event.target.result;
+              }
+              reader.readAsDataURL(e.target.files[i]);     
+            }
+          }
+  }
+
+
+  });
+    
+
+ </script>

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131012152720) do
+ActiveRecord::Schema.define(:version => 20131103093230) do
 
   create_table "activities", :force => true do |t|
     t.string   "title"
@@ -36,6 +36,20 @@ ActiveRecord::Schema.define(:version => 20131012152720) do
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
     t.boolean  "is_admin"
+  end
+
+  create_table "activitynotifications", :force => true do |t|
+    t.boolean  "is_unread"
+    t.boolean  "is_hidden"
+    t.integer  "recepient_id"
+    t.integer  "sender_id"
+    t.string   "objecttype"
+    t.string   "Activitynotificationtype"
+    t.string   "body_html"
+    t.string   "body_text"
+    t.string   "href"
+    t.datetime "created_at",               :null => false
+    t.datetime "updated_at",               :null => false
   end
 
   create_table "activityposts", :force => true do |t|

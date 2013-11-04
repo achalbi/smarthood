@@ -1,6 +1,8 @@
 EMS::Application.routes.draw do
 
 
+  get "activitynotifications/new"
+
   #get "authentication/index"
 
   #get "authentication/create"
