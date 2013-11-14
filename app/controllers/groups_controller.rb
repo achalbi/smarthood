@@ -125,7 +125,8 @@ def invite_app_user
 end
 
 def search_app_user
-  @users = User.where("name like ? AND id != ?", "%#{params[:q]}%", current_user.id)
+  @users = User.where("id IN (?)", active_community.usercommunities.collect(&:user_id))
+  @users = @users.where("users.name like ? AND users.id != ?", "%#{params[:q]}%", current_user.id)
   @users_pp = []
   @users.each do |user|
     user[:profile_pic] =  gravatar_for_url(user, size: 40)

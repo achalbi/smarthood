@@ -1,8 +1,12 @@
 class ActivitynotificationsController < ApplicationController
-  def new
-  end
+	include ActivitynotificationsHelper
 
-  def index
-  end
+  	def new
+  	end
+
+  	def index
+  		@notifications = Activitynotification.where("recepient_id = ?", current_user.id )
+  		@notification = @notifications.first
+  	end
   
 end

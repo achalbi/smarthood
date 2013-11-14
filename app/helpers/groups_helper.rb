@@ -1,6 +1,6 @@
 module GroupsHelper
 
-	def active_community_user_groups
+	def active_community_current_user_groups
 		@groups = Group.where('community_id = ?',active_community.id)
 		@groups = @groups.where(:id => current_user.user_groups.collect(&:group_id)) 
 	end

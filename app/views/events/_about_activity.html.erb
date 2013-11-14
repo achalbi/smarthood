@@ -164,7 +164,7 @@
                 <div class="center_block clearfix">
                   <%= label_tag :privacy %>
                   <div class="input">
-                    <%= f.select :privacy, options_for_select([["Event invitees", "1"], ["Custom", "2"]], f.object.privacy), {}, id: "activity_privacy_edit" %>
+                    <%= f.select :privacy, options_for_select([["Event invitees", Privacyenum::MEMBERS], ["Custom", Privacyenum::CUSTOM]], f.object.privacy), {}, id: "activity_privacy_edit" %>
                   </div>
                 </div>
                 <div id="page2-2">

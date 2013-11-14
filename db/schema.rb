@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131103093230) do
+ActiveRecord::Schema.define(:version => 20131110045538) do
 
   create_table "activities", :force => true do |t|
     t.string   "title"
@@ -50,6 +50,21 @@ ActiveRecord::Schema.define(:version => 20131103093230) do
     t.string   "href"
     t.datetime "created_at",               :null => false
     t.datetime "updated_at",               :null => false
+    t.string   "pic_url"
+  end
+
+  create_table "activitynotificationsettings", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "community_id"
+    t.boolean  "app"
+    t.boolean  "email"
+    t.boolean  "phone"
+    t.string   "cu_mem_act"
+    t.string   "act_inv_me"
+    t.string   "following_user_act"
+    t.string   "new_joiners"
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
   end
 
   create_table "activityposts", :force => true do |t|

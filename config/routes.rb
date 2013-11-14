@@ -1,7 +1,6 @@
 EMS::Application.routes.draw do
 
 
-  get "activitynotifications/new"
 
   #get "authentication/index"
 
@@ -25,6 +24,8 @@ EMS::Application.routes.draw do
   #resources :events
   resources :activities
   resources :authentication
+  resources :activitynotifications
+  
   resources :albums do
     collection do
       get :edit,:list,:updates,:delete_photos
@@ -93,10 +94,10 @@ EMS::Application.routes.draw do
 
   resources :groups do
     member do
-      get :followers, :add_moderators, :search_app_user,:invite_app_user
+      get :followers, :add_moderators, :invite_app_user, :search_app_user
     end
     collection do
-      get :my, :public, :post_paginate, :group_post, :groups_post_paginate
+      get :my, :public, :post_paginate, :group_post, :groups_post_paginate, :search_app_user
       post :create_album
     end
   end

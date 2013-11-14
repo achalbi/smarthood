@@ -1,4 +1,6 @@
 class AlbumsController < ApplicationController
+  include ActivitynotificationsHelper
+
   def new
     @album = Album.new
   end
@@ -15,7 +17,8 @@ class AlbumsController < ApplicationController
             @album.photos << @photo
         end
         @album.save
-        #createNotification(sender_id,objecttype,notificationtype, body_html, body_text, href )
+
+        createNotification(nil, Objecttypeenum::ALBUM, @album)
           flash[:success] = "Album created"
         #debugger
     

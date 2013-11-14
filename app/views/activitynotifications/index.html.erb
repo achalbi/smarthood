@@ -1,0 +1,46 @@
+<div id="gallery" class="span20 margin-padding0" >
+<aside class="span6" style="margin-left:0px;"> 
+  <section id="group_sec" style="background-color:#e5e5e5;padding:10px;width:210px;" class="well">
+    <span style="clear:both"></span>
+    <div id="comUnity_div">    
+      <li class="sidetabs sidetabs_selected" style="list-style-type: none;padding:5px; margin:5px;">
+        <h6><%= link_to  "All", "#" %></h6>
+      </li>
+      <%= link_to "", "#" , id: "my_group", remote: true %>
+      <li class="sidetabs "id="public_li" style="list-style-type: none;padding:5px; margin:5px;">
+        <h6><%= link_to  "Settings", "#" %></h6>
+      </li>
+      <%= link_to "", "#", id: "public_group", remote: true %>
+    </div>
+  </section>
+</aside>
+	<% unless @notifications.blank? %>
+	<ul class="users">
+		<% @notifications.each do |notification| %>
+			<li class="sidetabs">
+				<h4 class="marginLeft10">
+					<%= image_tag(notification.pic_url)  %>
+					<%=  notification.body_text %>
+					<%= link_to "Mark Read", '#', id: "markAsRead", remote: true,  class: "btn primary pull-right markAsRead" , style:"margin-Right:10px"%>
+				</h4>
+			</li>
+				<%= link_to notification.href, id: "notif_#{notification.id}", remote: true do %>
+				<% end %>
+		<% end %>
+	</ul>
+	<% end %>
+</div>
+<script type="text/javascript">
+var bool = true;
+$(document).ready(function(){
+	$(".markAsRead").click(function(){
+		bool = false;
+	});
+});
+	$(".sidetabs").click(function(){
+		if(bool){
+			$(this).next('a').click();
+		}
+		bool = true;
+	});
+</script>

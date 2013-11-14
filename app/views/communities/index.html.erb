@@ -109,7 +109,7 @@ $(document).ready(function(){
           <div class="center_block clearfix">
             <%= label_tag :privacy %>
             <div class="input">
-              <%= f.select :privacy, options_for_select([["Public", "public"], ["Private", "private"], ["Secret", "secret"]]) %>
+              <%= f.select :privacy, options_for_select([["Public", Privacyenum::PUBLIC], ["Private", Privacyenum::PRIVATE], ["Secret", Privacyenum::SECRET]]) %>
             </div>
           </div> 
           <div class="center_block clearfix">
@@ -194,7 +194,7 @@ $('#view_map_link_crt').click(function(){
   }); 
 });
 
-$('a.ui-corner-all').live("click", function(){
+$('a.ui-corner-all').on("click", function(){
   if($('#create_community_address').val()!=""){
     $('#view_map_link_crt').show();
   }else{

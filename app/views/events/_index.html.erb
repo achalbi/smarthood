@@ -147,7 +147,7 @@
                 <div class="center_block clearfix">
                   <%= label_tag :privacy %>
                   <div class="input">
-                    <%= f.select :privacy, options_for_select([["Public", "public"], ["Members", "members"], ["Private", "private"]]) %>
+                    <%= f.select :privacy, options_for_select([["Public", Privacyenum::PUBLIC], ["Members", Privacyenum::MEMBERS], ["Private", Privacyenum::PRIVATE]]) %>
                   </div>
                 </div> <br>
                 <div class="center_block clearfix">

@@ -59,13 +59,14 @@
     <% @activities.each do |activity| %>
     <div id="gallery"></div>
     <div class="gallery2">
-    <% unless activity.albums[0].nil? %>
     <% if activity.is_admin? %>
       <h4>Event's:</h4>
+      <%= render partial: 'events/albums', locals: {activity: activity, albums: activity.albums, album: @album} %>
     <% else %>
+    <% unless activity.albums[0].nil? %>
      <h4>Activity: <%= activity.title %></h4>
-    <% end %>
         <%= render partial: 'events/albums', locals: {activity: activity, albums: activity.albums, album: @album} %>
+    <% end %>
     <% end %>
     </div>
    <% end %>
@@ -131,7 +132,7 @@
                 <div class="center_block clearfix">
                   <%= label_tag :privacy %>
                   <div class="input">
-                    <%= f.select :privacy, options_for_select([["Event invitees", "1"], ["Custom", "2"]]) %>
+                    <%= f.select :privacy, options_for_select([["Event invitees", Privacyenum::MEMBERS], ["Custom", Privacyenum::CUSTOM]]) %>
                   </div>
                 </div>
                 <div id="page_crt_ac-2">
@@ -242,7 +243,7 @@
                 <div class="center_block clearfix">
                   <%= label_tag :privacy %>
                   <div class="input">
-                    <%= f.select :privacy, options_for_select([["Public", "public"], ["Members", "members"], ["Private", "private"]], f.object.privacy) %>
+                    <%= f.select :privacy, options_for_select([["Public", Privacyenum::PUBLIC], ["Members", Privacyenum::MEMBERS], ["Private", Privacyenum::PRIVATE]], f.object.privacy) %>
                   </div>
                 </div> <br>
                 <div class="center_block clearfix">

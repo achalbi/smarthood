@@ -109,6 +109,14 @@ module SessionsHelper
       end
     end
     @user
-  end  
+  end 
+
+  def active_community_users
+    User.where("id in (?)",active_community.usercommunities.collect(&:user_id))
+  end
+
+  def active_community_user_ids
+    active_community.usercommunities.collect(&:user_id)
+  end
   
 end

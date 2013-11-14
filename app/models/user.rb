@@ -44,6 +44,8 @@ class User < OmniAuth::Identity::Models::ActiveRecord
   has_many :eventdetails, :dependent => :destroy
   has_many :activitydetails, :dependent => :destroy
 
+  has_many :activitynotifications, :dependent => :destroy
+
 
   before_save { |user| user.email = email.downcase }
   before_save :create_remember_token

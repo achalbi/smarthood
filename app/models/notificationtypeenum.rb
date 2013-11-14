@@ -12,7 +12,10 @@ class Notificationtypeenum
         @hash.each {|key,value| yield(key,value)}
     end
 
-    Notificationtypeenum.add_item :EMAIL, "1"
-    Notificationtypeenum.add_item :POPUP, "2"
-    Notificationtypeenum.add_item :SIDEBAR, "3"
+    Notificationtypeenum.add_item :CU, "CU"
+    Notificationtypeenum.add_item :EMAIL, "EMAIL"
+    Notificationtypeenum.add_item :PHONE, "PHONE"
+    Notificationtypeenum.add_item :CU_EMAIL, "CU_EMAIL"
+    Notificationtypeenum.add_item :CU_PHONE, "CU_PHONE"
+    Notificationtypeenum.add_item :CU_EMAIL_PHONE, "CU_EMAIL_PHONE"
 end

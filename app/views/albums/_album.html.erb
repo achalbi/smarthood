@@ -26,11 +26,11 @@
 
     <%= form_for  @album, :url => { :action => "edit" },  :method => :get, remote: true do  |f| %>
           <div style="margin-right:120px;"  >
-               <div id="album_indiv" style="margin-left:250px;margin-bottom:0px;">
-                  <ul class="breadcrumb" style="width:667px">
+               <div id="album_indiv" style="margin-left:250px;  margin-bottom:0px;">
+                  <ul class="breadcrumb" style="width:667px;height:22px;">
                     <li><a href="#" class="marginLeft10 marginRight10">Albums</a><span class="divider">/</span> </li>
                     <li><a href="/albums/<%= @album.id %>" class="marginLeft10"><%= @album.title %></a></li>
-                    <span style="margin-left:475px;"><li><%= link_to "Share", '#', id: "share",  class: "uibutton icon add" %></li></span>
+                    <span style="margin-right:5px;float:right;"><li><%= link_to "Share", '#', id: "share",  class: "uibutton icon add" %></li></span>
                   </ul>
                 </div>
               <span id="buttonset" style="display:none;">
