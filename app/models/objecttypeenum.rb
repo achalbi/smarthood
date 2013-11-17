@@ -12,15 +12,15 @@ class Objecttypeenum
         @hash.each {|key,value| yield(key,value)}
     end
 
-    Objecttypeenum.add_item :COMUNITY, "COMUNITY"
-    Objecttypeenum.add_item :EVENT, "EVENT"
-    Objecttypeenum.add_item :ACTIVITY, "ACTIVITY"
-    Objecttypeenum.add_item :GROUP, "GROUP"
-    Objecttypeenum.add_item :ALBUM, "ALBUM"
-    Objecttypeenum.add_item :PHOTO, "PHOTO"
-    Objecttypeenum.add_item :POST, "POST"
-    Objecttypeenum.add_item :COMMENT, "COMMENT"
-    Objecttypeenum.add_item :USER, "USER"
+    Objecttypeenum.add_item :COMUNITY, "ComUnity"
+    Objecttypeenum.add_item :EVENT, "Event"
+    Objecttypeenum.add_item :ACTIVITY, "Activity"
+    Objecttypeenum.add_item :GROUP, "Group"
+    Objecttypeenum.add_item :ALBUM, "Album"
+    Objecttypeenum.add_item :PHOTO, "Photo"
+    Objecttypeenum.add_item :POST, "Post"
+    Objecttypeenum.add_item :COMMENT, "Comment"
+    Objecttypeenum.add_item :USER, "User"
 
 =begin
     Objecttypeenum.add_item :COMMUNITY_CREATE, "COMMUNITY_CREATE"

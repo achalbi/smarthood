@@ -132,7 +132,7 @@
                 <div class="center_block clearfix">
                   <%= label_tag :privacy %>
                   <div class="input">
-                    <%= f.select :privacy, options_for_select([["Event invitees", Privacyenum::MEMBERS], ["Custom", Privacyenum::CUSTOM]]) %>
+                    <%= f.select :privacy, options_for_select([["Public", Privacyenum::PUBLIC], ["Private", Privacyenum::PRIVATE]]) %>
                   </div>
                 </div>
                 <div id="page_crt_ac-2">

@@ -12,10 +12,10 @@ class Privacyenum
         @hash.each {|key,value| yield(key,value)}
     end
 
-    Privacyenum.add_item :PUBLIC, "PUBLIC"
-    Privacyenum.add_item :PRIVATE, "PRIVATE"
-    Privacyenum.add_item :SECRET, "SECRET"
-    Privacyenum.add_item :MEMBERS, "MEMBERS"
-    Privacyenum.add_item :CUSTOM, "CUSTOM"
-    Privacyenum.add_item :INDIVIDUAL, "INDIVIDUAL"
+    Privacyenum.add_item :PUBLIC, 1
+    Privacyenum.add_item :PRIVATE, 2
+    Privacyenum.add_item :MEMBERS, 3
+    Privacyenum.add_item :CUSTOM, 4
+    Privacyenum.add_item :SECRET, 5
+    Privacyenum.add_item :INDIVIDUAL, 6
 end

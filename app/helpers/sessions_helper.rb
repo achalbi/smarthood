@@ -118,5 +118,25 @@ module SessionsHelper
   def active_community_user_ids
     active_community.usercommunities.collect(&:user_id)
   end
+
+  def notification_count
+    Activitynotification.where("recepient_id = ? AND is_unread = ?", current_user.id, true ).count
+  end
+
+  def privacy_str(obj)
+    if obj.privacy == Privacyenum::PUBLIC
+      "Public"
+    elsif obj.privacy == Privacyenum::PRIVATE
+      "Private"
+    elsif obj.privacy == Privacyenum::MEMBERS
+      "Members"
+    elsif obj.privacy == Privacyenum::CUSTOM
+      "Custom"
+    elsif obj.privacy == Privacyenum::INDIVIDUAL
+      "Individual"
+    elsif obj.privacy == Privacyenum::SECRET
+      "Secret"      
+    end
+  end
   
 end

@@ -35,7 +35,7 @@
             <div class="center_block clearfix pull-left">
               <%= f.label "privacy:" %>
               <div class="input">
-                <%= f.select :privacy, ["Public", "Follower", "Private"] %>
+                <%= f.select :privacy, options_for_select([["Public", Privacyenum::PUBLIC], ["Private", Privacyenum::PRIVATE]]) %>
               </div>
             </div>
           </span>

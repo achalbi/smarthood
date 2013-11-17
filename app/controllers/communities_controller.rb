@@ -1,5 +1,5 @@
 class CommunitiesController < ApplicationController
-  include PhotosHelper, UsersHelper, CommunityHelper
+  include PhotosHelper, UsersHelper, CommunityHelper, ActivitynotificationsHelper
   before_filter :signed_in_user, only: [:create, :destroy]
 
   def new
@@ -66,7 +66,10 @@ class CommunitiesController < ApplicationController
       end 
       @usercommunity.status="active"
       @usercommunity.save
-    else
+      createNotificationSettings(active_community.id)
+      getNotifiableUsers(Objecttypeenum::COMUNITY, @community, nil, nil, Notificationtypeenum::CREATED)
+
+  else
     #	flash[:error] = "community not created!"
   end 
   respond_to do |format|
@@ -91,6 +94,8 @@ def update
     @requested_users = User.where(['id IN (?)' , @community.requested_uc.collect(&:user_id)])
   end  
   @ucs = @community.usercommunities
+  getNotifiableUsers(Objecttypeenum::COMUNITY, @community, nil, nil, Notificationtypeenum::UPDATED)
+
 end
 
 def setactive
@@ -156,19 +161,30 @@ end
 end
 
 def join_cu
- @usercommunity = Usercommunity.new 
- @usercommunity.community_id = params[:id]
- @usercommunity.user_id = current_user.id
- @usercommunity.invitation = Uc_enum::JOINED
- @usercommunity.is_admin = false
- @usercommunity.status=""
- @usercommunity.save
+ @usercommunity = Usercommunity.where("community_id = ? AND user_id = ?", params[:id], current_user.id).first
+ if @usercommunity.blank?
+   @usercommunity = Usercommunity.new 
+   @usercommunity.community_id = params[:id]
+   @usercommunity.user_id = current_user.id
+   @usercommunity.invitation = Uc_enum::JOINED
+   @usercommunity.is_admin = false
+   @usercommunity.status=""
+   @usercommunity.save
+ else
+    @usercommunity.invitation = Uc_enum::JOINED
+    @usercommunity.save
+ end
+      @notifications_settings = current_user.activitynotificationsettings.where("community_id = ?", params[:id]).first
+      if @notifications_settings.blank?
+        createNotificationSettings(params[:id])
+      end
 end
 
 def unjoin_cu
  @usercommunity = current_user.usercommunities.find_by_community_id(params[:id])
  @usercommunity.invitation = Uc_enum::UNJOINED
  @usercommunity.save
+ deleteNotificationSettings(params[:id])
 end
 
 def show
@@ -240,9 +256,9 @@ end
 def public_com
   @public_communities = nil
   if current_user.joined_uc.collect(&:community_id).count > 0 
-    @public_communities = Community.where(["id  NOT IN (?) AND privacy ='public'" , current_user.joined_uc.collect(&:community_id)])  
+    @public_communities = Community.where(["id  NOT IN (?) AND privacy = ?" , current_user.joined_uc.collect(&:community_id), Privacyenum::PUBLIC])  
   else
-    @public_communities = Community.where("privacy ='public'") 
+    @public_communities = Community.where("privacy = ?", Privacyenum::PUBLIC) 
   end 
   @communities = @public_communities  
 end
@@ -250,9 +266,9 @@ end
 def private_com
   @private_communities = nil
   if current_user.joined_uc.collect(&:community_id).count > 0 
-    @private_communities = Community.where(["id  NOT IN (?) AND privacy = 'private'" , current_user.joined_uc.collect(&:community_id)])   
+    @private_communities = Community.where(["id  NOT IN (?) AND privacy = ?" , current_user.joined_uc.collect(&:community_id), Privacyenum::PRIVATE])   
   else
-    @private_communities = Community.where("privacy ='private'") 
+    @private_communities = Community.where("privacy = ? ", Privacyenum::PRIVATE) 
   end
   @communities = @private_communities  
 end

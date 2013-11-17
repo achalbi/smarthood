@@ -8,6 +8,7 @@ class Community < ActiveRecord::Base
   def user_tokens=(ids)
     self.user_ids = ids.split(",")
   end
+  
   geocoded_by :address   # can also be an IP address
   after_validation :geocode, :if => :address_changed?          # auto-fetch coordinates
   
@@ -52,9 +53,9 @@ end
 def is_public?(current_user)
   @public_communities = nil
   if current_user.joined_uc.collect(&:community_id).count > 0 
-    @public_communities = Community.where(["id  NOT IN (?) AND privacy ='public'" , current_user.joined_uc.collect(&:community_id)])  
+    @public_communities = Community.where(["id  NOT IN (?) AND privacy = ? " , current_user.joined_uc.collect(&:community_id), Privacyenum::PUBLIC])  
   else
-    @public_communities = Community.where("privacy ='public'") 
+    @public_communities = Community.where("privacy = ? ", Privacyenum::PUBLIC) 
   end 
   if @public_communities.pluck(:id).detect {|n| n==self.id}.nil?
     return false
@@ -66,9 +67,9 @@ end
 def is_private?(current_user)
    @private_communities = nil
    if current_user.joined_uc.collect(&:community_id).count > 0 
-    @private_communities = Community.where(["id  NOT IN (?) AND privacy = 'private'" , current_user.joined_uc.collect(&:community_id)])   
+    @private_communities = Community.where(["id  NOT IN (?) AND privacy = ?" , current_user.joined_uc.collect(&:community_id), Privacyenum::PRIVATE])   
   else
-    @private_communities = Community.where("privacy ='private'") 
+    @private_communities = Community.where("privacy = ? ", Privacyenum::PRIVATE) 
   end
 
   if @private_communities.pluck(:id).detect {|n| n==self.id}.nil?

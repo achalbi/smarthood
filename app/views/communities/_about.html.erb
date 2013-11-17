@@ -32,7 +32,7 @@
   <%= gravatar_for community.user, size: 100 %>
 </div><br><br><br><br><br><br><br><br>
 </p>
-<p><h4>Privacy : <%= community.privacy %></h4></p>
+<p><h4>Privacy : <%= privacy_str(community) %></h4></p>
 
 
 <ul class="users" id="activity_events_ul" >

@@ -18,9 +18,11 @@ class AlbumsController < ApplicationController
         end
         @album.save
 
-        createNotification(nil, Objecttypeenum::ALBUM, @album)
-          flash[:success] = "Album created"
-        #debugger
+        body_text = "The Album '" + @album.title + "' was created by "+ current_user.name
+        href = "/albums/"+ @album.id.to_s
+
+        getNotifiableUsers(Objecttypeenum::ALBUM, @album, @album.albumable_type, @album.albumable_id, body_text, href)
+
     
       respond_to do |format|
          format.html {  }

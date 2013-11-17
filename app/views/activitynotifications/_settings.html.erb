@@ -1,0 +1,33 @@
+<ul class="users">
+<%= form_for( @notifications_settings, remote: true, :html => {:multipart => true}) do |f| %>
+	<h5>How you get Notifications :</h5>
+	<div >
+		<h6><%= f.check_box :app %> Application</h6>
+		<h6><%= f.check_box :email %> E-mail</h6>
+		<h6><%= f.check_box :phone %> Phone</h6>
+		<br>
+	</div>
+		<div>
+	<h5>What You Get Notified About :</h5>
+		<li>
+                <div >
+                  <%= label_tag "ComUnity members Activity", nil, class: "token-input" %>
+                  <div class="input pull-right">
+                    <%= f.select :cu_mem_act, options_for_select([["All", "all"], ["Off", "off"]], f.object.cu_mem_act) %>
+                  </div>
+                </div> <br>
+		</li>
+		<li>
+                <div >
+                  <%= label_tag "Activity that involves me", nil, class: "token-input" %>
+                  <div class="input pull-right">
+                    <%= f.select :act_inv_me, options_for_select([["All", "all"], ["Off", "off"]], f.object.act_inv_me) %>
+                  </div>
+                </div> <br>
+		</li>
+                 <br>
+		</div>
+    <%= f.submit "Save", class: "btn primary pull-right", id: "save_notification" %>  
+<% end %>
+
+</ul>

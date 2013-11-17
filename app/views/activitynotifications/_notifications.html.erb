@@ -1,0 +1,19 @@
+	<% unless @notifications.blank? %>
+	<ul class="users">
+		<% @notifications.each do |notification| %>
+			<li class="sidetabs <%= "sidetabs_selected" if notification.is_unread? %>" style="position:relative;">
+				<h5 class="marginLeft10" >
+					<%= image_tag(notification.pic_url)  %>
+					<%=  notification.body_text %>
+					<% if notification.is_unread?  %>
+					<span style="display:none;" >notification.id</span>
+					<%= link_to "Mark Read",  mark_read_activitynotification_path(notification.id) , id: "markAsRead", remote: true,  class: "btn primary pull-right markAsRead" , style:"margin-Right:10px"%>
+					<% end %>
+				</h5>
+						<span class="pull-right" style="position:relative; margin-Right:10px"><%= time_ago_in_words(notification.created_at) %> ago.</span>
+			</li>
+				<%= link_to notification.href, id: "notif_#{notification.id}", remote: true do %>
+				<% end %>
+		<% end %>
+	</ul>
+	<% end %>

@@ -1,4 +1,4 @@
-<div id="gallery" class="span20 margin-padding0" >
+<div id="gallery" class="span22 margin-padding0" >
 <aside class="span6" style="margin-left:0px;"> 
   <section id="group_sec" style="background-color:#e5e5e5;padding:10px;width:210px;" class="well">
     <span style="clear:both"></span>
@@ -6,41 +6,50 @@
       <li class="sidetabs sidetabs_selected" style="list-style-type: none;padding:5px; margin:5px;">
         <h6><%= link_to  "All", "#" %></h6>
       </li>
-      <%= link_to "", "#" , id: "my_group", remote: true %>
+      <%= link_to "", "#" , id: "notifications" %>
       <li class="sidetabs "id="public_li" style="list-style-type: none;padding:5px; margin:5px;">
         <h6><%= link_to  "Settings", "#" %></h6>
       </li>
-      <%= link_to "", "#", id: "public_group", remote: true %>
+      <%= link_to "", "#", id: "settings" %>
     </div>
   </section>
 </aside>
-	<% unless @notifications.blank? %>
-	<ul class="users">
-		<% @notifications.each do |notification| %>
-			<li class="sidetabs">
-				<h4 class="marginLeft10">
-					<%= image_tag(notification.pic_url)  %>
-					<%=  notification.body_text %>
-					<%= link_to "Mark Read", '#', id: "markAsRead", remote: true,  class: "btn primary pull-right markAsRead" , style:"margin-Right:10px"%>
-				</h4>
-			</li>
-				<%= link_to notification.href, id: "notif_#{notification.id}", remote: true do %>
-				<% end %>
-		<% end %>
-	</ul>
-	<% end %>
+<div id="main_content"class="span15" >
+	<div id="notifications_div">
+		<%= render 'notifications' %>
+	</div>
+	<div id="settings_div" class="well" >
+		<%= render 'settings' %>
+	</div>
+</div>
 </div>
 <script type="text/javascript">
 var bool = true;
 $(document).ready(function(){
 	$(".markAsRead").click(function(){
 		bool = false;
+		$(this).parent().parent().removeClass("sidetabs_selected");
+		$(this).hide();
+		 
 	});
+	$('#settings_div').hide();
 });
 	$(".sidetabs").click(function(){
 		if(bool){
 			$(this).next('a').click();
 		}
 		bool = true;
+		  $(".sidetabs").removeClass('sidetabs_selected');
+		  $(this).addClass('sidetabs_selected');
+	});
+
+	
+	$("#notifications").click(function(){
+		$('#notifications_div').show();
+		$('#settings_div').hide();
+	});
+	$("#settings").click(function(){
+		$('#notifications_div').hide();
+		$('#settings_div').show();
 	});
 </script>

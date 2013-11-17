@@ -2,6 +2,7 @@ EMS::Application.routes.draw do
 
 
 
+
   #get "authentication/index"
 
   #get "authentication/create"
@@ -24,8 +25,18 @@ EMS::Application.routes.draw do
   #resources :events
   resources :activities
   resources :authentication
-  resources :activitynotifications
+
+  resources :activitynotificationsettings
   
+  resources :activitynotifications do
+    member do
+      get :mark_read
+    end
+    collection do
+      get :update_count
+    end
+  end
+
   resources :albums do
     collection do
       get :edit,:list,:updates,:delete_photos

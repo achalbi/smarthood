@@ -18,7 +18,7 @@ class AuthenticationController < ApplicationController
   #end
 
   if authentication
-    flash[:notice] = "Signed in successfully."
+    #flash[:notice] = "Signed in successfully."
     user = User.find(authentication.user_id)
       user.token = omniauth['credentials']['token'] # code needs to be removed
       user.fb_uid = omniauth['uid'] # code needs to be removed
@@ -28,7 +28,7 @@ class AuthenticationController < ApplicationController
     #sign_in_and_redirect(:user, authentication.user)
   elsif current_user
     current_user.authentications.create(:provider => omniauth['provider'], :uid => omniauth['uid'], :username => omniauth['info']['nickname'])
-    flash[:notice] = "Authentication successful."
+   # flash[:notice] = "Authentication successful."
     redirect_to authentications_url
   else
     user = User.new
@@ -45,9 +45,13 @@ class AuthenticationController < ApplicationController
               authentication = Authentication.create(:provider => omniauth['provider'], :uid => omniauth['uid'], :user_id => omniauth['uid'])
           end
           user = User.find(authentication.uid)
-           flash[:notice] = "Signed up successfully."
+          # flash[:notice] = "Signed up successfully."
            # Tell the UserMailer to send a welcome Email after save
-          UserMailer.welcome_email(user).deliver
+          begin
+            UserMailer.welcome_email(user).deliver
+          rescue Exception => e
+            
+          end
     else
       
       #user.authentications.build(:provider => omniauth ['provider'], :uid => omniauth['uid'])
@@ -60,13 +64,18 @@ class AuthenticationController < ApplicationController
       user.password = rand(36**10).to_s(36)
       user.password_confirmation = user.password
       user.save!
-      flash[:notice] = "Signed up successfully."
+      #flash[:notice] = "Signed up successfully."
       #sign_in_and_redirect(:user, user)
       # Tell the UserMailer to send a welcome Email after save
+      begin
         UserMailer.welcome_email(user).deliver
+      rescue Exception => e
+        
+      end
+
     end
     sign_in user
-    redirect_back_or user
+    redirect_to root_path
   end
   end
 

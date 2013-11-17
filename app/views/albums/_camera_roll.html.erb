@@ -37,7 +37,7 @@
               <%= f.text_area :description, placeholder: "Album description...", :rows=>2, :cols=>40 %>
               <span class=" overrideClass"><br><br>
               <%= f.label "privacy:" %>
-              <%= f.select :privacy, ["Public", "Follower", "Private"] %>
+              <%= f.select :privacy, options_for_select([["Public", Privacyenum::PUBLIC], ["Private", Privacyenum::PRIVATE]]) %>
               
               </span>
             <br><br>

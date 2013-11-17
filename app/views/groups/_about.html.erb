@@ -2,7 +2,7 @@
  <%= link_to "edit", '#', id: "edit_group",  class: " pull-right uibutton icon edit",:title => "Edit" %>
  <p><h4>Description : <small><%= group.description %></small></h4></p>
 
- <p><h4>Privacy : <%= group.privacy? ? 'Private' : 'Public' %></h4></p>
+ <p><h4>Privacy : <%= group.privacy == Privacyenum::PRIVATE ? 'Private' : 'Public' %></h4></p>
  <ul class="users" id="activity_groups_ul" >
   <% if ad_users.count > 0  %>
   <h4>Moderators</h4>

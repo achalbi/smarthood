@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131110045538) do
+ActiveRecord::Schema.define(:version => 20131117044428) do
 
   create_table "activities", :force => true do |t|
     t.string   "title"
@@ -89,12 +89,12 @@ ActiveRecord::Schema.define(:version => 20131110045538) do
   create_table "albums", :force => true do |t|
     t.string   "title"
     t.text     "description"
-    t.string   "privacy"
+    t.integer  "privacy",        :limit => 255
     t.integer  "user_id"
     t.integer  "cover_photo_id"
     t.string   "type"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
     t.integer  "albumable_id"
     t.string   "albumable_type"
   end
@@ -123,11 +123,11 @@ ActiveRecord::Schema.define(:version => 20131110045538) do
     t.integer  "community_id"
     t.integer  "user_id"
     t.integer  "photo_id"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.datetime "created_at",                  :null => false
+    t.datetime "updated_at",                  :null => false
     t.string   "name"
     t.text     "description"
-    t.string   "privacy"
+    t.integer  "privacy",      :limit => 255
     t.string   "address"
     t.float    "latitude"
     t.float    "longitude"
@@ -232,7 +232,7 @@ ActiveRecord::Schema.define(:version => 20131110045538) do
   create_table "groups", :force => true do |t|
     t.string   "name"
     t.text     "description"
-    t.boolean  "privacy"
+    t.integer  "privacy"
     t.integer  "User_id"
     t.datetime "created_at",   :null => false
     t.datetime "updated_at",   :null => false
