@@ -31,3 +31,12 @@
 <% end %>
 
 </ul>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#save_notification').attr('data-loading-text', 'Saving...');
+});
+
+$("#save_notification").click(function(){
+	$(this).button('loading')
+});
+</script>

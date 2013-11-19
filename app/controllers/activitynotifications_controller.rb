@@ -10,10 +10,10 @@ class ActivitynotificationsController < ApplicationController
       if @notifications_settings.blank?
         createNotificationSettings(active_community.id)
 
-        Album.update_all(privacy: 1)
-        Community.update_all(privacy: 1)
-        Event.update_all(privacy: 1)
-        Group.update_all(privacy: 1)
+      # Album.update_all(privacy: 1)
+      # Community.update_all(privacy: 1)
+      # Event.update_all(privacy: 1)
+      # Group.update_all(privacy: 1)
       end
   	end
 

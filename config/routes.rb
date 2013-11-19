@@ -26,7 +26,7 @@ EMS::Application.routes.draw do
   resources :activities
   resources :authentication
 
-  resources :activitynotificationsettings
+  resources :activitynotificationsetting
   
   resources :activitynotifications do
     member do
