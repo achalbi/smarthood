@@ -13,7 +13,8 @@ class Notificationtypeenum
     end
 
     Notificationtypeenum.add_item :CREATED, "created"
-    Notificationtypeenum.add_item :UPDATED, "Updated"
-    Notificationtypeenum.add_item :INVITED, "Invited"
-    Notificationtypeenum.add_item :JOINED, "Joined"
+    Notificationtypeenum.add_item :UPDATED, "updated"
+    Notificationtypeenum.add_item :INVITED, "invited"
+    Notificationtypeenum.add_item :REQUESTED, "requested"
+    Notificationtypeenum.add_item :JOINED, "joined"
 end

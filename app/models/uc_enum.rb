@@ -18,4 +18,8 @@ class Uc_enum
     Uc_enum.add_item :JOINED, "joined"
     Uc_enum.add_item :INVITED, "invited"
     Uc_enum.add_item :UNJOINED, "unjoined"
+    Uc_enum.add_item :CREATED, "created"
+    Uc_enum.add_item :UPDATED, "updated"
+    Uc_enum.add_item :ACCEPTED, "accepted"
+    Uc_enum.add_item :ADD_MODERATOR, "add_moderator"
 end

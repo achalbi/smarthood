@@ -34,16 +34,24 @@ module ActivitynotificationsHelper
 		case objecttype
 		  when Objecttypeenum::COMUNITY then
 		    if(object.privacy==Privacyenum::PUBLIC)
-		    	if action == Notificationtypeenum::CREATED
+		    	if action == Uc_enum::CREATED
 			    	@users = current_user.followers.collect(&:id)
-			    elsif action == Notificationtypeenum::UPDATED
+			    elsif action == Uc_enum::UPDATED || action == Uc_enum::JOINED
 			    	@users = object.usercommunities.collect(&:user_id)
 			    	@users = getActivitynotificationUserssettings(@users, objecttype, object, Privacyenum::PUBLIC).collect(&:user_id)
 			    	@users = @users + current_user.followers.collect(&:id)
 			    	#debugger
 			    end
 			elsif (object.privacy==Privacyenum::PRIVATE || object.privacy==Privacyenum::SECRET )
+				if action == Uc_enum::REQUESTED
+					@users = object.usercommunities.where("is_admin=?", true).collect(&:user_id)
+				elsif action == Uc_enum::ACCEPTED || action == Uc_enum::INVITED
+					@users = objectfor
+				end
 			end 
+			if action == Uc_enum::ADD_MODERATOR
+				@users = objectfor			
+			end
 
 		  when Objecttypeenum::EVENT then
 			    if(object.privacy==Privacyenum::PUBLIC || object.privacy==Privacyenum::MEMBERS)
@@ -183,7 +191,7 @@ module ActivitynotificationsHelper
 		end
 		@users.uniq
 		unless @users.detect {|n| n == current_user.id}.nil?
-			@users=@users.reject {|n| n == current_user.id}
+		#	@users=@users.reject {|n| n == current_user.id}
 		end
 		body_text = build_body_text(objecttype, object, objectfortype, objectfor, action)
 		href = build_href(objecttype, object, objectfortype, objectfor, action)
@@ -232,6 +240,16 @@ module ActivitynotificationsHelper
 		  			body_text = "The ComUnity '" + @community.name + "' was created by "+ current_user.name
 		  		elsif action == Notificationtypeenum::UPDATED
 		  			body_text = "The ComUnity '" + @community.name + "' was updated by "+ current_user.name
+		  		elsif action == Notificationtypeenum::JOINED
+		  			body_text = objectfor.name + "has joined the ComUnity '" + @community.name + "'."
+		  		elsif action == Notificationtypeenum::REQUESTED
+		  			body_text = objectfor.name + "has requested to join the ComUnity '" + @community.name  + "'."
+		  		elsif action == Notificationtypeenum::ACCEPTED
+		  			body_text = "The request to join the ComUnity '" + @community.name  + "' has been accepted."
+		  		elsif action == Uc_enum::INVITED
+		  			body_text = "The moderator of the ComUnity '" + @community.name  + "' has requested to join the community."
+		  		elsif action == Uc_enum::ADD_MODERATOR
+		  			body_text = "You now moderator for the ComUnity '" + @community.name  + "'."
 		  		end
 		  when Objecttypeenum::EVENT then
 		  when Objecttypeenum::ACTIVITY then

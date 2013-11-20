@@ -67,7 +67,7 @@ class CommunitiesController < ApplicationController
       @usercommunity.status="active"
       @usercommunity.save
       createNotificationSettings(active_community.id)
-      getNotifiableUsers(Objecttypeenum::COMUNITY, @community, nil, nil, Notificationtypeenum::CREATED)
+      getNotifiableUsers(Objecttypeenum::COMUNITY, @community, nil, nil, Uc_enumUc_enum::CREATED)
 
   else
     #	flash[:error] = "community not created!"
@@ -94,7 +94,7 @@ def update
     @requested_users = User.where(['id IN (?)' , @community.requested_uc.collect(&:user_id)])
   end  
   @ucs = @community.usercommunities
-  getNotifiableUsers(Objecttypeenum::COMUNITY, @community, nil, nil, Notificationtypeenum::UPDATED)
+  getNotifiableUsers(Objecttypeenum::COMUNITY, @community, nil, nil, Uc_enum::UPDATED)
 
 end
 
@@ -121,6 +121,8 @@ def sendrequest
  @usercommunity.is_admin = false
  @usercommunity.status=""
  @usercommunity.save
+ @community = Community.find(params[:id])
+ getNotifiableUsers(Objecttypeenum::COMUNITY, @community, nil, nil, Uc_enum::REQUESTED)
 
 end
 
@@ -137,9 +139,11 @@ def acceptrequest
  @ad_users = User.where(['id IN (?)', @admin_users])
  @requested_users = nil
  @ucs = @community.usercommunities.where("user_id = ?  AND is_admin=?",current_user.id, true )
- if @ucs.count > 0
-  @requested_users = User.where(['id IN (?)' , @community.requested_uc.collect(&:user_id)])
-end   
+  if @ucs.count > 0
+    @requested_users = User.where(['id IN (?)' , @community.requested_uc.collect(&:user_id)])
+  end 
+  @usr = User.find(params[:user_id])
+  getNotifiableUsers(Objecttypeenum::COMUNITY, @community, Objecttypeenum::USER, @usr, Uc_enum::ACCEPTED)  
 end
 
 def declinerequest
@@ -178,6 +182,7 @@ def join_cu
       if @notifications_settings.blank?
         createNotificationSettings(params[:id])
       end
+    getNotifiableUsers(Objecttypeenum::COMUNITY, @community, nil, nil, Uc_enum::JOINED) 
 end
 
 def unjoin_cu
@@ -351,6 +356,7 @@ def search_app_user
    def invite_app_user
       unless params[:community][:user_tokens].nil?
         @user_ids = params[:community][:user_tokens].split(",")
+        @community = Community.find(params[:id])
         @user_ids.each do |id|
           @usercommunity = Usercommunity.where('community_id=? and user_id=?',params[:id],id)[0]
          if @usercommunity.blank?
@@ -360,10 +366,17 @@ def search_app_user
            @usercommunity.is_admin = false
            @usercommunity.status=""
            @usercommunity.invitation = Uc_enum::INVITED
+            @usr = User.find(id)
+            getNotifiableUsers(Objecttypeenum::COMUNITY, @community, Objecttypeenum::USER, @usr, Uc_enum::INVITED)
          elsif (@usercommunity.invitation==Uc_enum::REQUESTED || @usercommunity.invitation==Uc_enum::MODERATOR_DECLINED)
            @usercommunity.invitation = Uc_enum::JOINED
+            @usr = User.find(id)
+            getNotifiableUsers(Objecttypeenum::COMUNITY, @community, Objecttypeenum::USER, @usr, Uc_enum::ACCEPTED)
          elsif @usercommunity.invitation == Uc_enum::USER_DECLINED
            @usercommunity.invitation = Uc_enum::INVITED
+            @usr = User.find(id)
+            getNotifiableUsers(Objecttypeenum::COMUNITY, @community, Objecttypeenum::USER, @usr, Uc_enum::INVITED)
+
          end
            @usercommunity.save
        end
@@ -418,6 +431,11 @@ def search_app_user
  def add_moderators
     Usercommunity.where("community_id = ? AND user_id IN (?)", params[:id], params[:user_all_ids]).update_all(is_admin: false)
     Usercommunity.where("community_id = ? AND user_id IN (?)", params[:id], params[:user_ids]).update_all(is_admin: true)
+    @users = User.where("user_id IN (?)", params[:user_ids]))
+    @community = Community.find(params[:id])
+      @users.each do |usr|
+        getNotifiableUsers(Objecttypeenum::COMUNITY, @community, Objecttypeenum::USER, usr, Uc_enum::ADD_MODERATOR)
+      end
  end
 
 
