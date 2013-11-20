@@ -431,7 +431,7 @@ def search_app_user
  def add_moderators
     Usercommunity.where("community_id = ? AND user_id IN (?)", params[:id], params[:user_all_ids]).update_all(is_admin: false)
     Usercommunity.where("community_id = ? AND user_id IN (?)", params[:id], params[:user_ids]).update_all(is_admin: true)
-    @users = User.where("user_id IN (?)", params[:user_ids]))
+    @users = User.where("user_id IN (?)", params[:user_ids])
     @community = Community.find(params[:id])
       @users.each do |usr|
         getNotifiableUsers(Objecttypeenum::COMUNITY, @community, Objecttypeenum::USER, usr, Uc_enum::ADD_MODERATOR)
