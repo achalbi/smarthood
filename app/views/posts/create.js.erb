@@ -37,3 +37,8 @@ $(".bgClrChg2").click( function() {
 $("#group_post_submit").hide();
 $("#sel_grp_label").hide();
 <% end %>
+
+
+<% unless @communities.nil? %>
+$('#cu_post').html("<%= escape_javascript(render :partial => 'posts/communities_post', :locals => {:post => @post}, :communities => @communities) %>");
+<% end %>

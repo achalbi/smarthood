@@ -1,5 +1,5 @@
 class EventsController < ApplicationController
-  include UsersHelper, EventsHelper, GroupsHelper 
+  include UsersHelper, EventsHelper, GroupsHelper, ActivitynotificationsHelper
   require 'open-uri'
   helper_method :sort_column, :sort_direction
   autocomplete :name, :extra_data => [:email]
@@ -81,6 +81,7 @@ class EventsController < ApplicationController
       respond_to do |format|
         if @event.save
           @event.eventdetails.create(user_id: current_user.id, is_admin: true)
+          getNotifiableUsers(Objecttypeenum::EVENT, @event, nil, nil, Uc_enum::CREATED)
         #  format.html { redirect_to @event, format: 'js', :success => 'Event was successfully created.' }
           format.json { render :json => @event, :status => :created, :location => @event }
           format.js { redirect_to(:action => :show, :format => :js, :id => @event.id)} #redirect_to @event, format: :js, :success => 'Event was successfully created.' }
@@ -395,6 +396,7 @@ class EventsController < ApplicationController
      @is_event = true
     respond_to do |format|
       if @event.update_attributes(params[:event])
+        getNotifiableUsers(Objecttypeenum::EVENT, @event, nil, nil, Uc_enum::UPDATED)
         format.html { redirect_to @event, :notice => 'Event was successfully updated.' }
         format.json { head :no_content }
         format.js {}

@@ -282,9 +282,9 @@ $('#end_date_remove_link').click(function(){
 $(document).ready(function() {
 
 for (var i = 1; i < 99999; i++){
-
-        window.clearInterval(i);
+   window.clearInterval(i);
 }
+restartInterval();
 
   $('#page-2').hide();
 
@@ -563,7 +563,8 @@ function checkScroll_evt_idx(paginate) {
       for (var i = 1; i < 99999; i++){
         window.clearInterval(i);
       }
-      
+      restartInterval();
+
       console.log(intervalID_U+"--"+intervalID_P+"--"+intervalID_T);
     } 
     $('.'+paginate).append(data);

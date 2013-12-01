@@ -12,7 +12,7 @@
         </section>
       </div>
       </td>
-      <td style="padding:0px;">
+      <td style="padding:0px;" class="grid">
          <% post.photos.each do |photo| %>
             <li style="border-top: 0px;">
             <div  class="img_zoom" >
@@ -42,6 +42,21 @@
                 <% end %>
                 </ul>
               </span>
+        <% end %><br>
+        
+
+        <% unless post.communities.count == 1 && post.communities[0].id == active_community.id %>
+          <% unless post.communities[0].nil? %>
+                  <span  class="center_block"><br><h6>Posted under the <%="ComUnity".pluralize(post.communities.count) %>:</h6>
+                  <ul class="groupsList">
+                  <% post.communities.each do |cu| %>
+                  <ol>
+                  <%= link_to cu.name, cu, remote:true %>
+                  </ol>
+                  <% end %>
+                  </ul>
+                </span>
+          <% end %>
         <% end %>
 
           <span class="timestamp">

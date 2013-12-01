@@ -8,7 +8,7 @@
     <% end %>     
     <p><h4>Location : <%= event.address %></h4></p>
       <%= render :partial => "events/maps", :locals => { :location => event } %>
-     <p><h4>Privacy : <%= event.privacy==1? 'Event Invitees': 'custom' %></h4></p>
+     <p><h4>Privacy : <%= (event.privacy == Privacyenum::PUBLIC) ? 'Event Invitees': 'custom' %></h4></p>
       <ul class="users" id="activity_events_ul" >
         <% if (ad_users.count > 0 || ad_groups.count > 0) %>
           <h4>Moderators</h4>

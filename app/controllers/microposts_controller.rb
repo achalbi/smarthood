@@ -23,9 +23,9 @@ class MicropostsController < ApplicationController
 
   private
 
-    def correct_user
-  @micropost = current_user.microposts.find(params[:id])
-rescue
-  redirect_to root_url
-end
+  def correct_user
+    @micropost = current_user.microposts.find(params[:id])
+    rescue
+      redirect_to root_url
+  end
 end

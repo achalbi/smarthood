@@ -1,0 +1,196 @@
+  <div id="image" style="display:block" class="span13">
+<%= form_for(@post, remote: true,  :html => {:multipart => true}) do |f| %>
+    <div id="textarea_div" style="resize: both;border: 1px solid #d4dae8;overflow: hidden;background-color:#f2f2f2;">
+    <%= render 'shared/error_messages', object: f.object %>
+                <%= fields_for :photo, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
+                 
+                <%= photo_form.file_field :pic, id: "pic1",style: "width:1px; height:1px; padding:0px;  left:0px;display:none;" %>  
+
+                <% end %>
+                 <div class=" pull-left">
+                    <%= f.text_area :content, placeholder: "Compose new post...", :rows=>6, class: "span10" %>
+                 <canvas id="imageCanvas1" style = "border: 1px solid #ddd; padding:2px; align:center;cursor:pointer; background-color:#ffffff;" width="132px" height="88px">Add pictures</canvas>
+                </div> 
+ <%= link_to  "Select communities","#", id: "community_post_select", class: "uibutton pull-left" %>
+ <%= f.submit "Post", id: "community_post_submit", class: "btn primary pull-right" %>
+  <%= hidden_field_tag :type, "communities" %> 
+                  <div id="sel_grp_label"></div>
+              <% @communities.each do |cu| %>
+                  <div id="cu_label_<%= cu.id %>" style="display:none;margin:5px;" class="pull-left"><%=link_to cu.name, cu, remote: true %> </div>
+                  <div style="display:none;">
+                    <%= check_box_tag 'cu_ids[]', cu.id, nil, id:"cu_check_#{cu.id}" %>
+                  </div>
+              <% end %>
+      </div>
+<% end %>
+              <div id="div_post" class="resources1">
+                  <%= render 'posts/post' %>
+               
+              </div>
+               <div id="loading_page" class="center" ><img src="http://res.cloudinary.com/rashi/image/upload/v1377924529/loading7_gvb06y.gif"></div>
+            </div>
+
+</div>
+
+<div id="modal_sel_cu" style="display:none;" >
+  <div id="modal-from-dom2" class="modal hide fade in" style="display: block;width:700px;">
+    <div class="modal-header">
+      <a href="#" id="closeX_sel_cu" class="close">×</a>
+      <span style="font-size:20px;line-height: 2;">Select Communities</span>
+    </div>
+    <div class="modal-body" style="max-height:400px;">
+      <div class="row">
+        <div class="span14 ui-front">
+        <section id="cus_sec" style="">
+          <% unless @communities.nil? %>
+             <div style="padding:5px;">
+                        <% @communities.each do |cu| %>
+                        <div class="bgClrChg2 well pull-left" style="cursor:pointer;width:140px;margin-right:20px;">
+                            <div style="display:none;" class="pull-left">
+                              <%= check_box_tag 'cu_ids[]', cu.id %>
+                            </div>
+                            <p style="display:none;"><%= cu.id %></p>
+                            <% unless cu.photo.nil? %>
+                                <%= link_to cl_image_tag(cu.photo.pic_url(:smallest), class:"roundCorner albumLink", id:"cu_#{cu.id}") ,"#", class:"albumLink roundCorner", remote: true %>
+                            <% end %><br>
+                            <h5><%=  cu.name %></h5>
+                        </div>
+                        <% end %>
+            </div>
+          <% end %>
+
+        </section>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer" >
+      <%= link_to "Select","#", class: "btn primary pull-right", id: "selCU" %>  
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+$("#image_upload1").click(function(){
+      
+   $("#image_upload1").before($("div#image").html().replace('NEW_RECORD', new Date().getTime()) ); 
+   
+  });
+
+$("#remove_image").click(function(){
+  $("#pic1").val("");
+  $("#image").hide();
+  $("#image_upload1").show();
+
+});
+
+ var imageLoader = document.getElementById('pic1');
+    imageLoader.addEventListener('change', handleImage, false);
+    $("#imageCanvas1").click(function(){
+        $("#pic1").click();
+    });
+        var canvas = document.getElementById('imageCanvas1');
+    var ctx = canvas.getContext('2d');
+    ctx.font="8pt tahoma ";
+    ctx.fillStyle = 'grey';
+    ctx.fillText("Add picture",35,46);
+
+  function handleImage(e){
+    var canvas = document.getElementById('imageCanvas1');
+    var ctx = canvas.getContext('2d');
+    var iCnt=0;
+    var files = e.target.files;
+    canvas.width = 132;
+    canvas.height = 88*(Math.ceil(files.length/1));
+    for( var i = 0, len = files.length; i < len; i++) 
+          {
+          if(files[i])
+            {
+              var reader = new FileReader();
+              reader.onload = function(event){
+                var img = new Image();
+
+                img.onload = function(){
+                  var ratioPx = 150;
+                  var sWidth =ratioPx;
+                  var ratio = img.width/sWidth;
+                  var sHeight = img.height/ratio;   
+                    if(sHeight>ratioPx){
+                       sHeight =ratioPx;
+                       ratio = img.height/sHeight;
+                       sWidth = img.width/ratio;  
+                    }
+                  ctx.drawImage(img, 155*(iCnt%4),155*(Math.floor(iCnt/4)),sWidth,sHeight);
+                  //ctx.drawImage(img,0,0,sWidth,sHeight);
+                  iCnt++;
+                }
+                img.src = event.target.result;
+              }
+              reader.readAsDataURL(e.target.files[i]);     
+            }
+          }
+  }
+
+
+
+
+var currentPage = 1;
+var intervalID = -1000;
+ 
+function checkScroll() {
+  if (nearBottomOfPage()) {
+    currentPage++;
+  $('#loading_page').show();
+    jQuery.ajax('/posts/cus_post_paginate?page=' + currentPage, {asynchronous:true, evalScripts:true, method:'get', success: function(data, textStatus, jqXHR) {
+    $('.resources1').append($(data));
+    $('#loading_page').hide();
+    if(typeof jQuery(data) == 'undefined' ||jQuery(data).html() == null || $(data).find('.paginate_do').html()==null){
+      clearInterval(intervalID);
+
+    }
+  },});
+  }
+}
+ 
+function nearBottomOfPage() {
+  return scrollDistanceFromBottom() < 50;
+}
+ 
+function scrollDistanceFromBottom(argument) {
+  return pageHeight() - (window.pageYOffset + self.innerHeight);
+}
+ 
+function pageHeight() {
+  return Math.max(document.body.scrollHeight, document.body.offsetHeight);
+}
+ 
+$('document').ready(function(){
+  intervalID = setInterval(checkScroll, 250);
+})
+
+$("#community_post_select").click(function(){
+  $('#modal_sel_cu').modal('show');
+});
+$("#closeX_sel_cu").click(function(){
+  $('#modal_sel_cu').modal('hide');
+});
+
+$("#selCU").click(function(){
+  $('#modal_sel_cu').modal('hide');
+});
+
+$(".bgClrChg2").click( function() {
+  var id = $(this).find('p').html();
+  if($(this).find(':checkbox').is(':checked')){
+    $(this).find(':checkbox').removeAttr("checked");
+    $("#cu_check_"+id).removeAttr("checked");
+    $("#cu_label_"+id).hide();
+    $(this).removeClass('tabs_selected');
+  }else{
+    $(this).find(':checkbox').attr("checked",true);
+       $("#cu_check_"+id).attr("checked",true);
+       $("#cu_label_"+id).show();
+       $(this).addClass('tabs_selected');
+  }
+
+});
+</script>

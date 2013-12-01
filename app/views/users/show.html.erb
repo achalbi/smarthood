@@ -13,53 +13,18 @@
   </aside>
   <div class="span8">
   	 <%= render 'follow_form' if signed_in? %>
-     <h3>
-     <% if @user.microposts.any? %>
-     <a href="#" id="mp_link">Microposts (<%= @user.microposts.count %>)</a>
-      <% if @user.posts.any? %>
-      |
-      <% end %>
-     <% end %>
-     <% if @user.posts.any? %>
-     <a href="#" id="gp_link"> Groupposts (<%= @user.posts.count %>)</a>
-
-      <% end %>
-    </h3>
-    <div id="mp_div"> 
-      <% if @user.microposts.any? %>
-      
-      <ol class="microposts">
-        <%= render @microposts %>
-      </ol>
-      <%= will_paginate @microposts %>
-    <% end %>
-     </div>
       <div id="gp_div" style="display: none"> 
  
-        <% if @user.posts.any? %>
-                <ol class="microposts">
-                  <% @posts.each do |post| %>
-            <%= render :partial => 'posts/post_wo_user', :locals => {:post => post} %>
+        <% if @posts.any? %>
+          <ol class="microposts">
+            <% @posts.each do |post| %>
+             <!-- <%= render :partial => 'posts/post_wo_user', :locals => {:post => post} %>-->
+             <%= render 'posts/post' %>
             <% end %>
           </ol>
-          <%= will_paginate @posts %>
         <% end %>
       </div>
     
   </div>
 </div>
 
-<script type="text/javascript">
-$("#mp_link").click(function(){
-  $("#mp_link").css("text-decoration","underline");
-  $("#gp_link").css("text-decoration","none");
-  $("#gp_div").hide();
-  $("#mp_div").show();
-})
-$("#gp_link").click(function(){
-  $("#gp_link").css("text-decoration","underline");
-  $("#mp_link").css("text-decoration","none");
-  $("#mp_div").hide();
-  $("#gp_div").show();
-})
-</script>

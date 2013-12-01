@@ -1,0 +1,16 @@
+<% unless communities.nil? %>
+   <div style="padding:5px;">
+              <% communities.each do |cu| %>
+              <div class="bgClrChg2 well pull-left" style="cursor:pointer;width:140px;margin-right:20px;">
+                  <div style="display:none;" class="pull-left">
+                    <%= check_box_tag 'cu_ids[]', cu.id %>
+                  </div>
+                  <p style="display:none;"><%= cu.id %></p>
+                  <% unless cu.photo.nil? %>
+                      <%= link_to cl_image_tag(cu.photo.pic_url(:smallest), class:"roundCorner albumLink", id:"cu_#{cu.id}") ,"#", class:"albumLink roundCorner", remote: true %>
+                  <% end %><br>
+                  <h5><%=  cu.name %></h5>
+              </div>
+              <% end %>
+  </div>
+<% end %>

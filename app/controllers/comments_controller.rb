@@ -1,4 +1,6 @@
 class CommentsController < ApplicationController
+  include ActivitynotificationsHelper, UsersHelper
+
   def new
   end
 
@@ -7,6 +9,7 @@ class CommentsController < ApplicationController
     @comment = @post.comments.build(params[:comment])
     @comment.user = current_user
     @comment.save
+    getNotifiableUsers(Objecttypeenum::COMMENT, @comment, Objecttypeenum::POST, @post, Uc_enum::CREATED)
     flash[:success] = "Comments created!"
     respond_to do |format|
          format.html { redirect_to root_path }

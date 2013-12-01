@@ -20,7 +20,7 @@ EMS::Application.routes.draw do
   resources :microposts, only: [:create, :destroy]
   resources :relationships, only: [:create, :destroy]
   resources :user_groups
-  resources :posts
+  #resources :posts
   resources :comments
   #resources :events
   resources :activities
@@ -78,6 +78,10 @@ EMS::Application.routes.draw do
   resources :post, :has_many => [:user_groups]
 
   resources :posts do
+    collection do
+      get :cus_post_paginate
+    end
+     resources :photos, :only => [:create, :destroy]
     resources :comments
   end
 
@@ -111,10 +115,6 @@ EMS::Application.routes.draw do
       get :my, :public, :post_paginate, :group_post, :groups_post_paginate, :search_app_user
       post :create_album
     end
-  end
-
-  resources :posts do
-     resources :photos, :only => [:create, :destroy]
   end
 
   resources :users do

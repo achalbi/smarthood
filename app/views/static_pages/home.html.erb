@@ -10,16 +10,10 @@
       <section style="width:180px;margin:2px;">
         <%= render 'shared/stats' %>
       </section>
-      <section>
-        <%= render 'shared/micropost_form' %>
-      </section>
     </span>
     </aside>
-     <div class="span12">
-      <h3><a href="#" id="mp_link">Micropost Feed </a>| <a href="#" id="gp_link">Grouppost Feed</a></h3>
-      <div id="mp_div"> <%= render 'shared/feed' %> </div>
-      <div id="gp_div" style="display: none"> <%= render 'shared/group_feed' %> </div>
-
+     <div id="cu_post" class="span12">
+      <%= render 'posts/communities_post' %> 
     </div>
   </div> 
   <% else %>

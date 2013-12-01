@@ -2,7 +2,6 @@ module ActivitynotificationsHelper
 
 	def createNotification(user_ids ,objecttype, object, body_text, href, pic_url)
         body_html = ""
-        
         user_ids.each do |user_id|
 		    @notification = Activitynotification.new
 		    @notification.sender_id = current_user.id
@@ -22,15 +21,6 @@ module ActivitynotificationsHelper
 
 	def getNotifiableUsers(objecttype, object, objectfortype, objectfor, action)
 		@users = []
-		if(objectfortype == Objecttypeenum::GROUP)
-          objectfor = Group.find(albumable_id)
-        elsif(objectfortype == Objecttypeenum::ACTIVITY)
-          objectfor = Activity.find(albumable_id)
-          if @activity.is_admin? 
-            objectfortype = Objecttypeenum::EVENT 
-            objectfor = objectfor.event
-          end
-        end
 		case objecttype
 		  when Objecttypeenum::COMUNITY then
 		    if(object.privacy==Privacyenum::PUBLIC)
@@ -40,7 +30,6 @@ module ActivitynotificationsHelper
 			    	@users = object.usercommunities.collect(&:user_id)
 			    	@users = getActivitynotificationUserssettings(@users, objecttype, object, Privacyenum::PUBLIC).collect(&:user_id)
 			    	@users = @users + current_user.followers.collect(&:id)
-			    	#debugger
 			    end
 			elsif (object.privacy==Privacyenum::PRIVATE || object.privacy==Privacyenum::SECRET )
 				if action == Uc_enum::REQUESTED
@@ -54,136 +43,75 @@ module ActivitynotificationsHelper
 			end
 
 		  when Objecttypeenum::EVENT then
-			    if(object.privacy==Privacyenum::PUBLIC || object.privacy==Privacyenum::MEMBERS)
-			    	@users = active_community_user_ids
-			    	@users = getActivitynotificationUserssettings(@users, objecttype, object, Privacyenum::PUBLIC).collect(&:user_id)
-			    	@users = @users + current_user.followers.collect(&:id)
-			    elsif (object.privacy==Privacyenum::PRIVATE)
-			    	@users = object.eventdetails.collect(&:user_id)
-			    end   		
-
+  			@users = getEventUsers(objecttype, object, objectfortype, objectfor, action)
+  			
 		  when Objecttypeenum::ACTIVITY then
-		  	objectfor = object.event
-		    if(objectfor.privacy==Privacyenum::PUBLIC || objectfor.privacy==Privacyenum::MEMBERS)
-		  		if (object.privacy==Privacyenum::PUBLIC)
-		  			@users = objectfor.eventdetails.collect(&:user_id)
-		  			@users = getActivitynotificationUserssettings(@users, objecttype, object, Privacyenum::PUBLIC).collect(&:user_id)
-			    	@users = @users + current_user.followers.collect(&:id)
-			    else(object.privacy==Privacyenum::PRIVATE)
-			    	@users = object.activitydetails.collect(&:user_id)
-					@users = getActivitynotificationUserssettings(@users, objecttype, object, Privacyenum::PUBLIC).collect(&:user_id)
-			    	@users = @users + current_user.followers.collect(&:id)
-			    end  
-			elsif (objectfor.privacy==Privacyenum::PRIVATE)
-		  		if (object.privacy==Privacyenum::PUBLIC)
-		  			@users = objectfor.eventdetails.collect(&:user_id)
-			    else(object.privacy==Privacyenum::PRIVATE)
-			    	@users = object.activitydetails.collect(&:user_id)
-			    end 
-			end   		
-
+  			@users = getActivityUsers(objecttype, object, objectfortype, objectfor, action)
 
 		  when Objecttypeenum::GROUP then
-		  	    if(object.privacy==Privacyenum::PUBLIC)
-			    	@users = active_community_user_ids
-			    	@users = getActivitynotificationUserssettings(@users, objecttype, object, Privacyenum::PUBLIC).collect(&:user_id)
-			    	@users = @users + current_user.followers.collect(&:id)
-			    elsif (object.privacy==Privacyenum::PRIVATE)
-				    @users = object.user_groups.collect(&:user_id)
-			    end 
+  			@users = getGroupUsers(objecttype, object, objectfortype, objectfor, action)
+
 
 		  when Objecttypeenum::PHOTO then
 		    
 		  when Objecttypeenum::ALBUM then
-			if(object.privacy==Privacyenum::PUBLIC)
+
+		  	unless object.albumable_id.blank?
+			  	if(object.albumable_type == Objecttypeenum::GROUP)
+			  	  objectfortype == Objecttypeenum::GROUP
+		          objectfor = Group.find(object.albumable_id)
+		        elsif(object.albumable_type == Objecttypeenum::ACTIVITY)
+		          objectfortype = Objecttypeenum::ACTIVITY
+		          objectfor = Activity.find(object.albumable_id)
+		          if objectfor.is_admin? 
+		            objectfortype = Objecttypeenum::EVENT 
+		            objectfor = objectfor.event
+		          end
+		        end
+		  	end
+
+			if(object.privacy == Privacyenum::PUBLIC)
 
 		  			if(objectfortype == Objecttypeenum::EVENT)
-		    
-						if(objectfor.privacy==Privacyenum::PUBLIC || object.privacy==Privacyenum::MEMBERS)
-					    	@users = active_community_user_ids
-					    	@users = getActivitynotificationUserssettings(@users, objecttype, object, Privacyenum::PUBLIC).collect(&:user_id)
-					    	@users = @users + current_user.followers.collect(&:id)
-					    elsif (objectfor.privacy==Privacyenum::PRIVATE)
-					    	@users = objectfor.eventdetails.collect(&:user_id)
-					    end  
-
-			  		elsif (objectfortype == Objecttypeenum::GROUP)
-				  	    if(object.privacy==Privacyenum::PUBLIC)
-					    	@users = active_community_user_ids
-					    	@users = getActivitynotificationUserssettings(@users, objecttype, object, Privacyenum::PUBLIC).collect(&:user_id)
-					    	@users = @users + current_user.followers.collect(&:id)
-					    elsif (object.privacy==Privacyenum::PRIVATE)
-						    @users = object.user_groups.collect(&:user_id)
-					    end 
-
+		  				@users = getEventUsers(objectfortype, objectfor, nil, nil, action)
 			  		elsif (objectfortype == Objecttypeenum::ACTIVITY)
-							    if(objectfor.event.privacy==Privacyenum::PUBLIC || objectfor.event.privacy==Privacyenum::MEMBERS)
-							  		if (objectfor.privacy==Privacyenum::PUBLIC)
-							  			@users = active_community_user_ids
-							  			@users = getActivitynotificationUserssettings(@users, objecttype, object, Privacyenum::PUBLIC).collect(&:user_id)
-								    	@users = @users + current_user.followers.collect(&:id)
-								    else(objectfor.privacy==Privacyenum::PRIVATE)
-								    	@users = objectfor.activitydetails.collect(&:user_id)
-										@users = getActivitynotificationUserssettings(@users, objecttype, object, Privacyenum::PUBLIC).collect(&:user_id)
-								    	@users = @users + current_user.followers.collect(&:id)
-								    end  
-								elsif (objectfor.event.privacy==Privacyenum::PRIVATE)
-							  		if (objectfor.privacy==Privacyenum::PUBLIC)
-							  			@users = objectfor.event.eventdetails.collect(&:user_id)
-								    else(objectfor.privacy==Privacyenum::PRIVATE)
-								    	@users = objectfor.activitydetails.collect(&:user_id)
-								    end 
-								end  			  				
+						@users = getActivityUsers(objectfortype, objectfor, nil, nil, action)
+			  		elsif (objectfortype == Objecttypeenum::GROUP)
+				  	    @users = getGroupUsers(objectfortype, objectfor, nil, nil, action)
+				  	else
+				  		@users = current_user.followers.collect(&:id)
 			  		end
+
 		    elsif (object.privacy==Privacyenum::PRIVATE)
 
 		    end 
+
 		  when Objecttypeenum::POST then
-		   			if(objectfortype == Objecttypeenum::EVENT)
-						if(objectfor.privacy==Privacyenum::PUBLIC || object.privacy==Privacyenum::MEMBERS)
-					    	@users = active_community_user_ids
-					    	@users = getActivitynotificationUserssettings(@users, objecttype, object, Privacyenum::PUBLIC).collect(&:user_id)
-					    	@users = @users + current_user.followers.collect(&:id)
-					    elsif (objectfor.privacy==Privacyenum::PRIVATE)
-					    	@users = objectfor.eventdetails.collect(&:user_id)
-					    end  
- 					
+
+					if (objectfortype == Objecttypeenum::ACTIVITY)
+						if objectfor.is_admin? 
+				            objectfortype = Objecttypeenum::EVENT 
+				            objectfor = objectfor.event
+							@users = getEventUsers(objectfortype, objectfor, nil, nil, action)
+						else
+							@users = getActivityUsers(objectfortype, objectfor, nil, nil, action)
+						end
 			  		elsif (objectfortype == Objecttypeenum::GROUP)
-				  	    if(object.privacy==Privacyenum::PUBLIC)
-					    	@users = active_community_user_ids
-					    	@users = getActivitynotificationUserssettings(@users, objecttype, object, Privacyenum::PUBLIC).collect(&:user_id)
-					    	@users = @users + current_user.followers.collect(&:id)
-					    elsif (object.privacy==Privacyenum::PRIVATE)
-						    @users = object.user_groups.collect(&:user_id)
-					    end 
-
-			  		elsif (objectfortype == Objecttypeenum::ACTIVITY)
-
-			 				    if(objectfor.event.privacy==Privacyenum::PUBLIC || objectfor.event.privacy==Privacyenum::MEMBERS)
-							  		if (objectfor.privacy==Privacyenum::PUBLIC)
-							  			@users = objectfor.event.eventdetails.collect(&:user_id)
-							  			@users = getActivitynotificationUserssettings(@users, objecttype, object, Privacyenum::PUBLIC).collect(&:user_id)
-								    	@users = @users + current_user.followers.collect(&:id)
-								    else(objectfor.privacy==Privacyenum::PRIVATE)
-								    	@users = objectfor.activitydetails.collect(&:user_id)
-										@users = getActivitynotificationUserssettings(@users, objecttype, object, Privacyenum::PUBLIC).collect(&:user_id)
-								    	@users = @users + current_user.followers.collect(&:id)
-								    end  
-								elsif (objectfor.event.privacy==Privacyenum::PRIVATE)
-							  		if (objectfor.privacy==Privacyenum::PUBLIC)
-							  			@users = objectfor.event.eventdetails.collect(&:user_id)
-								    else(objectfor.privacy==Privacyenum::PRIVATE)
-								    	@users = objectfor.activitydetails.collect(&:user_id)
-								    end 
-								end
-					else
-			  			@users = active_community_user_ids
-			 	    	@users = getActivitynotificationUserssettings(@users, objecttype, object, Privacyenum::PUBLIC).collect(&:user_id)
-				    	@users = @users + current_user.followers.collect(&:id)
+				  	    @users = getGroupUsers(objectfortype, objectfor, nil, nil, action)
+			  	    elsif (objectfortype == Objecttypeenum::GROUPS)
+			  	    	objectfor.each do |group|
+				  	    	@users = @users + getGroupUsers(objectfortype, group, nil, nil, action)
+				  		end
+				  	elsif (objectfortype == Objecttypeenum::COMUNITY)
+			  	    	objectfor.each do |cu|
+				  	    	@users = @users + getCUUsers(objectfortype, cu, nil, nil, action)
+				  		end
+				  	else
+				  		@users = current_user.followers.collect(&:id)
 			  		end
+
 		  when Objecttypeenum::COMMENT then
 		  	@users = objectfor.comments.collect(&:user_id)
-		  	@users = @users + object.user_id
 		  when Objecttypeenum::USER then
 		    @users = object.followers.collect(&:user_id)
 		  else
@@ -196,7 +124,6 @@ module ActivitynotificationsHelper
 		body_text = build_body_text(objecttype, object, objectfortype, objectfor, action)
 		href = build_href(objecttype, object, objectfortype, objectfor, action)
 		pic_url = build_pic_url(objecttype, object, objectfortype, objectfor, action)
-		#debugger
 		if @users.count > 0
 			createNotification(@users ,objecttype, object, body_text, href, pic_url)
 		end
@@ -237,27 +164,54 @@ module ActivitynotificationsHelper
 		case objecttype
 		  when Objecttypeenum::COMUNITY then
 		  		if action == Notificationtypeenum::CREATED
-		  			body_text = "The ComUnity '" + @community.name + "' was created by "+ current_user.name
+		  			body_text = "The ComUnity '" + object.name + "' was created by "+ current_user.name
 		  		elsif action == Notificationtypeenum::UPDATED
-		  			body_text = "The ComUnity '" + @community.name + "' was updated by "+ current_user.name
+		  			body_text = "The ComUnity '" + object.name + "' was updated by "+ current_user.name
 		  		elsif action == Notificationtypeenum::JOINED
-		  			body_text = objectfor.name + "has joined the ComUnity '" + @community.name + "'."
+		  			body_text = objectfor.name + "has joined the ComUnity '" + object.name + "'."
 		  		elsif action == Notificationtypeenum::REQUESTED
-		  			body_text = objectfor.name + "has requested to join the ComUnity '" + @community.name  + "'."
+		  			body_text = objectfor.name + "has requested to join the ComUnity '" + object.name  + "'."
 		  		elsif action == Notificationtypeenum::ACCEPTED
-		  			body_text = "The request to join the ComUnity '" + @community.name  + "' has been accepted."
+		  			body_text = "The request to join the ComUnity '" + object.name  + "' has been accepted."
 		  		elsif action == Uc_enum::INVITED
-		  			body_text = "The moderator of the ComUnity '" + @community.name  + "' has requested to join the community."
+		  			body_text = "The moderator of the ComUnity '" + object.name  + "' has requested to join the community."
 		  		elsif action == Uc_enum::ADD_MODERATOR
-		  			body_text = "You now moderator for the ComUnity '" + @community.name  + "'."
+		  			body_text = "You now moderator for the ComUnity '" + object.name  + "'."
 		  		end
 		  when Objecttypeenum::EVENT then
+		  		if action == Notificationtypeenum::CREATED
+		  			body_text = "The Event '" + object.title + "' was created by "+ current_user.name
+		  		elsif action == Notificationtypeenum::UPDATED
+		  			body_text = "The Event '" + object.title + "' was updated by "+ current_user.name
+		  		end
 		  when Objecttypeenum::ACTIVITY then
+		   		if action == Notificationtypeenum::CREATED
+		  			body_text = "The Activity '" + object.title + "' was created by "+ current_user.name
+		  		elsif action == Notificationtypeenum::UPDATED
+		  			body_text = "The Activity '" + object.title + "' was updated by "+ current_user.name
+		  		end
 		  when Objecttypeenum::PHOTO then
 		  when Objecttypeenum::ALBUM then
+		  		if action == Notificationtypeenum::CREATED
+		  			body_text = "The Album '" + object.title + "' was added to " + objectfortype + ": '" + objectfor.title + "' by "+ current_user.name 
+		  		elsif action == Notificationtypeenum::UPDATED
+		  			body_text = "The Album '" + object.title + "' was updated by "+ current_user.name
+		  		end
 		  when Objecttypeenum::GROUP then
+		  		if action == Notificationtypeenum::CREATED
+		  			body_text = "The Group '" + object.name + "' was created by "+ current_user.name 
+		  		elsif action == Notificationtypeenum::UPDATED
+		  			body_text = "The Group '" + object.name + "' was updated by "+ current_user.name
+		  		end
 		  when Objecttypeenum::POST then
+		  	if (objectfortype == Objecttypeenum::GROUP)
+		  		body_text = current_user.name + "has posted on the "+ objectfortype + ": '" + objectfor.name + "'."
+		  	else
+		  		body_text = current_user.name + "has posted."
+		  	end
+
 		  when Objecttypeenum::COMMENT then
+		  		body_text = current_user.name + "has commented on the post."
 		  when Objecttypeenum::USER then
 		  else
 		end	
@@ -267,14 +221,20 @@ module ActivitynotificationsHelper
         href = ""
         case objecttype
 		  when Objecttypeenum::COMUNITY then
-		  		href = "/communities/"+ @community.id.to_s	
+		  		href = "/communities/"+ object.id.to_s	
 		  when Objecttypeenum::EVENT then
+		  		href = "/events/"+ object.id.to_s
 		  when Objecttypeenum::ACTIVITY then
+		  		href = "/activities/"+ object.id.to_s
 		  when Objecttypeenum::PHOTO then
 		  when Objecttypeenum::ALBUM then
+		  		href = "/albums/"+ object.id.to_s
 		  when Objecttypeenum::GROUP then
+		  		href = "/groups/"+ object.id.to_s
 		  when Objecttypeenum::POST then
+		  		href = "/posts/"+ object.id.to_s
 		  when Objecttypeenum::COMMENT then
+		  		href = "/posts/"+ objectfor.id.to_s
 		  when Objecttypeenum::USER then
 		  else
 		end	
@@ -286,14 +246,93 @@ module ActivitynotificationsHelper
 		  when Objecttypeenum::COMUNITY then
 		  		pic_url = object.photo.pic_url(:smaller_mid)
 		  when Objecttypeenum::EVENT then
+		  		pic_url = object.photo.pic_url(:smaller_mid)
 		  when Objecttypeenum::ACTIVITY then
+		  		pic_url = object.event.photo.pic_url(:smaller_mid)
 		  when Objecttypeenum::PHOTO then
 		  when Objecttypeenum::ALBUM then
+		  		pic_url = object.photos[0].pic_url(:smaller_mid)
 		  when Objecttypeenum::GROUP then
+		  		pic_url = object.photo.pic_url(:smaller_mid)
 		  when Objecttypeenum::POST then
+		  		pic_url = gravatar_for_url(current_user, size: 75)
 		  when Objecttypeenum::COMMENT then
+		  		pic_url = gravatar_for_url(current_user, size: 75)
 		  when Objecttypeenum::USER then
 		  else
 		end	
 	end
+
+	def getCUUsers(objecttype, object, objectfortype, objectfor, action)
+		@users = []
+		@users = object.usercommunities.collect(&:user_id)
+		@users = getActivitynotificationUserssettings(@users, objecttype, object, Privacyenum::PUBLIC).collect(&:user_id)
+		@users = @users + current_user.followers.collect(&:id)
+	end
+
+	def getEventUsers(objecttype, object, objectfortype, objectfor, action)
+		@users = []
+			    if(object.privacy==Privacyenum::PUBLIC)
+			    	@users = active_community_user_ids
+			    	@users = getActivitynotificationUserssettings(@users, objecttype, object, Privacyenum::PUBLIC).collect(&:user_id)
+			    	@users = @users + current_user.followers.collect(&:id)
+			   	elsif (object.privacy==Privacyenum::MEMBERS)
+			    	@users = active_community_user_ids
+			    elsif (object.privacy==Privacyenum::PRIVATE)
+			    	@users = object.eventdetails.collect(&:user_id)
+			    end 
+			    @users	
+			    	
+	end
+
+	def getActivityUsers(objecttype, object, objectfortype, objectfor, action)
+		@users = []
+		  	objectfor = object.event
+		    if(objectfor.privacy==Privacyenum::PUBLIC)
+		  		if (object.privacy==Privacyenum::PUBLIC)
+		  			@users = objectfor.eventdetails.collect(&:user_id)
+		  			@users = getActivitynotificationUserssettings(@users, objecttype, object, Privacyenum::PUBLIC).collect(&:user_id)
+			    	@users = @users + current_user.followers.collect(&:id)
+			    else(object.privacy==Privacyenum::PRIVATE)
+			    	@users = object.activitydetails.collect(&:user_id)
+					@users = getActivitynotificationUserssettings(@users, objecttype, object, Privacyenum::PRIVATE).collect(&:user_id)
+			    end  
+			elsif objectfor.privacy==Privacyenum::MEMBERS
+				if (object.privacy==Privacyenum::PUBLIC)
+		  			@users = objectfor.eventdetails.collect(&:user_id)
+		  			@users = getActivitynotificationUserssettings(@users, objecttype, object, Privacyenum::PUBLIC).collect(&:user_id)
+			    else(object.privacy==Privacyenum::PRIVATE)
+			    	@users = object.activitydetails.collect(&:user_id)
+					@users = getActivitynotificationUserssettings(@users, objecttype, object, Privacyenum::PRIVATE).collect(&:user_id)
+			    end
+			elsif (objectfor.privacy==Privacyenum::PRIVATE)
+		  		if (object.privacy==Privacyenum::PUBLIC)
+		  			@users = objectfor.eventdetails.collect(&:user_id)
+			    else(object.privacy==Privacyenum::PRIVATE)
+			    	@users = object.activitydetails.collect(&:user_id)
+			    end 
+			end 
+			@users
+	end
+
+	def getGroupUsers(objecttype, object, objectfortype, objectfor, action)
+		@users = []
+		if action == Uc_enum::INVITED
+			@users = User.where("id IN (?)", objectfor)
+		else
+		  	    if(object.privacy==Privacyenum::PUBLIC)
+		  	    	@users = active_community_user_ids #all community members
+			    	@users = getActivitynotificationUserssettings(@users, objecttype, object, Privacyenum::PUBLIC).collect(&:user_id)
+			    	@users = @users + current_user.followers.collect(&:id)
+		  	    elsif(object.privacy==Privacyenum::MEMBERS)
+			    	@users = active_community_user_ids
+			    	@users = getActivitynotificationUserssettings(@users, objecttype, object, Privacyenum::PUBLIC).collect(&:user_id)
+			    	@users = @users + current_user.followers.collect(&:id)
+			    elsif (object.privacy==Privacyenum::PRIVATE)
+				    @users = object.user_groups.collect(&:user_id)
+			    end 
+		end
+		@users
+	end
+	
 end

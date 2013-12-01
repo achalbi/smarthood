@@ -15,6 +15,10 @@ class Community < ActiveRecord::Base
   belongs_to :user
   belongs_to :photo
 
+  has_many :communityposts, dependent: :destroy
+  has_many :posts, :through => :communityposts
+
+
   has_many :groups, :through => :user_groups
   has_many :user_groups, dependent: :destroy
   has_many :users, :through => :usercommunities

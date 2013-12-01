@@ -4,12 +4,12 @@
     <%= render 'shared/error_messages', object: f.object %>
                 <%= fields_for :photo, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
                  
-                <%= photo_form.file_field :pic, id: "pic",style: "width:1px; height:1px; padding:0px;  left:0px;display:none;" %>  
+                <%= photo_form.file_field :pic, id: "pic-grp",style: "width:1px; height:1px; padding:0px;  left:0px;display:none;" %>  
 
                 <% end %>
                  <div class=" pull-left">
                     <%= f.text_area :content, placeholder: "Compose new post...", :rows=>6, class: "span10" %>
-                 <canvas id="imageCanvas" style = "border: 1px solid #ddd; padding:2px; align:center;cursor:pointer; background-color:#ffffff;" width="132px" height="88px">Add pictures</canvas>
+                 <canvas id="imageCanvas-grp" style = "border: 1px solid #ddd; padding:2px; align:center;cursor:pointer; background-color:#ffffff;" width="132px" height="88px">Add pictures</canvas>
                 </div> 
  <%= f.submit "Post", class: "btn primary pull-right" %>
   <%= hidden_field_tag :type, "group" %>  
@@ -27,25 +27,25 @@ $("#image_upload").click(function(){
   });
 
 $("#remove_image").click(function(){
-  $("#pic").val("");
+  $("#pic-grp").val("");
   $("#image").hide();
   $("#image_upload").show();
 
 });
 
- var imageLoader = document.getElementById('pic');
+ var imageLoader = document.getElementById('pic-grp');
     imageLoader.addEventListener('change', handleImage, false);
-    $("#imageCanvas").click(function(){
-        $("#pic").click();
+    $("#imageCanvas-grp").click(function(){
+        $("#pic-grp").click();
     });
-        var canvas = document.getElementById('imageCanvas');
+        var canvas = document.getElementById('imageCanvas-grp');
     var ctx = canvas.getContext('2d');
     ctx.font="8pt tahoma ";
     ctx.fillStyle = 'grey';
     ctx.fillText("Add picture",35,46);
 
   function handleImage(e){
-    var canvas = document.getElementById('imageCanvas');
+    var canvas = document.getElementById('imageCanvas-grp');
     var ctx = canvas.getContext('2d');
     var iCnt=0;
     var files = e.target.files;

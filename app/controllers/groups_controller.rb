@@ -1,5 +1,5 @@
 class GroupsController < ApplicationController
-  include PhotosHelper, GroupsHelper, UsersHelper
+  include PhotosHelper, GroupsHelper, UsersHelper, ActivitynotificationsHelper
   before_filter :signed_in_user, only: [:create, :destroy]
 
   def new
@@ -34,11 +34,12 @@ class GroupsController < ApplicationController
         @usergroup.save
       end
     end
-    flash[:success] = "Group created!"
+   # flash[:success] = "Group created!"
     @group.follow!(current_user, @group.id, Uc_enum::JOINED, true)
     #debugger
     #UserGroup.where("user_id = ? AND group_id = ?",current_user.id, @group.id).update_all(is_admin: true, invitation: Uc_enum::JOINED)
       # redirect_to :action => :index
+      getNotifiableUsers(Objecttypeenum::GROUP, @group, nil, nil, Uc_enum::CREATED)
     else
     	flash[:error] = "Group not created!"
        # redirect_to :action => :index
@@ -108,18 +109,23 @@ def invite_app_user
     @user_ids = params[:group][:user_tokens].split(",")
     @user_ids.each do |id|
       @usergroup = UserGroup.where('group_id=? and user_id=?',params[:id],id)[0]
+      @group = Group.find(params[:id])
       if @usergroup.blank?
        @usergroup = UserGroup.new 
        @usergroup.group_id = params[:id]
        @usergroup.user_id = id
        @usergroup.is_admin = false
        @usergroup.invitation = Uc_enum::INVITED
+       @usergroup.save
+       getNotifiableUsers(Objecttypeenum::GROUP, @group, Objecttypeenum::USER, @user_ids, Uc_enum::INVITED)
      elsif (@usergroup.invitation==Uc_enum::REQUESTED || @usergroup.invitation==Uc_enum::MODERATOR_DECLINED)
        @usergroup.invitation = Uc_enum::JOINED
      elsif @usergroup.invitation == Uc_enum::USER_DECLINED
        @usergroup.invitation = Uc_enum::INVITED
+       getNotifiableUsers(Objecttypeenum::GROUP, @group, Objecttypeenum::USER, @user_ids, Uc_enum::INVITED)
      end
      @usergroup.save
+
    end
  end 
 end
@@ -153,6 +159,7 @@ def create_album
         @group.save
         @albums = @group.albums
         @album_old = @album
+        getNotifiableUsers(Objecttypeenum::ALBUM, @album, nil, nil, Uc_enum::CREATED)
         @album = Album.new
           flash[:success] = "Album created"
       @share = Share.new
@@ -170,6 +177,7 @@ def create_album
   def update
     @group = Group.find(params[:id])
     @group.update_attributes(params[:group])
+    getNotifiableUsers(Objecttypeenum::GROUP, @group, nil, nil, Uc_enum::UPDATED)
   end
 
 def acceptrequest

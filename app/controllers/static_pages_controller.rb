@@ -1,6 +1,7 @@
 class StaticPagesController < ApplicationController
  def home
     if signed_in?
+=begin
       @micropost  = current_user.microposts.build
       @feed_items = current_user.feed.paginate(page: params[:page], :per_page => 8)
       # @group_feed_items = current_user.posts.paginate(page: params[:page])
@@ -9,6 +10,14 @@ class StaticPagesController < ApplicationController
       # @group_feed_items = @group_feed_items.
       @comments = Comment.new
       @post = @group_feed_items
+=end
+
+
+      @post = Post.new
+      @cu_ids = current_user.communities.collect(&:id)
+      @communities = Community.where('id IN (?)', @cu_ids)
+      @communityposts = Communitypost.where('community_id IN (?)', @cu_ids)
+      @posts = @communityposts.paginate(page: params[:page], :per_page => 8).collect{|a| a.post}.uniq
     end
   end
   

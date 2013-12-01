@@ -36,6 +36,7 @@ $(document).ready(function(){
 });
 	$(".sidetabs").click(function(){
 		if(bool){
+			$(this).children().find('.markAsRead').click();
 			$(this).next('a').click();
 		}
 		bool = true;

@@ -16,6 +16,7 @@ class Objecttypeenum
     Objecttypeenum.add_item :EVENT, "Event"
     Objecttypeenum.add_item :ACTIVITY, "Activity"
     Objecttypeenum.add_item :GROUP, "Group"
+    Objecttypeenum.add_item :GROUPS, "Groups"
     Objecttypeenum.add_item :ALBUM, "Album"
     Objecttypeenum.add_item :PHOTO, "Photo"
     Objecttypeenum.add_item :POST, "Post"

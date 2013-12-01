@@ -438,5 +438,8 @@ def search_app_user
       end
  end
 
+def cu_list
+  
+end
 
 end

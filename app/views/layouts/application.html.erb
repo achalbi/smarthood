@@ -2,6 +2,7 @@
 <html>
   <head>
     <title><%= full_title(yield(:title)) %></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <%= stylesheet_link_tag "application", media: "all" %>
     
     <%= javascript_include_tag "application" %>
@@ -49,8 +50,8 @@
               </li>
 
             </div>
-           <!-- <li><%= link_to "Create group", new_group_path %></li>
-            <li><%= link_to "Follow / Unfollow group", groups_path %></li>
+            <!--   <li><%= link_to "Pause Interval", id: "pauseInterval" %></li>
+           <li><%= link_to "Follow / Unfollow group", groups_path %></li>
             <li><%= link_to "Group post", posts_path %></li>-->
             <% end %>
           </ul>
@@ -117,7 +118,14 @@
     };
 
     setInterval(function() {
-        $.get(' <%= update_count_activitynotifications_path %>');
+ //       $.get(' <%= update_count_activitynotifications_path %>');
       }, 10000);
+
+function restartInterval(){
+  setInterval(function() {
+ //       $.get(' <%= update_count_activitynotifications_path %>');
+      }, 10000);
+}
+
 </script>
 </html>

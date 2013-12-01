@@ -5,6 +5,8 @@ class Post < ActiveRecord::Base
   belongs_to :user
   has_many :groupposts, dependent: :destroy
   has_many :groups, :through => :groupposts
+  has_many :communityposts, dependent: :destroy
+  has_many :communities, :through => :communityposts
 
   has_many :photos, dependent: :destroy
   accepts_nested_attributes_for :photos, :allow_destroy => true

@@ -100,9 +100,9 @@
 
           <div class="center_block clearfix">
             <%= label_tag "Private group:" %>
-            <div class="input">
-              <%= f.check_box :privacy %>
-            </div>
+                  <div class="input">
+                    <%= f.select :privacy, options_for_select([["Public", Privacyenum::PUBLIC], ["Members", Privacyenum::MEMBERS], ["Private", Privacyenum::PRIVATE]], f.object.privacy) %>
+                  </div>
           </div>
           <div class="center_block clearfix"><br>
             <%= f.label "Invite members:" %>

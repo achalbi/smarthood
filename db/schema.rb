@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131117044428) do
+ActiveRecord::Schema.define(:version => 20131130120235) do
 
   create_table "activities", :force => true do |t|
     t.string   "title"
@@ -133,6 +133,13 @@ ActiveRecord::Schema.define(:version => 20131117044428) do
     t.float    "longitude"
   end
 
+  create_table "communityposts", :force => true do |t|
+    t.integer  "post_id"
+    t.integer  "community_id"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+  end
+
   create_table "event_editor_groups", :force => true do |t|
     t.integer  "event_id"
     t.integer  "group_id"
@@ -202,13 +209,13 @@ ActiveRecord::Schema.define(:version => 20131117044428) do
     t.string   "title"
     t.text     "description"
     t.string   "location"
-    t.string   "privacy"
+    t.integer  "privacy",      :limit => 255
     t.integer  "creator"
     t.datetime "starts_at"
     t.datetime "ends_at"
     t.boolean  "all_day"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.datetime "created_at",                  :null => false
+    t.datetime "updated_at",                  :null => false
     t.integer  "community_id"
     t.string   "address"
     t.float    "latitude"
