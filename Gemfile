@@ -21,7 +21,6 @@ gem 'omniauth-google-oauth2'
 gem 'omniauth-identity'
 gem 'simple_form'
 gem 'remotipart'
-gem 'debugger'
 gem "geocoder"
 gem 'rails3-jquery-autocomplete'
 gem "font-awesome-rails"
@@ -40,6 +39,7 @@ gem 'koala'
 group :development, :test do
   gem 'sqlite3', '1.3.5'
   gem 'rspec-rails', '2.11.0'
+  gem 'debugger'
 end
 
 group :development do
