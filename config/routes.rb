@@ -1,7 +1,9 @@
 EMS::Application.routes.draw do
 
 
+  get "issue_ticket_action/destroy"
 
+  get "issue_ticket_action/update"
 
   #get "authentication/index"
 
@@ -27,7 +29,17 @@ EMS::Application.routes.draw do
   resources :authentication
 
   resources :activitynotificationsetting
+  resources :ticket_action
   
+  resources :issue_ticket_action, :only => [:create, :destroy]
+
+  resources :issue_trackers do
+    collection do
+      put :update_action
+      post :quick_filter
+    end
+  end
+
   resources :activitynotifications do
     member do
       get :mark_read
@@ -75,7 +87,8 @@ EMS::Application.routes.draw do
 
  # match '/auth/:provider/callback', to: 'sessions#create' #omniauth route
 
-  resources :post, :has_many => [:user_groups]
+
+
 
   resources :posts do
     collection do
@@ -84,6 +97,7 @@ EMS::Application.routes.draw do
      resources :photos, :only => [:create, :destroy]
     resources :comments
   end
+  resources :post, :has_many => [:user_groups]
 
   resources :users do
     member do
@@ -94,6 +108,7 @@ EMS::Application.routes.draw do
     resources :users do
       collection do
         get :search_auto
+        post :search_users
       end
     end
 

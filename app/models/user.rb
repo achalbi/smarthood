@@ -10,7 +10,7 @@
 #
 
 class User < OmniAuth::Identity::Models::ActiveRecord
-  attr_accessible :name, :email, :password, :password_confirmation, :photo, :photo_file_name, :photo_content_type, :photo_file_size, :photo_updated_at, :photos_attributes, :pic, :profile_pic
+  attr_accessible :name, :email, :password, :email_confirmation, :password_confirmation, :photo, :photo_file_name, :photo_content_type, :photo_file_size, :photo_updated_at, :photos_attributes, :pic, :profile_pic, :user_info_attributes, :user_info
   attr_accessor :profile_pic
 
   has_secure_password
@@ -39,8 +39,12 @@ class User < OmniAuth::Identity::Models::ActiveRecord
   has_many :authentications, dependent: :destroy
   has_many :photos, dependent: :destroy
   accepts_nested_attributes_for :photos, :allow_destroy => true
+
+  has_one :user_info, dependent: :destroy
+  accepts_nested_attributes_for :user_info, :allow_destroy => true
   
   has_many :albums, dependent: :destroy
+  
   has_many :eventdetails, :dependent => :destroy
   has_many :activitydetails, :dependent => :destroy
 
@@ -52,14 +56,21 @@ class User < OmniAuth::Identity::Models::ActiveRecord
   before_save :create_remember_token
   #before_create { generate_token(:remember_token) }
 
+  has_many :posts, :as => :postable
+
+  has_many :issue_ticket_actions, dependent: :destroy
+  has_many :issue_trackers, foreign_key: "author_id", dependent: :destroy
+  has_many :issue_trackers, foreign_key: "assignee_id", dependent: :destroy
+
   
   validates :name,  presence: true, length: { maximum: 50 },
                     uniqueness: { case_sensitive: false }
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
   validates :email, presence: true, format: { with: VALID_EMAIL_REGEX },
-                    uniqueness: { case_sensitive: false }
-  validates :password, presence: true, length: { minimum: 6 }
-  validates :password_confirmation, presence: true
+                    uniqueness: { case_sensitive: false }, confirmation: true
+  validates :email_confirmation, presence: true, :on => :create
+  validates :password, presence: true, length: { minimum: 6 }, :on => :create
+  validates :password_confirmation, presence: true, :on => :create
 
 def send_password_reset
   generate_token(:password_reset_token)

@@ -79,7 +79,9 @@ module ActivitynotificationsHelper
 			  		elsif (objectfortype == Objecttypeenum::GROUP)
 				  	    @users = getGroupUsers(objectfortype, objectfor, nil, nil, action)
 				  	else
-				  		@users = current_user.followers.collect(&:id)
+				    	@users = active_community_user_ids
+				    	@users = getActivitynotificationUserssettings(@users, objecttype, object, Privacyenum::PUBLIC).collect(&:user_id)
+				    	@users = @users + current_user.followers.collect(&:id)
 			  		end
 
 		    elsif (object.privacy==Privacyenum::PRIVATE)
@@ -193,7 +195,11 @@ module ActivitynotificationsHelper
 		  when Objecttypeenum::PHOTO then
 		  when Objecttypeenum::ALBUM then
 		  		if action == Notificationtypeenum::CREATED
-		  			body_text = "The Album '" + object.title + "' was added to " + objectfortype + ": '" + objectfor.title + "' by "+ current_user.name 
+		  			if objectfortype.nil?
+			  			body_text = "The Album '" + object.title + "' was added by "+ current_user.name 
+		  			else
+			  			body_text = "The Album '" + object.title + "' was added to " + objectfortype + ": '" + objectfor.title + "' by "+ current_user.name 
+		  			end
 		  		elsif action == Notificationtypeenum::UPDATED
 		  			body_text = "The Album '" + object.title + "' was updated by "+ current_user.name
 		  		end

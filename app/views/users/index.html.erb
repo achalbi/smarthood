@@ -1,13 +1,72 @@
 <% provide(:title, 'All users') %>
-<ul class="users">
-	<div class="ressources">
-  		<%= render @users %>
-	</div>
-	<div id="loading_page" class="center" ><img src="http://res.cloudinary.com/rashi/image/upload/v1377924529/loading7_gvb06y.gif"></div>
-</ul>
+<div class="row">
+<%= form_tag( 'search_users' , remote: true) do  %>	
+  <aside class="span5 well" style="margin: 0px 15px; 15px 15px;">
+    <section>
+      <h4>
+        Search for
+      </h4>
+    </section>
+    <section>
+      <h6>ComUnity</h6>
+      <ul class="inputs-list">
+                <li>
+                  <label>
+      					<%= check_box_tag( "search[community_id][]", active_community.id, @selected_comm.include?(active_community)) %>
+                    <span><%= active_community.name %></span>
+                  </label>
+                </li>
+                <% @joined_communities.each do |cu| %>
+                <li>
+                  <label>
+					   <%= check_box_tag("search[community_id][]", cu.id, @selected_comm.include?(cu)) %>
+                    <span><%= cu.name %></span>
+                  </label>
+                </li>
+				<% end %>
+                <li>
+              </ul>
+      
+    </section>
+ 
+  </aside>
+  	<div class="input-append">
+	    <%= text_field_tag "search[user]", nil, class: "span13", placeholder: "Search..." %>
+	    <%= submit_tag "Search", class: "active ui-button", id: "search_user" %>  
+  	</div>
+
+<% end %>
+<div id="aboutDiv">  
+    <ul class="users span14">
+    	<div id="results">
+		<div class="ressources">
+	  		<%= render @users %>
+		</div>
+    	</div>
+		<!-- <div id="loading_page" class="center" ><img src="http://res.cloudinary.com/rashi/image/upload/v1377924529/loading7_gvb06y.gif"></div> -->
+	</ul>
+</div>
+</div>
+
 
 
 <script type="text/javascript">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
 
 var currentPage = 1;
 var intervalID = -1000;
@@ -39,8 +98,11 @@ function scrollDistanceFromBottom(argument) {
 function pageHeight() {
   return Math.max(document.body.scrollHeight, document.body.offsetHeight);
 }
- 
 $('document').ready(function(){
 	intervalID = setInterval(checkScroll, 250);
 })
+*/ 
+$('document').ready(function(){
+	$('.gravatar').addClass('thumbnail');
+});
 </script>

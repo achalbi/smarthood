@@ -1,8 +1,13 @@
 <li>
-  <%= gravatar_for user, size: 100 %>
-  <%= link_to user.name, user %>
-  <% if current_user.admin? && !current_user?(user) %>
-    | <%= link_to "delete", user, method: :delete,
+	<a href="<%= user_path(user) %>" data-remote="true">
+	  	<%= gravatar_for user, size: 100 %>
+	</a>
+	<h4 class="pull-left">
+  	<%= link_to user.name, user, remote: true %>
+	</h4>
+	<%= user.user_info.current_city  unless user.user_info.nil? %>
+  	<!--<% if current_user.admin? && !current_user?(user) %>
+    	| <%= link_to "delete", user, method: :delete,
                                   data: { confirm: "You sure?" } %>
-  <% end %>
+  	<% end %> -->
 </li>

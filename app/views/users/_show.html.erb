@@ -1,0 +1,20 @@
+<% provide(:title, @user.name) %>
+<div class="row">
+  <aside class="span6">
+    <section>
+      <h1>
+        <%= gravatar_for @user, size: 100 %>
+        <%= @user.name %><br>
+      </h1>
+    </section>
+    <section>
+      <%= render 'shared/stats' %>
+    </section>
+  <section>
+     <%= render 'follow_form' if signed_in? %>
+  </section>
+  </aside>
+<div id="aboutDiv">  
+     <%= render 'user_info'  %>
+</div>
+

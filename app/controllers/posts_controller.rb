@@ -7,7 +7,6 @@ class PostsController < ApplicationController
   def index
     @post = Post.new
     @user_groups = current_user.user_groups.all
-    
   end
 
   def create

@@ -77,7 +77,7 @@ var intervalID = -1000;
 function checkScroll_post() {
   if (nearBottomOfPage()) {
     currentPage++;
-  console.log("--"+intervalID+"---"+$('#group_id').html());
+ // console.log("--"+intervalID+"---"+$('#group_id').html());
   $('#loading_page').show();
   if($('#group_id').html() == null){
       clearInterval(intervalID);
@@ -87,7 +87,7 @@ function checkScroll_post() {
       }
       restartInterval();
 
-      console.log("-null-"+intervalID);
+    //  console.log("-null-"+intervalID);
     }
     jQuery.ajax('/groups/post_paginate?id=<%= @group.id %>&page=' + currentPage, {asynchronous:true, evalScripts:true, method:'get', success: function(data, textStatus, jqXHR) {
       $('#loading_page').hide();
@@ -100,7 +100,7 @@ function checkScroll_post() {
       }
       restartInterval();
 
-      console.log("-1-"+intervalID);
+     // console.log("-1-"+intervalID);
     }else{
     $('.resources<%= @group.id %>').append(data);
     }

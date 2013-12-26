@@ -11,7 +11,6 @@ class AuthenticationController < ApplicationController
   session['fb_auth'] = omniauth
   session['fb_access_token'] = omniauth['credentials']['token']
   session['fb_error'] = nil
-
   #if params[:code]
      # acknowledge code and get access token from FB
    #  session[:access_token] = session[:oauth].get_access_token(params[:code])
@@ -23,6 +22,18 @@ class AuthenticationController < ApplicationController
       user.token = omniauth['credentials']['token'] # code needs to be removed
       user.fb_uid = omniauth['uid'] # code needs to be removed
       user.save
+      
+      user_session = session['fb_auth']['extra']['raw_info']
+      unless user_session.nil?
+        user.user_info =  UserInfo.new
+        user.user_info.first_name = user_session['first_name']
+        user.user_info.last_name = user_session['last_name']
+        user.email = user_session['email']
+        user.user_info.gender = user_session['gender']
+        user.user_info.dob = user_session['birthday']
+        user.save!
+      end
+
     sign_in user
     redirect_back_or user
     #sign_in_and_redirect(:user, authentication.user)
@@ -63,6 +74,14 @@ class AuthenticationController < ApplicationController
       user.fb_uid = omniauth['uid']
       user.password = rand(36**10).to_s(36)
       user.password_confirmation = user.password
+
+      user_session = session['fb_auth']['extra']['raw_info']
+      user.user_info =  UserInfo.new
+      user.user_info.first_name = user_session['first_name']
+      user.user_info.last_name = user_session['last_name']
+      user.email = user_session['email']
+      user.user_info.gender = user_session['gender']
+      user.user_info.dob = user_session['birthday']
       user.save!
       #flash[:notice] = "Signed up successfully."
       #sign_in_and_redirect(:user, user)

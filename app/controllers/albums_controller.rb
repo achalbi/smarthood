@@ -17,11 +17,21 @@ class AlbumsController < ApplicationController
             @album.photos << @photo
         end
         @album.save
-
+      if @album.privacy == Privacyenum::PUBLIC
+        @post = Post.new
+        @post.content = "New album: '" + @album.title << "' was created by '" << current_user.name << "'. " 
+        @post.user_id = current_user.id
+        @post.postable = @album
+        @post.save
+        @post.communities << active_community 
+        @album.photos.each do |photo|
+          @post.photos << photo
+        end
+      end
         body_text = "The Album '" + @album.title + "' was created by "+ current_user.name
         href = "/albums/"+ @album.id.to_s
 
-        getNotifiableUsers(Objecttypeenum::ALBUM, @album, @album.albumable_type, @album.albumable_id, body_text, href)
+        getNotifiableUsers(Objecttypeenum::ALBUM, @album, @album.albumable_type, @album.albumable_id, Uc_enum::CREATED)
 
     
       respond_to do |format|
@@ -78,7 +88,7 @@ class AlbumsController < ApplicationController
 
   def index
   	@camera_roll = current_user.photos.order('created_at DESC').all
-  	@albums = current_user.albums.all
+  	@albums = current_user.albums.all.reverse
     @album = Album.new
      respond_to do |format|
          format.html {  }
@@ -87,7 +97,7 @@ class AlbumsController < ApplicationController
   end
 
   def list
-    @albums = current_user.albums.all
+    @albums = current_user.albums.all.reverse
     @album = Album.new
      respond_to do |format|
          format.html {  }

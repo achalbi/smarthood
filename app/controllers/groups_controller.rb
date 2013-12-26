@@ -36,7 +36,6 @@ class GroupsController < ApplicationController
     end
    # flash[:success] = "Group created!"
     @group.follow!(current_user, @group.id, Uc_enum::JOINED, true)
-    #debugger
     #UserGroup.where("user_id = ? AND group_id = ?",current_user.id, @group.id).update_all(is_admin: true, invitation: Uc_enum::JOINED)
       # redirect_to :action => :index
       getNotifiableUsers(Objecttypeenum::GROUP, @group, nil, nil, Uc_enum::CREATED)

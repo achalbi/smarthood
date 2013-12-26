@@ -5,22 +5,28 @@ class UsersController < ApplicationController
   before_filter :admin_user,     only: :destroy
 
   def new
-  	 @user = env['omniauth.identity'] ||= User.new
+     @user = env['omniauth.identity'] ||= User.new
+     
   end
 
   def show
   	@user = User.find(params[:id])
+    if @user.user_info.nil?
+      @user.user_info = UserInfo.new
+    end
     @post = Post.new
     @posts = @user.posts.uniq   
   end
 
   def create
   	@user = User.new(params[:user])
+    @user.name = @user.user_info.first_name+@user.user_info.last_name
   	if @user.save
-  		flash[:success] = "User Created successfully!!!"
+  		#flash[:success] = "User Created successfully!!!"
       # Tell the UserMailer to send a welcome Email after save
         UserMailer.welcome_email(@user).deliver
-  		redirect_to @user
+        sign_in @user
+  		  redirect_to @user
   	else 
   		render 'new'
   	end	
@@ -40,18 +46,22 @@ class UsersController < ApplicationController
 
   def update
     @user = User.find(params[:id])
+    @user.user_info.update_attributes(params[:user][:user_info_attributes])
     if @user.update_attributes(params[:user])
-      flash[:success] = "Profile updated"
+      #flash[:success] = "Profile updated"
       sign_in @user
-      redirect_to @user
-    else
-      render 'edit'
+      #redirect_to @user
     end
   end
 
   def index
-    #@users = active_community.users.paginate(page: params[:page], :per_page => 8)
-    @users = User.paginate(page: params[:page], :per_page => 20)
+    @user = current_user
+    @users = active_community_users.paginate(page: params[:page], :per_page => 20)
+    @comm_id = current_user.usercommunities.where("is_admin=? OR invitation != ?", true, Uc_enum::JOINED ).collect(&:community_id)
+    @comm_id << active_community.id
+    @joined_communities = Community.where(['id IN (?) and id NOT IN (?)', current_user.joined_uc.collect(&:community_id), @comm_id]) 
+    @selected_comm = []
+    @selected_comm << active_community
   end
 
     def destroy
@@ -64,14 +74,12 @@ class UsersController < ApplicationController
     @title = "Following"
     @user = User.find(params[:id])
     @users = @user.followed_users.paginate(page: params[:page], :per_page => 8)
-    render 'show_follow'
   end
 
   def followers
     @title = "Followers"
     @user = User.find(params[:id])
     @users = @user.followers.paginate(page: params[:page], :per_page => 8)
-    render 'show_follow'
   end
 
   def search_user
@@ -80,6 +88,28 @@ class UsersController < ApplicationController
       format.html
       format.json { render :json => @users.map(&:attributes) }
     end
+  end
+
+  def search_users
+    @comm_ids = params[:search][:community_id]
+    @selected_comm = Community.where(['id IN (?)', @comm_ids])
+    @cu_users = []
+    @selected_comm.each do |cu|
+      cu.users.each do |user|
+        @cu_users << user
+      end
+    end
+    @users = @cu_users.uniq
+  end
+
+  def update_user_info_from_fb
+    user = session['fb_auth']['extra']['raw_info']
+    @user.user_info.first_name = user['first_name']
+    @user.user_info.last_name = user['last_name']
+    @user.email = user['email']
+    @user.user_info.gender = user['gender']
+    @user.user_info.dob = user['birthday']
+
   end
 
  private

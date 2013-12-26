@@ -4,6 +4,7 @@ class Album < ActiveRecord::Base
   belongs_to :albumable, :polymorphic => true
   belongs_to :user
 
+  has_many :posts, :as => :postable
   has_many :photoalbums, dependent: :destroy
   has_many :photos, :through => :photoalbums
 

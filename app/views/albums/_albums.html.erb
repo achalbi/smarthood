@@ -42,7 +42,7 @@
           
           <div class="center_block clearfix pull-left">
           <%= fields_for :photos, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
-          <%= photo_form.file_field :pic, id: "pic1", :multiple => true, style: "width:1px; height:1px; padding:0px;  left:0px;" %>  
+            <%= photo_form.file_field :pic, id: "pic1", :multiple => true, style: "width:1px; height:1px; padding:0px;  left:0px;" %>  
           <% end %>
               <div class="input">
                 <canvas id="imageCanvas1" style = "border: 1px solid #ddd; padding:5px; align:center" >select photos</canvas>

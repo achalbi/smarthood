@@ -1,0 +1,136 @@
+<%= link_to "Create issue", '#', id: "create_issue_link",  class: " pull-right uibutton icon edit",:title => "Create issue" %>
+<table class="zebra-striped" id="sortTableExample">
+	<thead>
+		<tr>
+			<th class="header">#</th>
+			<th class="blue header headerSortDown">Ticket id</th>
+			<th class="blue header">Description</th>
+			<th class="blue header">Type</th>
+			<th class="blue header">Module</th>
+			<th class="blue header">Priority</th>
+			<th class="blue header">Severity</th>
+			<th class="blue header">Version</th>
+			<th class="blue header">Status</th>
+			<th class="blue header">Impact</th>
+			<th class="blue header">Author</th>
+			<th class="blue header">Assignee</th>
+			<th class="blue header">Opened on</th>
+			<th class="blue header">Closed on</th>
+		</tr>
+	</thead>
+	<tbody>
+
+		<% @issues.each_with_index  do |issue, i| %>
+			<tr>
+				<td><%= i %></td>
+				<td><%= link_to issue.ticket_id , issue %></td>
+				<td><%= issue.description %></td>
+				<td><%= issue.type %></td>
+				<td><%= issue.module %></td>
+				<td><%= issue.priority %></td>
+				<td><%= issue.severity %></td>
+				<td><%= issue.version %></td>
+				<td><%= issue.status %></td>
+				<td><%= issue.impact %></td>
+				<td><%= issue.author.name %></td>
+				<td><%= issue.assignee.name %></td>
+				<td><%= issue.created_at %></td>
+				<td>
+					<% if issue.status == 'closed' %>
+						<%= issue.updated_at %>
+					<% end %>
+				</td>
+			</tr>
+		<% end %>
+	</tbody>
+</table>
+
+
+<%= form_for( @issue, remote: true) do |f| %>
+  <div id="modal_issue" style="display:none" >
+          <div id="modal-from-dom" class="modal hide fade in" style="display: block;width:700px;">
+            <div class="modal-header">
+              <a href="#" id="close_issue" class="close">×</a>
+              <h3>Create issue</h3>
+            </div>
+            <div class="modal-body" style="max-height:500px;">
+              <div class="row">
+		          <div class="span14 ui-front">
+		               <%= render 'shared/error_messages', object: f.object %>
+		                  <%= f.label :description %>
+		                  	<div class="input">
+		                  		<%= f.text_field :description, :placeholder=>"Description" %>
+		              		</div>
+		                </div>
+		                <div class="center_block clearfix">
+		                  <%= f.label :type %>
+		                  	<div class="input">
+		                  		<%= f.select :type, options_for_select([["Bug", "bug"], ["Improvement", "improvement"], ["New feature", "new feature"], ["Task", "task"], ["Sub-task", "sub-task"]], f.object.type), {}, id: "issue_type" %>
+		              		</div>
+		                </div>
+		                <div class="center_block clearfix">
+		                  <%= f.label :module %>
+		                  	<div class="input">
+		                  		<%= f.select :module, options_for_select([["Home", "home"], ["ComUnity", "comunity"], ["Users", "users"], ["Events", "events"], ["Photos", "photos"], ["Groups", "groups"], ["Notifications", "notifications"], ["Issues Tracker", "issues tracker"]], f.object.module), {}, id: "issue_module" %>
+		              		</div>
+		                </div>
+		                <div class="center_block clearfix">
+		                  <%= f.label :priority %>
+		                  	<div class="input">
+		                  		<%= f.select :priority, options_for_select([["Select One", ""]["Critical", "critical"], ["High", "high"], ["Medium", "medium"], ["Low", "low"]], f.object.priority), {}, id: "issue_priority" %>
+		              		</div>
+		                </div>
+		                <div class="center_block clearfix">
+		                  <%= f.label :severity %>
+		                  	<div class="input">
+		                  		<%= f.select :severity, options_for_select([["Select One", ""]["Critical", "critical"], ["High", "high"], ["Medium", "medium"], ["Low", "low"]], f.object.severity), {}, id: "issue_severity" %>
+		              		</div>
+		                </div>
+		                <div class="center_block clearfix">
+		                  <%= f.label :version %>
+		                  	<div class="input">
+		                  		<%= f.text_field :version, :placeholder=>"Version", value: "0.1" %>
+		              		</div>
+		                </div>
+		                <div class="center_block clearfix">
+		                  <%= f.label :status %>
+		                  	<div class="input">
+		                  		<%= f.select :status, options_for_select([["Opened", "opened"], ["Resolved", "resolved"], ["Wont fix", "wont fix"], ["Closed", "closed"]], f.object.status), {}, id: "issue_status" %>
+		              		</div>
+		                </div>
+		                <div class="center_block clearfix">
+		                  <%= f.label :impact %>
+		                  	<div class="input">
+		                  		<%= f.text_field :impact, :placeholder=>"Impact" %>
+		              		</div>
+		                </div>
+		        </div> 	  
+           </div>
+            <div class="modal-footer" >
+              <%= f.submit "Create", class: "btn primary pull-right", id: "create_issue_submit" %>  
+            </div>
+          </div>
+          
+        </div>
+<% end %>
+
+
+
+<script type="text/javascript">
+$(function() {
+	$("table#sortTableExample").tablesorter({ sortList: [[1,0]] });
+});
+
+    $("#create_issue_link").click(function(){
+      $('#modal_issue').modal('show');
+    });
+    $("#close_issue").click(function(){
+          $('#modal_issue').modal('hide');
+        });
+
+    $("#create_issue_submit").click(function(){
+          $('#modal_issue').modal('hide');
+        });
+
+
+</script>

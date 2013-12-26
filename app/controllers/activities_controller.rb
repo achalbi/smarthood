@@ -25,6 +25,15 @@ class ActivitiesController < ApplicationController
       end
     end
     @activity.save
+      if @activity.privacy == Privacyenum::PUBLIC
+        @post = Post.new
+        @post.content = "New activity: '" + @activity.title << "' was created under the event: '" << @et.title << "'. " 
+        @post.user_id = current_user.id
+        @post.postable = @activity
+        @post.save
+        @post.communities << active_community 
+        @post.photos << @et.photo
+      end
     getNotifiableUsers(Objecttypeenum::ACTIVITY, @activity, nil, nil, Uc_enum::CREATED)
     @activities = @et.activities
     #flash[:success] = "Activity created!"
@@ -81,7 +90,6 @@ class ActivitiesController < ApplicationController
     @inv_users = User.where(['id IN (?)', @users])
     @album = Album.new
     @albums = @activity.albums
-    #debugger
     @is_event = false
     @event2 = @event
     unless @activity.is_admin
@@ -107,7 +115,6 @@ class ActivitiesController < ApplicationController
         getNotifiableUsers(Objecttypeenum::ALBUM, @album, nil, nil, Uc_enum::CREATED)
         @album = Album.new
         #  flash[:success] = "Album created"
-        #debugger
       @share = Share.new
     #  if @activity.is_admin?
     #    getNotifiableUsers(Objecttypeenum::ALBUM, @album, Objecttypeenum::EVENT, @activity.event, Uc_enum::CREATED)
@@ -127,7 +134,6 @@ class ActivitiesController < ApplicationController
     @activity.activitydetails.where(['user_id Not IN (?)', @act_users]).delete_all
     @act_groups = @activity.group_ids
     @activity.activitydetails.where(['group_id Not IN (?)', @act_groups]).delete_all
-    #debugger
     unless @act_users.nil? 
       @act_users.each do |user_id|
         @user_act = Activitydetail.new
@@ -171,7 +177,6 @@ class ActivitiesController < ApplicationController
     @inv_groups = Group.where(['id IN (?)', @groups])
     @event = @activity
     @activities = @event2.activities
-    #debugger
     @is_event = false
     @album = Album.new
     getNotifiableUsers(Objecttypeenum::ACTIVITY, @activity, nil, nil, Uc_enum::UPDATED)

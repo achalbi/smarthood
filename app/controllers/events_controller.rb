@@ -77,6 +77,24 @@ class EventsController < ApplicationController
           @event.eventdetails << @group_ed
         end
       end
+
+      if @event.photo.nil?
+        @photo = Photo.new
+        @photo.remote_pic_url = "http://res.cloudinary.com/rashi/image/upload/v1378556932/events_medium_m4h4ww.jpg"
+        @photo.save
+        @event.photo = @photo 
+      end
+
+      if @event.privacy == Privacyenum::PUBLIC
+        @post = Post.new
+        @post.content = "New event: '" + @event.title << "' was created under the community: '" << active_community.name << "'. " 
+        @post.user_id = current_user.id
+        @post.postable = @event
+        @post.save
+        @post.communities << active_community 
+        @post.photos << @event.photo
+      end
+
       @event.community_id = active_community.id
       respond_to do |format|
         if @event.save
@@ -123,13 +141,11 @@ class EventsController < ApplicationController
 
       def search_auto_user
         @users = User.where("name like ?", "%#{params[:q]}%")
-        # debugger
         @users_pp = []
         @users.each do |user|
         user[:profile_pic] =  gravatar_for_url(user, size: 40)
         @users_pp << user
        end
-      # debugger
         respond_to do |format|
           format.html
           format.json { render :json => @users_pp.map(&:attributes) }
@@ -261,7 +277,6 @@ class EventsController < ApplicationController
       @event.photo = @photo 
       end
        @event.save
-      # debugger
     end
     @is_event = true        
     respond_to do |format|
@@ -392,7 +407,6 @@ class EventsController < ApplicationController
       @grps.each do |group|
      #   @mod_users |= group.users
       end
-     # debugger
      @is_event = true
     respond_to do |format|
       if @event.update_attributes(params[:event])

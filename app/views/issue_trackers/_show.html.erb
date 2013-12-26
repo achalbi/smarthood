@@ -1,0 +1,461 @@
+<div id="show_issue">
+	<div style="border-bottom:1px solid #eee;padding:5px;">
+		<h2>
+			<% if current_user?(@issue.author) %>
+			    <%= link_to "Delete", @issue, method: :delete, class: "btn danger pull-left",
+			                                     data: { confirm: "You sure?" }, remote: true,
+			                                     title: @issue.title %>
+			  <% end %>
+			<%= @issue.ticket_id+": "+@issue.title %>
+			<%= link_to "Edit", '#', id: "edit_issue_link",  class: " pull-right uibutton icon edit", style: "margin-right:15px;",:title => "Create issue" %>
+
+		</h2>
+	</div>
+	<br>
+	<aside class="span5 well">
+		<div  class="span4" style="padding:5px;" >
+			<h4>Issue Type:
+				<span style="font-size:small">
+					<%= @issue.issue_type %>
+				</span> 
+			</h4>
+			
+		</div>
+
+		<div class="span4" style="border-top:1px solid #aaa; padding:5px;">
+			<h4>Module:
+				<span style="font-size:small">
+					<%= @issue.module %>
+				</span> 
+			</h4>
+		</div>
+		<div class="span4" style="border-top:1px solid #aaa;padding:5px;">
+			<h4>Priority:
+				<span style="font-size:small">
+					<%= @issue.priority %>
+				</span> 
+			</h4>
+		</div>
+		<div class="span4" style="border-top:1px solid #aaa;padding:5px;">
+			<h4>Severity :
+				<span style="font-size:small">
+					<%= @issue.severity %>
+				</span> 
+			</h4>
+		</div>
+		<div class="span4" style="border-top:1px solid #aaa;padding:5px;">
+			<h4>Status :
+				<span style="font-size:small">
+					<%= @issue.status %>
+				</span> 
+			</h4>
+		</div>
+	</aside>
+	<aside class="span5 well pull-right" style="margin-right:15px;padding:10px;">
+		<div class="span4" style="border-bottom:1px solid #aaa;padding:5px;">
+			<h4>Screenshots:</h4>
+		</div>
+		<br>
+		<br>
+		<div style="padding:5px;">
+			<ul id="grid" style="padding:5px;margin:10px;">
+				<% @issue.issue_ticket_actions.reverse_each do |ita| %>
+				<% ita.issue_ticket_action_photos.each do |itap| %>
+				<li>
+					<a href="<%= itap.photo.pic_url %>" class="fancybox_photo" rel="group_photo">
+						<%= cl_image_tag(itap.photo.pic_url(:small), class:"thumbnail", style: "margin:0px!important;")  %></a> 
+	                  <!-- 
+					<%= link_to cl_image_tag(itap.photo.pic_url(:small), class:"image_al_c thumbnail") , itap.photo.pic_url, class:"albumLink", remote: true %>
+				-->
+			</li>
+			<% end %>
+			<% end %>
+		</ul>
+	</div>
+</div>
+
+
+</aside>
+<aside >
+	<section class="span14"  style="margin:10px;">
+		<div >
+			<h4>Description:</h4>
+			<p><%= @issue.description %></p>
+		</div>
+	</section>
+	<section class="span14" style="margin:10px;">
+		<div  >
+			<h4>Impact:</h4>
+			<p><%= @issue.impact %></p>
+		</div>
+			
+			
+	</section>
+	<section class="span14" style="margin:10px;">
+		<div  >
+
+			<h4 style="padding:10px;font-size:medium;" class="well"><%= @issue.issue_ticket_actions.count.to_s + " Action".pluralize(@issue.issue_ticket_actions.count) %>  :
+						<%= link_to "Add", '#', id: "create_issue_action_link",  class: " pull-right uibutton icon add", style: "margin:4px;",:title => "Create issue action" %>
+			</h4>
+			<ul class="post_grid">
+				<% @issue.issue_ticket_actions.reverse_each do |ita| %>
+				<div style="border-top:1px solid #eee;padding:5px;" class="edit_action_div">
+					<li>
+						<div>
+							<a href="/users/<%=ita.user.id %>/" data-remote="true" style="cursor:pointer;border:0px;padding:0px;" class="pop_up" rel="popover" data-content='<%= gravatar_for ita.user, size: 100 %>' data-original-title="<%= ita.user.name %>" >
+								<%= gravatar_for ita.user, size: 50 %>
+							</a>
+						</div>
+
+							<span style="font-size:small">
+								<h5>Action : <%= ita.ticket_action.description %>
+									<% if current_user?(ita.user) %>
+										<%= link_to "Delete", '#', id: "_delete_#{ita.id}",  class: " pull-right btn danger icon edit delete_action", style: "margin-right:15px;",:title => "Delete action", remote: true %>
+									<% end %>
+									<%= link_to "Edit", '#', id: "#{ita.id}",  class: " pull-right uibutton icon edit edit_action", style: "margin-right:15px;",:title => "Edit action", remote: true %>
+
+								</h5>
+								<p><%= ita.comment %></p>
+							</span> 
+						<ul id="grid" style="padding:5px;margin:10px 0px 10px 10px;">
+							<% ita.photos.each do |photo| %>
+							<li>
+								<a href="<%= photo.pic_url %>" class="fancybox_photo" rel="group_photo">
+									<%= cl_image_tag(photo.pic_url(:smallest), class:"thumbnail", style: "margin:0px!important;")  %></a> 
+								</li>
+								<% end %>
+							</ul>
+
+						</li>
+						<span class="timestamp pull-right ">
+            				Posted <%= time_ago_in_words(ita.created_at) %> ago.
+          				</span>
+          				<span class="clear-float"></span>
+					</div>
+					<div id="modal_issue_action_delete_<%= ita.id %>" style="display:none" class="modal_issue_action" >
+						<div id="modal-from-dom" class="modal hide fade in" style="display: block;">
+							<div class="modal-header">
+								<a href="#" id="close_issue_action" class="close close_issue_action_delete">×</a>
+								<h3>Delete Action</h3>
+							</div>
+							<div class="modal-body" style="max-height:430px;">
+								<div class="row">
+									<h2> Are you sure?</h2>
+								</div>
+							</div>
+							<div class="modal-footer" >
+								<%= link_to "Delete", ita, method: :delete, id: "delete_#{ita.id}", class: "btn danger pull-right del_action delete_issue_action", remote: true, title: "Delete" %>
+								<%= link_to "Cancel", '#', id: "_cancel_#{ita.id}",  class: "btn pull-right delete_issue_action", style: "margin-right:15px;",:title => "Cancel" %>
+							</div>
+						</div>          
+					</div>
+											
+					<%= form_for( ita, url: update_action_issue_trackers_path, remote: true) do |f| %>
+					<div id="modal_issue_action_<%= ita.id %>" style="display:none" class="modal_issue_action" >
+						<div id="modal-from-dom" class="modal hide fade in" style="display: block;width:700px;">
+							<div class="modal-header">
+								<a href="#" id="close_issue_action" class="close close_issue_action">×</a>
+								<h3>Create issue</h3>
+							</div>
+							<div class="modal-body" style="max-height:430px;">
+								<div class="row">
+									<div class="span14 ui-front">
+										<%= render 'shared/error_messages', object: f.object %>
+
+										<div class="center_block clearfix">
+											<%= f.label :ticket_action_id, "Status" %>
+											<div class="input">
+												<%= f.select(:ticket_action_id, TicketAction.all.collect {|a| [a.description, a.id]}) %>
+											</div>
+
+										</div>
+
+										<%= f.hidden_field :id %>
+										<%= f.hidden_field :user_id, :value => current_user.id %>
+										<div class="center_block clearfix">
+											<%= f.label :comment, "Comments" %>
+											<div class="input">
+												<%= f.text_area :comment, :placeholder=>"Comment", class: ' inherit_width', :title => "Comment", rows: 3, cols: 75  %> 
+											</div>
+										</div>
+
+									</div> 	  
+								</div>
+							</div>
+							<div class="modal-footer" >
+								<%= f.submit "Edit", class: "btn primary pull-right edit_issue_action_submit" %>  
+							</div>
+						</div>          
+					</div>
+					<% end %>
+
+
+					<% end %>
+				</ul>
+				<br>
+			</div>
+		</section>
+
+	</aside>
+
+
+
+	<%= form_for( @issue, remote: true) do |f| %>
+	<div id="modal_issue_edit" style="display:none" >
+		<div id="modal-from-dom" class="modal hide fade in" style="display: block;width:700px;">
+			<div class="modal-header">
+				<a href="#" id="close_issue_edit" class="close">×</a>
+				<h3>Edit issue</h3>
+			</div>
+			<div class="modal-body" style="max-height:430px;">
+				<div class="row">
+					<div class="span14 ui-front">
+						<%= render 'shared/error_messages', object: f.object %>
+						<div class="center_block clearfix">
+							<%= f.label :title %>
+							<div class="input">
+								<%= f.text_area :title, :placeholder=>"Title", class: ' inherit_width', :title => "Title", rows: 2, cols: 75  %> 
+							</div>
+						</div>
+						<div class="center_block clearfix">
+							<%= f.label :description %>
+							<div class="input">
+								<%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title => "Description", rows: 3, cols: 75  %> 
+							</div>
+						</div>
+						<div class="center_block clearfix">
+		                  <%= f.label :issue_type %>
+		                  	<div class="input">
+		                  		<%= f.select :issue_type, options_for_select([["Bug", "Bug"], ["Improvement", "Improvement"], ["New feature", "New feature"], ["Task", "Task"], ["Sub-task", "Sub-task"]], f.object.issue_type), {}, id: "issue_type" %>
+		              		</div>
+		                </div>
+		                <div class="center_block clearfix">
+		                  <%= f.label :module %>
+		                  	<div class="input">
+		                  		<%= f.select :module, options_for_select([["Home", "Home"], ["ComUnity", "ComUnity"], ["Users", "Users"], ["Events", "Events"], ["Photos", "Photos"], ["Groups", "Groups"], ["Notifications", "Notifications"], ["Issues Tracker", "Issues tracker"]], f.object.module), {}, id: "issue_module" %>
+		              		</div>
+		                </div>
+		                <div class="center_block clearfix">
+		                  <%= f.label :priority %>
+		                  	<div class="input">
+		                  		<%= f.select :priority, options_for_select([["Critical", "Critical"], ["High", "High"], ["Medium", "Medium"], ["Low", "Low"]], f.object.priority), {}, id: "issue_priority" %>
+		              		</div>
+		                </div>
+		                <div class="center_block clearfix">
+		                  <%= f.label :severity %>
+		                  	<div class="input">
+		                  		<%= f.select :severity, options_for_select([["Critical", "Critical"], ["High", "High"], ["Medium", "Medium"], ["Low", "Low"]], f.object.severity), {}, id: "issue_severity" %>
+		              		</div>
+		                </div>
+						<div class="center_block clearfix">
+							<%= f.label :impact %>
+							<div class="input">
+								<%= f.text_area :impact, :placeholder=>"Impact", class: ' inherit_width', :title => "Impact", rows: 3, cols: 75  %> 
+							</div>
+						</div>
+					</div> 	  
+				</div>
+			</div>
+			<div class="modal-footer" >
+				<%= f.submit "Update", class: "btn primary pull-right", id: "update_issue_edit_submit" %>  
+			</div>
+		</div>          
+	</div>
+	<% end %>
+
+	<%= form_for( @issue, remote: true) do |f| %>
+	<div id="modal_issue_action" style="display:none" >
+		<div id="modal-from-dom" class="modal hide fade in" style="display: block;width:700px;">
+			<div class="modal-header">
+				<a href="#" id="close_issue_action" class="close">×</a>
+				<h3>Create Action</h3>
+			</div>
+			<div class="modal-body" style="max-height:430px;">
+				<div class="row">
+					<div class="span14 ui-front">
+						<%= render 'shared/error_messages', object: f.object %>
+
+						<%= f.fields_for :issue_ticket_actions, IssueTicketAction.new do |ff| %>
+						<div class="center_block clearfix">
+							<%= ff.label :ticket_action_id, "Status" %>
+							<div class="input">
+								<%= ff.select(:ticket_action_id, TicketAction.all.collect {|a| [a.description, a.id]}) %>
+							</div>
+
+						</div>
+
+						<%= ff.hidden_field :user_id, :value => current_user.id %>
+						<div class="center_block clearfix">
+							<%= ff.label :comment, "Comments" %>
+							<div class="input">
+								<%= ff.text_area :comment, :placeholder=>"Comment", class: ' inherit_width', :title => "Comment", rows: 3, cols: 75  %> 
+							</div>
+						</div>
+
+								<div class="center_block clearfix">
+						            <%= label_tag "Add picture:" %>
+						            <%= fields_for :photos, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
+						            	<%= photo_form.file_field :pic, id: "pic_action", :multiple => true, style: "width:1px; height:1px; padding:0px;  left:0px;" %>  
+						            <% end %>
+						            <div class="input">
+						              <canvas id="imageCanvas_action" style = "border: 1px solid #ddd; padding:5px; align:center; width:500px;cursor:pointer" >select new image</canvas>
+						            </div>
+						        </div>
+
+
+						<% end %>
+
+					</div> 	  
+				</div>
+			</div>
+			<div class="modal-footer" >
+				<%= f.submit "Create", class: "btn primary pull-right", id: "create_issue_action_submit" %>  
+			</div>
+		</div>          
+	</div>
+	<% end %>
+
+
+
+	<script type="text/javascript">
+	$("a.fancybox_photo").fancybox({
+		padding    : 0,
+		'transitionIn'  : 'elastic',
+		'transitionOut' : 'elastic',
+		'speedIn'   : 600, 
+		'speedOut'    : 200, 
+		'overlayShow' : false
+	});
+
+
+	$(document).ready(function(){
+		$(".gravatar").addClass(" thumbnail");
+	});
+
+
+
+	$('.pop_up').popover({
+		html: true,
+		trigger: 'manual',
+		placement: 'left',
+		delay: { hide: 500},
+		template: ' <div class="popover"><div class="pop_div"><div class="arrow1" stlye="margin-right:10px;"></div><div class="popover-inner"  ><h3 class="popover-title" ></h3><div class="popover-content" ><p></p><br></div></div></div></div>'
+	});
+
+	$(".pop_up").hover(function(){
+		$(this).popover('show');        
+	},function(){
+		$(this).popover('hide');        
+	});
+
+
+    $("#edit_issue_link").click(function(){
+      $('#modal_issue_edit').modal('show');
+    });
+    $("#close_issue_edit").click(function(){
+          $('#modal_issue_edit').modal('hide');
+        });
+
+    $("#update_issue_edit_submit").click(function(){
+          $('#modal_issue_edit').modal('hide');
+
+        });
+
+
+    $("#create_issue_action_link").click(function(){
+      $('#modal_issue_action').modal('show');
+    });
+    $("#close_issue_action").click(function(){
+          $('#modal_issue_action').modal('hide');
+        });
+
+    $("#create_issue_action_submit").click(function(){
+          $('#modal_issue_action').modal('hide');
+        });
+
+var imageLoader = document.getElementById('pic_action');
+imageLoader.addEventListener('change', handleImage, false);
+$("#imageCanvas_action").click(function(){
+  $("#pic_action").click();
+});
+var canvas = document.getElementById('imageCanvas_action');
+var ctx = canvas.getContext('2d');
+ctx.font="10px Arial";
+ctx.fillText("Add pictures",10,50);
+
+function handleImage(e){
+  var canvas = document.getElementById('imageCanvas_action');
+  var ctx = canvas.getContext('2d');
+  var iCnt=0;
+  var files = e.target.files;
+  canvas.width = 180;
+  canvas.height = 155*(Math.ceil(files.length/4));
+  for( var i = 0, len = files.length; i < len; i++) 
+  {
+    if(files[i])
+    {
+      var reader = new FileReader();
+      reader.onload = function(event){
+        var img = new Image();
+
+        img.onload = function(){
+          var ratioPx = 150;
+          var sWidth =ratioPx;
+          var ratio = img.width/sWidth;
+          var sHeight = img.height/ratio;   
+          if(sHeight>ratioPx){
+           sHeight =ratioPx;
+           ratio = img.height/sHeight;
+           sWidth = img.width/ratio;  
+         }
+         ctx.drawImage(img, 155*(iCnt%4),155*(Math.floor(iCnt/4)),sWidth,sHeight);
+                  //ctx.drawImage(img,0,0,sWidth,sHeight);
+                  iCnt++;
+                }
+                img.src = event.target.result;
+              }
+              reader.readAsDataURL(e.target.files[i]);     
+            }
+          }
+        }
+
+    $(".edit_action").click(function(){
+      $('#modal_issue_action_'+this.id).modal('show');
+    });
+    $(".close_issue_action").click(function(){
+          $('.modal_issue_action').modal('hide');
+        });
+
+    $(".edit_issue_action_submit").click(function(){
+          $('.modal_issue_action').modal('hide');
+        });
+
+
+      $('a.edit_action').hide();
+      $('a.delete_action').hide();
+
+    $('div.edit_action_div').hover(function(){
+      $(this).find('a.edit_action').toggle();
+      $(this).find('a.delete_action').toggle();
+      },function(){
+      $(this).find('a.edit_action').toggle();
+      $(this).find('a.delete_action').toggle();
+    });
+
+    $(".del_action").click(function(){
+          $("#_"+this.id).parent().parent().parent().parent().hide();
+        });
+
+
+    $(".delete_action").click(function(){
+      $('#modal_issue_action'+this.id).modal('show');
+    });
+    $(".close_issue_action_delete").click(function(){
+          $('.modal_issue_action').modal('hide');
+        });
+
+    $(".delete_issue_action").click(function(){
+          $('.modal_issue_action').modal('hide');
+        });
+	</script>
+</div>

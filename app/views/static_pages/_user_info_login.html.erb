@@ -1,0 +1,64 @@
+  
+<%= form_for( @user, url:'/auth/identity/register' , remote: true, :html => {:multipart => true}) do |f| %>
+
+    <div class="row">
+        <div class="span14 ui-front">
+            
+          <%= render 'shared/error_messages', object: f.object %>
+          <%= f.fields_for :user_info do |ui| %>
+               <div class="center_block clearfix">
+                  <%= ui.label :first_name, "Name" %>
+                  <div class="input">
+                  <%= ui.text_field :first_name, :placeholder=>"First name" %>
+                 <!-- <%= ui.text_field :middle_name, :placeholder=>"Middle name", class: "span4" %> -->
+                  <%= ui.text_field :last_name, :placeholder=>"Last name" %>
+                  </div>
+               </div>
+
+          <% end %>
+          <div class="center_block clearfix">
+              <%= f.label :email %>
+            <div class="input">
+              <%= f.email_field :email, :placeholder=>"Email" %>
+              <%= f.email_field :email_confirmation, :placeholder=>"Re-enter Email" %>
+            </div>
+          </div>
+
+          <div id="change_password" class="center_block clearfix">
+              <%= f.label :password %>
+            <div class="input">
+              <%= f.password_field :password, :placeholder=>"Password" %>
+              <%= f.password_field :password_confirmation, :placeholder=>"Confirm Password" %>
+            </div>
+          </div>
+
+
+
+          <%= f.fields_for :user_info do |ui| %>
+               <div class="center_block clearfix">
+                  <%= ui.label "Birthday" %>
+                  <div id="dob_date" class="input">
+                  <%= ui.date_select :dob, :placeholder=>"Birthday" %>
+                  </div>
+               </div>
+               <div class="center_block clearfix">
+                    <%= ui.label :gender %>
+                  <div class="input">
+                    <%= ui.radio_button :gender, "female" %> Female &nbsp;
+                    <%= ui.radio_button :gender, "male", :checked => true  %> Male &nbsp;
+                    <!--<%= ui.radio_button :gender, "other" %> Other -->
+                  </div>
+               </div>
+          <% end %>
+          <br>
+               <div class="center_block clearfix">
+                  <div class="input center">
+                    <%= f.submit "Sign up", class: "btn success ui-button span3 " %>  
+                  </div>
+                </div>
+          </div>
+        </div>   
+<% end %>
+<script type="text/javascript">
+$("#dob_date select").addClass('medium');
+</script>

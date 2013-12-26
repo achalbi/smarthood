@@ -3,7 +3,8 @@ class Activity < ActiveRecord::Base
 
   geocoded_by :address   # can also be an IP address
   after_validation :geocode, :if => :address_changed?          # auto-fetch coordinates
-  
+  #has_many :postables, :as => :postable
+
   attr_reader :user_tokens
   attr_accessor :user_ids
   def user_tokens=(ids)

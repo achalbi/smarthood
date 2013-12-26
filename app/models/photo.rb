@@ -7,6 +7,10 @@ class Photo < ActiveRecord::Base
 
   has_many :photoalbums, dependent: :destroy
   has_many :albums, :through => :photoalbums
+  
+  has_many :issue_ticket_action_photos, dependent: :destroy
+  has_many :issue_ticket_actions, :through => :issue_ticket_action_photos
+
 #  has_attached_file :pic,  :url =>
 #"/images/photos/:id/:style_:basename.:extension", :path =>
 #":rails_root/public/images/photos/:id/:style_:basename.:extension"

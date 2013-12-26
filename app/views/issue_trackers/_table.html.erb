@@ -1,0 +1,50 @@
+<table class="zebra-striped bordered-table" id="sortTable" >
+	<thead>
+		<tr>
+			<th class="header">#</th>
+			<th class="blue header headerSortDown">Ticket id</th>
+			<th class="blue header">Title</th>
+			<!-- <th class="blue header">Description</th> -->
+			<th class="blue header">Type</th>
+			<th class="blue header">Module</th>
+			<th class="blue header">Priority</th>
+			<th class="blue header">Severity</th>
+			<!-- <th class="blue header">Version</th> -->
+			<th class="blue header">Status</th>
+			<!-- <th class="blue header">Impact</th> -->
+			<!-- <th class="blue header">Author</th>
+			<th class="blue header">Assignee</th> -->
+			<th class="blue header">Opened on</th>
+			<th class="blue header">Closed on</th>
+		</tr>
+	</thead>
+	<tbody>
+
+		<% @issues.each_with_index  do |issue, i| %>
+			<tr>
+				<td><%= i+1 %></td>
+				<td><%= link_to issue.ticket_id , issue, remote: true %></td>
+				<td><%= issue.title %></td>
+				<!-- <td><%= issue.description %></td> -->
+				<td><%= issue.issue_type %></td>
+				<td><%= issue.module %></td>
+				<td><%= issue.priority %></td>
+				<td><%= issue.severity %></td>
+				<!-- <td><%= issue.version %></td> -->
+				<td><%= issue.status %></td>
+				<!-- <td><%= issue.impact %></td> -->
+				<!-- <td><%= issue.author.name unless issue.author.nil? %></td>
+				<td><%= issue.assignee.name unless issue.assignee.nil? %></td> -->
+				<td><%= issue.created_at.strftime("%d/%m/%Y") %></td>
+				<td>
+					<% if issue.status == 'Closed' %>
+						<%= issue.updated_at.strftime("%d/%m/%Y") %>
+					<% end %>
+				</td>
+			</tr>
+		<% end %>
+	</tbody>
+</table>
+<script type="text/javascript">
+	$("table").tablesorter({sortList: [[1,1]]});
+</script>

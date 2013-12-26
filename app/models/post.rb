@@ -8,6 +8,8 @@ class Post < ActiveRecord::Base
   has_many :communityposts, dependent: :destroy
   has_many :communities, :through => :communityposts
 
+  belongs_to :postable, :polymorphic => true
+
   has_many :photos, dependent: :destroy
   accepts_nested_attributes_for :photos, :allow_destroy => true
 

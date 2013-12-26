@@ -23,25 +23,37 @@
   <% end %>
 
 <% else %>
-<div class="center hero-unit container-fluid canvas" style="margin-top:70px;">
-  <span class="center hero-unit span10">
-      <h1>Welcome to ComUnity</h1>
-
-    <h2>
-      This is a
-      <a href="#">Event Management</a>
-       application.
-    </h2>
-
-    <%= link_to "Sign up now!", '/signup', class: "btn success" %>
-  </span>
-
-<span class="center">
-           
-             <%= render 'sessions/signin' %>
-             
-    
-</span>
+<div class="hero-unit container-fluid " style="margin-top:70px;">
+  <div class="" style="width: 980px; margin: 0 auto">
+    <aside>
+      <section class="span8 center">
+        <div >
+          <h1 class="inlineBlock" style="padding: 42px 0 24px; font-size: 28px; line-height: 36px">
+            Come unite with friends, neighbours and the
+            <br>
+            world around you on Comunity. 
+          </h1>
+        </div>
+      </section>
+    </aside>
+  <div class="span13">
+  <h1 style="font-size: 36px">
+      Sign Up
+    </h1>
+    <h5 class="center">
+      It’s always free. No need to sign up if you have Facebook account, just login with it.
+    </h5>
+    <br>
+    <div>
+      <div>
+        <noscript>
+          &lt;div id="no_js_box"&gt;&lt;h2&gt;JavaScript is disabled on your browser.&lt;/h2&gt;&lt;p&gt;Please enable JavaScript on your browser or upgrade to a JavaScript-capable browser to register for Facebook.&lt;/p&gt;&lt;/div&gt;
+        </noscript>
+    </div>
+    <%= render 'user_info_login' %>
+  </div>
+  </div>
+</div>
 </div>
 <!--
 <%= link_to image_tag("indy.png", alt: "Rashi"), 'http://rashi.org/' %> -->

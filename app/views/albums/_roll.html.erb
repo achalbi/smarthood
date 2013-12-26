@@ -1,3 +1,4 @@
+   <script src="https://rawgithub.com/kayahr/jquery-fullscreen-plugin/master/jquery.fullscreen.js"></script>
    <div id="camera_rolls" style="margin-left:250px;margin-bottom:0px;">
      <!--<ul class="breadcrumb" style="width:670px">
       <li><a href="#" class="marginLeft10">View by month</a> </li>
@@ -53,10 +54,34 @@
      });
 
           $("a.lightview1").fancybox({
+            padding    : 0,
+            afterShow: function() { 
+                $('<div class="expander"></div>').appendTo(this.inner).click(function() {
+                    $(document).toggleFullScreen();
+                });
+            },
+            afterClose: function() {
+              $(document).toggleFullScreen();
+                $(document).fullScreen(false);
+            },
             'transitionIn'  : 'elastic',
             'transitionOut' : 'elastic',
             'speedIn'   : 600, 
             'speedOut'    : 200, 
             'overlayShow' : false
+/*           ,
+        autoCenter : false,
+        afterLoad  : function () {
+            $.extend(this, {
+                aspectRatio : false,
+                type    : 'html',
+                height  : '100%',
+                content : '<div class="fancybox-image" style="background-image:url(' + this.href + '); background-size: cover; background-position:50% 50%;background-repeat:no-repeat;height:100%;width:100%;" /></div>'
+            });
+        }*/
+          });
+
+          $(document).bind("fullscreenerror", function() {
+              alert("Browser rejected fullscreen change");
           });
     </script>

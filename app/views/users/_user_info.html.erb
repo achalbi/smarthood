@@ -1,0 +1,130 @@
+<div class="span14">
+  <% if current_user == @user %>
+ <%= link_to "edit", '#', id: "edit_user",  class: " pull-right uibutton icon edit",:title => "Edit" %><br>
+ <% end %>
+ <p><h4>Name : <small><%= @user.user_info.first_name %></small> <small><%= @user.user_info.middle_name %></small> <small><%= @user.user_info.last_name %></small> </h4></p>
+      <p><h4>e-mail : <%= @user.email  %></h4></p>
+      <!-- <p><h4>Current city : <%= @user.user_info.current_city  %></h4></p>
+      <p><h4>Home town : <%= @user.user_info.home_town  %></h4></p> -->
+      <p><h4>Birthday : <%= @user.user_info.dob.strftime("%d/%m/%Y") unless @user.user_info.dob.nil? %></h4></p>
+      <p><h4>Gender : <%= @user.user_info.gender  %></h4></p>
+      <p><h4>Mobile : <%= @user.user_info.mobile  %></h4></p>
+      <p><h4>Relationship status : <%= @user.user_info.relationship_status  %></h4></p>
+      <!-- <p><h4>work : <%= @user.user_info.work  %></h4></p>
+      <p><h4>Education : <%= @user.user_info.education  %></h4></p> -->
+</div>
+
+
+<%= form_for( @user, remote: true, :html => {:multipart => true}) do |f| %>
+<div id="modal_user" style="display:none;" >
+          <div id="modal-from-dom2" class="modal hide fade in" style="display: block;width:700px;">
+            <div class="modal-header">
+              <a href="#" id="closeX_user" class="close">×</a>
+              <span style="font-size:20px;line-height: 2;">Edit User</span>
+            </div>
+            <div class="modal-body" style="max-height:550px;">
+              <div class="row">
+          <div class="span14 ui-front">
+            
+               <%= render 'shared/error_messages', object: f.object %>
+          <%= f.fields_for :user_info do |ui| %>
+               <div class="center_block clearfix">
+                  <%= ui.label :first_name, "Name" %>
+                  <div class="input">
+                  <%= ui.text_field :first_name, :placeholder=>"First name", class: "span4" %>
+                 <!-- <%= ui.text_field :middle_name, :placeholder=>"Middle name", class: "span4" %>-->
+                  <%= ui.text_field :last_name, :placeholder=>"Last name",class: "span4" %>
+                  </div>
+               </div>
+
+          <% end %>
+
+          <div id="change_password_link_div" class="center_block clearfix">
+            <div class="input">
+              <%= link_to "change password", '#', id: "change_password_link",  class: "uibutton icon edit",:title => "Change password" %>
+            </div>
+          </div>
+          <div id="change_password" class="center_block clearfix">
+              <%= f.label :password %>
+            <div class="input">
+              <%= f.password_field :password, :placeholder=>"Password" %>
+              <%= f.password_field :password_confirmation, :placeholder=>"Confirm Password" %>
+            </div>
+          </div>
+
+
+          <div class="center_block clearfix">
+              <%= f.label "E-mail" %>
+            <div class="input">
+              <%= f.email_field :email, :placeholder=>"E-mail" %>
+            </div>
+          </div>
+
+          <%= f.fields_for :user_info do |ui| %>
+               <div class="center_block clearfix">
+                  <%= ui.label "Birthday" %>
+                  <div id="dob_date" class="input">
+                  <%= ui.date_select :dob, :placeholder=>"Birthday" %>
+                  </div>
+               </div>
+               <div class="center_block clearfix">
+                    <%= ui.label :gender %>
+                  <div class="input">
+                    <%= ui.radio_button :gender, "male", :checked => true  %> Male &nbsp;
+                    <%= ui.radio_button :gender, "female" %> Female &nbsp;
+                    <%= ui.radio_button :gender, "other" %> Other
+                  </div>
+               </div>
+               <div class="center_block clearfix">
+                  <%= ui.label :mobile %>
+                  <div class="input">
+                  <%= ui.telephone_field :mobile, :placeholder=>"Mobile" %>
+                  </div>
+               </div>
+               <div class="center_block clearfix">
+                  <%= ui.label :relationship_status %>
+                  <div class="input">
+                    <%= ui.select :relationship_status, options_for_select([["Married", "married"], ["Single", "single"], ["Committed", "committed"]], ui.object.relationship_status) %>
+                  </div>
+               </div>
+
+          <% end %>
+                         
+          </div>
+        </div>   
+           </div>
+            <div class="modal-footer" >
+              <%= f.submit "Update", class: "btn primary pull-right", id: "updUser" %>  
+            </div>
+          </div>
+          
+        </div>
+            <% end %>
+
+
+    
+</div>
+
+<script type="text/javascript">
+    $("#edit_user").click(function(){
+      $('#modal_user').modal('show');
+    });
+    $("#closeX_user").click(function(){
+          $('#modal_user').modal('hide');
+        });
+    $("#updUser").click(function(){
+          $('#modal_user').modal('hide');
+          $("#change_password").show();
+        });
+    $("#dob_date select").addClass('medium');
+
+   $("#change_password_link").click(function(){
+    $("#change_password_link").hide();
+    $("#change_password").show();
+
+   });
+   $(document).ready(function(){
+    $("#change_password").hide();
+  });
+
+</script>

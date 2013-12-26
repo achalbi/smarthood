@@ -20,8 +20,11 @@
  *= require fullcalendar
  *= require font-awesome
  *= require token-input-facebook
- *= require jquery.lazy-images
  */
 
 
-/* fullcalendar.print*/
+/* 
+fullcalendar.print
+jquery.lazy-images
+bootstrap-multiselect
+*/ 

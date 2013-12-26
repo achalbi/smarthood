@@ -18,6 +18,9 @@ class StaticPagesController < ApplicationController
       @communities = Community.where('id IN (?)', @cu_ids)
       @communityposts = Communitypost.where('community_id IN (?)', @cu_ids)
       @posts = @communityposts.paginate(page: params[:page], :per_page => 8).collect{|a| a.post}.uniq
+    else
+      @user = env['omniauth.identity'] ||= User.new
+      @user.user_info = UserInfo.new
     end
   end
   
@@ -26,5 +29,6 @@ class StaticPagesController < ApplicationController
 
   def about
   end
+
 end
   

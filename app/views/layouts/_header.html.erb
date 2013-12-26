@@ -1,14 +1,14 @@
+                <%= form_tag "/auth/identity/callback" do %>
 <header class="container-fluid">
   <div class="topbar">  
     
     <div class="topbar-inner navbar ">
       <div class="container-fluid canvas">
 
-        <%= link_to "ComUnity", home_page, id: "logo1", class: "brand ", style:"margin-left:150px" %>
-        <nav>
-          <ul class="nav pull-right">
           <% if signed_in? %>
-            
+        <%= link_to "ComUnity", home_page, id: "logo1", class: "brand ", style:"margin-left:150px;margin-top:5px;vertical-align: middle;background-color:transparent; " %>
+        <nav>
+          <ul class="nav pull-right">            
             <li id="fat-menu" class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                 Account <b class="caret1"></b>
@@ -25,11 +25,73 @@
                   <%= link_to "Sign out", signout_path, id: "sign_out_fb" %> <!-- , method: "delete" %> -->
               </li>
             </li>
-          <% else %>
-            <li><%= link_to image_tag("facebook.png", alt: "Facebook"), '#', id: "sign_in_fb", style: "margin: 1px;padding:1px;" %></li>
-          <% end %>
         </ul>
       </nav>
+          <% else %>
+        <%= link_to "ComUnity", home_page, id: "logo1", class: "brand ", style:"margin-left:150px;font-size:xx-large;margin-top:5px;vertical-align: middle;background-color:transparent; " %>
+            <div class="menu_login_container pull-right">
+                  <table cellspacing="0" style="margin-bottom:5px;margin-top:10px;">
+                    <tbody>
+                        <!-- <tr >
+                            <td class="html7magic " style="border:0px;padding:0px;">
+                                <label for="auth_key" style="color:white; float:left!important;">Email</label>
+                            </td>
+                            <td class="html7magic " style="border:0px;padding:0px;">
+                                <label for="password" style="color:white; float:left!important;">Password</label>
+                            </td> -->
+                        </tr>
+                        <tr>
+                            <td style="border:0px;padding:0px;">
+                                <%= text_field_tag :auth_key, nil, placeholder: "Email" %>
+                            </td>
+                            <td style="border:0px;padding:0px 0px 5px 5px;">
+                              <table style="margin-bottom:0px;">
+                                <tr>
+                                  <td style="border:0px;padding:0px;">
+                                      <%= password_field_tag :password, nil,  placeholder: "Password" %>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td style="border:0px;padding:0px; 0px 5px 5px;">
+                                      <a rel="nofollow" href="<%= new_password_reset_path %>">Forgot your password?</a>
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                            <td style="border:0px;padding:0px 0px 5px 5px;width:20px;" >
+                                    <%= submit_tag "Log in", class: "ui-button active" %>
+                            </td>
+                            <td style="border:0px;padding:0px 0px 5px 5px;width:20px;" >
+                                  <p style="margin-left:20px;margin-right:20px;color:white;margin-top:0px;font-size:small;">
+                                     or
+                                  </p> 
+                            </td>
+                          <td style="border:0px;padding:0px 0px 5px 5px;">
+                            <%= link_to image_tag("facebook.png", alt: "Facebook"), '#', id: "sign_in_fb" %>
+                          </td>
+                        </tr>
+                            <!--
+                        <tr>
+                             <td class="login_form_label_field" style="border:0px;padding:0px;">
+                                <div>
+                                    <div class="uiInputLabel clearfix uiInputLabelLegacy">
+                                        <input id="persist_box" type="checkbox" name="persistent" value="1" checked="1" class="uiInputLabelInput uiInputLabelCheckbox">
+                                        <label for="persist_box" class="uiInputLabelLabel">Keep me logged in</label>
+                                    </div>
+                                    <input type="hidden" name="default_persistent" value="1">
+                                </div>
+                            </td> 
+                            <td class="login_form_label_field pull-right" style="border:0px;padding:0px;"><a rel="nofollow" href="<%= new_password_reset_path %>">Forgot your password?</a>
+                            </td>
+                        </tr>
+                          -->
+                        
+                    </tbody>
+                </table>
+                <% end %>
+            </div>
+           
+          <% end %>
     </div>
   </div>
 </div>

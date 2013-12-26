@@ -14,12 +14,11 @@
 //= require jquery
 //= require jquery_ujs
 //= require jquery.ui.all
-//= require jquery.remotipart
 //= require bootstrap
+//= require jquery.remotipart
 //= require autocomplete-rails
 //= require jquery.tokeninput
 //= require fullcalendar
-//= require jquery.lazy-images
 
 //= require_tree .
 //= require_tree ../../../vendor/assets/javascripts/lightview/.
@@ -29,3 +28,5 @@
 //= require_tree ../../../vendor/assets/javascripts/sidemenu/.
 //= require_tree ../../../vendor/assets/javascripts/fancybox/.
 
+// jquery.lazy-images
+// bootstrap-multiselect

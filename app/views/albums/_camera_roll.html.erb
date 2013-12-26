@@ -259,6 +259,15 @@
             
           });
           $("a.lightview1").fancybox({
+            padding    : 0,
+            afterShow: function() { 
+                $('<div class="expander"></div>').appendTo(this.inner).click(function() {
+                    $(document).toggleFullScreen();
+                });
+            },
+            afterClose: function() {
+                $(document).fullScreen(false);
+            },
             'transitionIn'  : 'elastic',
             'transitionOut' : 'elastic',
             'speedIn'   : 600, 

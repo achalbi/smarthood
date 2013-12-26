@@ -12,18 +12,29 @@
         </section>
       </div>
       </td>
-      <td style="padding:0px;" class="grid">
+      <td style="padding:0px;" class="post_grid">
+        <div class="container_pics" >
          <% post.photos.each do |photo| %>
             <li style="border-top: 0px;">
             <div  class="img_zoom" >
-          <a href="<%= photo.pic_url %>" rel="rettyPhoto[<%= post.id %>]" class="lightview" 
-         data-lightview-group="thumbnail-<%= post.id %>" 
-         data-lightview-group-options="controls: 'thumbnails'">
-          <%= cl_image_tag(photo.pic_url(:medium_large), class:"image_al_c")  %></a> 
+          <% if (post.postable_type != Objecttypeenum::EVENT && post.postable_type != Objecttypeenum::ACTIVITY && post.postable_type != Objecttypeenum::ALBUM)%>
+            <a href="<%= photo.pic_url %>" rel="rettyPhoto[<%= post.id %>]" class="lightview" data-lightview-group="thumbnail-<%= post.id %>" data-lightview-group-options="controls: 'thumbnails'">
+            <%= cl_image_tag(photo.pic_url(:medium_large), class:"image_al_c")  %></a> 
+          <% end %>
+          <% if post.postable_type == Objecttypeenum::EVENT %>
+            <%= link_to cl_image_tag(photo.pic_url(:medium_large), class:" albumLink", id:"#{photo.id}") , post.postable, remote: true %>
+          <% end %>
+          <% if post.postable_type == Objecttypeenum::ACTIVITY %>
+            <%= link_to cl_image_tag(photo.pic_url(:medium_large), class:" albumLink", id:"#{photo.id}") , post.postable, remote: true %>
+          <% end %>
+          <% if post.postable_type == Objecttypeenum::ALBUM %>
+            <%= link_to cl_image_tag(photo.pic_url(:medium_large), class:" albumLink", id:"#{photo.id}") , post.postable, remote: true %>
+          <% end %>
           </div>
           </li>
-        
+          <% break %>
         <% end %>
+        </div>
         
         <div style="background-color:#f0f0f0;padding:5px;margin:4px 0px;">
         <span class="content" style="font-size:15px"><%= post.content %></span>
@@ -59,7 +70,7 @@
           <% end %>
         <% end %>
 
-          <span class="timestamp">
+          <span class="timestamp" >
             Posted <%= time_ago_in_words(post.created_at) %> ago.
           </span>
         <% if current_user?(post.user) %>
@@ -80,6 +91,7 @@
 <script type="text/javascript">
 $(document).ready(function(){
   $(".gravatar").addClass(" thumbnail");
+  $("#content").addClass("photo_content");
   });
 
 $('.img_zoom1 img').load(function() {

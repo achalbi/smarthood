@@ -10,6 +10,7 @@ class Group < ActiveRecord::Base
     self.user_ids = ids.split(",")
   end
 
+  #has_many :postables, :as => :postable
   has_many :albums, :as => :albumable
 
   has_many :user_groups, dependent: :destroy

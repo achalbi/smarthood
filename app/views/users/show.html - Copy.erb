@@ -1,0 +1,30 @@
+<% provide(:title, @user.name) %>
+<div class="row">
+  <aside class="span6">
+    <section>
+      <h1>
+        <%= gravatar_for @user, size: 100 %>
+        <%= @user.name %>
+      </h1>
+    </section>
+    <section>
+      <%= render 'shared/stats' %>
+    </section>
+  </aside>
+  <div class="span8">
+  	 <%= render 'follow_form' if signed_in? %>
+      <div id="gp_div"> 
+ 
+        <% if @posts.any? %>
+          <ol class="microposts">
+            <% @posts.each do |post| %>
+             <!-- <%= render :partial => 'posts/post_wo_user', :locals => {:post => post} %>-->
+             <%= render 'posts/post' %>
+            <% end %>
+          </ol>
+        <% end %>
+      </div>
+    
+  </div>
+</div>
+

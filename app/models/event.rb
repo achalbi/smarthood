@@ -8,6 +8,7 @@ class Event < ActiveRecord::Base
   belongs_to :photo
   accepts_nested_attributes_for :photo
   accepts_nested_attributes_for :eventdetails
+  has_many :posts, :as => :postable
 
   attr_reader :user_tokens
   attr_accessor :user_ids

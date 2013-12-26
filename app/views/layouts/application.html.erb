@@ -50,7 +50,15 @@
               </li>
 
             </div>
-            <!--   <li><%= link_to "Pause Interval", id: "pauseInterval" %></li>
+            <li><%= link_to "Issues Tracker", issue_trackers_path, id: "issues_home" %></li>
+            <li><%= link_to "Blogs", issue_trackers_path, id: "issues_home" %></li>
+            <li><%= link_to "Book Shelf", issue_trackers_path, id: "issues_home" %></li>
+            <li><%= link_to "Discussion & Debates", issue_trackers_path, id: "issues_home" %></li>
+            <li><%= link_to "Buy & Sell", issue_trackers_path, id: "issues_home" %></li>
+            <li><%= link_to "Tasks", issue_trackers_path, id: "issues_home" %></li>
+            <li><%= link_to "Create a page", issue_trackers_path, id: "issues_home" %></li>
+            <!-- <li><%= link_to "UI", 'ui' %></li>
+              <li><%= link_to "Pause Interval", id: "pauseInterval" %></li>
            <li><%= link_to "Follow / Unfollow group", groups_path %></li>
             <li><%= link_to "Group post", posts_path %></li>-->
             <% end %>
@@ -118,12 +126,12 @@
     };
 
     setInterval(function() {
-        $.get(' <%= update_count_activitynotifications_path %>');
+  //      $.get(' <%= update_count_activitynotifications_path %>');
       }, 10000);
 
 function restartInterval(){
   setInterval(function() {
-        $.get(' <%= update_count_activitynotifications_path %>');
+ //       $.get(' <%= update_count_activitynotifications_path %>');
       }, 10000);
 }
 

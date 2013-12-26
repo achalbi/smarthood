@@ -182,7 +182,8 @@ def join_cu
       if @notifications_settings.blank?
         createNotificationSettings(params[:id])
       end
-    getNotifiableUsers(Objecttypeenum::COMUNITY, @community, nil, nil, Uc_enum::JOINED) 
+      @community = Community.find(params[:id])
+    getNotifiableUsers(Objecttypeenum::COMUNITY, @community, Objecttypeenum::USER, current_user, Uc_enum::JOINED) 
 end
 
 def unjoin_cu
@@ -299,13 +300,11 @@ end
 
 def search_app_user
   @users = User.where("name like ? AND id != ?", "%#{params[:q]}%", current_user.id)
-        # debugger
         @users_pp = []
         @users.each do |user|
           user[:profile_pic] =  gravatar_for_url(user, size: 40)
           @users_pp << user
         end
-      # debugger
       respond_to do |format|
         format.html
         format.json { render :json => @users_pp.map(&:attributes) }
@@ -322,7 +321,6 @@ def search_app_user
           @users_pp << friend
         end
       end
-      # debugger
       respond_to do |format|
         format.html
         format.json { render :json => @users_pp.map(&:attributes) }

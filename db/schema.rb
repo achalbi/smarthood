@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131130120235) do
+ActiveRecord::Schema.define(:version => 20131219162929) do
 
   create_table "activities", :force => true do |t|
     t.string   "title"
@@ -257,6 +257,47 @@ ActiveRecord::Schema.define(:version => 20131130120235) do
     t.datetime "updated_at",      :null => false
   end
 
+  create_table "issue_ticket_action_photos", :force => true do |t|
+    t.integer  "issue_ticket_action_id"
+    t.integer  "photo_id"
+    t.datetime "created_at",             :null => false
+    t.datetime "updated_at",             :null => false
+  end
+
+  create_table "issue_ticket_actions", :force => true do |t|
+    t.integer  "issue_tracker_id"
+    t.integer  "ticket_action_id"
+    t.integer  "user_id"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+    t.string   "comment"
+  end
+
+  create_table "issue_trackers", :force => true do |t|
+    t.string   "ticket_id"
+    t.string   "version"
+    t.string   "description"
+    t.string   "module"
+    t.string   "priority"
+    t.string   "severity"
+    t.string   "status"
+    t.string   "impact"
+    t.integer  "author_id"
+    t.integer  "assignee_id"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+    t.string   "title"
+    t.string   "issue_type"
+  end
+
+  create_table "locations", :force => true do |t|
+    t.string   "address"
+    t.float    "latitude"
+    t.float    "longitude"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
   create_table "microposts", :force => true do |t|
     t.string   "content"
     t.integer  "user_id"
@@ -296,6 +337,8 @@ ActiveRecord::Schema.define(:version => 20131130120235) do
     t.string   "photo_content_type"
     t.integer  "photo_file_size"
     t.datetime "photo_updated_at"
+    t.integer  "postable_id"
+    t.string   "postable_type"
   end
 
   add_index "posts", ["user_id", "created_at"], :name => "index_posts_on_user_id_and_created_at"
@@ -320,6 +363,21 @@ ActiveRecord::Schema.define(:version => 20131130120235) do
     t.datetime "updated_at",    :null => false
   end
 
+  create_table "sn_links", :force => true do |t|
+    t.string   "fb"
+    t.string   "twitter"
+    t.string   "google"
+    t.string   "linkedin"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "ticket_actions", :force => true do |t|
+    t.string   "description"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
   create_table "user_groups", :force => true do |t|
     t.integer  "user_id"
     t.integer  "group_id"
@@ -333,6 +391,26 @@ ActiveRecord::Schema.define(:version => 20131130120235) do
   add_index "user_groups", ["group_id"], :name => "index_user_groups_on_group_id"
   add_index "user_groups", ["user_id", "group_id"], :name => "index_user_groups_on_user_id_and_group_id", :unique => true
   add_index "user_groups", ["user_id"], :name => "index_user_groups_on_user_id"
+
+  create_table "user_infos", :force => true do |t|
+    t.string   "first_name"
+    t.string   "middle_name"
+    t.string   "last_name"
+    t.integer  "home_town"
+    t.integer  "current_city"
+    t.datetime "dob"
+    t.string   "gender"
+    t.string   "mobile"
+    t.string   "work"
+    t.string   "education"
+    t.string   "relationship_status"
+    t.string   "app_url"
+    t.string   "website"
+    t.datetime "created_at",          :null => false
+    t.datetime "updated_at",          :null => false
+    t.integer  "sn_link_id"
+    t.integer  "user_id"
+  end
 
   create_table "usercommunities", :force => true do |t|
     t.integer  "community_id"
