@@ -6,11 +6,15 @@ class IssueTrackersController < ApplicationController
     TicketAction.create(description: "Opened")
     TicketAction.create(description: "Resolved")
     TicketAction.create(description: "Wont-Fix")
+    TicketAction.create(description: "Invalid")
+    TicketAction.create(description: "Re-opened")
     TicketAction.create(description: "Closed")
     TicketAction.create(description: "Comment")
     @issue = IssueTracker.new
     @issues = IssueTracker.all
     @ticket_actions = TicketAction.all
+    @ta = TicketAction.where(description: "Comment")
+    @ticket_actions = @ticket_actions.delete_if { |obj| @ta.include?(obj)}
   end
 
   def create
@@ -27,7 +31,7 @@ class IssueTrackersController < ApplicationController
         end
       end
     @issue.save
-    redirect_to :action => :index
+    @issue
   end
 
   def show
@@ -54,7 +58,7 @@ class IssueTrackersController < ApplicationController
       @issue = IssueTracker.find(params[:id])
       @issue.destroy
       @issue = IssueTracker.new
-      @issues = IssueTracker.all.reverse
+      @issues = IssueTracker.all
       @ticket_actions = TicketAction.all
     end
 
