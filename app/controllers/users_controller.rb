@@ -15,7 +15,10 @@ class UsersController < ApplicationController
       @user.user_info = UserInfo.new
     end
     @post = Post.new
-    @posts = @user.posts.uniq   
+    @posts = @user.posts.uniq 
+    if @user.address.nil? 
+        @user.address = Address.new
+    end
   end
 
   def create

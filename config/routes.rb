@@ -30,6 +30,12 @@ EMS::Application.routes.draw do
 
   resources :activitynotificationsetting
   resources :ticket_action
+  resources :buysell do
+    collection do
+      post :add_category, :add_subcategory, :search_items
+      get :load_subcategory
+    end
+  end
   
   resources :issue_ticket_action, :only => [:create, :destroy]
 

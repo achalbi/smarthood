@@ -17,7 +17,7 @@
          <% post.photos.each do |photo| %>
             <li style="border-top: 0px;">
             <div  class="img_zoom" >
-          <% if (post.postable_type != Objecttypeenum::EVENT && post.postable_type != Objecttypeenum::ACTIVITY && post.postable_type != Objecttypeenum::ALBUM)%>
+          <% if (post.postable_type != Objecttypeenum::EVENT && post.postable_type != Objecttypeenum::ACTIVITY && post.postable_type != Objecttypeenum::ALBUM && post.postable_type != Objecttypeenum::BUYSELL)%>
             <a href="<%= photo.pic_url %>" rel="rettyPhoto[<%= post.id %>]" class="lightview" data-lightview-group="thumbnail-<%= post.id %>" data-lightview-group-options="controls: 'thumbnails'">
             <%= cl_image_tag(photo.pic_url(:medium_large), class:"image_al_c")  %></a> 
           <% end %>
@@ -28,6 +28,9 @@
             <%= link_to cl_image_tag(photo.pic_url(:medium_large), class:" albumLink", id:"#{photo.id}") , post.postable, remote: true %>
           <% end %>
           <% if post.postable_type == Objecttypeenum::ALBUM %>
+            <%= link_to cl_image_tag(photo.pic_url(:medium_large), class:" albumLink", id:"#{photo.id}") , post.postable, remote: true %>
+          <% end %>
+          <% if post.postable_type == Objecttypeenum::BUYSELL %>
             <%= link_to cl_image_tag(photo.pic_url(:medium_large), class:" albumLink", id:"#{photo.id}") , post.postable, remote: true %>
           <% end %>
           </div>

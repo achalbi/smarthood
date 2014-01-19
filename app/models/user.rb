@@ -10,7 +10,7 @@
 #
 
 class User < OmniAuth::Identity::Models::ActiveRecord
-  attr_accessible :name, :email, :password, :email_confirmation, :password_confirmation, :photo, :photo_file_name, :photo_content_type, :photo_file_size, :photo_updated_at, :photos_attributes, :pic, :profile_pic, :user_info_attributes, :user_info
+  attr_accessible :name, :email, :password, :email_confirmation, :password_confirmation, :photo, :photo_file_name, :photo_content_type, :photo_file_size, :photo_updated_at, :photos_attributes, :pic, :profile_pic, :user_info_attributes, :user_info, :address_id, :address_attributes
   attr_accessor :profile_pic
 
   has_secure_password
@@ -62,6 +62,9 @@ class User < OmniAuth::Identity::Models::ActiveRecord
   has_many :issue_trackers, foreign_key: "author_id", dependent: :destroy
   has_many :issue_trackers, foreign_key: "assignee_id", dependent: :destroy
 
+  has_many :buysell_items, dependent: :destroy
+  belongs_to  :address
+  accepts_nested_attributes_for :address, :allow_destroy => true
   
   validates :name,  presence: true, length: { maximum: 50 },
                     uniqueness: { case_sensitive: false }

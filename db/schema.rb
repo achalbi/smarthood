@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131219162929) do
+ActiveRecord::Schema.define(:version => 20140119112101) do
 
   create_table "activities", :force => true do |t|
     t.string   "title"
@@ -79,6 +79,17 @@ ActiveRecord::Schema.define(:version => 20131219162929) do
   add_index "activityposts", ["post_id", "activity_id"], :name => "index_activityposts_on_post_id_and_activity_id", :unique => true
   add_index "activityposts", ["post_id"], :name => "index_activityposts_on_post_id"
 
+  create_table "addresses", :force => true do |t|
+    t.string   "doorno"
+    t.string   "street"
+    t.string   "city"
+    t.string   "state"
+    t.string   "country"
+    t.string   "postalcode"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
   create_table "albumactivities", :force => true do |t|
     t.integer  "activity_id"
     t.integer  "album_id"
@@ -106,6 +117,65 @@ ActiveRecord::Schema.define(:version => 20131219162929) do
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
     t.string   "username"
+  end
+
+  create_table "buysell_item_categories", :force => true do |t|
+    t.string   "name"
+    t.string   "description"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  create_table "buysell_item_category_subcategories", :force => true do |t|
+    t.integer  "buysell_item_category_id"
+    t.integer  "buysell_item_subcategory_id"
+    t.datetime "created_at",                  :null => false
+    t.datetime "updated_at",                  :null => false
+  end
+
+  create_table "buysell_item_comments", :force => true do |t|
+    t.integer  "buysell_item_id"
+    t.integer  "comment_id"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+  end
+
+  create_table "buysell_item_communities", :force => true do |t|
+    t.integer  "buysell_item_id"
+    t.integer  "community_id"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+  end
+
+  create_table "buysell_item_photos", :force => true do |t|
+    t.integer  "buysell_item_id"
+    t.integer  "photo_id"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+  end
+
+  create_table "buysell_item_subcategories", :force => true do |t|
+    t.string   "name"
+    t.string   "description"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  create_table "buysell_items", :force => true do |t|
+    t.string   "name"
+    t.string   "description"
+    t.integer  "price"
+    t.string   "currency"
+    t.string   "notes"
+    t.datetime "created_at",                  :null => false
+    t.datetime "updated_at",                  :null => false
+    t.integer  "user_id"
+    t.integer  "address_id"
+    t.string   "condition"
+    t.string   "contact_no"
+    t.integer  "buysell_item_subcategory_id"
+    t.string   "item_type"
+    t.integer  "privacy"
   end
 
   create_table "comments", :force => true do |t|
@@ -435,6 +505,7 @@ ActiveRecord::Schema.define(:version => 20131219162929) do
     t.boolean  "admin"
     t.string   "token"
     t.string   "fb_uid"
+    t.integer  "address_id"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

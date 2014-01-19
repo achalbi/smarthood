@@ -1,0 +1,131 @@
+<% @posts.each do |post| %>
+      <table id="table_<%= post.id %>">
+      <tr>
+        <td width="70px" style="padding:2px;">
+      <div class="pull-left paginate_do">
+        <section class="grid">
+          <li>
+            <a href="/users/<%=post.user.id %>/" data-remote="true" style="cursor:pointer;border:0px;padding:0px;" class="pop_up" rel="popover" data-content='<%= gravatar_for post.user, size: 100 %>' data-original-title="<%= post.user.name %>" >
+                    <%= gravatar_for post.user, size: 50 %>
+            </a>
+          </li>
+        </section>
+      </div>
+      </td>
+      <td style="padding:0px;" class="post_grid">
+        <div class="container_pics" >
+         <% post.photos.each do |photo| %>
+            <li style="border-top: 0px;">
+            <div  class="img_zoom" >
+            <a href="<%= photo.pic_url %>" rel="rettyPhoto[<%= post.id %>]" class="lightview" data-lightview-group="thumbnail-<%= post.id %>" data-lightview-group-options="controls: 'thumbnails'">
+            <%= cl_image_tag(photo.pic_url(:medium_large), class:"image_al_c")  %></a> 
+          </div>
+          </li>
+          <% break %>
+        <% end %>
+        </div>
+        <div style="background-color:#f0f0f0;padding:5px;margin:4px 0px;">
+        
+        <p class="pull-right">
+          <span class="timestamp" >
+            Posted <%= time_ago_in_words(post.created_at) %> ago.
+          </span>
+        <% if current_user?(post.user) %>
+          <%= link_to "delete", post, method: :delete, remote: true,
+                                           data: { confirm: "You sure?" },
+                                           title: post.content %>
+        <% end %>
+        </p><br>
+        <div>
+          <%= label_tag "Name: " , nil, class: " pull-left" %><span style="line-height: 2.3em;">&nbsp;&nbsp;<%= post.postable.name %><span><br>
+        </div>
+        <div class="more_details">
+          <%= label_tag "Description: ", nil, class: "pull-left" %><span style="line-height: 2.3em;">&nbsp;&nbsp;<%= post.postable.description %><span><br>
+        </div>
+        <div>
+          <%= label_tag "Type: ", nil, class: " pull-left" %><span style="line-height: 2.3em;">&nbsp;&nbsp;<%= post.postable.item_type %><span><br>
+        </div>
+        <div>
+          <%= label_tag "Category: ", nil, class: " pull-left" %><span style="line-height: 2.3em;">&nbsp;&nbsp;<%= post.postable.buysell_item_subcategory.buysell_item_category.name %><span><br>
+        </div>
+                <div>
+          <%= label_tag "Sub-category: ", nil, class: " pull-left" %><span style="line-height: 2.3em;">&nbsp;&nbsp;<%= post.postable.buysell_item_subcategory.name %><span><br>
+        </div>
+        <div>
+          <%= label_tag "Price: ", nil, class: " pull-left" %><span style="line-height: 2.3em;">&nbsp;&nbsp;<%= post.postable.price %><span><br>
+        </div>
+        <div>
+          <%= label_tag "Condition: ", nil, class: " pull-left" %><span style="line-height: 2.3em;">&nbsp;&nbsp;<%= post.postable.condition %><span><br>
+        </div>
+        <div class="more_details">
+          <%= label_tag "Notes: ", nil, class: " pull-left" %><span style="line-height: 2.3em;">&nbsp;&nbsp;<%= post.postable.notes %><span><br>
+        </div>
+        <div class="more_details">
+          <%= label_tag "Contact No: ", nil, class: " pull-left" %><span style="line-height: 2.3em;">&nbsp;&nbsp;<%= post.postable.contact_no %><span><br>
+        </div>
+                  <div class="center_block clearfix more_details ">
+                                <%= label_tag "Address:" %>
+                                <div  class="clearfix" style="margin-left:150px;margin-top:7px;">
+                                <p><%= post.postable.address.doorno  %></p>
+                                <p><%= post.postable.address.street  %></p>
+                                <p><%= post.postable.address.city  %></p>
+                                <p><%= post.postable.address.country  %> - <%= post.postable.address.postalcode  %></p>
+                                </div>
+                      </div>
+
+          <a class="pull-right more_details_link disabled">More details...</a><br>
+
+        <% unless post.communities.count == 1 && post.communities[0].id == active_community.id %>
+          <% unless post.communities[0].nil? %>
+                  <span  class="center_block"><br><h6>Posted under the <%="ComUnity".pluralize(post.communities.count) %>:</h6>
+                  <ul class="groupsList">
+                  <% post.communities.each do |cu| %>
+                  <ol>
+                  <%= link_to cu.name, cu, remote:true %>
+                  </ol>
+                  <% end %>
+                  </ul>
+                </span>
+          <% end %>
+        <% end %>
+        </div>
+
+
+      </td>
+      </tr>
+      </table>
+ <% end %>
+<script type="text/javascript">
+$(document).ready(function(){
+  $(".gravatar").addClass(" thumbnail");
+  $("#content").addClass("photo_content");
+  $(".more_details").hide();
+  });
+
+$('.img_zoom1 img').load(function() {
+    $(this).data('height', this.height);
+}).bind('mouseenter mouseleave', function(e) {
+    $(this).stop().animate({
+        height: $(this).data('height') * (e.type === 'mouseenter' ? 1.08 : 1)
+    });
+});
+$(".more_details_link").click(function(){
+  $(this).parent().children(".more_details").show();
+  $(this).hide();
+});
+
+$('.pop_up').popover({
+    html: true,
+    trigger: 'manual',
+    placement: 'left',
+    delay: { hide: 500},
+    template: ' <div class="popover"><div class="pop_div"><div class="arrow1" stlye="margin-right:10px;"></div><div class="popover-inner"  ><h3 class="popover-title" ></h3><div class="popover-content" ><p></p><br></div></div></div></div>'
+});
+
+  $(".pop_up").hover(function(){
+      $(this).popover('show');        
+  },function(){
+      $(this).popover('hide');        
+  });
+
+</script>

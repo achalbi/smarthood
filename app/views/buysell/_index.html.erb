@@ -1,0 +1,528 @@
+<% provide(:title, 'Buy/Sell/Rent') %>
+<div class="row">
+<%= form_tag( '/buysell/search_items' , remote: true) do  %>	
+  <aside class="span5 well " style="margin: 0px 15px; 15px 15px; position: fixed;">
+    <section>
+      <%= link_to "Category ",  "#", id: "add_category",  class: "icon add uibutton" , style:"margin-left:5px;"%>
+      <%= link_to "Sub-Category ",  "#", id: "add_subcategory",  class: "icon add uibutton" , style:"margin-left:5px;"%>
+
+
+    </section>
+    <section>
+      <h4>Search for <%= link_to "Sell/Rent ",  "#", id: "sell_rent",  class: "pull-right uibutton" , style:"margin-left:5px;"%></h4>
+      <h6>Buy/Rent</h6>
+        <ul class="inputs-list ">
+                <li>
+                    <%= select_tag "item_type", options_for_select([["I want to Buy", "sell"], ["I want for Rent", "rent"]]), class: "span5 quick_filter", id: "type_search" %>
+                </li>
+        </ul>
+        <h6>Condition</h6>
+        <ul class="inputs-list ">
+                <li>
+                    <%= select_tag "condition", options_for_select([["New", "new"], ["Used", "used"]]), class: "span5 quick_filter", id: "type_search" %>
+                </li>
+        </ul>
+
+      <h6>ComUnity</h6>
+      <ul class="inputs-list">
+                <li>
+                    <%= select_tag "comm_type", options_for_select([["All community", "all"], ["My communities", "my"]]), class: "span5 quick_filter", id: "comm_type_search" %>
+                </li>
+                <div id="comm_list">
+                <br>
+                  <li>
+                    <label>
+                  <%= check_box_tag( "search[community_id][]", active_community.id, @selected_comm.include?(active_community), class: " quick_filter") %>
+                      <span><%= active_community.name %></span>
+                    </label>
+                  </li>
+                  <% @joined_communities.each do |cu| %>
+                    <li>
+                      <label>
+                        <%= check_box_tag("search[community_id][]", cu.id, @selected_comm.include?(cu), class: " quick_filter") %>
+                        <span><%= cu.name %></span>
+                      </label>
+                    </li>
+                  <% end %>
+                </div>
+      </ul>
+      
+      <h6>Catgories</h6>
+        <ul class="inputs-list ">
+                <li>
+                  <%= collection_select(:buysell_item_category, :id1, BuysellItemCategory.all, :id, :name, {:prompt => 'Select'}, class: "span5 quick_filter" )%>
+                </li>
+        </ul>
+      <h6>Sub-Catgories</h6>
+        <ul class="inputs-list ">
+                <li class="item_subcategory">
+                  <%= collection_select(:buysell_item_subcategory, :id, @subcategories, :id, :name, {:prompt => 'Select'}, class: "span5 quick_filter" )%>
+                </li>
+        </ul>
+
+
+      <h6>Price Range</h6>
+        <ul class="inputs-list ">
+               <!--  <li>
+                 <input type="text" id="amount" style="border:0; color:#f6931f; font-weight:bold;">
+                </li>
+                <div id="slider-range"></div> -->
+                <li>
+                      From &nbsp;
+                      <%= text_field_tag :price_from, nil,  :placeholder=>"0", class: ' span4 quick_filter_price' %><br>
+                      To &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      <%= text_field_tag :price_to, nil,  :placeholder=>"Maximum", class: ' span4 quick_filter_price' %> 
+                </li>
+        </ul>
+    </section>
+  </aside>
+
+      <%= submit_tag "Search", class: "active_hide", id: "search_submit" %>  
+
+<% end %>
+<div id="aboutDiv" style="margin-left: 300px;">  
+    <ul class="users span14">
+      <div id="results">
+           <%= render :partial => 'buysell/post' %>
+    <div class="ressources">
+    </div>
+      </div>
+    <!-- <div id="loading_page" class="center" ><img src="http://res.cloudinary.com/rashi/image/upload/v1377924529/loading7_gvb06y.gif"></div> -->
+  </ul>
+</div>
+</div>
+
+
+<%= form_for( @category, url: add_category_buysell_index_path , remote: true,  :html => {:multipart => true}) do |f| %>
+  <div id="modal_category" style="display:none" >
+          <div id="modal-from-dom" class="modal hide fade in" style="display: block;width:700px;">
+            <div class="modal-header">
+              <a href="#" id="close_category" class="close">×</a>
+              <h3>Create category</h3>
+            </div>
+            <div class="modal-body" style="max-height:430px;">
+              <div class="row">
+              <div class="span14 ui-front">
+                   <%= render 'shared/error_messages', object: f.object %>
+                   <div class="center_block clearfix">
+                      <%= f.label :name %>
+                        <div class="input">
+                      <%= f.text_field :name, :placeholder=>"Name", class: ' inherit_width', :title => "Title" %> 
+                      </div>
+                    </div>
+                    <div class="center_block clearfix">
+                      <%= f.label :description %>
+                        <div class="input">
+                      <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title => "Description", rows: 3, cols: 75  %> 
+                      </div>
+                    </div>
+              </div>    
+             </div>
+           </div>
+            <div class="modal-footer" >
+              <%= f.submit "Create", class: "btn primary pull-right ", id: "create_category" %>  
+            </div>
+          </div>          
+        </div>
+<% end %>
+
+<%= form_for( @subcategory, url: add_subcategory_buysell_index_path , remote: true,  :html => {:multipart => true}) do |f| %>
+  <div id="modal_subcategory" style="display:none" >
+          <div id="modal-from-dom" class="modal hide fade in" style="display: block;width:700px;">
+            <div class="modal-header">
+              <a href="#" id="close_subcategory" class="close">×</a>
+              <h3>Create category</h3>
+            </div>
+            <div class="modal-body" style="max-height:430px;">
+              <div class="row">
+              <div class="span14 ui-front">
+                   <%= render 'shared/error_messages', object: f.object %>
+                   <div class="center_block clearfix">
+                        <%= f.label :category, "Category" %>
+                        <div class="input">
+                        <%= f.select(:buysell_item_category_id, BuysellItemCategory.all.collect {|a| [a.name, a.id]}) %>
+                        </div>
+                        
+                     </div>
+                   <div class="center_block clearfix">
+                      <%= f.label :name %>
+                        <div class="input">
+                      <%= f.text_field :name, :placeholder=>"Name", class: ' inherit_width', :title => "Title" %> 
+                      </div>
+                    </div>
+                    <div class="center_block clearfix">
+                      <%= f.label :description %>
+                        <div class="input">
+                      <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title => "Description", rows: 3, cols: 75  %> 
+                      </div>
+                    </div>
+              </div>    
+             </div>
+           </div>
+            <div class="modal-footer" >
+              <%= f.submit "Create", class: "btn primary pull-right ", id: "create_subcategory" %>  
+            </div>
+          </div>          
+        </div>
+<% end %>
+<%= form_for( @buysellitem, url: {action: "create"}, remote: true,  :html => {:multipart => true}) do |f| %>
+  <div id="modal_create_item" style="display:none" >
+          <div id="modal-from-dom" class="modal hide fade in" style="display: block;width:700px;">
+            <div class="modal-header">
+              <a href="#" id="close_create_item" class="close">×</a>
+              <h3>Create category</h3>
+            </div>
+            <div class="modal-body" style="max-height:430px;">
+              <div class="row">
+              <div class="span14 ui-front">
+                   <%= render 'shared/error_messages', object: f.object %>
+                   <div class="center_block clearfix">
+                      <%= f.label :name %>
+                        <div class="input">
+                      <%= f.text_field :name, :placeholder=>"Name", class: ' inherit_width', :title => "Title" %> 
+                      </div>
+                    </div>
+                    <div class="center_block clearfix">
+                      <%= f.label :description %>
+                        <div class="input">
+                      <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title => "Description", rows: 3, cols: 75  %> 
+                      </div>
+                    </div>
+                   <div class="center_block clearfix">
+                        <%= f.label :category, "Category" %>
+                        <div class="input">
+                        <%= collection_select(:buysell_item_category, :id2, BuysellItemCategory.all, :id, :name, {:prompt => 'Select'}, class: "span5" )%>
+                        </div>
+                        
+                     </div>
+                   <div class="center_block clearfix">
+                      <%= f.label :subcategory, "Sub-Category" %>
+                        <div class="input item_subcategory">
+                        <%= collection_select(:buysell_item_subcategory, :id, @subcategories, :id, :name, {:prompt => 'Select'}, class: "span5" )%>
+                      </div>
+                    </div>
+                    <div class="center_block clearfix">
+                      <%= f.label :item_type, "Sell/Rent" %>
+                        <div class="input">
+                      <%= f.select :item_type, options_for_select([["I want to sell", "sell"], ["I want to Rent", "rent"]]), {}, id: "type" %>    
+                      </div>
+                    </div>
+                    <div class="center_block clearfix">
+                      <%= f.label :price %>
+                        <div class="input">
+                      <%= f.select :currency, options_for_select([["Rs", "Rs"], ["$", "$"]]), {}, id: "currency", class: "span2" %>    
+                      <%= f.text_field :price, :placeholder=>"Price", class: ' inherit_width', :title => "Price" %> 
+                      </div>
+                    </div>
+                    <div class="center_block clearfix">
+                      <%= f.label :condition %>
+                        <div class="input">
+                      <%= f.select :condition, options_for_select([["New", "new"], ["Used", "used"]]), {}, id: "condition", class: "span2" %>
+                      </div>
+                    </div>
+                    <div class="center_block clearfix">
+                      <%= f.label :notes %>
+                        <div class="input">
+                      <%= f.text_area :notes, :placeholder=>"More details", class: ' inherit_width', :title => "More details", rows: 3, cols: 75  %> 
+                      </div>
+                    </div>
+                    <div class="center_block clearfix">
+                      <%= f.label "Contact No." %>
+                        <div class="input">
+                      <%= f.text_field :contact_no, :placeholder=>"Mobile / Phone no.", class: ' inherit_width', :title => "Contact No." %> 
+                      </div>
+                    </div> <br>
+                    <div class="center_block clearfix">
+                      <%= label_tag "Add picture:" %>
+                      <div class="input">
+                          <%= fields_for :photos, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
+                     
+                            <%= photo_form.file_field :pic, id: "pic_buysell", :multiple => true,style: "width:1px; height:1px; padding:0px;  left:0px;" %>       
+
+                          <% end %>
+                          <canvas id="imageCanvas_buysell" style = "border: 1px solid #ddd; padding:5px; align:center;cursor:pointer" >select photos</canvas>
+
+                      </div>
+                    </div>
+                    <div id="address_details">
+                        <%= link_to "Change Address",  "#", id: "change_address_link",  class: "icon edit uibutton pull-right" , style:"margin-left:5px;"%>
+                      <div class="center_block clearfix">
+                                <%= f.label "Address" %>
+                                <div  class="input">
+                                <p><%= @buysellitem.address.doorno  %></p>
+                                <p><%= @buysellitem.address.street  %></p>
+                                <p><%= @buysellitem.address.city  %></p>
+                                <p><%= @buysellitem.address.country  %> - <%= @buysellitem.address.postalcode  %></p>
+                                </div>
+                      </div>
+                      
+                    </div>
+                    <div id="change_address">
+                        <%= f.fields_for :address do |f| %>
+                             <div class="center_block clearfix">
+                                <%= f.label "Door no." %>
+                                <div class="input">
+                                <%= f.text_field :doorno, :placeholder=>"Door no." %>
+                                </div>
+                             </div>
+                             <div class="center_block clearfix">
+                                  <%= f.label :street %>
+                                <div class="input">
+                                  <%= f.text_field :street, :placeholder=>"Street" %>
+                                </div>
+                             </div>
+                             <div class="center_block clearfix">
+                                  <%= f.label :city %>
+                                <div class="input">
+                                  <%= f.text_field :city, :placeholder=>"City" %>
+                                </div>
+                             </div>
+                             <div class="center_block clearfix">
+                                  <%= f.label :country %>
+                                <div class="input">
+                                  <%= f.text_field :country, :placeholder=>"Country" %>
+                                </div>
+                             </div>
+                             <div class="center_block clearfix">
+                                  <%= f.label :postalcode, "Postal Code" %>
+                                <div class="input">
+                                  <%= f.text_field :postalcode, :placeholder=>"Postal Code" %>
+                                </div>
+                             </div>
+
+                        <% end %>
+                    </div>
+                    <div class="center_block clearfix">
+                     <%= f.label :privacy, "Advertise to" %>
+                       <div class="input">
+                          <ul class="inputs-list">
+                                <li>
+                                    <%= f.select :privacy, options_for_select([["Active community", Privacyenum::PUBLIC], ["My communities", Privacyenum::PRIVATE]]), class: "span5 quick_filter" %>
+                                </li>
+                                <div id="comm_list2">
+                                <br>
+                                  <li>
+                                    <label>
+                                  <%= check_box_tag( "search[community_id][]", active_community.id, @selected_comm.include?(active_community)) %>
+                                      <span><%= active_community.name %></span>
+                                    </label>
+                                  </li>
+                                  <% @joined_communities.each do |cu| %>
+                                    <li>
+                                      <label>
+                                        <%= check_box_tag("search[community_id][]", cu.id, @selected_comm.include?(cu)) %>
+                                        <span><%= cu.name %></span>
+                                      </label>
+                                    </li>
+                                  <% end %>
+                                </div>
+                          </ul>
+                       </div>
+                    </div>
+
+              </div>    
+             </div>
+           </div>
+            <div class="modal-footer" >
+              <%= f.submit "Create", class: "btn primary pull-right ", id: "create_item" %>  
+            </div>
+          </div>          
+        </div>
+<% end %>
+
+<script type="text/javascript">
+
+
+
+    $("#add_category").click(function(){
+      $('#modal_category').modal('show');
+    });
+    $("#close_category").click(function(){
+          $('#modal_category').modal('hide');
+        });
+
+    $("#create_category").click(function(){
+          $('#modal_category').modal('hide');
+        }); 
+
+    $("#add_subcategory").click(function(){
+      $('#modal_subcategory').modal('show');
+    });
+    $("#close_subcategory").click(function(){
+          $('#modal_subcategory').modal('hide');
+        });
+
+    $("#create_subcategory").click(function(){
+          $('#modal_subcategory').modal('hide');
+        });
+
+    $("#sell_rent").click(function(){
+      $('#modal_create_item').modal('show');
+    });
+    $("#close_create_item").click(function(){
+          $('#modal_create_item').modal('hide');
+        });
+
+    $("#create_item").click(function(){
+          //$('#modal_create_item').modal('hide');
+          $(this).button('loading')
+        });
+
+      $("#change_address_link").click(function(){
+          $('#change_address').show();
+          $('#address_details').hide();
+        });
+
+    $( "#buysell_item_category_id1" ).on("change", function() {
+      var categoryId = $( "#buysell_item_category_id1" ).val();
+      $.get( '<%= load_subcategory_buysell_index_path %>', { category_id: categoryId } );
+    });
+
+        $( "#buysell_item_category_id2" ).change(function() {
+      var categoryId = $( "#buysell_item_category_id2" ).val();
+      $.get( '<%= load_subcategory_buysell_index_path %>', { category_id: categoryId } );
+    });
+
+    $(document).ready(function(){
+      $('#comm_list').hide();
+      $('#comm_list2').hide();
+      $('#change_address').hide();
+    });
+
+    $( "#comm_type_search" ).change(function() {
+      var categoryId = $( "#comm_type_search" ).val();
+      if(categoryId == 'all'){
+        $('#comm_list').hide();
+      }else{
+        $('#comm_list').show();
+      }
+    });
+
+    $( "#buysell_item_privacy" ).change(function() {
+      var categoryId = $( "#buysell_item_privacy" ).val();
+      if(categoryId == 1){
+        $('#comm_list2').hide();
+      }else{
+        $('#comm_list2').show();
+      }
+    });
+
+
+var imageLoader = document.getElementById('pic_buysell');
+imageLoader.addEventListener('change', handleImage, false);
+$("#imageCanvas_buysell").click(function(){
+  $("#pic_buysell").click();
+});
+var canvas = document.getElementById('imageCanvas_buysell');
+var ctx = canvas.getContext('2d');
+ctx.font="30px Arial";
+ctx.fillText("Select Photos",10,50);
+function handleImage(e){
+  var canvas = document.getElementById('imageCanvas_buysell');
+  var ctx = canvas.getContext('2d');
+  var iCnt=0;
+  var files = e.target.files;
+    canvas.width = 500;
+    canvas.height = 155*(Math.ceil(files.length/3));
+    for( var i = 0, len = files.length; i < len; i++) 
+    {
+      if(files[i])
+      {
+        var reader = new FileReader();
+        reader.onload = function(event){
+          var img = new Image();
+
+          img.onload = function(){
+            var ratioPx = 150;
+            var sWidth =ratioPx;
+            var ratio = img.width/sWidth;
+            var sHeight = img.height/ratio;   
+            if(sHeight>ratioPx){
+             sHeight =ratioPx;
+             ratio = img.height/sHeight;
+             sWidth = img.width/ratio;  
+           }
+           ctx.drawImage(img, 155*(iCnt%3),155*(Math.floor(iCnt/3)),sWidth,sHeight);
+                  //ctx.drawImage(img,0,0,sWidth,sHeight);
+                  iCnt++;
+                }
+                img.src = event.target.result;
+              }
+              reader.readAsDataURL(e.target.files[i]);     
+            }
+          }
+        }
+
+
+
+
+/*
+ $(function() {
+  $( "#slider-range" ).slider({
+    range: true,
+    min: 0,
+    max: 10000,
+    values: [ 0, 300 ],
+    slide: function( event, ui ) {
+      $( "#amount" ).val( "Rs " + ui.values[ 0 ] + " - Rs " + ui.values[ 1 ] );
+    }
+  });
+    $( "#amount" ).val( "Rs " + $( "#slider-range" ).slider( "values", 0 ) +" - Rs " + $( "#slider-range" ).slider( "values", 1 ) );
+ });
+*/
+
+
+
+
+
+
+
+/*
+
+var currentPage = 1;
+var intervalID = -1000;
+ 
+function checkScroll() {
+  if (nearBottomOfPage()) {
+    currentPage++;
+ // console.log("endless request "+ currentPage);
+  $('#loading_page').show();
+    jQuery.ajax('/users?page=' + currentPage, {asynchronous:true, evalScripts:true, method:'get', success: function(data, textStatus, jqXHR) {
+    $('.ressources').append($(data).find('.ressources').html());
+    $('#loading_page').hide();
+    if((typeof jQuery(data).find('.ressources').html() == 'undefined' ||jQuery(data).find('.ressources').html() == null) || jQuery(data).find('.ressources').html().trim().length == 0){
+      clearInterval(intervalID);
+
+    }
+  },});
+  }
+}
+ 
+function nearBottomOfPage() {
+  return scrollDistanceFromBottom() < 50;
+}
+ 
+function scrollDistanceFromBottom(argument) {
+  return pageHeight() - (window.pageYOffset + self.innerHeight);
+}
+ 
+function pageHeight() {
+  return Math.max(document.body.scrollHeight, document.body.offsetHeight);
+}
+$('document').ready(function(){
+  intervalID = setInterval(checkScroll, 250);
+})
+*/ 
+$('document').ready(function(){
+  $('.gravatar').addClass('thumbnail');
+  $('#create_item').attr('data-loading-text', 'Creating...');
+});
+
+$(".quick_filter").on("change", function(){
+  $("#search_submit").click();
+});
+
+$(".quick_filter_price").change(function(){
+  $("#search_submit").click();
+});
+</script>
