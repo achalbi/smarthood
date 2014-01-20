@@ -68,6 +68,7 @@ class BuysellController < ApplicationController
   def create
     @buysellitem = current_user.buysell_items.build(params[:buysell_item])
     @buysellitem.buysell_item_subcategory_id = params[:buysell_item_subcategory][:id]
+    @buysellitem.buysell_item_category_id = params[:buysell_item_category][:id2]
     @buysellitem.save
         params[:photos][:pic].each do |pic|
           @photo = Photo.new
@@ -76,7 +77,7 @@ class BuysellController < ApplicationController
         end    
     @buysellitem.save
         @post = Post.new
-        @post.content = "New item: '" + @buysellitem.name << "' was posted by '" << current_user.name << "'. " 
+        @post.content = "Item: '" + @buysellitem.name << "' was posted by '" << current_user.name << "' to " << @buysellitem.item_type << " at " << @buysellitem.currency << " " << @buysellitem.price.to_s << ". " 
         @post.user_id = current_user.id
         @post.postable = @buysellitem
         @post.save
@@ -99,23 +100,26 @@ class BuysellController < ApplicationController
 
   def search_items
     @items = BuysellItem
-      unless params[:item_type].nil?
+      if(params[:item_type] != 'all')
         @items = @items.where(item_type: params[:item_type])
       end
-      unless params[:condition].nil?
+      if(params[:condition] != 'all')
         @items = @items.where(condition: params[:condition]) 
       end
-      unless params[:search][:community_id].nil?
+      if(params[:comm_type] != 'all')
         @items = @items.joins(:communities).where(communities: {id: params[:search][:community_id]}) 
       end
+      unless params[:buysell_item_category][:id1].blank?
+        @items = @items.where(buysell_item_category_id: params[:buysell_item_category][:id1])
       unless params[:buysell_item_subcategory][:id].blank?
-        @items = @items.where(buysell_item_subcategory_id: params[:buysell_item_subcategory][:id])
+          @items = @items.where(buysell_item_subcategory_id: params[:buysell_item_subcategory][:id])
+        end
       end
       unless params[:price_from].blank?
-        @items = @items.where("price > ?", params[:price_from]) 
+        @items = @items.where("price >= ?", params[:price_from]) 
       end
       unless params[:price_to].blank?
-        @items = @items.where("price < ?", params[:price_to]) 
+        @items = @items.where("price <= ?", params[:price_to]) 
       end
       @items = @items.all
 

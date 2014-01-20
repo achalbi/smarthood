@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140119112101) do
+ActiveRecord::Schema.define(:version => 20140120023809) do
 
   create_table "activities", :force => true do |t|
     t.string   "title"
@@ -176,6 +176,7 @@ ActiveRecord::Schema.define(:version => 20140119112101) do
     t.integer  "buysell_item_subcategory_id"
     t.string   "item_type"
     t.integer  "privacy"
+    t.integer  "buysell_item_category_id"
   end
 
   create_table "comments", :force => true do |t|

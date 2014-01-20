@@ -1,11 +1,12 @@
 class BuysellItem < ActiveRecord::Base
-  attr_accessible :address_attributes, :buysell_item_subcategory_id, :currency, :description, :name, :notes, :price, :privacy, :item_type, :user_id, :contact_no, :condition, :photos, :communities
+  attr_accessible :address_attributes, :buysell_item_subcategory_id, :buysell_item_category_id, :currency, :description, :name, :notes, :price, :privacy, :item_type, :user_id, :contact_no, :condition, :photos, :communities
 
     belongs_to :user
     belongs_to :address
     accepts_nested_attributes_for :address, :allow_destroy => true
     
     belongs_to :buysell_item_subcategory
+    belongs_to :buysell_item_category
 
     has_many :buysell_item_photos, dependent: :destroy
 	has_many :photos, :through => :buysell_item_photos

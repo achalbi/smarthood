@@ -13,13 +13,13 @@
       <h6>Buy/Rent</h6>
         <ul class="inputs-list ">
                 <li>
-                    <%= select_tag "item_type", options_for_select([["I want to Buy", "sell"], ["I want for Rent", "rent"]]), class: "span5 quick_filter", id: "type_search" %>
+                    <%= select_tag "item_type", options_for_select([["I want to Buy / Rent", "all"],["I want to Buy only", "sell"], ["I want for Rent only", "rent"]]), class: "span5 quick_filter", id: "type_search" %>
                 </li>
         </ul>
         <h6>Condition</h6>
         <ul class="inputs-list ">
                 <li>
-                    <%= select_tag "condition", options_for_select([["New", "new"], ["Used", "used"]]), class: "span5 quick_filter", id: "type_search" %>
+                    <%= select_tag "condition", options_for_select([["New / Used", "all"],["New", "new"], ["Used", "used"]]), class: "span5 quick_filter", id: "type_search" %>
                 </li>
         </ul>
 
@@ -330,6 +330,7 @@
         </div>
 <% end %>
 
+
 <script type="text/javascript">
 
 
@@ -519,6 +520,7 @@ $('document').ready(function(){
 });
 
 $(".quick_filter").on("change", function(){
+  console.log("123");
   $("#search_submit").click();
 });
 
