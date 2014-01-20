@@ -21,7 +21,9 @@ class BuysellController < ApplicationController
     @subcategories = []
     @buysellitem = BuysellItem.new
     @buysellitem.address = Address.new
-    @buysellitem.address.attributes = current_user.address.attributes.except("id", "created_at", "updated_at")
+    unless current_user.address.nil?
+      @buysellitem.address.attributes = current_user.address.attributes.except("id", "created_at", "updated_at")
+    end
     @buysellitem.contact_no = current_user.user_info.mobile
   end
 
