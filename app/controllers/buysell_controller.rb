@@ -67,6 +67,14 @@ class BuysellController < ApplicationController
     end
   end
 
+  def edit_subcategory
+    @subcategories = []
+    unless params[:category_id].blank?
+        @category = BuysellItemCategory.find(params[:category_id])
+        @subcategories = @category.buysell_item_subcategories
+    end
+  end
+
   def create
     @buysellitem = current_user.buysell_items.build(params[:buysell_item])
     @buysellitem.buysell_item_subcategory_id = params[:buysell_item_subcategory][:id]
@@ -133,6 +141,20 @@ class BuysellController < ApplicationController
     end
     @posts = @posts.reverse
     
+  end
+
+
+  def update
+    @item = BuysellItem.find(params[:buysell_item][:id])
+    @item.update_attributes(params[:buysell_item])
+    @item.save
+  end
+
+  def delete_item
+    @post = Post.find(params[:id])
+    @item = @post.postable
+    @post.destroy
+    @item.destroy
   end
 
 end

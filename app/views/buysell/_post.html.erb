@@ -1,4 +1,5 @@
 <% @posts.each do |post| %>
+
       <table id="table_<%= post.id %>">
       <tr>
         <td width="70px" style="padding:2px;">
@@ -31,9 +32,9 @@
             Posted <%= time_ago_in_words(post.created_at) %> ago.
           </span>
         <% if current_user?(post.user) %>
-          <%= link_to "delete", post, method: :delete, remote: true,
+          <%= link_to "delete", "/buysell/#{post.id}/delete_item", method: :post, remote: true,
                                            data: { confirm: "You sure?" },
-                                           title: post.content %>
+                                           title: post.content %>&nbsp;&nbsp;&nbsp;<a class="pull-right disabled uibutton edit_buysell_link" id="edit_buysell_<%= post.id%>">Edit</a>
         <% end %>
         </p><br>
         <div>
@@ -94,6 +95,125 @@
       </td>
       </tr>
       </table>
+
+<%= form_for( post.postable, url: "/buysell/update", remote: true,  :html => {:multipart => true, method: 'put'}) do |f| %>
+  <div id="modal_edit_buysell_<%= post.id%>" style="display:none" class="modal_edit_buysell" >
+          <div id="modal-from-dom" class="modal hide fade in" style="display: block;width:700px;">
+            <div class="modal-header">
+              <a href="#" id="close_edit_item" class="close close_edit_item">×</a>
+              <h3>Create category</h3>
+            </div>
+            <div class="modal-body" style="max-height:430px;">
+              <div class="row">
+              <div class="span14 ui-front">
+                <%= f.hidden_field :id %>
+                   <%= render 'shared/error_messages', object: f.object %>
+                   <div class="center_block clearfix">
+                      <%= f.label :name %>
+                        <div class="input">
+                      <%= f.text_field :name, :placeholder=>"Name", class: ' inherit_width', :title => "Title" %> 
+                      </div>
+                    </div>
+                    <div class="center_block clearfix">
+                      <%= f.label :description %>
+                        <div class="input">
+                      <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title => "Description", rows: 3, cols: 75  %> 
+                      </div>
+                    </div>
+                    <div class="old_category">
+                      <div class="center_block clearfix">
+                          <%= label_tag "Category" %>
+                          <div class="input">
+                            <span style="line-height: 2.3em;">&nbsp;&nbsp;<%= post.postable.buysell_item_subcategory.buysell_item_category.name %><span>
+                          </div>
+                          
+                       </div>
+                       <div class="center_block clearfix">
+                          <%= label_tag "Sub-Category" %>
+                          <div class="input">
+                            <span style="line-height: 2.3em;">&nbsp;&nbsp;<%= post.postable.buysell_item_subcategory.name %><span>
+                          </div>
+                          
+                       </div>
+                    </div>
+                    <div class="center_block clearfix">
+                      <%= f.label :item_type, "Sell/Rent" %>
+                        <div class="input">
+                      <%= f.select :item_type, options_for_select([["I want to sell", "sell"], ["I want to Rent", "rent"]], f.object.item_type), {}, id: "type" %>    
+                      </div>
+                    </div>
+                    <div class="center_block clearfix">
+                      <%= f.label :price %>
+                        <div class="input">
+                      <%= f.select :currency, options_for_select([["Rs", "Rs"], ["$", "$"]], f.object.currency), {}, id: "currency", class: "span2" %>    
+                      <%= f.text_field :price, :placeholder=>"Price", class: ' inherit_width', :title => "Price" %> 
+                      </div>
+                    </div>
+                    <div class="center_block clearfix">
+                      <%= f.label :condition %>
+                        <div class="input">
+                      <%= f.select :condition, options_for_select([["New", "new"], ["Used", "used"]], f.object.condition), {}, id: "condition", class: "span2" %>
+                      </div>
+                    </div>
+                    <div class="center_block clearfix">
+                      <%= f.label :notes %>
+                        <div class="input">
+                      <%= f.text_area :notes, :placeholder=>"More details", class: ' inherit_width', :title => "More details", rows: 3, cols: 75  %> 
+                      </div>
+                    </div>
+                    <div class="center_block clearfix">
+                      <%= f.label "Contact No." %>
+                        <div class="input">
+                      <%= f.text_field :contact_no, :placeholder=>"Mobile / Phone no.", class: ' inherit_width', :title => "Contact No." %> 
+                      </div>
+                    </div>
+
+                        <%= f.fields_for :address do |f| %>
+                             <div class="center_block clearfix">
+                        <%= label_tag "Address:" %><br><br><br>
+                                <%= f.label "Door no." %>
+                                <div class="input">
+                                <%= f.text_field :doorno, :placeholder=>"Door no." %>
+                                </div>
+                             </div>
+                             <div class="center_block clearfix">
+                                  <%= f.label :street %>
+                                <div class="input">
+                                  <%= f.text_field :street, :placeholder=>"Street" %>
+                                </div>
+                             </div>
+                             <div class="center_block clearfix">
+                                  <%= f.label :city %>
+                                <div class="input">
+                                  <%= f.text_field :city, :placeholder=>"City" %>
+                                </div>
+                             </div>
+                             <div class="center_block clearfix">
+                                  <%= f.label :country %>
+                                <div class="input">
+                                  <%= f.text_field :country, :placeholder=>"Country" %>
+                                </div>
+                             </div>
+                             <div class="center_block clearfix">
+                                  <%= f.label :postalcode, "Postal Code" %>
+                                <div class="input">
+                                  <%= f.text_field :postalcode, :placeholder=>"Postal Code" %>
+                                </div>
+                             </div>
+
+                        <% end %>
+                    
+              </div>    
+             </div>
+           </div>
+            <div class="modal-footer" >
+              <%= f.submit "Update", class: "btn primary pull-right edit_item", id: "edit_item" %>  
+            </div>
+          </div>          
+        </div>
+<% end %>
+
+
  <% end %>
 <script type="text/javascript">
 $(document).ready(function(){
@@ -127,5 +247,26 @@ $('.pop_up').popover({
   },function(){
       $(this).popover('hide');        
   });
+
+$(".edit_buysell_link").click(function(){
+      var id = this.id
+      $('#modal_'+id).modal('show');
+    });
+    $(".close_edit_item").click(function(){
+          $('.modal_edit_buysell').modal('hide');
+        });
+
+    $(".edit_item").click(function(){
+          $('.modal_edit_buysell').modal('hide');
+        });
+
+
+
+        $( "#buysell_item_category_id3" ).change(function() {
+      var categoryId = $( "#buysell_item_category_id3" ).val();
+      var postId = $( "#buysell_item_category_id3" ).val();
+      $.get( '<%= edit_subcategory_buysell_index_path %>', { category_id: categoryId, post_id: postId } );
+    });
+
 
 </script>

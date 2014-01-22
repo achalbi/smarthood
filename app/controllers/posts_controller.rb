@@ -113,6 +113,7 @@ class PostsController < ApplicationController
    end
 
    def destroy
+    @post = Post.find(params[:id])
     @id = @post.id 
     @post.destroy
     respond_to do |format|

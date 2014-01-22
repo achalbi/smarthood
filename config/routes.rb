@@ -31,9 +31,12 @@ EMS::Application.routes.draw do
   resources :activitynotificationsetting
   resources :ticket_action
   resources :buysell do
+    member do
+      post :delete_item
+    end
     collection do
       post :add_category, :add_subcategory, :search_items
-      get :load_subcategory
+      get :load_subcategory, :edit_subcategory
     end
   end
   
