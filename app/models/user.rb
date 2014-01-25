@@ -35,6 +35,7 @@ class User < OmniAuth::Identity::Models::ActiveRecord
   has_many :events, foreign_key: "creator", dependent: :destroy
 
   has_many :posts, dependent: :destroy
+  has_many :userlikes, dependent: :destroy
   has_many :comments, dependent: :destroy
   has_many :authentications, dependent: :destroy
   has_many :photos, dependent: :destroy

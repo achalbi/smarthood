@@ -101,7 +101,8 @@ EMS::Application.routes.draw do
 
   resources :posts do
     collection do
-      get :cus_post_paginate
+      get :cus_post_paginate, :userLike, :userUnlike
+      post :share
     end
      resources :photos, :only => [:create, :destroy]
     resources :comments

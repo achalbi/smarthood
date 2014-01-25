@@ -23,7 +23,7 @@
     
     <div class="container1">
       <% flash.each do |key, value| %>
-        <div class="alert alert-<%= key %>"><%= value %></div>
+        <!--<div class="alert alert-<%= key %>"><%= value %></div>-->
       <% end %>
       <% if signed_in? %>
       <aside>
@@ -32,7 +32,7 @@
                 <h3>Menu</h3>
           <ul>
             <% if is_community_active? %>
-            <li class="active"><%= link_to "Home", root_path %></li>
+            <li class="active"><%= link_to "Home", root_path, id: 'root_home' %></li>
             <% end %>
             <li><%= link_to "ComUnity", communities_path %><span style="display:none"><%= link_to "", communities_path, id: 'home_comunity' %></span></li>
            <% if is_community_active? %>

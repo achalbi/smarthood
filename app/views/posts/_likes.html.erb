@@ -1,0 +1,84 @@
+          <% @Ulikes = false %>
+        <% unless post.userlikes.blank?  %> 
+          <% post.userlikes.each do |likes| %>
+            <% if likes.user_id == current_user.id %>
+              <% @Ulikes = true %>
+            <% end %>
+
+          <% end %>
+        <% end %>
+
+        <% if @Ulikes %>
+            <%= link_to "Unlike", userUnlike_posts_path(post_id: post.id), remote:true %><span class="timestamp" >&nbsp; - &nbsp;</span><a class="disabled" id="share_<%= post.id %>">Share</a><br> 
+            <div>You <% if post.userlikes.count>1 %> and <abbr id="<%= post.id %>_hover"  title="<% post.userlikes.each do |likes| %><div><%= likes.user.name %></div><% end %>"><a class="disabled"  id="show_like_<%= post.id %>" title="" title=""><%= post.userlikes.count-1 %> <%= "other".pluralize(post.userlikes.count) %></a></abbr> <% end %> like this</div>
+             
+        <% else %>
+            <%= link_to "Like", userLike_posts_path(post_id: post.id), remote:true %><span class="timestamp" >&nbsp; - &nbsp;</span><a class="disabled" id="share_<%= post.id %>">Share</a><br> 
+            <% if post.userlikes.count>0 %>
+              <% if post.userlikes.count==1 %>
+                <div><%= post.userlikes[0].user.name  %> likes this</div>
+              <% else %>
+                <div><abbr id="<%= post.id %>_hover"  title="<% post.userlikes.each do |likes| %><div><%= likes.user.name %></div><% end %>"><a class="disabled"  id="show_like_<%= post.id %>" title="" title=""><%= post.userlikes.count %> <%= "other".pluralize(post.userlikes.count) %></a></abbr> like this</div>
+              <% end %>
+            <% end %>
+        <% end %>
+
+  <div id="modal_like_<%= post.id %>" style="display:none" class="modal_like">
+          <div id="modal-from-dom" class="modal hide fade in" style="display: block;width:500px;">
+            <div class="modal-header">
+              <a href="#" id="close_category" class="close">×</a>
+              <h3>People who like this</h3>
+            </div>
+            <div class="modal-body" style="max-height:430px;width: 300px;">
+              <div class="row">
+              <div class="span14 ui-front">
+                <ul class="users span14" style="width: 100%;" >
+                  <% post.userlikes.each do |likes| %>
+                      <li style="width: 100%;">
+                        <a href="<%= user_path(likes.user) %>" data-remote="true">
+                            <%= gravatar_for likes.user, size: 50 %>
+                        </a>
+                        <h4 class="pull-left">
+                          <%= link_to likes.user.name, likes.user, remote: true %>
+                        </h4>
+                        <%= likes.user.user_info.current_city  unless likes.user.user_info.nil? %>
+                      </li>
+                  <% end %> 
+                </ul>              
+              </div>    
+             </div>
+           </div>
+          </div>          
+        </div>
+
+
+
+
+        <script type="text/javascript">
+            $(document).ready(function() {
+             //  $("#<%= post.id %>_hover" ).hover(function(){console.log("123")  },function(){console.log("456") });
+              $("#<%= post.id %>_hover" ).tooltip({
+                 content: "<% post.userlikes.each do |likes| %><div><%= likes.user.name %></div><% end %>"
+              });
+
+            });
+
+        $("#show_like_<%= post.id %>").click(function(){
+          $('#modal_like_<%= post.id %>').modal('show');
+        });
+        $(".close").click(function(){
+              $('.modal_like').modal('hide');
+            });
+
+    $("#share_<%= post.id %>").click(function(){
+      $('#modal_share_<%= post.id %>').modal('show');
+    });
+    $(".close").click(function(){
+          $('.modal_share').modal('hide');
+        });
+
+    $(".share_post").click(function(){
+          $(this).button('loading');
+        }); 
+
+        </script>

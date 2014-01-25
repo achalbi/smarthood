@@ -38,6 +38,16 @@
           <% break %>
         <% end %>
         </div>
+          <div class="pull-right" style="padding:5px 0 0 5px;margin:1px 0 0 0;">
+          <span class="timestamp" >
+            Posted <%= time_ago_in_words(post.created_at) %> ago.
+          </span>
+        <% if current_user?(post.user) %>
+          <%= link_to "delete", post, method: :delete, remote: true,
+                                           data: { confirm: "You sure?" },
+                                           title: post.content %>
+        <% end %><br>
+          </div>
         
         <div style="background-color:#f0f0f0;padding:5px;margin:4px 0px;">
         <span class="content" style="font-size:15px"><%= post.content %></span>
@@ -47,7 +57,7 @@
           <% end %>
         <% end %>
           <% unless post.groups[0].nil? %>
-                <span  class="center_block"><br><h6>Posted under the <%="Group".pluralize(post.groups.count) %>:</h6>
+                <span  class="center_block"><h5 class="timestamp">Posted under the <%="Group".pluralize(post.groups.count) %>:</h5>
                 <ul class="groupsList">
                 <% post.groups.each do |group| %>
                 <ol>
@@ -56,12 +66,12 @@
                 <% end %>
                 </ul>
               </span>
-        <% end %><br>
+        <% end %>
         
 
         <% unless post.communities.count == 1 && post.communities[0].id == active_community.id %>
           <% unless post.communities[0].nil? %>
-                  <span  class="center_block"><br><h6>Posted under the <%="ComUnity".pluralize(post.communities.count) %>:</h6>
+                  <span  class="center_block"><h5 class="timestamp">Posted under the <%="Community".pluralize(post.communities.count) %>:</h5>
                   <ul class="groupsList">
                   <% post.communities.each do |cu| %>
                   <ol>
@@ -72,17 +82,11 @@
                 </span>
           <% end %>
         <% end %>
-
-          <span class="timestamp" >
-            Posted <%= time_ago_in_words(post.created_at) %> ago.
-          </span>
-        <% if current_user?(post.user) %>
-          <%= link_to "delete", post, method: :delete, remote: true,
-                                           data: { confirm: "You sure?" },
-                                           title: post.content %>
-        <% end %>
+        <div id="<%= post.id %>_userlike" style="border-top:1px solid #ddd;padding:5px 0 0 5px;margin:5px 0 0 0;">
+              <%= render :partial => "posts/likes", :locals => { :post => post} %>
         </div>
-       
+
+        </div>
           <div id="postId_<%= post.id %>" class="comments">
               <%= render :partial => "comments/comment", :locals => { :comment => @comment, :post => post} %>
           </div>
@@ -90,11 +94,78 @@
       </td>
       </tr>
       </table>
+
+<%= form_for( post, url: share_posts_path , remote: true, method: :post,  :html => {:multipart => true}) do |f| %>
+  <div id="modal_share_<%= post.id %>" style="display:none" class="modal_share">
+          <div id="modal-from-dom" class="modal hide fade in" style="display: block;width:550px;">
+            <div class="modal-header">
+              <a href="#"  class="close">×</a>
+              <h3>Share</h3>
+            </div>
+            <div class="modal-body" style="max-height:430px;">
+              <div class="row">
+              <div class="span6 ui-front">
+                   <%= render 'shared/error_messages', object: f.object %>
+                    <%= f.hidden_field :id %>
+                    <div class="center_block clearfix">
+                      <%= f.text_area :content, :placeholder=>"Description", class: ' inherit_width', :title => "Content", rows: 2, cols: 100  %> 
+                    </div>
+
+
+                  <div class="container_pics" >
+                   <% post.photos.each do |photo| %>
+                      <div  class="img_zoom" >
+                        <%= cl_image_tag(photo.pic_url(:small), class:"image_al_c")  %></a> 
+                    </div>
+                    <% break %>
+                  <% end %>
+                  </div>
+
+                  <% unless @joined_communities.nil? %>
+                  <aside class="" >
+                    <section>
+                    <ul class="inputs-list">
+                       
+                        <div id="comm_list">
+                          <li>
+                            <span  class="center_block"><h5 class="timestamp">Select <%= "Community".pluralize(@joined_communities.count+1) %>:</h5>
+                            <label>
+                          <%= check_box_tag( "community_id[]", active_community.id, @selected_comm.include?(active_community)) %>
+                              <span><%= active_community.name %></span>
+                            </label>
+                          </li>
+                          <% @joined_communities.each do |cu| %>
+                            <li>
+                              <label>
+                                <%= check_box_tag("community_id[]", cu.id, @selected_comm.include?(cu)) %>
+                                <span><%= cu.name %></span>
+                              </label>
+                            </li>
+                          <% end %>
+                        </div>
+                  </ul>
+                    </section>
+                  </aside>
+                <% end %>
+                   
+              </div>    
+             </div>
+           </div>
+            <div class="modal-footer" >
+              <%= f.submit "Share", class: "btn primary pull-right share_post" %>  
+            </div>
+          </div>          
+        </div>
+<% end %>
+
+ 
  <% end %>
 <script type="text/javascript">
 $(document).ready(function(){
   $(".gravatar").addClass(" thumbnail");
   $("#content").addClass("photo_content");
+  $('.share_post').attr('data-loading-text', 'sharing...');
+
   });
 
 $('.img_zoom1 img').load(function() {
@@ -106,7 +177,7 @@ $('.img_zoom1 img').load(function() {
 });
 
 
-$('.pop_up').popover({
+/*$('.pop_up').popover({
     html: true,
     trigger: 'manual',
     placement: 'left',
@@ -119,5 +190,5 @@ $('.pop_up').popover({
   },function(){
       $(this).popover('hide');        
   });
-
+*/
 </script>

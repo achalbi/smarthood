@@ -1,0 +1,1 @@
+$('#<%= escape_javascript( @post.id.to_s )%>_userlike').html('<%= escape_javascript( render :partial => "posts/likes", :locals => { :post => @post}  ) %>')

@@ -1,5 +1,5 @@
 class Post < ActiveRecord::Base
-  attr_accessible :content, :user_id, :photo, :photo_file_name, :photo_content_type, :photo_file_size, :photo_updated_at, :photos_attributes, :pic, :event_id
+  attr_accessible :content, :user_id, :photo, :photo_file_name, :photo_content_type, :photo_file_size, :photo_updated_at, :photos_attributes, :pic, :event_id, :postable_id, :postable_type 
 
 
   belongs_to :user
@@ -9,6 +9,7 @@ class Post < ActiveRecord::Base
   has_many :communities, :through => :communityposts
 
   belongs_to :postable, :polymorphic => true
+  has_many :userlikes, :as => :likeable
 
   has_many :photos, dependent: :destroy
   accepts_nested_attributes_for :photos, :allow_destroy => true

@@ -2,7 +2,7 @@ class PostsController < ApplicationController
   include ActivitynotificationsHelper, UsersHelper
 
   before_filter :signed_in_user, only: [:create, :destroy]
-  before_filter :correct_user,   only: :destroy
+ # before_filter :correct_user,   only: :destroy
 
   def index
     @post = Post.new
@@ -50,74 +50,74 @@ class PostsController < ApplicationController
    end
  when "groups"
   if params[:grp_ids].nil?
-      #flash[:error] = "Please select Group"
-      @post = Post.new
-      @groups = Group.where('id IN (?)', current_user.user_groups.collect(&:group_id))
-    else
-      @post_groups = Group.where('id IN (?)',params[:grp_ids])
-      @post = current_user.posts.build(params[:post])
-      @post.user = current_user
-      @post.save(:validate => false)
-      unless params[:photo].nil?
-        @post.photos << current_user.photos.build(params[:photo])
+        #flash[:error] = "Please select Group"
+        @post = Post.new
+        @groups = Group.where('id IN (?)', current_user.user_groups.collect(&:group_id))
+      else
+        @post_groups = Group.where('id IN (?)',params[:grp_ids])
+        @post = current_user.posts.build(params[:post])
+        @post.user = current_user
         @post.save(:validate => false)
-      end
-      @post_groups.each do |group|
-        @post.groups << group
-      end  
-      @post.communities << active_community 
-      getNotifiableUsers(Objecttypeenum::POST, @post, Objecttypeenum::GROUPS, @post.groups, Uc_enum::CREATED)
-      @post = Post.new
-      @group_ids = current_user.user_groups.collect(&:group_id)
-      @groups = Group.where('id IN (?)', @group_ids)
-      @groupposts = Grouppost.where('group_id IN (?)', @group_ids)
-      @posts = @groupposts.paginate(page: params[:page], :per_page => 8).collect{|a| a.post}.uniq   
-        # @post.save
-         #  flash[:success] = "Post created!"
-       end
-   when "communities"
-    if params[:cu_ids].nil?
-      @post = current_user.posts.build(params[:post])
-      @communities = Community.where(['id IN (?)', current_user.communities.collect(&:id)]) 
-      @post.user = current_user
-      @post.save(:validate => false)
-      unless params[:photo].nil?
-        @post.photos << current_user.photos.build(params[:photo])
-        @post.save(:validate => false)
-      end
-      @post.communities << active_community 
-      
-    else
-      @post_cus = Community.where('id IN (?)',params[:cu_ids])
-      @post = current_user.posts.build(params[:post])
-      @post.user = current_user
-      @post.save(:validate => false)
-      unless params[:photo].nil?
-        @post.photos << current_user.photos.build(params[:photo])
-        @post.save(:validate => false)
-      end
-      @post_cus.each do |cu|
-        @post.communities << cu
-      end   
-    end
-      getNotifiableUsers(Objecttypeenum::POST, @post, Objecttypeenum::COMUNITY, @post.communities, Uc_enum::CREATED)
-      @post = Post.new
-      @cu_ids = current_user.communities.collect(&:id)
-      @communities = Community.where('id IN (?)', @cu_ids)
-      @communityposts = Communitypost.where('community_id IN (?)', @cu_ids)
-      @posts = @communityposts.paginate(page: params[:page], :per_page => 8).collect{|a| a.post}.uniq   
-        # @post.save
-         #  flash[:success] = "Post created!"
-   else
-   end
-   end
+        unless params[:photo].nil?
+          @post.photos << current_user.photos.build(params[:photo])
+          @post.save(:validate => false)
+        end
+        @post_groups.each do |group|
+          @post.groups << group
+        end  
+        @post.communities << active_community 
+        getNotifiableUsers(Objecttypeenum::POST, @post, Objecttypeenum::GROUPS, @post.groups, Uc_enum::CREATED)
+        @post = Post.new
+        @group_ids = current_user.user_groups.collect(&:group_id)
+        @groups = Group.where('id IN (?)', @group_ids)
+        @groupposts = Grouppost.where('group_id IN (?)', @group_ids)
+        @posts = @groupposts.paginate(page: params[:page], :per_page => 8).collect{|a| a.post}.uniq   
+          # @post.save
+           #  flash[:success] = "Post created!"
+         end
+       when "communities"
+        if params[:cu_ids].nil?
+          @post = current_user.posts.build(params[:post])
+          @communities = Community.where(['id IN (?)', current_user.communities.collect(&:id)]) 
+          @post.user = current_user
+          @post.save(:validate => false)
+          unless params[:photo].nil?
+            @post.photos << current_user.photos.build(params[:photo])
+            @post.save(:validate => false)
+          end
+          @post.communities << active_community 
 
-   def destroy
-    @post = Post.find(params[:id])
-    @id = @post.id 
-    @post.destroy
+        else
+          @post_cus = Community.where('id IN (?)',params[:cu_ids])
+          @post = current_user.posts.build(params[:post])
+          @post.user = current_user
+          @post.save(:validate => false)
+          unless params[:photo].nil?
+            @post.photos << current_user.photos.build(params[:photo])
+            @post.save(:validate => false)
+          end
+          @post_cus.each do |cu|
+            @post.communities << cu
+          end   
+        end
+        getNotifiableUsers(Objecttypeenum::POST, @post, Objecttypeenum::COMUNITY, @post.communities, Uc_enum::CREATED)
+        @post = Post.new
+        @cu_ids = current_user.communities.collect(&:id)
+        @communities = Community.where('id IN (?)', @cu_ids)
+        @communityposts = Communitypost.where('community_id IN (?)', @cu_ids)
+        @posts = @communityposts.paginate(page: params[:page], :per_page => 8).collect{|a| a.post}.uniq   
+        # @post.save
+         #  flash[:success] = "Post created!"
+       else
+       end
+     end
+
+  def destroy
+      @post = Post.find(params[:id])
+      @id = @post.id 
+      @post.destroy
     respond_to do |format|
-     format.html { redirect_to @activity, format: 'js' }
+     format.html { }#redirect_to @activity, format: 'js' }
      format.js { }
    end
  end
@@ -128,20 +128,62 @@ class PostsController < ApplicationController
  end
 
  def cus_post_paginate
-    @post = Post.new
-      @cu_ids = current_user.communities.collect(&:id)
-      @communities = Community.where('id IN (?)', @cu_ids)
-      @communityposts = Communitypost.where('community_id IN (?)', @cu_ids)
-      @posts = @communityposts.paginate(page: params[:page], :per_page => 8).collect{|a| a.post}.uniq
- end
-
- private
-
- def correct_user
-  @post = current_user.posts.find(params[:id])
-rescue
-  redirect_to root_url
+  @comm_id = current_user.usercommunities.where("is_admin=? OR invitation != ?", true, Uc_enum::JOINED ).collect(&:community_id)
+  @comm_id << active_community.id
+  @joined_communities = Community.where(['id IN (?) and id NOT IN (?)', current_user.joined_uc.collect(&:community_id), @comm_id]) 
+  @selected_comm = []
+  @selected_comm << active_community
+  @post = Post.new
+  @communities = Community.where('id IN (?) ', current_user.joined_uc.collect(&:community_id))
+  @cu_ids = @communities.collect(&:id)
+  @communityposts = Communitypost.where('community_id IN (?)', @cu_ids)
+  @posts = @communityposts.paginate(page: params[:page], :per_page => 8).collect{|a| a.post}.uniq
 end
+
+def userLike
+  @post = Post.find(params[:post_id])
+  @userlike = current_user.userlikes.new
+  @userlike.likeable = @post
+  @userlike.save
+
+end
+
+def userUnlike
+  @post = Post.find(params[:post_id]) 
+  @userlike = Userlike.where(likeable_id: params[:post_id], likeable_type: "Post", user_id: current_user.id)
+  @userlike[0].destroy
+end
+
+def share
+  @post = Post.find(params[:post][:id])
+  @newPost = Post.new
+  @newPost.attributes = @post.attributes.except("id", "created_at", "updated_at")
+  @newPost.content = params[:post][:content]
+  @newPost.user_id = current_user.id
+  @newPost.save
+  @post_cus = Community.where('id IN (?)',params[:community_id])
+  @post_cus.each do |cu|
+    @newPost.communities << cu
+  end
+  unless @post.photos.blank?
+   @photo = Photo.new
+   @photo.remote_pic_url = @post.photos[0].pic_url
+   @photo.post_id = @newPost.id
+   @photo.save
+ end
+end
+
+private
+
+def correct_user
+  begin
+    @post = current_user.posts.find(params[:id])
+  rescue => e
+  puts e.to_s
+    redirect_to root_url
+  end
+end
+
 
 
 
