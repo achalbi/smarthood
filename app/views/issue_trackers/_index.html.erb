@@ -22,7 +22,7 @@
 		<div class="span4" style="border-top:1px solid #aaa; padding:5px;">
 			<h4>Module:
 				<span style="overflow: hidden;font-size:small">
-					<%= select_tag :module, options_for_select([["Home", "Home"], ["ComUnity", "ComUnity"], ["Users", "Users"], ["Events", "Events"], ["Photos", "Photos"], ["Groups", "Groups"], ["Notifications", "Notifications"], ["Issues Tracker", "Issues tracker"]]),  multiple: true, class: "span4 quick_filter", style: "width:110%;", id: "issue_module_search", size: "8" %>
+					<%= select_tag :module, options_for_select([["Home", "Home"], ["Community", "ComUnity"], ["Users", "Users"], ["Events", "Events"], ["Photos", "Photos"], ["Groups", "Groups"], ["Notifications", "Notifications"], ["Issues Tracker", "Issues tracker"]]),  multiple: true, class: "span4 quick_filter", style: "width:110%;", id: "issue_module_search", size: "8" %>
 				</span> 
 			</h4>
 		</div>
@@ -90,7 +90,7 @@
 		                <div class="center_block clearfix">
 		                  <%= f.label :module %>
 		                  	<div class="input">
-		                  		<%= f.select :module, options_for_select([["Home", "Home"], ["ComUnity", "ComUnity"], ["Users", "Users"], ["Events", "Events"], ["Photos", "Photos"], ["Groups", "Groups"], ["Notifications", "Notifications"], ["Issues Tracker", "Issues tracker"]], f.object.module), {}, id: "issue_module" %>
+		                  		<%= f.select :module, options_for_select([["Home", "Home"], ["Community", "ComUnity"], ["Users", "Users"], ["Events", "Events"], ["Photos", "Photos"], ["Groups", "Groups"], ["Notifications", "Notifications"], ["Issues Tracker", "Issues tracker"]], f.object.module), {}, id: "issue_module" %>
 		              		</div>
 		                </div>
 		                <div class="center_block clearfix">

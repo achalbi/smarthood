@@ -171,6 +171,7 @@ def share
    @photo.post_id = @newPost.id
    @photo.save
  end
+ getNotifiableUsers(Objecttypeenum::POST, @post, Objecttypeenum::COMUNITY, @post.communities, Uc_enum::SHARED)
 end
 
 private

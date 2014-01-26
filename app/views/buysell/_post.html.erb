@@ -78,7 +78,7 @@
 
         <% unless post.communities.count == 1 && post.communities[0].id == active_community.id %>
           <% unless post.communities[0].nil? %>
-                  <span  class="center_block"><br><h6>Posted under the <%="ComUnity".pluralize(post.communities.count) %>:</h6>
+                  <span  class="center_block"><br><h6>Posted under the <%="Community".pluralize(post.communities.count) %>:</h6>
                   <ul class="groupsList">
                   <% post.communities.each do |cu| %>
                   <ol>

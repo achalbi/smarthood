@@ -22,4 +22,5 @@ class Uc_enum
     Uc_enum.add_item :UPDATED, "updated"
     Uc_enum.add_item :ACCEPTED, "accepted"
     Uc_enum.add_item :ADD_MODERATOR, "add_moderator"
+    Uc_enum.add_item :SHARED, "shared"
 end

@@ -170,9 +170,9 @@ module ActivitynotificationsHelper
 		  		elsif action == Notificationtypeenum::UPDATED
 		  			body_text = "The ComUnity '" + object.name + "' was updated by "+ current_user.name
 		  		elsif action == Notificationtypeenum::JOINED
-		  			body_text = objectfor.name + "has joined the ComUnity '" + object.name + "'."
+		  			body_text = objectfor.name + " has joined the ComUnity '" + object.name + "'."
 		  		elsif action == Notificationtypeenum::REQUESTED
-		  			body_text = objectfor.name + "has requested to join the ComUnity '" + object.name  + "'."
+		  			body_text = objectfor.name + " has requested to join the ComUnity '" + object.name  + "'."
 		  		elsif action == Notificationtypeenum::ACCEPTED
 		  			body_text = "The request to join the ComUnity '" + object.name  + "' has been accepted."
 		  		elsif action == Uc_enum::INVITED
@@ -211,13 +211,13 @@ module ActivitynotificationsHelper
 		  		end
 		  when Objecttypeenum::POST then
 		  	if (objectfortype == Objecttypeenum::GROUP)
-		  		body_text = current_user.name + "has posted on the "+ objectfortype + ": '" + objectfor.name + "'."
+		  		body_text = current_user.name + " has posted on the "+ objectfortype + ": '" + objectfor.name + "'."
 		  	else
-		  		body_text = current_user.name + "has posted."
+		  		body_text = current_user.name + " has posted."
 		  	end
 
 		  when Objecttypeenum::COMMENT then
-		  		body_text = current_user.name + "has commented on the post."
+		  		body_text = current_user.name + " has commented on the post."
 		  when Objecttypeenum::USER then
 		  else
 		end	
