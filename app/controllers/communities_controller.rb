@@ -172,18 +172,25 @@ def join_cu
    @usercommunity.user_id = current_user.id
    @usercommunity.invitation = Uc_enum::JOINED
    @usercommunity.is_admin = false
-   @usercommunity.status=""
+   @usercommunity.status="active"
    @usercommunity.save
  else
     @usercommunity.invitation = Uc_enum::JOINED
     @usercommunity.save
  end
+  unless params[:id].nil?
+   
       @notifications_settings = current_user.activitynotificationsettings.where("community_id = ?", params[:id]).first
       if @notifications_settings.blank?
         createNotificationSettings(params[:id])
       end
       @community = Community.find(params[:id])
-    getNotifiableUsers(Objecttypeenum::COMUNITY, @community, Objecttypeenum::USER, current_user, Uc_enum::JOINED) 
+    getNotifiableUsers(Objecttypeenum::COMUNITY, @community, Objecttypeenum::USER, current_user, Uc_enum::JOINED)
+  
+  end
+  if @uc_count < 1
+    render js: %(window.location.href='#{root_path}')
+  end
 end
 
 def unjoin_cu

@@ -20,59 +20,23 @@
     <%= link_to "edit", '#', id: "edit_comUnity",  class: "marginRight10 pull-right uibutton icon edit",:title => "Edit" %>
  <% end %>
 
+ <p><h1><%= community.name %></h1></p>
+ 
  <p><h4>Description : <small><%= community.description %></small></h4></p>
 
  <p><h4>Location : <%= community.address %></h4></p>
 
  <%= render :partial => "events/maps", :locals => { :location => community } %><br>
+<p><h4>Privacy : <%= privacy_str(community) %></h4></p>
  <p ><h4 >Host : <span style="margin:5px;">
   <%= link_to community.user.name, community.user %>
-</span></h4>
+</span></h4></p>
 <div  class="img_zoom" style="float:left;" >
   <%= gravatar_for community.user, size: 100 %>
-</div><br><br><br><br><br><br><br><br>
-</p>
-<p><h4>Privacy : <%= privacy_str(community) %></h4></p>
+</div>
+<br><br><br><br><br><br><br><br>
 
 
-<ul class="users" id="activity_events_ul" >
-  <% unless ad_users.nil? %>
-  <% if ad_users.count > 0  %>
-  <h4>Moderators</h4>
-  <% ad_users.each do |user|%>
-  <li style="width:100px;float:left;">
-    <div  class="img_zoom" style="float:left;" >
-      <%= gravatar_for user, size: 52 %>
-    </div>
-    <span style="margin:5px;float:left;">
-      <%= link_to user.name, user %>
-    </span>
-  </li>
-  <% end %>
-  <li style="clear:both;"></li>
-  <% end %> 
-  <% end %> 
-  <% unless inv_users.nil? %>
-  <% if inv_users.count > 0 %> 
-  <h4>Members</h4>
-  <% inv_users.each do |user|%>
-  <li style="width:100px;float:left;">
-    <div  class="img_zoom" style="float:left;" >
-      <%= gravatar_for user, size: 52 %>
-    </div>
-    <span style="margin:5px;float:left;">
-      <%= link_to user.name, user %>
-    </span>
-  </li>
-  <% end %>
-  <li style="clear:both;"></li>
-  <% end %>
-  <% end %>
-
-</ul>
-
-
-<br>
 </div>
 
 
@@ -112,6 +76,12 @@
               <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title => "Description", rows: 3, cols: 75  %> 
             </div>
           </div>
+                <div class="center_block clearfix">
+                  <%= label_tag :comm_type, "Type" %>
+                  <div class="input">
+                    <%= f.select :comm_type, options_for_select([["Residential", "residential"], ["Organisation", "organisation"]], f.object.comm_type) %>
+                  </div>
+                </div>          
 
           <div class="center_block clearfix">
             <%= label_tag :privacy %>

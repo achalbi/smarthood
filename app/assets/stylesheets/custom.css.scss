@@ -766,3 +766,46 @@ body {
     z-index: 99999;   
     cursor: pointer;
 }
+
+
+.uiBoxWhite {
+background-color: #fff;
+border: 1px solid #ccc;
+border-radius: 5px;
+
+}
+
+.center-signin{
+margin:auto;
+margin-top: 10%;
+width: 650px!important;
+}
+
+.signin-name-div{
+padding: 20px 20px 3px 0px;
+}
+.signin-name{
+border-bottom: 1px solid #ccc;
+}
+.signin-maginleft{
+  margin-left: 100px;
+}
+
+.font_strong{
+  font-weight: bold;
+}
+
+.uiButtonText, .uiButton input {
+  background: none;
+  border: 0;
+  color: #333;
+  cursor: pointer;
+  display: inline-block;
+  font-family: 'lucida grande',tahoma,verdana,arial,sans-serif;
+  font-size: 11px;
+  font-weight: bold;
+  line-height: 13px;
+  margin: 0;
+  padding: 1px 0 2px;
+  white-space: nowrap;
+}

@@ -105,7 +105,12 @@ $(document).ready(function(){
               <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title=>"Description", rows: 3, cols: 75  %> 
             </div>
           </div>
-
+                <div class="center_block clearfix">
+                  <%= label_tag :comm_type, "Type" %>
+                  <div class="input">
+                    <%= f.select :comm_type, options_for_select([["Residential", "residential"], ["Organisation", "organisation"]]) %>
+                  </div>
+                </div>
 
           <div class="center_block clearfix">
             <%= label_tag :privacy %>

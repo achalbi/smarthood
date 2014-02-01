@@ -108,5 +108,6 @@ class AuthenticationController < ApplicationController
   def failure
   flash[:error] = 'Invalid email/password combination'
   redirect_to signin_path
+  #redirect_to root_path
   end
 end

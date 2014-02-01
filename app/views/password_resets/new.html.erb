@@ -1,12 +1,38 @@
-<br><br><br><br>
-<div class="row">
-	<div class="span6 offset3">
-<%= form_tag password_resets_path, :method => :post do %>
+<% provide(:title, "Reset password") %>
+
+
+<div class="container  center-signin uiBoxWhite">
+  <div class="span14 signin-name-div"><h3 class="signin-name">Reset password</h3><br>
+      <div class="alert-message block-message error">    
+        <p><strong>Forgot you password?</strong></p><br>
+        <ul class="post_grid">
+          <li>Please enter the correct email address below.</li><br>
+          <li>A link will be sent to your email, please click on it within 2 hours to reset your password.</li>
+        </ul>
+      </div>
+  </div>
+  <div class="row">
+
+    <%= form_tag password_resets_path, :method => :post do %>
   
-    <%= label_tag :email %>
-    <%= text_field_tag :email, params[:email] %>
-    <div ><%= submit_tag "Reset Password", :class=>"btn primary"%></div>
-</div>
+    <div class="center_block clearfix signin-maginleft">
+      <%= label_tag :email, "Email: " %>
+      <div class="input">
+    	<%= text_field_tag :email, params[:email] %>
+      </div>
+    </div>
+
+    <div class="center_block clearfix signin-maginleft">
+      <div class="input">
+        <%= submit_tag "Reset Password", :class=>"btn primary"%> or <%= link_to "Sign up for Smarthood", root_path , class: "font_strong" %>
+      </div>
+    </div>
+    
+
+  <% end %>
+
+
+
+  </div>
 </div>
 
-<% end %>

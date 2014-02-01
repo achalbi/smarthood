@@ -4,12 +4,12 @@
   <aside class="span6">
     <section>
       <div class="img_zoom" >
-             <h4 class="pull-left" style="margin-left:10px;font-size:18px;">
+             <!-- <h4 class="pull-left" style="margin-left:10px;font-size:18px;">
               <div id="albumLink">
                 <%= link_to @selected_community.name, @selected_community, class:"albumLink", remote: true %>
               </div>
             </h4>
-            <% unless @selected_community.photo.nil? %>
+ -->            <% unless @selected_community.photo.nil? %>
               <%= link_to cl_image_tag(@selected_community.photo.pic_url(:thumb_medium), class:"roundCorner albumLink", id:"#{@selected_community.photo.id}") , @event, class:"albumLink roundCorner", remote: true %>
             <% end %>
      </div>
@@ -101,7 +101,12 @@
                   <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title=>"Description", rows: 3, cols: 75  %> 
                 </div>
                 </div>
-
+                <div class="center_block clearfix">
+                  <%= label_tag :comm_type, "Type" %>
+                  <div class="input">
+                    <%= f.select :comm_type, options_for_select([["Residential", "residential"], ["Organisation", "organisation"]]) %>
+                  </div>
+                </div>
 
                 <div class="center_block clearfix">
                   <%= label_tag :privacy %>
