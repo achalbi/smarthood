@@ -7,7 +7,6 @@ class CommunitiesController < ApplicationController
   end
 
   def index
-  	@community = Community.new
     @selected_community = nil
     @my_communities = Community.where(['id IN (?)', current_user.communities.collect(&:id)]) 
     unless Usercommunity.where(['status=? and user_id=?','active',current_user.id])[0].nil?
@@ -15,7 +14,8 @@ class CommunitiesController < ApplicationController
       @my_communities = Community.where(['id IN (?) and id!=?', current_user.communities.collect(&:id),@selected_community.id]) 
     end
     @public_communities = Community.where(['id  NOT IN (?)' , current_user.communities.collect(&:id)]) 
-
+    @posts = nil
+    @post = Post.new
     @requested_users = nil
     unless @selected_community.nil?
       @ad_eds = @selected_community.usercommunities.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED, true )
@@ -26,8 +26,20 @@ class CommunitiesController < ApplicationController
       @ad_users = User.where(['id IN (?)', @admin_users])
       @requested_users = nil
       @ucs = @selected_community.usercommunities.where("user_id = ?  AND is_admin=?",current_user.id, true )
+
+      @group_ids = current_user.user_groups.where("community_id = ?", @selected_community.id).collect(&:group_id)
+      @post_ids = []
+      unless @group_ids.blank?
+        @groups = Group.where('id IN (?) AND community_id = ?', @group_ids, @selected_community.id)
+        @groupposts = Grouppost.where('group_id IN (?)', @group_ids)
+        @post_ids = @groupposts.collect(&:post_id)
+      end
+        @post_ids << @selected_community.posts.collect(&:id)
+        @posts = Post.where(id: @post_ids.uniq).paginate(page: params[:page], :per_page => 4)
+      #@posts = @selected_community.posts.paginate(page: params[:page], :per_page => 4)
       if @ucs.count > 0
         @requested_users = User.where(['id IN (?)' , @selected_community.requested_uc.collect(&:user_id)])
+        @selected_community.req_pending_cnt = @requested_users.count
       end  
     end
     @users_pp = []
@@ -39,6 +51,7 @@ class CommunitiesController < ApplicationController
     end
     @inv_req_cu = Community.where(['id IN (?)' , current_user.communities.where('invitation = ?',Uc_enum::INVITED).collect(&:id)])
     @ucs = @selected_community.usercommunities unless @selected_community.nil?
+  	@community = @selected_community
   end
 
 
@@ -67,7 +80,19 @@ class CommunitiesController < ApplicationController
       @usercommunity.status="active"
       @usercommunity.save
       createNotificationSettings(active_community.id)
-      getNotifiableUsers(Objecttypeenum::COMUNITY, @community, nil, nil, Uc_enumUc_enum::CREATED)
+    @selected_comm  = []
+    @selected_comm << active_community
+    @post = Post.new
+     @group_ids = current_user.user_groups.where("community_id = ?", @selected_community.id).collect(&:group_id)
+      @post_ids = []
+      unless @group_ids.blank?
+        @groups = Group.where('id IN (?) AND community_id = ?', @group_ids, @selected_community.id)
+        @groupposts = Grouppost.where('group_id IN (?)', @group_ids)
+        @post_ids = @groupposts.collect(&:post_id)
+      end
+        @post_ids << @community.posts.collect(&:id)
+        @posts = Post.where(id: @post_ids.uniq).paginate(page: params[:page], :per_page => 4)
+      getNotifiableUsers(Objecttypeenum::COMUNITY, @community, nil, nil, Uc_enum::CREATED)
 
   else
     #	flash[:error] = "community not created!"
@@ -92,8 +117,21 @@ def update
   @ucs = @community.usercommunities.where("user_id = ?  AND is_admin=?",current_user.id, true )
   if @ucs.count > 0
     @requested_users = User.where(['id IN (?)' , @community.requested_uc.collect(&:user_id)])
+    @community.req_pending_cnt = @requested_users.count
   end  
   @ucs = @community.usercommunities
+  @selected_comm  = []
+  @selected_comm << active_community
+  @post = Post.new
+   @group_ids = current_user.user_groups.where("community_id = ?", @selected_community.id).collect(&:group_id)
+      @post_ids = []
+      unless @group_ids.blank?
+        @groups = Group.where('id IN (?) AND community_id = ?', @group_ids, @selected_community.id)
+        @groupposts = Grouppost.where('group_id IN (?)', @group_ids)
+        @post_ids = @groupposts.collect(&:post_id)
+      end
+        @post_ids << @community.posts.collect(&:id)
+        @posts = Post.where(id: @post_ids.uniq).paginate(page: params[:page], :per_page => 4)
   getNotifiableUsers(Objecttypeenum::COMUNITY, @community, nil, nil, Uc_enum::UPDATED)
 
 end
@@ -108,6 +146,18 @@ end
 @usercommunitySel = Usercommunity.where(['community_id=? and user_id=?',params[:id],current_user.id])[0]
 @usercommunitySel.status="active"
 @usercommunitySel.save
+@selected_comm  = []
+@selected_comm << active_community
+@post = Post.new
+ @group_ids = current_user.user_groups.where("community_id = ?", @selected_community.id).collect(&:group_id)
+      @post_ids = []
+      unless @group_ids.blank?
+        @groups = Group.where('id IN (?) AND community_id = ?', @group_ids, @selected_community.id)
+        @groupposts = Grouppost.where('group_id IN (?)', @group_ids)
+        @post_ids = @groupposts.collect(&:post_id)
+      end
+        @post_ids << active_community.posts.collect(&:id)
+        @posts = Post.where(id: @post_ids.uniq).paginate(page: params[:page], :per_page => 4)
 if @uc_count < 1
   render js: %(window.location.href='#{root_path}')
 end
@@ -202,6 +252,7 @@ end
 
 def show
   @community = Community.find(params[:id])
+  @selected_community = @community
   @user = current_user
   @users = @community.users
   @ad_eds = @community.usercommunities.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED, true )
@@ -214,7 +265,20 @@ def show
   @ucs = @community.usercommunities.where("user_id = ?  AND is_admin=?",current_user.id, true )
   if @ucs.count > 0
     @requested_users = User.where(['id IN (?)' , @community.requested_uc.collect(&:user_id)])
+    @selected_community.req_pending_cnt = @requested_users.count
   end
+  @selected_comm  = []
+  @selected_comm << active_community
+  @post = Post.new
+   @group_ids = current_user.user_groups.where("community_id = ?", @selected_community.id).collect(&:group_id)
+      @post_ids = []
+      unless @group_ids.blank?
+        @groups = Group.where('id IN (?) AND community_id = ?', @group_ids, @selected_community.id)
+        @groupposts = Grouppost.where('group_id IN (?)', @group_ids)
+        @post_ids = @groupposts.collect(&:post_id)
+      end
+        @post_ids << @community.posts.collect(&:id)
+        @posts = Post.where(id: @post_ids.uniq).paginate(page: params[:page], :per_page => 4)
   @ucs = @community.usercommunities
   respond_to do |format|
    format.html {  }
@@ -237,8 +301,21 @@ def active_com
   @ad_users = User.where(['id IN (?)', @admin_users])
   @requested_users = nil
   @ucs = @community.usercommunities.where("user_id = ?  AND is_admin=?",current_user.id, true )
+  @selected_comm  = []
+  @selected_comm << active_community
+  @post = Post.new
+       @group_ids = current_user.user_groups.where("community_id = ?", @selected_community.id).collect(&:group_id)
+      @post_ids = []
+      unless @group_ids.blank?
+        @groups = Group.where('id IN (?) AND community_id = ?', @group_ids, @selected_community.id)
+        @groupposts = Grouppost.where('group_id IN (?)', @group_ids)
+        @post_ids = @groupposts.collect(&:post_id)
+      end
+        @post_ids << active_community.posts.collect(&:id)
+        @posts = Post.where(id: @post_ids.uniq).paginate(page: params[:page], :per_page => 4)
   if @ucs.count > 0
     @requested_users = User.where(['id IN (?)' , @community.requested_uc.collect(&:user_id)])
+    @selected_community.req_pending_cnt = @requested_users.count
   end
   @ucs = @community.usercommunities
 end
@@ -442,6 +519,84 @@ def search_app_user
         getNotifiableUsers(Objecttypeenum::COMUNITY, @community, Objecttypeenum::USER, usr, Uc_enum::ADD_MODERATOR)
       end
  end
+
+   def community_post_paginate
+    @selected_comm  = []
+    @community = Community.find(params[:id])
+    @selected_comm << @community
+    @post = Post.new
+    @posts = @community.posts.paginate(page: params[:page], :per_page => 4).uniq
+  end
+
+  def posts_com
+    @selected_comm  = []
+    @community = Community.find(params[:id])
+    @selected_community = @community
+    @selected_comm << @community
+    @post = Post.new
+       @group_ids = current_user.user_groups.where("community_id = ?", @selected_community.id).collect(&:group_id)
+      @post_ids = []
+      unless @group_ids.blank?
+        @groups = Group.where('id IN (?) AND community_id = ?', @group_ids, @selected_community.id)
+        @groupposts = Grouppost.where('group_id IN (?)', @group_ids)
+        @post_ids = @groupposts.collect(&:post_id)
+      end
+        @post_ids << @community.posts.collect(&:id)
+        @posts = Post.where(id: @post_ids.uniq).paginate(page: params[:page], :per_page => 4)
+    @selected_community.req_pending_cnt = User.where(['id IN (?)' , @community.requested_uc.collect(&:user_id)]).count
+  end
+
+  def about_com
+    @community = Community.find(params[:id])
+    @selected_community = @community
+    @selected_community.req_pending_cnt = User.where(['id IN (?)' , @community.requested_uc.collect(&:user_id)]).count
+  end
+
+  def photos_com
+    @community = Community.find(params[:id])
+    @albums = @community.albums
+    @selected_community = @community
+    @selected_community.req_pending_cnt = User.where(['id IN (?)' , @community.requested_uc.collect(&:user_id)]).count
+  end
+
+ def members_com
+    @community = Community.find(params[:id])
+    @ad_eds = @community.usercommunities.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED, true )
+    @non_ad_eds = @community.usercommunities.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED, false)
+    @users = @non_ad_eds.pluck(:user_id)
+    @admin_users = @ad_eds.pluck(:user_id)
+    @inv_users = User.where(['id IN (?)', @users])
+    @ad_users = User.where(['id IN (?)', @admin_users])
+    @requested_users = nil
+    @ucs = @community.usercommunities.where("user_id = ?  AND is_admin=?",current_user.id, true )
+    if @ucs.count > 0
+      @requested_users = User.where(['id IN (?)' , @community.requested_uc.collect(&:user_id)])
+      @community.req_pending_cnt = @requested_users.count
+    end 
+    @ucs = @community.usercommunities
+ end
+
+ def create_album
+     @com = Community.find(params[:id])
+    @album = current_user.albums.build(params[:album])
+        @album.save
+        @photos = params[:photos][:pic]
+        @photos.each do |pic|
+          @photo = Photo.new
+            @photo.pic = pic
+            @album.photos << @photo
+          end
+        @album.save
+        @com.albums << @album
+        @com.save
+        @albums = @com.albums
+        getNotifiableUsers(Objecttypeenum::ALBUM, @album, nil, nil, Uc_enum::CREATED)
+        #flash[:success] = "Album created"
+      respond_to do |format|
+         format.html {  }
+         format.js {  }
+      end
+  end
 
 def cu_list
   

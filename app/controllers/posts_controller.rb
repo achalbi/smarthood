@@ -108,6 +108,26 @@ class PostsController < ApplicationController
         @posts = @communityposts.paginate(page: params[:page], :per_page => 8).collect{|a| a.post}.uniq   
         # @post.save
          #  flash[:success] = "Post created!"
+     when "community"
+          @post = current_user.posts.build(params[:post])
+          @post.user = current_user
+          @post.save(:validate => false)
+          @post_groups = Group.where('id IN (?)',params[:grp_ids])
+          unless params[:photo].nil?
+            @post.photos << current_user.photos.build(params[:photo])
+            @post.save(:validate => false)
+          end
+          @post_groups.each do |group|
+            @post.groups << group
+          end  
+          @community = Community.find(params[:id])
+          @selected_community = @community
+          @post.communities << @community 
+        getNotifiableUsers(Objecttypeenum::POST, @post, Objecttypeenum::COMUNITY, @post.communities, Uc_enum::CREATED)  
+          @selected_comm  = []
+          @selected_comm << @community
+          @post = Post.new
+          @posts = @community.posts.paginate(page: params[:page], :per_page => 8).uniq
        else
        end
      end

@@ -659,6 +659,11 @@ ul#group_list ul.tabs li.active{
   text-shadow: none;
 }
 
+ul.tabs li.active{
+  text-shadow: none;
+}
+
+
 div#camera_rolls ul.tabs li.active{
   text-shadow: none;
 }
@@ -808,4 +813,31 @@ border-bottom: 1px solid #ccc;
   margin: 0;
   padding: 1px 0 2px;
   white-space: nowrap;
+}
+
+
+.text_overlay { 
+   position: absolute; 
+   bottom: 0; 
+   left: 0; 
+   width: 100%; 
+}
+
+.text_overlay span { 
+   color: white; 
+   font: bold 18px/35px Helvetica, Sans-Serif; 
+   letter-spacing: -1px;  
+   background: rgb(0, 0, 0); /* fallback color */
+   background: rgba(0, 0, 0, 0.7);
+   padding: 3px; 
+}
+
+.image_overlay { 
+   position: relative; 
+   width: 100%; /* for IE 6 */
+}
+
+.hfive{
+  font-size: 14px;
+  line-height: 1;
 }

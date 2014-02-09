@@ -10,7 +10,7 @@
               </div>
             </h4>
  -->            <% unless @selected_community.photo.nil? %>
-              <%= link_to cl_image_tag(@selected_community.photo.pic_url(:thumb_medium), class:"roundCorner albumLink", id:"#{@selected_community.photo.id}") , @event, class:"albumLink roundCorner", remote: true %>
+              <%= link_to cl_image_tag(@selected_community.photo.pic_url(:cover_pic_small), class:"roundCorner albumLink", id:"#{@selected_community.photo.id}") , @event, class:"albumLink roundCorner", remote: true %>
             <% end %>
      </div>
     </section>
@@ -38,7 +38,7 @@
     </div>
     </aside>
 <div id="comUnity_list" class="span13">
-  <div id="about_comUnity">  
+  <div id="community_tabs">  
    <%= render partial: 'communities/about', locals: {ad_users: @ad_users, inv_users: @inv_users, community: @selected_community} %>
   </div>
   <div id="my_comm">  
@@ -173,14 +173,14 @@ $(".sidetabs").click(function(){
      $('#public_comUnity').click(function(){
             $('#suggested_comm').show();
             $('#my_comm').hide();
-            $('#about_comUnity').hide();
+            $('#community_tabs').hide();
         });
 
 
         $('#joined_comUnity').click(function(){
             $('#suggested_comm').hide();
             $('#my_comm').show();
-            $('#about_comUnity').hide();
+            $('#community_tabs').hide();
         });
 
 

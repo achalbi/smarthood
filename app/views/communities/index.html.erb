@@ -23,11 +23,11 @@ $(document).ready(function(){
       <div id="comUnity_div">    
         <% unless @selected_community.nil? %>
         <li class="sidetabs sidetabs_selected" style="list-style-type: none;padding:5px; margin:5px;">
-          <h6><%= link_to  "Active: " << @selected_community.name , '#', remote: true %></h6>
+          <h6><a><%= "Active: " << @selected_community.name %></a></h6>
         </li>
         <%= link_to "", active_com_communities_path, id: "active_comUnity", remote: true %>
        <li class="sidetabs notActive" style="list-style-type: none;padding:5px; margin:5px;">
-          <h6><%= link_to  "Moderated", "#", remote: true %>
+          <h6><a>Moderated</a>
           <% unless (@requested_users_all.nil? || @requested_users_all == 0)%>
             <span class="pull-right label important" style="margin:5px;"><%= if @requested_users_all > 0 then @requested_users_all end %></span>
           <% end %>
@@ -36,18 +36,25 @@ $(document).ready(function(){
         <%= link_to "", moderated_com_communities_path , id: "moderated_comUnity", remote: true %>
         <% end %>
         <li class="sidetabs notActive" style="list-style-type: none;padding:5px; margin:5px;">
-          <h6><%= link_to  "Joined", "#", remote: true %></h6>
+          <h6><a>Joined</a></h6>
         </li>
         <%= link_to "", joined_com_communities_path , id: "joined_comUnity", remote: true %>
         <li class="sidetabs notActive"id="public_li" style="list-style-type: none;padding:5px; margin:5px;">
-          <h6><%= link_to  "Public", "#",  remote: true %></h6>
+          <h6><a>Public</a></h6>
         </li>
         <%= link_to "", public_com_communities_path,id: "public_comUnity", remote: true %>
         <li class="sidetabs notActive" style="list-style-type: none;padding:5px; margin:5px;">
-          <h6><%= link_to  "Private", '#', remote: true %></h6>
+          <h6><a>Private</a></h6>
         </li>
         <%= link_to "", private_com_communities_path , id: "private_comUnity", remote: true %>
-
+        <li class="sidetabs notActive" style="list-style-type: none;padding:5px; margin:5px;">
+          <h6><a>Invites / Requests</a>
+          <% unless (@inv_req_cu.nil? || @inv_req_cu.count == 0)%>
+            <span class="pull-right label important" style="margin:5px;"><%= if @inv_req_cu.count > 0 then @inv_req_cu.count end %></span>
+          <% end %>
+        </h6>
+        </li>
+        <%= link_to "", invites_requests_communities_path , id: "invites_comUnity", remote: true %>
       </div>
     </section>
 
@@ -56,13 +63,10 @@ $(document).ready(function(){
     <div id="invited_ComUnity">
       <%= render partial: 'shared/invite_reqs', locals: {communities: @inv_req_cu } %>
     </div>
-    <div id="comUnity_stats">
-      <%= render partial: 'shared/comUnity_stats', locals: {ad_users: @ad_users, inv_users: @inv_users, requested_users: @requested_users, community: @selected_community, ucs: @ucs } %>
-    </div>
   </aside>
-  <div id="comUnity_list" class="span13" style="margin-top:5px;">
-    <div id="about_comUnity" >  
-     <%= render partial: 'communities/about', locals: {ad_users: @ad_users, inv_users: @inv_users, community: @selected_community} %>
+  <div id="community_list" class="span13" style="margin-top:5px;">
+    <div id="community_tabs" >  
+      <%= render partial: 'communities/community_post', locals: {posts: @posts, community: @selected_community} %>
    </div>
 
  </div>
@@ -75,8 +79,6 @@ $(document).ready(function(){
       <span style="font-size:20px;line-height: 2;">Create Community</span>
     </div>
     <div class="modal-body" style="max-height:550px;">
-<!--     <% unless @selected_community.nil? %>
-    <% end %> -->
       <div class="row">
         <div class="span14 ui-front">
 
@@ -155,8 +157,10 @@ $(".sidetabs").click(function(){
   $(this).addClass('sidetabs_selected');
   if($(this).hasClass('notActive')){
     $('#cu_pic').hide('slow');
+    $('.tabs').hide();
   }else{
     $('#cu_pic').show('slow');
+    $('.tabs').show();
   }
   $(this).next('a').click();
 });
@@ -172,19 +176,6 @@ $("#crtComUnity").click(function(){
   $('#modal').modal('hide');
 });
 
-/*$('#public_comUnity').click(function(){
-  $('#suggested_comm').show();
-  $('#my_comm').hide();
-  $('#about_comUnity').hide();
-});
-
-
-$('#joined_comUnity').click(function(){
-  $('#suggested_comm').hide();
-  $('#my_comm').show();
-  $('#about_comUnity').hide();
-});
-*/
 
 $('#create_community_address').keydown(function(){
   $('#view_map_link_crt').hide();
@@ -270,17 +261,6 @@ function handleImage(e){
             }
           }
         }
-
-
-
-
-
-
-
-
-
-
-
 
 
 

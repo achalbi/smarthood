@@ -22,6 +22,7 @@ class Community < ActiveRecord::Base
   has_many :buysell_item_communities, dependent: :destroy
   has_many :buysell_items, :through => :buysell_item_communities
 
+  has_many :albums, :as => :albumable
 
   has_many :groups, :through => :user_groups
   has_many :user_groups, dependent: :destroy

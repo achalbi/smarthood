@@ -5,6 +5,11 @@
         </div>
       </h4> -->
       <% unless community.photo.nil? %>
-      <%= link_to cl_image_tag(community.photo.pic_url(:thumb_medium), class:"roundCorner albumLink", id:"cu_#{community.id}") ,community, class:"albumLink roundCorner", remote: true %>
+      <div class="image_overlay">
+        <%= link_to cl_image_tag(community.photo.pic_url(:cover_pic_small), class:"roundCorner albumLink", id:"cu_#{community.id}") ,community, class:"albumLink roundCorner", remote: true %>
+      <h2 class="text_overlay"><span><%= community.name %></span></h2>
+
+      </div>
+
       <% end %>
     </div>

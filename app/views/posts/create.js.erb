@@ -42,3 +42,6 @@ $("#sel_grp_label").hide();
 <% unless @communities.nil? %>
 $('#cu_post').html("<%= escape_javascript(render :partial => 'posts/communities_post', :locals => {:post => @post}, :communities => @communities) %>");
 <% end %>
+<% unless @community.nil? %>
+$('#community_tabs').html("<%= escape_javascript(render :partial => 'communities/community_post', locals: {posts: @posts, community: @community}) %>");
+<% end %>

@@ -9,7 +9,8 @@ class GroupsController < ApplicationController
     @group = Group.new
    # @groups = Group.where(:id => current_user.user_groups.collect(&:group_id)) 
    #@groups = active_community_user_groups
-   @my_groups = Group.where('id IN (?)', current_user.user_groups.collect(&:group_id)) 
+   @my_groups = Group.where('id IN (?)', current_user.user_groups.collect(&:group_id))
+   @community = active_community 
  end
 
  def create
@@ -31,11 +32,12 @@ class GroupsController < ApplicationController
         @usergroup.user_id = id
         @usergroup.is_admin = false
         @usergroup.invitation = Uc_enum::INVITED
+        @usergroup.community_id = params[:community_id]
         @usergroup.save
       end
     end
    # flash[:success] = "Group created!"
-    @group.follow!(current_user, @group.id, Uc_enum::JOINED, true)
+    @group.follow!(current_user, @group.id, Uc_enum::JOINED, true,  params[:community_id])
     #UserGroup.where("user_id = ? AND group_id = ?",current_user.id, @group.id).update_all(is_admin: true, invitation: Uc_enum::JOINED)
       # redirect_to :action => :index
       getNotifiableUsers(Objecttypeenum::GROUP, @group, nil, nil, Uc_enum::CREATED)

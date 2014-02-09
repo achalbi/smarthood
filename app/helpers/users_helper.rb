@@ -10,12 +10,8 @@ require 'uri'
       auth = user.authentications.find_by_provider('facebook')
       unless auth.nil?
         gravatar_url = "http://graph.facebook.com/#{user.authentications.first.username}/picture?width=180&height=180"
-        u = URI.parse(gravatar_url)
-          h = Net::HTTP.new u.host, u.port
-          h.use_ssl = u.scheme == 'https'
-          head = h.start do |ua|
-            ua.head u.path
-          end
+          u = URI.parse(gravatar_url)
+          head = Net::HTTP.get_response(u)
           gravatar_url = head['location']
       end
     else
@@ -34,12 +30,8 @@ require 'uri'
       auth = user.authentications.find_by_provider('facebook')
       unless auth.nil?
         gravatar_url = "http://graph.facebook.com/#{auth.username}/picture?width=#{size}&height=#{size}"
-        u = URI.parse(gravatar_url)
-          h = Net::HTTP.new u.host, u.port
-          h.use_ssl = u.scheme == 'https'
-          head = h.start do |ua|
-            ua.head u.path
-          end
+          u = URI.parse(gravatar_url)
+          head = Net::HTTP.get_response(u)
           gravatar_url = head['location']
       else
       gravatar_id = Digest::MD5::hexdigest(user.email.downcase)

@@ -110,6 +110,7 @@
               <%= f.text_field :user_tokens, id: "search_users" %>
             </div>
           </div>
+          <%= hidden_field_tag :community_id, @community.id %>
           <div class="center_block clearfix">
             <%= label_tag "Add picture:" %>
             <%= f.fields_for :photo, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>

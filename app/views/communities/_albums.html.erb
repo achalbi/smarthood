@@ -1,9 +1,14 @@
+  <ul class="tabs">
+      <%= render 'communities/links', locals: { community: @community} %>
+  </ul>
+
+
           <div id="gallery"  >
             <div id="grp_album">
                     <div id="gallery1" class="span12 pull-left">
                        <ul id="grid" >    
                        <li style="background-color:#ffffff!important;">
-                        <div id="upload_pics_grp"  style = "border:2px dashed #ddd; width:85px; height:85px; padding:10px;  left:40px; text-align:middle; z-index: 1;  cursor:pointer;  float:left; margin-bottom:25px;
+                        <div id="upload_pics_com"  style = "border:2px dashed #ddd; width:85px; height:85px; padding:10px;  left:40px; text-align:middle; z-index: 1;  cursor:pointer;  float:left; margin-bottom:25px;
                         " class="bgClrChg">  <h5> Create Album </h5>
                         </div>
                        </li>               
@@ -18,13 +23,12 @@
                     </div>
                      
           </div>
-      <ul class="users" id="photos_events_ul" >
-      </ul>
-      <%= form_for(album, url: create_album_groups_path, remote: true, :html => {:multipart => true}) do  |f| %> 
-      <div id="modal5" style="display:none" >
-          <div id="modal-from-dom5" class="modal hide fade in" style="display: block;width:700px;">
+
+      <%= form_for(Album.new, url: create_album_communities_path, remote: true, :html => {:multipart => true}) do  |f| %> 
+      <div id="modal_com" style="display:none" >
+          <div id="modal-from-dom_com" class="modal hide fade in" style="display: block;width:700px;">
             <div class="modal-header">
-              <a href="#" id="close5X" class="close">×</a>
+              <a href="#" id="closeX_com" class="close">×</a>
               <h3>Create album</h3>
             </div>
             <div class="modal-body" style="max-height:450px;">
@@ -55,21 +59,21 @@
               </span>
             <br><br>
               <div class="center_block clearfix pull-left clear">
-               <div class="ui-front">    
+               <div class="input">    
                <%= fields_for :photos, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
                  
-              <%= photo_form.file_field :pic, id: "pic5_#{group.id.to_s}", :multiple => true, style: "width:1px; height:1px; padding:0px;  left:0px;" %>  
+              <%= photo_form.file_field :pic, id: "pic_com", :multiple => true, style: "width:1px; height:1px; padding:0px;  left:0px;" %>  
               <% end %>
-             <!-- <%= hidden_field_tag :type, "event" %> -->
-              <%= hidden_field_tag :id, group.id %>
-                  <canvas id="imageCanvas5<%= group.id.to_s %>" style = "border: 1px solid #ddd; padding:5px; align:center" >select photos</canvas>
+              <%= hidden_field_tag :type, "communities" %>
+              <%= hidden_field_tag :id, active_community.id %>
+                  <canvas id="imageCanvas_com" style = "border: 1px solid #ddd; padding:5px; align:center" >select photos</canvas>
                 </div>
               </div>
              </div>
             </div>
             </div>
             <div class="modal-footer" >
-              <%= f.submit "Create Album", class: "btn primary pull-right", id: "crtAlb" %> 
+              <%= f.submit "Create Album", class: "btn primary pull-right", id: "crtAlb_com" %> 
             </div>
           </div>
         </div>
@@ -78,32 +82,32 @@
 
 
         <script type="text/javascript">
-          $("#upload_pics_grp").click(function(){
-            $('#modal5').modal('show');
+          $("#upload_pics_com").click(function(){
+            $('#modal_com').modal('show');
           });
-          $("#close5X").click(function(){
-                $('#modal5').modal('hide');
+          $("#closeX_com").click(function(){
+                $('#modal_com').modal('hide');
               });
 
-          $("#crtAlb").click(function(){
-                $('#modal5').modal('hide');
+          $("#crtAlb_com").click(function(){
+                $('#modal_com').modal('hide');
                 showProgress();
               });
 
 
-          var imageLoader = document.getElementById('pic5_'+<%= group.id.to_s %>);
+          var imageLoader = document.getElementById('pic_com');
             imageLoader.addEventListener('change', handleImage, false);
-            $("#imageCanvas5"+<%= group.id.to_s %>).click(function(){
-                $("#pic5_"+<%= group.id.to_s %>).click();
+            $("#imageCanvas_com").click(function(){
+                $("#pic_com").click();
             });
                 
-            var canvas = document.getElementById('imageCanvas5'+<%= group.id.to_s %>);
+            var canvas = document.getElementById('imageCanvas_com');
             var ctx = canvas.getContext('2d');
             ctx.font="30px Arial";
             ctx.fillText("Select photos",10,50);
 
           function handleImage(e){
-            var canvas = document.getElementById('imageCanvas5'+<%= group.id.to_s %>);
+            var canvas = document.getElementById('imageCanvas_com');
             var ctx = canvas.getContext('2d');
             var iCnt=0;
             var files = e.target.files;
@@ -139,6 +143,58 @@
           }
 
 
+$('#posts_community_li').click(function(){
+  $('#posts_community_li').addClass('active');
+  $('#about_community_li').removeClass('active');
+  $('#photos_community_li').removeClass('active');
+  $('#members_community_li').removeClass('active');
+  $('#requests_community_li').removeClass('active');
+  $(this).next('a').click();
+
+});
+$('#about_community_li').click(function(){
+  $('#posts_community_li').removeClass('active');
+  $('#about_community_li').addClass('active');
+  $('#photos_community_li').removeClass('active');
+  $('#members_community_li').removeClass('active');
+  $('#requests_community_li').removeClass('active');
+  $(this).next('a').click();
+
+});
+$('#photos_community_li').click(function(){
+  $('#posts_community_li').removeClass('active');
+  $('#about_community_li').removeClass('active');
+  $('#photos_community_li').addClass('active');
+  $('#members_community_li').removeClass('active');
+  $('#requests_community_li').removeClass('active');
+  $(this).next('a').click();
+});
+
+$('#members_community_li').click(function(){
+  $('#posts_community_li').removeClass('active');
+  $('#about_community_li').removeClass('active');
+  $('#photos_community_li').removeClass('active');
+  $('#members_community_li').addClass('active');
+  $('#requests_community_li').removeClass('active');
+  $(this).next('a').click();
+});
+
+$('#requests_community_li').click(function(){
+  $('#posts_community_li').removeClass('active');
+  $('#about_community_li').removeClass('active');
+  $('#photos_community_li').removeClass('active');
+  $('#members_community_li').removeClass('active');
+  $('#requests_community_li').addClass('active');
+});
+
+
+$(document).ready(function(){
+  $('#posts_community_li').removeClass('active');
+  $('#about_community_li').removeClass('active');
+  $('#photos_community_li').addClass('active');
+  $('#members_community_li').removeClass('active');
+  $('#requests_community_li').removeClass('active');
+});
         </script>
         </div>
         </div>  

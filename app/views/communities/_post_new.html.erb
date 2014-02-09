@@ -1,0 +1,62 @@
+        <%= form_for(Post.new, remote: true,  :html => {:multipart => true}) do |f| %>
+            <div id="textarea_div" style="resize: both;border: 1px solid #d4dae8;overflow: hidden;background-color:#f2f2f2;">
+            <%= render 'shared/error_messages', object: f.object %>
+                        <%= fields_for :photo, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
+                         
+                        <%= photo_form.file_field :pic, id: "pic1",style: "width:1px; height:1px; padding:0px;  left:0px;display:none;" %>  
+
+                        <% end %>
+                         <div class=" pull-left">
+                            <%= f.text_area :content, placeholder: "Compose new post...", :rows=>6, class: "span10" %>
+                         <canvas id="imageCanvas1" style = "border: 1px solid #ddd; padding:2px; align:center;cursor:pointer; background-color:#ffffff;" width="132px" height="88px">Add pictures</canvas>
+                        </div> 
+                     <%= link_to  "Select groups","#", id: "group_post_select", class: "uibutton pull-left" %>
+                     <%= f.submit "Post", id: "community_post_submit", class: "btn primary pull-right" %>
+                     <%= hidden_field_tag :type, "community" %> 
+                     <%= hidden_field_tag :id, @community.id %> 
+                     <div id="sel_grp_label"></div>
+                      <% @community.groups.each do |grp| %>
+                          <div id="grp_label_<%= grp.id %>" style="display:none;margin:5px;" class="pull-left"><%=link_to grp.name, grp, remote: true %> </div>
+                          <div style="display:none;">
+                            <%= check_box_tag 'grp_ids[]', grp.id, nil, id:"grp_check_#{grp.id}" %>
+                          </div>
+                      <% end %>
+              </div>
+        <% end %>
+
+<div id="modal_sel_grp" style="display:none;" >
+  <div id="modal-from-dom2" class="modal hide fade in" style="display: block;width:700px;">
+    <div class="modal-header">
+      <a href="#" id="closeX_sel_grp" class="close">×</a>
+      <span style="font-size:20px;line-height: 2;">Select Groups</span>
+    </div>
+    <div class="modal-body" style="max-height:400px;">
+      <div class="row">
+        <div class="span14 ui-front">
+        <section id="groups_sec" style="">
+            <% render :partial => 'groups/group_list', :locals => {:groups => @groups} %>
+        </section>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer" >
+      <%= link_to "Select","#", class: "btn primary pull-right", id: "selGroup" %>  
+    </div>
+  </div>
+</div>
+
+
+<script type="text/javascript">
+
+$("#group_post_select").click(function(){
+  $('#modal_sel_grp').modal('show');
+});
+$("#closeX_sel_grp").click(function(){
+  $('#modal_sel_grp').modal('hide');
+});
+
+$("#selGroup").click(function(){
+  $('#modal_sel_grp').modal('hide');
+});
+
+</script>

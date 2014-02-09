@@ -1,0 +1,163 @@
+    <ul class="tabs">
+        <%= render 'communities/links', locals: { community: @selected_community} %>
+  </ul>
+  <div id="image" style="display:block" class="span13">
+    <div id="div_new_post">
+        <%= render 'communities/post_new', locals: { community: @selected_community} %>
+    </div>
+              <div id="div_post" class="resources1">
+                  <%= render 'posts/post' %>
+               
+              </div>
+               <div id="loading_page" class="center" ><img src="http://res.cloudinary.com/rashi/image/upload/v1377924529/loading7_gvb06y.gif"></div>
+            </div>
+
+</div>
+
+<script type="text/javascript">
+
+
+ var imageLoader = document.getElementById('pic1');
+    imageLoader.addEventListener('change', handleImage, false);
+    $("#imageCanvas1").click(function(){
+        $("#pic1").click();
+    });
+        var canvas = document.getElementById('imageCanvas1');
+    var ctx = canvas.getContext('2d');
+    ctx.font="8pt tahoma ";
+    ctx.fillStyle = 'grey';
+    ctx.fillText("Add picture",35,46);
+
+  function handleImage(e){
+    var canvas = document.getElementById('imageCanvas1');
+    var ctx = canvas.getContext('2d');
+    var iCnt=0;
+    var files = e.target.files;
+    canvas.width = 132;
+    canvas.height = 88*(Math.ceil(files.length/1));
+    for( var i = 0, len = files.length; i < len; i++) 
+          {
+          if(files[i])
+            {
+              var reader = new FileReader();
+              reader.onload = function(event){
+                var img = new Image();
+
+                img.onload = function(){
+                  var ratioPx = 150;
+                  var sWidth =ratioPx;
+                  var ratio = img.width/sWidth;
+                  var sHeight = img.height/ratio;   
+                    if(sHeight>ratioPx){
+                       sHeight =ratioPx;
+                       ratio = img.height/sHeight;
+                       sWidth = img.width/ratio;  
+                    }
+                  ctx.drawImage(img, 155*(iCnt%4),155*(Math.floor(iCnt/4)),sWidth,sHeight);
+                  //ctx.drawImage(img,0,0,sWidth,sHeight);
+                  iCnt++;
+                }
+                img.src = event.target.result;
+              }
+              reader.readAsDataURL(e.target.files[i]);     
+            }
+          }
+  }
+
+
+
+
+var currentPage = 1;
+var intervalID = -1000;
+var insideLoop ="false"; 
+
+function checkScroll() {
+  if (nearBottomOfPage() && insideLoop!="true" ) {
+    insideLoop ="true";
+    currentPage++;
+  $('#loading_page').show();
+    jQuery.ajax('/communities/community_post_paginate?page=' + currentPage + '&id=' + '<%= @selected_community.id.to_s %>' , {asynchronous:true, evalScripts:true, method:'get', success: function(data, textStatus, jqXHR) {
+    $('.resources1').append($(data));
+    $('#loading_page').hide();
+    if(typeof jQuery(data) == 'undefined' ||jQuery(data).html() == null || $(data).find('.paginate_do').html()==null){
+      clearInterval(intervalID);
+      for (var i = 1; i < 99999; i++){
+         window.clearInterval(i);
+      }
+      restartInterval();
+    }
+  },});
+    insideLoop = "false";
+  }
+}
+ 
+function nearBottomOfPage() {
+  return scrollDistanceFromBottom() < 50;
+}
+ 
+function scrollDistanceFromBottom(argument) {
+  return pageHeight() - (window.pageYOffset + self.innerHeight);
+}
+ 
+function pageHeight() {
+  return Math.max(document.body.scrollHeight, document.body.offsetHeight);
+}
+ 
+$('document').ready(function(){
+  intervalID = setInterval(checkScroll, 1000);
+  $('#posts_community_li').addClass('active');
+  $('#about_community_li').removeClass('active');
+  $('#photos_community_li').removeClass('active');
+  $('#members_community_li').removeClass('active');
+  $('#requests_community_li').removeClass('active');
+});
+
+
+
+
+$('#posts_community_li').click(function(){
+  $('#posts_community_li').addClass('active');
+  $('#about_community_li').removeClass('active');
+  $('#photos_community_li').removeClass('active');
+  $('#members_community_li').removeClass('active');
+  $('#requests_community_li').removeClass('active');
+  $(this).next('a').click();
+
+});
+$('#about_community_li').click(function(){
+  $('#posts_community_li').removeClass('active');
+  $('#about_community_li').addClass('active');
+  $('#photos_community_li').removeClass('active');
+  $('#members_community_li').removeClass('active');
+  $('#requests_community_li').removeClass('active');
+  $(this).next('a').click();
+
+});
+$('#photos_community_li').click(function(){
+  $('#posts_community_li').removeClass('active');
+  $('#about_community_li').removeClass('active');
+  $('#photos_community_li').addClass('active');
+  $('#members_community_li').removeClass('active');
+  $('#requests_community_li').removeClass('active');
+  $(this).next('a').click();
+});
+
+$('#members_community_li').click(function(){
+  $('#posts_community_li').removeClass('active');
+  $('#about_community_li').removeClass('active');
+  $('#photos_community_li').removeClass('active');
+  $('#members_community_li').addClass('active');
+  $('#requests_community_li').removeClass('active');
+  $(this).next('a').click();
+});
+
+$('#requests_community_li').click(function(){
+  $('#posts_community_li').removeClass('active');
+  $('#about_community_li').removeClass('active');
+  $('#photos_community_li').removeClass('active');
+  $('#members_community_li').removeClass('active');
+  $('#requests_community_li').addClass('active');
+});
+
+
+</script>

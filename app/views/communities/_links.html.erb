@@ -1,0 +1,9 @@
+    <li class="active" id="posts_community_li"><a ><h4>Posts</h4></a></li><%= link_to "", posts_com_community_path(@community) , id: "posts_community", remote: true %>
+    <li id="about_community_li"><a ><h4>About</h4></a></li><%= link_to "", about_com_community_path(@community) , id: "about_community", remote: true %>
+    <li id="photos_community_li"><a ><h4>Photos</h4></a></li><%= link_to "", photos_com_community_path(@community) , id: "photos_community", remote: true %>
+   <li id="members_community_li"><a ><h4>Members
+        <% unless (@community.req_pending_cnt.nil? || @community.req_pending_cnt == 0)%>
+        <span class="pull-right label important" style="margin:5px;margin-right:10px;position:absolute;right:0;"><%= if @community.req_pending_cnt > 0 then @community.req_pending_cnt end %></span>
+        &nbsp;<% end %>
+    </h4></a></li><%= link_to "", members_com_community_path(@community) , id: "members_community", remote: true %>
+    <li id="requests_community_li"><a ><h4>Invites</h4></a></li>

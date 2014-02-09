@@ -1,0 +1,1 @@
+$("#community_tabs").html("<%= escape_javascript(render partial: 'communities/members', locals: { ad_users: @ad_users, inv_users: @inv_users, community: @community, requested_users: @requested_users, ucs: @ucs  } ) %>")

@@ -1,0 +1,328 @@
+<% unless community.nil? %>
+  <ul class="tabs">
+    <%= render 'communities/links' %>
+  </ul>
+  <%= render 'communities/invite_members', :locals => { :community => community }  %>
+
+<% unless requested_users.nil?  %>
+<% if requested_users.count > 0 %>
+<div style="background-color: lemonchiffon">
+  <h4 >Join <%="Request".pluralize(requested_users.count) %></h4>
+  <ul class="users">
+    <% requested_users.each do |req_user| %>
+    <li style="padding-left:15px;" class="tr-hover">
+      <%= gravatar_for req_user, size: 50 %> 
+      <h5><%= req_user.name %>
+
+      <a href="<%= declinerequest_community_path(community) << '?user_id='%><%= req_user.id %>"class="uibutton pull-right" data-remote="true" id="decline" style="margin-right:5px;"> Decline <i class="icon-remove"></i></a>
+      <a href="<%= acceptrequest_community_path(community) << '?user_id='%><%= req_user.id %>"class="uibutton pull-right" data-remote="true" id="decline" style="margin-right:3px;"><i class="icon-ok"></i> Accept </a>
+      </h5>
+      <p><%= req_user.email %></p>
+    </li>
+    <% end %>
+  </ul>
+</div>
+<br>
+<% end %> 
+<% end %>
+
+<ul class="users">
+  <% unless ad_users.nil? %>
+    <% if ad_users.count > 0  %>
+    <h4><%="Moderator".pluralize(ad_users.count) %><%= link_to "edit", '#', id: "moderator",  class: "uibutton icon edit pull-right" %></h4>
+      <% ad_users.each do |user|%>
+      <li style="width:250px;float:left;margin-left:15px;">
+        <div  class="img_zoom" style="float:left;" >
+          <%= gravatar_for user, size: 52 %>
+        </div>
+          <%= link_to user.name, user %>
+          <p><%= user.email %></p>
+      </li>
+      <% end %>
+    <li style="clear:both;"></li>
+    <% end %> 
+  <% end %> 
+  <% unless inv_users.nil? %>
+    <% if inv_users.count > 0 %> 
+    <h4><%="Member".pluralize(ad_users.count) %></h4>
+      <% inv_users.each do |user|%>
+      <li style="width:250px;float:left;margin-left:15px;">
+        <div  class="img_zoom" style="float:left;" >
+          <%= gravatar_for user, size: 52 %>
+        </div>
+          <%= link_to user.name, user %>
+          <p><%= user.email %></p>
+      </li>
+      <% end %>
+    <li style="clear:both;"></li>
+    <% end %>
+  <% end %>
+</ul>
+
+
+
+<%= form_for( community, url: invite_app_user_community_path(community), method: :get, remote: true) do |f| %>
+<div id="modal_invite" style="display:none;" >
+  <div id="modal-from-dom2" class="modal hide fade in" style="display: block;width:700px;">
+    <div class="modal-header">
+      <a href="#" id="close_invite" class="close">×</a>
+      <span style="font-size:20px;line-height: 2;">Invite</span>
+    </div>
+    <div class="modal-body" style="max-height:550px;">
+      <div class="row">
+        <div class="span14 ui-front">
+          <div class="center_block clearfix"><br>
+            <%= f.label "Invite by User name:" %>
+            <div class="input ui-front">
+              <%= f.text_field :user_tokens, id: "search_user" %>
+            </div>
+          </div>
+        </div>
+      </div>   
+    </div>
+    <div class="modal-footer" >
+      <%= f.submit "Invite", class: "btn primary pull-right", id: "invite_submit" %>  
+    </div>
+  </div>
+
+</div>
+<% end %>
+
+
+
+
+<%= form_for( community, url: invite_by_email_community_path(community), method: :get, remote: true) do |f| %>
+<div id="modal_invite_email" style="display:none;" >
+  <div id="modal-from-dom2" class="modal hide fade in" style="display: block;width:700px;">
+    <div class="modal-header">
+      <a href="#" id="close_invite_email" class="close">×</a>
+      <span style="font-size:20px;line-height: 2;">Invite</span>
+    </div>
+    <div class="modal-body" style="max-height:550px;">
+      <div class="row">
+        <div class="span14 ui-front">
+          <div class="center_block clearfix"><br>
+            <%= f.label "Invite by e-mail:" %>
+            <div class="input ui-front">
+              <%= f.text_field :user_tokens, id: "search_email" %>
+            </div>
+          </div>
+        </div>
+      </div>   
+    </div>
+    <div class="modal-footer" >
+      <%= f.submit "Invite", class: "btn primary pull-right", id: "invite_email_submit" %>  
+    </div>
+  </div>
+
+</div>
+<% end %>
+
+
+<%= form_for( community, url: add_moderators_community_path(community), method: :get, remote: true) do |f| %>
+<div id="modal_add_mod" style="display:none;" >
+  <div id="modal-from-dom__add_mod" class="modal hide fade in" style="display: block;">
+    <div class="modal-header">
+      <a href="#" id="close_add_mod" class="close">×</a>
+      <span style="font-size:20px;line-height: 2;">Moderators</span>
+      <span style="font-size:11px;line-height: 4;margin-right:5px;" class="pull-right">(Check to set as Moderator.)</span>
+    </div>
+    <div class="modal-body" style="max-height:350px;">
+      <div class="row">
+        <div class=" ui-front">         
+         <%= render 'shared/error_messages', object: f.object %>
+         <aside class="">
+          <section>
+            <!-- <h2 style="margin-left:65px;padding:3px;">Moderators</h2> -->
+            <ul class="user" style="overflow:auto;">
+              <% @ucs.each do |uc| %>
+              <% user = User.find(uc.user_id) %>
+              <ul class="users">
+                  <li style="margin-left:15px;" class="tr-hover">
+                    <div  class="img_zoom" style="float:left;" >
+                      <%= gravatar_for user, size: 52 %>
+                    </div>
+                      <%= link_to user.name, user %>
+                      <p><%= user.email %></p>
+                  <div style="margin-right:10px;" class="pull-right">
+                    <%= check_box_tag 'user_ids[]', user.id, uc.is_admin? %>
+                    <%= hidden_field_tag 'user_all_ids[]', user.id %>
+                  </div>
+                  </li>
+              </ul>
+              <% end %>
+            </ul>     
+          </section>
+        </aside>
+      </div>
+    </div>   
+  </div>
+  <div class="modal-footer" >
+    <%= f.submit "Update", class: "btn primary pull-right", id: "submit_add_mod" %>  
+  </div>
+</div>
+</div>
+<% end %>
+
+
+
+
+<script type="text/javascript">
+
+$(document).ready(function(){
+  $('#posts_community_li').removeClass('active');
+  $('#about_community_li').removeClass('active');
+  $('#photos_community_li').removeClass('active');
+  $('#members_community_li').addClass('active');
+  $('#requests_community_li').removeClass('active');
+});
+
+
+$('#posts_community_li').click(function(){
+  $('#posts_community_li').addClass('active');
+  $('#about_community_li').removeClass('active');
+  $('#photos_community_li').removeClass('active');
+  $('#members_community_li').removeClass('active');
+  $('#requests_community_li').removeClass('active');
+  $(this).next('a').click();
+
+});
+$('#about_community_li').click(function(){
+  $('#posts_community_li').removeClass('active');
+  $('#about_community_li').addClass('active');
+  $('#photos_community_li').removeClass('active');
+  $('#members_community_li').removeClass('active');
+  $('#requests_community_li').removeClass('active');
+  $(this).next('a').click();
+
+});
+$('#photos_community_li').click(function(){
+  $('#posts_community_li').removeClass('active');
+  $('#about_community_li').removeClass('active');
+  $('#photos_community_li').addClass('active');
+  $('#members_community_li').removeClass('active');
+  $('#requests_community_li').removeClass('active');
+  $(this).next('a').click();
+});
+
+$('#members_community_li').click(function(){
+  $('#posts_community_li').removeClass('active');
+  $('#about_community_li').removeClass('active');
+  $('#photos_community_li').removeClass('active');
+  $('#members_community_li').addClass('active');
+  $('#requests_community_li').removeClass('active');
+  $(this).next('a').click();
+});
+
+$('#requests_community_li').click(function(){
+  $('#posts_community_li').removeClass('active');
+  $('#about_community_li').removeClass('active');
+  $('#photos_community_li').removeClass('active');
+  $('#members_community_li').removeClass('active');
+  $('#requests_community_li').addClass('active');
+});
+
+$(document).ready(function(){
+  $('.gravatar').addClass('thumbnail');  
+
+  });
+
+
+
+
+$("#invite_fb").on( "click", function() {
+  FB.ui({method: 'apprequests',
+    message: 'Join Community: <%=community.name%>, form Smarthood to make your neighbourhood smart'
+  }, requestCallback);    
+});
+
+
+function requestCallback(response)
+{
+  if(response!=null){
+ // console.log("resp: "+response.to);
+  for (var i in response.to) {
+        FB.ui({
+          method: 'send',
+          to: response.to[i],
+          link: 'http://www.smarthood.in/',
+        });
+  }
+
+  $.get( '<%= invite_fb_friends_community_path(community) %>', { ids: response.to } );
+  }
+}
+
+$("#invite_cu").on( "click", function() {
+ $('#modal_invite').modal('show');
+});
+
+$("#close_invite").click(function(){
+  $('#modal_invite').modal('hide');
+});
+
+$("#invite_submit").click(function(){
+  $('#modal_invite').modal('hide');
+});
+
+$("#invite_email").on( "click", function() {
+ $('#modal_invite_email').modal('show');
+});
+
+$("#close_invite_email").click(function(){
+  $('#modal_invite_email').modal('hide');
+});
+
+$("#invite_email_submit").click(function(){
+  $('#modal_invite_email').modal('hide');
+});
+
+$("#moderator").on( "click", function() {
+ $('#modal_add_mod').modal('show');
+});
+
+$("#close_add_mod").click(function(){
+  $('#modal_add_mod').modal('hide');
+});
+
+$("#submit_add_mod").click(function(){
+  $('#modal_add_mod').modal('hide');
+});
+
+$(function() {
+  $("#search_user").tokenInput("/communities/<%= community.id %>/search_app_user", {
+    crossDomain: false,
+    theme: "facebook",
+    resultsFormatter: function(item){ return "<li>" + "<img src='" + item.profile_pic + "' title='" + item.name + "' height='30px' width='30px' />" + "<div style='display: inline-block; padding-left: 10px;'><div class='full_name'>" + item.name + " " + ""+ "</div><div class='full_name'>" + item.email + " " + ""+ "</div></div></li>" },
+    tokenFormatter: function(item) { return  "<li>" + "<img src='" + item.profile_pic + "' title='" + item.name + "' height='30px' width='30px' />" + "<div style='display: inline-block; padding-left: 10px;'><div class='full_name'>" + item.name +"</div><div class='full_name'>" + item.email + " " + ""+ "</div></div></li>" },
+    preventDuplicates: true ,
+    zindex: 11001,
+    hintText: "Type in a user name",
+  });
+});
+
+
+         $('.tokenfields').on('beforeCreateToken', function (e) {
+            var token = e.token.value.split('|')
+            e.token.value = token[1] || token[0]
+            e.token.label = token[1] ? token[0] + ' (' + token[1] + ')' : token[0]
+          }).on('afterCreateToken', function (e) {
+            // Über-simplistic e-mail validation
+            var re = /\S+@\S+\.\S+/
+            var valid = re.test(e.token.value)
+            if (!valid) {
+              $(e.relatedTarget).addClass('invalid')
+            }
+          }).on('beforeEditToken', function (e) {
+            if (e.token.label !== e.token.value) {
+              var label = e.token.label.split(' (')
+              e.token.value = label[0] + '|' + e.token.value
+            }
+          }).on('removeToken', function (e) {
+           // alert('Token removed! Token value was: ' + e.token.value)
+          }).on('preventDuplicateToken', function (e) {
+            alert('Duplicate detected! Token value is: ' + e.token.value)
+          }).tokenfield();
+
+</script>
+<% end %>

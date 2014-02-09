@@ -1,0 +1,113 @@
+ <ul class="users">
+  <li class="tr-hover" >
+  <h4 class="marginLeft5">Invite by: 
+    <% if session["fb_access_token"].present? %>
+       <a class=" uibutton pull-right" style="margin-right:5px;" id="invite_fb"> Facebook friends </a>
+    <% end %>
+         <a class="uibutton pull-right" style="margin-right:5px;" id="invite_cu" >Smarthood User's name </a>
+     <a class="uibutton pull-right" style="margin-right:2px;" id="invite_email" > Email </a>
+  </h4>
+  </li>
+ </ul>
+
+<% unless @community.nil? %>
+
+<%= form_for( @community, url: invite_app_user_community_path(@community), method: :get, remote: true) do |f| %>
+<div id="modal_invite" style="display:none;" >
+  <div id="modal-from-dom2" class="modal hide fade in" style="display: block;">
+    <div class="modal-header">
+      <a href="#" id="close_invite" class="close">×</a>
+      <span style="font-size:20px;line-height: 2;">Invite by User's name:</span>
+    </div>
+    <div class="modal-body" style="max-height:550px;">
+      <div class="row">
+        <div class="span8 ui-front">
+          <div class="center_block clearfix marginLeft50"><br>
+              <%= f.text_field :user_tokens, id: "search_user" %>
+          </div>
+        </div>
+      </div>   
+    </div>
+    <div class="modal-footer" >
+      <%= f.submit "Invite", class: "btn primary pull-right", id: "invite_submit" %>  
+    </div>
+  </div>
+
+</div>
+<% end %>
+
+
+
+
+<%= form_for( @community, url: invite_by_email_community_path(@community), method: :get, remote: true) do |f| %>
+<div id="modal_invite_email" style="display:none;" >
+  <div id="modal-from-dom2" class="modal hide fade in" style="display: block;">
+    <div class="modal-header">
+      <a href="#" id="close_invite_email" class="close">×</a>
+      <span style="font-size:20px;line-height: 2;">Invite by Email:</span>
+    </div>
+    <div class="modal-body" style="max-height:550px;">
+      <div class="row">
+        <div class="span10 ui-front">
+          <div class="center_block clearfix"><br>
+              <div class="bs-example bs-email">
+                        <div class="form-group">
+                          <input type="text" class="form-control tokenfields" style="width:480px;" id="tokenfield-m1" name="community[user_tokens]" placeholder="Type email and hit tab/enter" />
+                        </div>
+                </div>
+          </div>
+        </div>
+      </div>   
+    </div>
+    <div class="modal-footer" >
+      <%= f.submit "Invite", class: "btn primary pull-right", id: "invite_email_submit" %>  
+    </div>
+  </div>
+
+</div>
+<% end %>
+
+
+<%= form_for( @community, url: add_moderators_community_path(@community), method: :get, remote: true) do |f| %>
+<div id="modal_add_mod" style="display:none;" >
+  <div id="modal-from-dom__add_mod" class="modal hide fade in" style="display: block;">
+    <div class="modal-header">
+      <a href="#" id="close_add_mod" class="close">×</a>
+      <span style="font-size:20px;line-height: 2;">Edit Moderators</span>
+    </div>
+    <div class="modal-body" style="max-height:350px;">
+      <div class="row">
+        <div class=" ui-front">         
+         <%= render 'shared/error_messages', object: f.object %>
+         <aside class="">
+          <section>
+            <!-- <h2 style="margin-left:65px;padding:3px;">Moderators</h2> -->
+            <ul class="user" style="overflow:auto;">
+              <% @ucs.each do |uc| %>
+              <% user = User.find(uc.user_id) %>
+              <ol>
+                <div style="background-color:#f0f0f0;padding:5px;" class="span5">
+                  <%= link_to user.name, "#" %>
+                  <%= gravatar_for user, size: 25 %>
+                  <div style="margin-right:10px;" class="pull-right">
+                    <%= check_box_tag 'user_ids[]', user.id, uc.is_admin? %>
+                    <%= hidden_field_tag 'user_all_ids[]', user.id %>
+                  </div>
+                </div>
+              </ol>
+              <% end %>
+            </ul>     
+          </section>
+        </aside>
+      </div>
+    </div>   
+  </div>
+  <div class="modal-footer" >
+    <%= f.submit "Update", class: "btn primary pull-right", id: "submit_add_mod" %>  
+  </div>
+</div>
+</div>
+<% end %>
+
+
+<% end %>

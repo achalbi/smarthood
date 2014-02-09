@@ -25,12 +25,13 @@ class AuthenticationController < ApplicationController
       
       user_session = session['fb_auth']['extra']['raw_info']
       unless user_session.nil?
-        user.user_info =  UserInfo.new
+        #user.user_info =  UserInfo.new
         user.user_info.first_name = user_session['first_name']
         user.user_info.last_name = user_session['last_name']
         user.email = user_session['email']
         user.user_info.gender = user_session['gender']
         user.user_info.dob = user_session['birthday']
+        user.name = user.user_info.first_name + ' '.to_s + user.user_info.last_name
         user.save!
       end
 

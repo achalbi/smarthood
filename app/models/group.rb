@@ -42,6 +42,10 @@ class Group < ActiveRecord::Base
     user.user_groups.create!(group_id: group_id, invitation: invitation, is_admin: is_admin)
   end
 
+  def follow!(user, group_id, invitation, is_admin, community_id)
+    user.user_groups.create!(group_id: group_id, invitation: invitation, is_admin: is_admin, community_id: community_id)
+  end
+
   def self.search(search, exclude_group)
     if search  
       if exclude_group.nil?

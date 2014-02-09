@@ -60,6 +60,9 @@ module ActivitynotificationsHelper
 			  	if(object.albumable_type == Objecttypeenum::GROUP)
 			  	  objectfortype == Objecttypeenum::GROUP
 		          objectfor = Group.find(object.albumable_id)
+	            elsif(object.albumable_type == Objecttypeenum::COMUNITY)
+		          objectfortype = Objecttypeenum::COMUNITY
+		          objectfor = Community.find(object.albumable_id)
 		        elsif(object.albumable_type == Objecttypeenum::ACTIVITY)
 		          objectfortype = Objecttypeenum::ACTIVITY
 		          objectfor = Activity.find(object.albumable_id)
@@ -78,6 +81,8 @@ module ActivitynotificationsHelper
 						@users = getActivityUsers(objectfortype, objectfor, nil, nil, action)
 			  		elsif (objectfortype == Objecttypeenum::GROUP)
 				  	    @users = getGroupUsers(objectfortype, objectfor, nil, nil, action)
+			  	    elsif (objectfortype == Objecttypeenum::COMUNITY)
+				  	    @users = getCommunityUsers(objectfortype, objectfor, nil, nil, action)
 				  	else
 				    	@users = active_community_user_ids
 				    	@users = getActivitynotificationUserssettings(@users, objecttype, object, Privacyenum::PUBLIC).collect(&:user_id)
@@ -341,4 +346,23 @@ module ActivitynotificationsHelper
 		@users
 	end
 	
+	def getCommunityUsers(objecttype, object, objectfortype, objectfor, action)
+		@users = []
+		if action == Uc_enum::INVITED
+			@users = User.where("id IN (?)", objectfor)
+		else
+		  	    if(object.privacy==Privacyenum::PUBLIC)
+		  	    	@users = active_community_user_ids #all community members
+			    	@users = getActivitynotificationUserssettings(@users, objecttype, object, Privacyenum::PUBLIC).collect(&:user_id)
+			    	@users = @users + current_user.followers.collect(&:id)
+		  	    elsif(object.privacy==Privacyenum::MEMBERS)
+			    	@users = active_community_user_ids
+			    	@users = getActivitynotificationUserssettings(@users, objecttype, object, Privacyenum::PUBLIC).collect(&:user_id)
+			    	@users = @users + current_user.followers.collect(&:id)
+			    elsif (object.privacy==Privacyenum::PRIVATE)
+				    @users = object.users.collect(&:id)
+			    end 
+		end
+		@users
+	end	
 end
