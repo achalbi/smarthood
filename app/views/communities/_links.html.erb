@@ -6,4 +6,4 @@
         <span class="pull-right label important" style="margin:5px;margin-right:10px;position:absolute;right:0;"><%= if @community.req_pending_cnt > 0 then @community.req_pending_cnt end %></span>
         &nbsp;<% end %>
     </h4></a></li><%= link_to "", members_com_community_path(@community) , id: "members_community", remote: true %>
-    <li id="requests_community_li"><a ><h4>Invites</h4></a></li>
+    <li id="groups_community_li"><a ><h4>Groups</h4></a></li><%= link_to "", groups_com_community_path(@community) , id: "groups_community", remote: true %>

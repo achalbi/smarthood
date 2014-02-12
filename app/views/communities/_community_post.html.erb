@@ -109,7 +109,7 @@ $('document').ready(function(){
   $('#about_community_li').removeClass('active');
   $('#photos_community_li').removeClass('active');
   $('#members_community_li').removeClass('active');
-  $('#requests_community_li').removeClass('active');
+  $('#groups_community_li').removeClass('active');
 });
 
 
@@ -118,9 +118,10 @@ $('document').ready(function(){
 $('#posts_community_li').click(function(){
   $('#posts_community_li').addClass('active');
   $('#about_community_li').removeClass('active');
+  $('#groups_community_li').removeClass('active');
   $('#photos_community_li').removeClass('active');
   $('#members_community_li').removeClass('active');
-  $('#requests_community_li').removeClass('active');
+  $('#groups_community_li').removeClass('active');
   $(this).next('a').click();
 
 });
@@ -129,7 +130,7 @@ $('#about_community_li').click(function(){
   $('#about_community_li').addClass('active');
   $('#photos_community_li').removeClass('active');
   $('#members_community_li').removeClass('active');
-  $('#requests_community_li').removeClass('active');
+  $('#groups_community_li').removeClass('active');
   $(this).next('a').click();
 
 });
@@ -138,7 +139,7 @@ $('#photos_community_li').click(function(){
   $('#about_community_li').removeClass('active');
   $('#photos_community_li').addClass('active');
   $('#members_community_li').removeClass('active');
-  $('#requests_community_li').removeClass('active');
+  $('#groups_community_li').removeClass('active');
   $(this).next('a').click();
 });
 
@@ -147,16 +148,17 @@ $('#members_community_li').click(function(){
   $('#about_community_li').removeClass('active');
   $('#photos_community_li').removeClass('active');
   $('#members_community_li').addClass('active');
-  $('#requests_community_li').removeClass('active');
+  $('#groups_community_li').removeClass('active');
   $(this).next('a').click();
 });
 
-$('#requests_community_li').click(function(){
+$('#groups_community_li').click(function(){
   $('#posts_community_li').removeClass('active');
   $('#about_community_li').removeClass('active');
   $('#photos_community_li').removeClass('active');
   $('#members_community_li').removeClass('active');
-  $('#requests_community_li').addClass('active');
+  $('#groups_community_li').addClass('active');
+  $(this).next('a').click();
 });
 
 
