@@ -583,8 +583,6 @@ def search_app_user
     @my_groups_ids = current_user.user_groups.where("community_id = ? AND invitation = ? ", @selected_community.id, Uc_enum::JOINED ).collect(&:group_id).uniq
     @my_groups = Group.where('id IN (?)', @my_groups_ids)
     @other_groups = Group.where("community_id = ? AND id NOT IN (?)", @selected_community.id, @my_groups_ids)
-    debugger
-    debugger
     @groups
  end
 
