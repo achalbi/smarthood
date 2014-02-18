@@ -544,7 +544,15 @@ def search_app_user
     @community = Community.find(params[:id])
     @selected_comm << @community
     @post = Post.new
-    @posts = @community.posts.paginate(page: params[:page], :per_page => 4).uniq
+     @group_ids = current_user.user_groups.where("community_id = ?", params[:id]).collect(&:group_id)
+        @post_ids = []
+        unless @group_ids.blank?
+          @groups = Group.where('id IN (?) AND community_id = ?', @group_ids, params[:id])
+          @groupposts = Grouppost.where('group_id IN (?)', @group_ids)
+          @post_ids = @groupposts.collect(&:post_id)
+        end
+          @post_ids << @community.posts.collect(&:id)
+          @posts = Post.where(id: @post_ids.uniq).paginate(page: params[:page], :per_page => 4)
   end
 
   def posts_com
