@@ -548,7 +548,7 @@ def search_app_user
   end
 
   def posts_com
-    unless params[:id]
+    unless params[:id].nil?
       @selected_comm  = []
       @community = Community.find(params[:id])
       @selected_community = @community

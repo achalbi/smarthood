@@ -87,8 +87,8 @@ function checkScroll() {
       }
       restartInterval();
     }
-  },});
     insideLoop = "false";
+  },});
   }
 }
  
@@ -105,7 +105,7 @@ function pageHeight() {
 }
  
 $('document').ready(function(){
-  intervalID = setInterval(checkScroll, 2000);
+  intervalID = setInterval(checkScroll, 1000);
   $('#posts_community_li').addClass('active');
   $('#about_community_li').removeClass('active');
   $('#photos_community_li').removeClass('active');
