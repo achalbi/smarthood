@@ -1,4 +1,2 @@
-//$("#community_tabs").html("<%= escape_javascript(render partial: 'communities/community_post', locals: {posts: @posts}) %>");
-//$('#comUnity_stats').html("<%= escape_javascript render partial: 'shared/comUnity_stats', locals: {ad_users: @ad_users, inv_users: @inv_users, requested_users: @requested_users, community: @community} %>");
-//$("#comUnity_stats").show('slow');
-$('#cu_name').click();
+$('#inv_cu').html("<%= escape_javascript(render '/communities/inv_cu', locals: {inv_req_cu: @inv_req_cu }) %>");
+$('#inv_req_count').html("<%= escape_javascript(render '/communities/inv_req_count', locals: {inv_req_cu: @inv_req_cu, inv_req_grps: @inv_req_grps }) %>");

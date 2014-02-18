@@ -62,6 +62,7 @@ class GroupsController < ApplicationController
     @ad_users = User.where(['id IN (?)', @group.user_groups.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED,true).collect(&:user_id)])
     @is_admin = @ad_users.include? current_user
     @ucs = @group.user_groups.where("user_id = ?  AND is_admin=?",current_user.id, true )
+    @community = active_community
     respond_to do |format|
      format.html {  }
      format.js {render  :locals => { :group => @group, :posts => @posts, :user => @user }  }
@@ -186,12 +187,20 @@ def acceptrequest
  @usergroup.invitation = Uc_enum::JOINED
  @usergroup.save
  @groups = Group.where(['id  IN (?)', current_user.user_groups.collect(&:group_id)]) 
+ @group_ids = current_user.invited_groups.collect(&:group_id)
+ @inv_groups = Group.where('id IN (?)', @group_ids)
+ @inv_req_cu = Community.where(['id IN (?)' , current_user.communities.where('invitation = ?',Uc_enum::INVITED).collect(&:id)])
+ @inv_req_grps = current_user.invited_groups.collect(&:group_id)
 end
 
 def declinerequest
  @usergroup = UserGroup.where('group_id=? and user_id=?',params[:id],params[:user_id])[0]
  @usergroup.invitation = Uc_enum::USER_DECLINED
  @usergroup.save
+ @group_ids = current_user.invited_groups.collect(&:group_id)
+ @inv_groups = Group.where('id IN (?)', @group_ids)
+ @inv_req_cu = Community.where(['id IN (?)' , current_user.communities.where('invitation = ?',Uc_enum::INVITED).collect(&:id)])
+ @inv_req_grps = current_user.invited_groups.collect(&:group_id)
 end
 
 private  

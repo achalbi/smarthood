@@ -1,0 +1,24 @@
+ <% unless @inv_groups.blank?  %>
+            <% if @inv_groups.count > 0 %>
+                <div style="background-color: lemonchiffon">
+                  <h4 class="marginLeft5">Group join <%="request".pluralize(@inv_groups.count) %></h4>
+                  <ul class="users">
+                    <% @inv_groups.each do |group| %>
+                    <li style="padding-left:15px;" class="tr-hover">
+                      <% unless group.photo.nil? %>
+                         <%= link_to cl_image_tag(group.photo.pic_url(:smallest), class:"image_al_c1 thumbnail pull-left ", id:"#{group.photo.id}"), "/groups/#{group.id}", remote: true,   style:"cursor:pointer;"%>
+
+                      <% end %> 
+                      <h5><%= link_to group.name.capitalize, group, class: "pull-left", style: "margin:2px 5px;" %>
+
+                      <a href="<%= declinerequest_group_path(group) << '?user_id='%><%= current_user.id %>"class="uibutton pull-right" data-remote="true" id="decline" style="margin-right:5px;"> Decline <i class="icon-remove"></i></a>
+                      <a href="<%= acceptrequest_group_path(group) << '?user_id='%><%= current_user.id %>"class="uibutton pull-right" data-remote="true" id="accept" style="margin-right:3px;"><i class="icon-ok"></i> Accept </a>
+                      </h5><br><br><br>
+                      <span class="marginLeft5"><%= group.description %></span>
+                    </li>
+                    <% end %>
+                  </ul>
+                </div>
+                <br>
+            <% end %> 
+          <% end %>

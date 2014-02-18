@@ -26,13 +26,13 @@
  <% end %><br><br>
 <!--  <p><h1><%= community.name %></h1></p> -->
  
- <p><h4>Description : <small><%= community.description %></small></h4></p>
+ <p><h4><strong>Description : </strong><small><%= community.description %></small></h4></p>
 
- <p><h4>Location : <%= community.address %></h4></p>
+ <p><h4><strong>Location : </strong><%= community.address %></h4></p>
 
  <%= render :partial => "events/maps", :locals => { :location => community } %><br>
-<p><h4>Privacy : <%= privacy_str(community) %></h4></p>
- <p ><h4 >Host : <span style="margin:5px;">
+<p><h4><strong>Privacy : </strong><%= privacy_str(community) %></h4></p>
+ <p ><h4 ><strong>Host : </strong><span style="margin:5px;">
   <%= link_to community.user.name, community.user %>
 </span></h4></p>
 <div  class="img_zoom" style="float:left;" >

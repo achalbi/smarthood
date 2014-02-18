@@ -173,6 +173,10 @@ def facebook
   @fb_user ||= FbGraph::User.me(self.authentications.find_by_provider('facebook').token)
 end
 
+def invited_groups
+ @groups = self.user_groups.where(["invitation = ?", Uc_enum::INVITED]) 
+end
+
 protected
  
 def apply_facebook(omniauth)

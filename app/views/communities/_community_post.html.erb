@@ -1,3 +1,4 @@
+<% if @selected_community.is_joined?(current_user, @selected_community) %> 
     <ul class="tabs">
         <%= render 'communities/links', locals: { community: @selected_community} %>
   </ul>
@@ -104,7 +105,7 @@ function pageHeight() {
 }
  
 $('document').ready(function(){
-  intervalID = setInterval(checkScroll, 1000);
+  intervalID = setInterval(checkScroll, 2000);
   $('#posts_community_li').addClass('active');
   $('#about_community_li').removeClass('active');
   $('#photos_community_li').removeClass('active');
@@ -163,3 +164,39 @@ $('#groups_community_li').click(function(){
 
 
 </script>
+<% else %>
+  
+
+<div id="aboutDiv">
+ <% if @selected_community.is_private?(current_user) %>
+     <% unless @selected_community.is_requested?(current_user) %>
+       <%= link_to "Send request", sendrequest_community_path(@selected_community), class: "uibutton icon secure pull-right", remote: true %>
+     <% end %>
+ <% elsif @selected_community.is_public?(current_user) %>
+   <%= link_to "Join", join_cu_community_path(@selected_community), class: "uibutton icon prev pull-right", remote: true %>
+ <% end %>
+
+ <p><h4><strong>Description : </strong><small><%= @selected_community.description %></small></h4></p>
+
+ <p><h4><strong>Location : </strong><%= @selected_community.address %></h4></p>
+
+ <%= render :partial => "events/maps", :locals => { :location => @selected_community } %><br>
+<p><h4><strong>Privacy : </strong><%= privacy_str(@selected_community) %></h4></p>
+ <p ><h4 ><strong>Host : </strong><span style="margin:5px;">
+  <%= link_to @selected_community.user.name, @selected_community.user %>
+</span></h4></p>
+<div  class="img_zoom" style="float:left;" >
+  <%= gravatar_for @selected_community.user, size: 100 %>
+</div>
+
+
+</div>
+<script type="text/javascript">
+
+$(document).ready(function(){
+  $('.gravatar').addClass('thumbnail pop_up');  
+
+});
+</script>
+
+<% end %>

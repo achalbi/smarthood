@@ -1,0 +1,1 @@
+$("#comm_groups_list").html("<%= escape_javascript(render partial: 'communities/show_group', locals: { group: @group, inv_users: @inv_users, ad_users: @ad_users} ) %>")

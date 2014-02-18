@@ -7,15 +7,14 @@
 <% unless requested_users.nil?  %>
 <% if requested_users.count > 0 %>
 <div style="background-color: lemonchiffon">
-  <h4 >Join <%="Request".pluralize(requested_users.count) %></h4>
+  <h4 class="marginLeft5">Join <%="Request".pluralize(requested_users.count) %></h4>
   <ul class="users">
     <% requested_users.each do |req_user| %>
     <li style="padding-left:15px;" class="tr-hover">
       <%= gravatar_for req_user, size: 50 %> 
       <h5><%= req_user.name %>
-
       <a href="<%= declinerequest_community_path(community) << '?user_id='%><%= req_user.id %>"class="uibutton pull-right" data-remote="true" id="decline" style="margin-right:5px;"> Decline <i class="icon-remove"></i></a>
-      <a href="<%= acceptrequest_community_path(community) << '?user_id='%><%= req_user.id %>"class="uibutton pull-right" data-remote="true" id="decline" style="margin-right:3px;"><i class="icon-ok"></i> Accept </a>
+      <a href="<%= acceptrequest_community_path(community) << '?user_id='%><%= req_user.id %>"class="uibutton pull-right" data-remote="true" id="accept" style="margin-right:3px;"><i class="icon-ok"></i> Accept </a>
       </h5>
       <p><%= req_user.email %></p>
     </li>

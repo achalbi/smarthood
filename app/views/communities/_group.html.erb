@@ -1,0 +1,19 @@
+
+
+<li style="width:250px;float:left;margin-left:15px;">
+<div  class="img_zoom">
+  <span style="margin: auto;"  >
+   <h5> <div  class="img_zoom" id="div-img_<%= group.photo.id %>" >
+      <% unless group.photo.nil? %>
+         <%= link_to cl_image_tag(group.photo.pic_url(:smallest), class:"image_al_c1 thumbnail pull-left ", id:"#{group.photo.id}"), "/communities/#{group.id}/show_group", remote: true,   style:"cursor:pointer;"%>
+
+      <% end %>
+        </div>
+    <% if group.name.length > 20 %>
+     <%= link_to group.name.slice(0..20).capitalize+"...",  "/communities/#{group.id}/show_group", title: group.name, class: "pull-left", style: "margin:10px;", remote: true %>
+    <% else %>
+    <%= link_to group.name.capitalize,  "/communities/#{group.id}/show_group", class: "pull-left", style: "margin:2px 5px;", remote: true %>
+    <% end %></h5>
+  </span>
+  </div>
+  </li>

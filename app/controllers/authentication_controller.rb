@@ -71,6 +71,7 @@ class AuthenticationController < ApplicationController
       #user.apply_omniauth(omniauth)
       user.name = omniauth['info']['name']
       user.email = omniauth['info']['email']
+      user.email_confirmation = user.email 
       user.token = omniauth['credentials']['token']
       user.fb_uid = omniauth['uid']
       user.password = rand(36**10).to_s(36)
@@ -80,7 +81,7 @@ class AuthenticationController < ApplicationController
       user.user_info =  UserInfo.new
       user.user_info.first_name = user_session['first_name']
       user.user_info.last_name = user_session['last_name']
-      user.email = user_session['email']
+      #user.email_confirmation = user_session['email']
       user.user_info.gender = user_session['gender']
       user.user_info.dob = user_session['birthday']
       user.save!

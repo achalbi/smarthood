@@ -50,6 +50,7 @@ class CommunitiesController < ApplicationController
       @requested_users_all += User.where(['id IN (?)' , community.requested_uc.collect(&:user_id)]).count
     end
     @inv_req_cu = Community.where(['id IN (?)' , current_user.communities.where('invitation = ?',Uc_enum::INVITED).collect(&:id)])
+    @inv_req_grps = current_user.invited_groups.collect(&:group_id)
     @ucs = @selected_community.usercommunities unless @selected_community.nil?
   	@community = @selected_community
   end
@@ -79,9 +80,9 @@ class CommunitiesController < ApplicationController
       end 
       @usercommunity.status="active"
       @usercommunity.save
-      createNotificationSettings(active_community.id)
+      createNotificationSettings(@community.id)
     @selected_comm  = []
-    @selected_comm << active_community
+    @selected_comm << @community
     @post = Post.new
      @group_ids = current_user.user_groups.where("community_id = ?", @selected_community.id).collect(&:group_id)
       @post_ids = []
@@ -189,10 +190,20 @@ def acceptrequest
  @ad_users = User.where(['id IN (?)', @admin_users])
  @requested_users = nil
  @ucs = @community.usercommunities.where("user_id = ?  AND is_admin=?",current_user.id, true )
+ @group_ids = current_user.invited_groups.collect(&:group_id)
+ @inv_groups = Group.where('id IN (?)', @group_ids)
+ @inv_req_cu = Community.where(['id IN (?)' , current_user.communities.where('invitation = ?',Uc_enum::INVITED).collect(&:id)])
+ @inv_req_grps = current_user.invited_groups.collect(&:group_id)
   if @ucs.count > 0
     @requested_users = User.where(['id IN (?)' , @community.requested_uc.collect(&:user_id)])
   end 
-  @usr = User.find(params[:user_id])
+  #@usr = User.find(params[:user_id])
+  @usr = []
+  @usr << params[:user_id]
+  @notifications_settings = current_user.activitynotificationsettings.where("community_id = ?", params[:id]).first
+    if @notifications_settings.blank?
+      createNotificationSettings(params[:id])
+    end
   getNotifiableUsers(Objecttypeenum::COMUNITY, @community, Objecttypeenum::USER, @usr, Uc_enum::ACCEPTED)  
 end
 
@@ -209,9 +220,13 @@ def declinerequest
  @ad_users = User.where(['id IN (?)', @admin_users])
  @requested_users = nil
  @ucs = @community.usercommunities.where("user_id = ?  AND is_admin=?",current_user.id, true )
- if @ucs.count > 0
-  @requested_users = User.where(['id IN (?)' , @community.requested_uc.collect(&:user_id)])
-end   
+  @group_ids = current_user.invited_groups.collect(&:group_id)
+ @inv_groups = Group.where('id IN (?)', @group_ids)
+ @inv_req_cu = Community.where(['id IN (?)' , current_user.communities.where('invitation = ?',Uc_enum::INVITED).collect(&:id)])
+ @inv_req_grps = current_user.invited_groups.collect(&:group_id)
+  if @ucs.count > 0
+    @requested_users = User.where(['id IN (?)' , @community.requested_uc.collect(&:user_id)])
+  end   
 end
 
 def join_cu
@@ -238,6 +253,7 @@ def join_cu
     getNotifiableUsers(Objecttypeenum::COMUNITY, @community, Objecttypeenum::USER, current_user, Uc_enum::JOINED)
   
   end
+  @uc_count = current_user.usercommunities.where('status=?','active').count
   if @uc_count < 1
     render js: %(window.location.href='#{root_path}')
   end
@@ -448,19 +464,22 @@ def search_app_user
            @usercommunity.is_admin = false
            @usercommunity.status=""
            @usercommunity.invitation = Uc_enum::INVITED
+           @usercommunity.save
             @usr = User.find(id)
             getNotifiableUsers(Objecttypeenum::COMUNITY, @community, Objecttypeenum::USER, @usr, Uc_enum::INVITED)
          elsif (@usercommunity.invitation==Uc_enum::REQUESTED || @usercommunity.invitation==Uc_enum::MODERATOR_DECLINED)
            @usercommunity.invitation = Uc_enum::JOINED
+           @usercommunity.save
             @usr = User.find(id)
             getNotifiableUsers(Objecttypeenum::COMUNITY, @community, Objecttypeenum::USER, @usr, Uc_enum::ACCEPTED)
-         elsif @usercommunity.invitation == Uc_enum::USER_DECLINED
+         elsif (@usercommunity.invitation == Uc_enum::USER_DECLINED || @usercommunity.invitation == Uc_enum::UNJOINED)
            @usercommunity.invitation = Uc_enum::INVITED
+           @usercommunity.save
             @usr = User.find(id)
             getNotifiableUsers(Objecttypeenum::COMUNITY, @community, Objecttypeenum::USER, @usr, Uc_enum::INVITED)
 
          end
-           @usercommunity.save
+
        end
       end 
   end
@@ -529,21 +548,24 @@ def search_app_user
   end
 
   def posts_com
-    @selected_comm  = []
-    @community = Community.find(params[:id])
-    @selected_community = @community
-    @selected_comm << @community
-    @post = Post.new
-       @group_ids = current_user.user_groups.where("community_id = ?", @selected_community.id).collect(&:group_id)
-      @post_ids = []
-      unless @group_ids.blank?
-        @groups = Group.where('id IN (?) AND community_id = ?', @group_ids, @selected_community.id)
-        @groupposts = Grouppost.where('group_id IN (?)', @group_ids)
-        @post_ids = @groupposts.collect(&:post_id)
-      end
-        @post_ids << @community.posts.collect(&:id)
-        @posts = Post.where(id: @post_ids.uniq).paginate(page: params[:page], :per_page => 4)
-    @selected_community.req_pending_cnt = User.where(['id IN (?)' , @community.requested_uc.collect(&:user_id)]).count
+    unless params[:id]
+      @selected_comm  = []
+      @community = Community.find(params[:id])
+      @selected_community = @community
+      @selected_comm << @community
+      @post = Post.new
+         @group_ids = current_user.user_groups.where("community_id = ?", @selected_community.id).collect(&:group_id)
+        @post_ids = []
+        unless @group_ids.blank?
+          @groups = Group.where('id IN (?) AND community_id = ?', @group_ids, @selected_community.id)
+          @groupposts = Grouppost.where('group_id IN (?)', @group_ids)
+          @post_ids = @groupposts.collect(&:post_id)
+        end
+          @post_ids << @community.posts.collect(&:id)
+          @posts = Post.where(id: @post_ids.uniq).paginate(page: params[:page], :per_page => 4)
+      @selected_community.req_pending_cnt = User.where(['id IN (?)' , @community.requested_uc.collect(&:user_id)]).count
+        
+    end
   end
 
   def about_com
@@ -581,9 +603,10 @@ def search_app_user
     @selected_community = @community
     @selected_community.req_pending_cnt = User.where(['id IN (?)' , @community.requested_uc.collect(&:user_id)]).count
     @my_groups_ids = current_user.user_groups.where("community_id = ? AND invitation = ? ", @selected_community.id, Uc_enum::JOINED ).collect(&:group_id).uniq
-    @my_groups = Group.where('id IN (?)', @my_groups_ids)
+    @groups = Group.where('id IN (?)', @my_groups_ids)
     @other_groups = Group.where("community_id = ? AND id NOT IN (?)", @selected_community.id, @my_groups_ids)
-    @groups
+    @group_ids = current_user.invited_groups.collect(&:group_id)
+    @inv_groups = Group.where('id IN (?)', @group_ids)
  end
 
  def create_album
@@ -606,6 +629,25 @@ def search_app_user
          format.html {  }
          format.js {  }
       end
+  end
+
+  def invites_requests
+    @group_ids = current_user.invited_groups.collect(&:group_id)
+    @inv_groups = Group.where('id IN (?)', @group_ids)
+    @inv_req_cu = Community.where(['id IN (?)' , current_user.communities.where('invitation = ?',Uc_enum::INVITED).collect(&:id)])
+    
+  end
+  def show_group
+     @group = Group.find(params[:id])
+     @users = @group.users
+    @album = Album.new
+    @inv_users = User.where(['id IN (?)', @group.user_groups.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED,false).collect(&:user_id)])
+    @ad_users = User.where(['id IN (?)', @group.user_groups.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED,true).collect(&:user_id)])
+    @is_admin = @ad_users.include? current_user
+    @ucs = @group.user_groups.where("user_id = ?  AND is_admin=?",current_user.id, true )
+    @inv_users = User.where(['id IN (?)', @group.user_groups.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED,false).collect(&:user_id)])
+    @ad_users = User.where(['id IN (?)', @group.user_groups.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED,true).collect(&:user_id)])
+    @community = active_community
   end
 
 def cu_list

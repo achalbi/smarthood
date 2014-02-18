@@ -84,7 +84,7 @@ EMS::Application.routes.draw do
 
   resources :communities do
     member do
-      get :setactive, :sendrequest, :join_cu, :acceptrequest, :declinerequest, :search_app_user, :invite_app_user, :invite_fb_friends, :invite_by_email, :unjoin_cu, :add_moderators, :about_com, :posts_com, :photos_com, :members_com, :groups_com
+      get :setactive, :sendrequest, :join_cu, :acceptrequest, :declinerequest, :search_app_user, :invite_app_user, :invite_fb_friends, :invite_by_email, :unjoin_cu, :add_moderators, :about_com, :posts_com, :photos_com, :members_com, :groups_com, :show_group
     end
     collection do
       get :active_com , :joined_com, :public_com, :private_com, :moderated_com, :search_address, :get_geo_coordinates, :invites_requests, :community_post_paginate
@@ -135,7 +135,7 @@ EMS::Application.routes.draw do
 
   resources :groups do
     member do
-      get :followers, :add_moderators, :invite_app_user, :search_app_user
+      get :followers, :add_moderators, :invite_app_user, :search_app_user, :acceptrequest, :declinerequest
     end
     collection do
       get :my, :public, :post_paginate, :group_post, :groups_post_paginate, :search_app_user

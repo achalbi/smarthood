@@ -1,0 +1,299 @@
+<div class="row">
+        <div class="marginLeft15 ui-front">
+        <section id="groups_sec" style="">
+          <ul id="group_list" class="grid users">
+          <li class="span13">
+            <%= link_to "edit", '#', id: "edit_group",  class: " pull-right uibutton icon edit",:title => "Edit" %>
+            <%= cl_image_tag(group.photo.pic_url(:smaller), class:"image_al_c1 thumbnail pull-left gravatar", id:"#{group.photo.id}") %>
+            <div class="pull-left">
+             <h5> <strong> Name: </strong> <%= group.name %> </h5>
+             <% unless group.description.blank? %>
+               <h5> <strong> Description: </strong> <%= group.description %> </h5>
+             <% end %>
+             <h5> <strong> privacy: </strong> <%= privacy_str(group) %> </h5>
+              <br><br><br>
+            </div>
+          </li>
+          </ul>
+        </section>
+
+<ul class="users marginLeft15">
+  <% unless ad_users.nil? %>
+    <% if ad_users.count > 0  %>
+    <h4><%="Moderator".pluralize(ad_users.count) %><%= link_to "edit", '#', id: "moderator",  class: "uibutton icon edit pull-right" %></h4>
+      <% ad_users.each do |user|%>
+      <li style="width:250px;float:left;margin-left:15px;">
+        <div  class="img_zoom" style="float:left;" >
+          <%= gravatar_for user, size: 52 %>
+        </div>
+          <%= link_to user.name, user %>
+          <p><%= user.email %></p>
+      </li>
+      <% end %>
+    <li style="clear:both;"></li>
+    <% end %> 
+  <% end %> <br>
+ <h4>Members<%= link_to "add", '#', id: "invite",  class: "uibutton icon add pull-right" %></h4>
+  <% unless inv_users.nil? %>
+    <% if inv_users.count > 0 %> 
+      <% inv_users.each do |user|%>
+      <li style="width:250px;float:left;margin-left:15px;">
+        <div  class="img_zoom" style="float:left;" >
+          <%= gravatar_for user, size: 52 %>
+        </div>
+          <%= link_to user.name, user %>
+          <p><%= user.email %></p>
+      </li>
+      <% end %>
+    <li style="clear:both;"></li>
+    <% end %>
+  <% end %>
+</ul>
+
+        </div>
+      </div>
+
+
+<%= form_for( @group, remote: true, :html => {:multipart => true}) do |f| %>
+<div id="modal_edit_grp" style="display:none;" >
+  <div id="modal-from-dom2" class="modal hide fade in" style="display: block;width:700px;">
+    <div class="modal-header">
+      <a href="#" id="closeX_edit_grp" class="close">×</a>
+      <span style="font-size:20px;line-height: 2;">Edit Group</span>
+    </div>
+    <div class="modal-body" style="max-height:550px;">
+      <div class="row">
+        <div class="span14 ui-front">
+
+         <%= render 'shared/error_messages', object: f.object %>
+         <div class="center_block clearfix">
+          <%= f.label :name %>
+          <div class="input">
+            <%= f.text_field :name, :placeholder=>"Title" %></div>
+          </div>
+
+          <div class="center_block clearfix">
+            <%= f.label :description %>
+            <div class="input">
+              <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title=>"Description", rows: 3, cols: 75  %> 
+            </div>
+          </div>
+
+          <div class="center_block clearfix">
+            <%= label_tag "Private group:" %>
+                  <div class="input">
+                    <%= f.select :privacy, options_for_select([["Public", Privacyenum::PUBLIC], ["Members", Privacyenum::MEMBERS], ["Private", Privacyenum::PRIVATE]], f.object.privacy) %>
+                  </div>
+          </div>
+          <br>
+
+          <div class="center_block clearfix">
+            <%= label_tag "Change picture:" %>
+            <%= f.fields_for :photo, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
+              <%= photo_form.file_field :pic, id: "pic2",style: "width:1px; height:1px; padding:0px;  left:0px;" %>  
+            <% end %>
+            <div class="input"> 
+              <% unless @group.photo.nil? %>
+              <%= cl_image_tag(@group.photo.pic_url(:small), class:" thumbnail albumLink", id:"group_edit_pic", style: "cursor:pointer;") %>   
+              <% end %>
+              <canvas id="imageCanvas2" style = "border: 1px solid #ddd; padding:5px; align:center; width:200px;display:none;cursor:pointer" >select new image</canvas>
+            </div>
+          </div>  
+
+        </div>
+      </div>   
+    </div>
+    <div class="modal-footer" >
+      <%= f.submit "Update", class: "btn primary pull-right", id: "updGroup" %>  
+    </div>
+  </div>
+</div>
+<% end %>
+
+
+
+<%= form_for( group, url: add_moderators_group_path(group), method: :get, remote: true) do |f| %>
+<div id="modal_add_mod" style="display:none;" >
+  <div id="modal-from-dom__add_mod" class="modal hide fade in" style="display: block;">
+    <div class="modal-header">
+      <a href="#" id="close_add_mod" class="close">×</a>
+      <span style="font-size:20px;line-height: 2;">Edit Moderators</span>
+    </div>
+    <div class="modal-body" style="max-height:350px;">
+      <div class="row">
+        <div class=" ui-front">         
+         <%= render 'shared/error_messages', object: f.object %>
+         <aside class="">
+          <section>
+            <!-- <h2 style="margin-left:65px;padding:3px;">Moderators</h2> -->
+            <ul class="user" style="overflow:auto;">
+              <% @ucs.each do |uc| %>
+              <% user = User.find(uc.user_id) %>
+              <ol>
+                <div style="background-color:#f0f0f0;padding:5px;" class="span5">
+                  <%= link_to user.name, "#" %>
+                  <%= gravatar_for user, size: 25 %>
+                  <div style="margin-right:10px;" class="pull-right">
+                    <%= check_box_tag 'user_ids[]', user.id, uc.is_admin? %>
+                    <%= hidden_field_tag 'user_all_ids[]', user.id %>
+                  </div>
+                </div>
+              </ol>
+              <% end %>
+            </ul>     
+          </section>
+        </aside>
+      </div>
+    </div>   
+  </div>
+  <div class="modal-footer" >
+    <%= f.submit "Update", class: "btn primary pull-right", id: "submit_add_mod" %>  
+  </div>
+</div>
+</div>
+<% end %>
+
+
+
+<%= form_for( group, url: invite_app_user_group_path(group), method: :get, remote: true) do |f| %>
+<div id="modal_invite" style="display:none;" >
+  <div id="modal-from-dom2" class="modal hide fade in" style="display: block;width:700px;">
+    <div class="modal-header">
+      <a href="#" id="close_invite" class="close">×</a>
+      <span style="font-size:20px;line-height: 2;">Invite</span>
+    </div>
+    <div class="modal-body" style="max-height:550px;">
+      <div class="row">
+        <div class="span14 ui-front">
+          <div class="center_block clearfix"><br>
+            <%= f.label "Invite by User name:" %>
+            <div class="input ui-front">
+              <%= f.text_field :user_tokens, id: "search_user" %>
+            </div>
+          </div>
+        </div>
+      </div>   
+    </div>
+    <div class="modal-footer" >
+      <%= f.submit "Invite", class: "btn primary pull-right", id: "invite_submit" %>  
+    </div>
+  </div>
+
+</div>
+<% end %>
+
+
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+  $('.gravatar').addClass('thumbnail');  
+
+});
+
+
+
+
+$("#invite").on( "click", function() {
+ $('#modal_invite').modal('show');
+});
+
+$("#close_invite").click(function(){
+  $('#modal_invite').modal('hide');
+});
+
+$("#invite_submit").click(function(){
+  $('#modal_invite').modal('hide');
+});
+
+$("#moderator").on( "click", function() {
+ $('#modal_add_mod').modal('show');
+});
+
+$("#close_add_mod").click(function(){
+  $('#modal_add_mod').modal('hide');
+});
+
+$("#submit_add_mod").click(function(){
+  $('#modal_add_mod').modal('hide');
+});
+
+$(function() {
+  $("#search_user").tokenInput("/groups/<%= group.id %>/search_app_user", {
+    crossDomain: false,
+    theme: "facebook",
+    resultsFormatter: function(item){ return "<li>" + "<img src='" + item.profile_pic + "' title='" + item.name + "' height='30px' width='30px' />" + "<div style='display: inline-block; padding-left: 10px;'><div class='full_name'>" + item.name + " " + ""+ "</div></div></li>" },
+    tokenFormatter: function(item) { return  "<li>" + "<img src='" + item.profile_pic + "' title='" + item.name + "' height='30px' width='30px' />" + "<div style='display: inline-block; padding-left: 10px;'><div class='full_name'>" + item.name +"</div></div></li>" },
+    preventDuplicates: true ,
+    zindex: 11001,
+    hintText: "Type in a user name",
+  });
+});
+
+
+
+$("#edit_group").click(function(){
+      $('#modal_edit_grp').modal('show');
+    });
+    $("#closeX_edit_grp").click(function(){
+          $('#modal_edit_grp').modal('hide');
+        });
+
+    $("#updGroup").click(function(){
+          $('#modal_edit_grp').modal('hide');
+        });
+
+    $("#group_edit_pic").click(function(){
+      $('#group_edit_pic').hide();
+      $('#pic2').click();
+      $('#imageCanvas2').show();
+    });
+
+      var imageLoader = document.getElementById('pic2');
+    imageLoader.addEventListener('change', handleImage, false);
+    $("#imageCanvas2").click(function(){
+        $("#pic2").click();
+    });
+        var canvas = document.getElementById('imageCanvas2');
+    var ctx = canvas.getContext('2d');
+    ctx.font="30px Arial";
+    ctx.fillText("Change picture",10,50);
+
+  function handleImage(e){
+    var canvas = document.getElementById('imageCanvas2');
+    var ctx = canvas.getContext('2d');
+    var iCnt=0;
+    var files = e.target.files;
+    canvas.width = 180;
+    canvas.height = 155*(Math.ceil(files.length/4));
+    for( var i = 0, len = files.length; i < len; i++) 
+          {
+          if(files[i])
+            {
+              var reader = new FileReader();
+              reader.onload = function(event){
+                var img = new Image();
+
+                img.onload = function(){
+                  var ratioPx = 150;
+                  var sWidth =ratioPx;
+                  var ratio = img.width/sWidth;
+                  var sHeight = img.height/ratio;   
+                    if(sHeight>ratioPx){
+                       sHeight =ratioPx;
+                       ratio = img.height/sHeight;
+                       sWidth = img.width/ratio;  
+                    }
+                  ctx.drawImage(img, 155*(iCnt%4),155*(Math.floor(iCnt/4)),sWidth,sHeight);
+                  //ctx.drawImage(img,0,0,sWidth,sHeight);
+                  iCnt++;
+                }
+                img.src = event.target.result;
+              }
+              reader.readAsDataURL(e.target.files[i]);     
+            }
+          }
+  }
+
+
+</script>

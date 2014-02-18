@@ -1,1 +1,3 @@
 $('#sidebar_right').html("<%= escape_javascript(render '/groups/side_link_right') %>");
+$('#inv_groups').html("<%= escape_javascript(render '/communities/inv_groups', locals: {inv_groups: @inv_groups }) %>");
+$('#inv_req_count').html("<%= escape_javascript(render '/communities/inv_req_count', locals: {inv_req_cu: @inv_req_cu, inv_req_grps: @inv_req_grps }) %>");
