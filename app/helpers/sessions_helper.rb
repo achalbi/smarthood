@@ -62,6 +62,15 @@ module SessionsHelper
   end
 
   def active_community
+    if Usercommunity.where(['status=? and user_id=?','active',current_user.id])[0].nil?
+       @usercommunity = Usercommunity.new 
+       @usercommunity.community_id = Community.where(name: 'Smarthood')[0].id
+       @usercommunity.user_id = current_user.id
+       @usercommunity.invitation = Uc_enum::JOINED
+       @usercommunity.is_admin = false
+       @usercommunity.status="active"
+       @usercommunity.save
+    end
     Community.find(Usercommunity.where(['status=? and user_id=?','active',current_user.id])[0].community_id)
   end
 
