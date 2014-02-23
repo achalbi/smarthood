@@ -135,7 +135,7 @@ $(document).ready(function(){
       </div>
     </div>
     <div class="modal-footer" >
-      <%= f.submit "Create", class: "btn primary pull-right", id: "crtComUnity" %>  
+      <%= f.submit "Create", class: "btn primary pull-right busy", id: "crtComUnity" %>  
     </div>
   </div>
 </div>
@@ -144,6 +144,14 @@ $(document).ready(function(){
 
 
 <script type="text/javascript">
+$(document).ready(function(){
+  $('#crtComUnity').attr('data-loading-text', 'Creating...');
+});
+
+$("#crtComUnity").click(function(){
+  $(this).button('loading')
+});
+
 
 $(document).ready(function(){ 
   $('#suggested_comm').hide();
@@ -172,9 +180,6 @@ $("#closeX").click(function(){
   $('#modal').modal('hide');
 });
 
-$("#crtComUnity").click(function(){
-  $('#modal').modal('hide');
-});
 
 
 $('#create_community_address').keydown(function(){
