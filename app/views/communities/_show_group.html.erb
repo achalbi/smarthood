@@ -2,8 +2,32 @@
         <div class="marginLeft15 ui-front">
         <section id="groups_sec" style="">
           <ul id="group_list" class="grid users">
-          <li class="span13">
-            <%= link_to "edit", '#', id: "edit_group",  class: " pull-right uibutton icon edit",:title => "Edit" %>
+          <li class="span13 tr-hover">
+              <% if @group.is_admin?(current_user) %>
+                  <%= link_to "edit", '#', id: "edit_group",  class: " pull-right uibutton icon edit ",:title => "Edit" %>
+               <% end %>
+               <span class="pull-right "> &nbsp;</span>
+                  <% if @group.is_joined?(current_user, @group) %>
+                    <% if @group.is_admin?(current_user) %>
+                      <% if @group.can_admin_unjoin?(current_user) %>
+                        <%= link_to "Unjoin", unjoin_grp_group_path(@group), class: "uibutton icon prev pull-right", remote: true %>
+                      <% end %>
+                    <% else %>
+                        <%= link_to "Unjoin", unjoin_grp_group_path(@group), class: "uibutton icon prev pull-right", remote: true %>
+                    <% end %>
+                  <% else %>
+                    <% if @group.privacy == Privacyenum::PUBLIC %>
+                        <%= link_to "Join", "/groups/#{@group.id}/join_grp?comm_id=#{community.id}", class: "uibutton icon prev pull-right", remote: true %>
+                    <% end %>
+                  <% end %>
+               <span class="pull-right "> &nbsp;</span>
+               <% if @group.is_admin?(current_user) %>
+                  <%= link_to "delete", @group, method: :delete, remote: true,
+                                           data: { confirm: "You sure?" },
+                                           class: "pull-right uibutton",
+                                           title: @group.name %>
+               <% end %>
+               <span class="pull-right "> &nbsp;</span>
             <%= cl_image_tag(group.photo.pic_url(:smaller), class:"image_al_c1 thumbnail pull-left gravatar", id:"#{group.photo.id}") %>
             <div class="pull-left">
              <h5> <strong> Name: </strong> <%= group.name %> </h5>
@@ -20,28 +44,46 @@
 <ul class="users marginLeft15">
   <% unless ad_users.nil? %>
     <% if ad_users.count > 0  %>
-    <h4><%="Moderator".pluralize(ad_users.count) %><%= link_to "edit", '#', id: "moderator",  class: "uibutton icon edit pull-right" %></h4>
+    <h4><%="Moderator".pluralize(ad_users.count) %>
+      <% if @group.is_admin?(current_user) %>
+       <%= link_to "edit", '#', id: "moderator",  class: "uibutton icon edit pull-right" %>
+      <% end %>
+     </h4>
       <% ad_users.each do |user|%>
-      <li style="width:250px;float:left;margin-left:15px;">
+      <li style="float:left;margin-left:15px;margin-right:15px; " class="span13 tr-hover">
         <div  class="img_zoom" style="float:left;" >
           <%= gravatar_for user, size: 52 %>
         </div>
+        <p class="marginRight25">
+          <% if @group.is_admin?(current_user) %>
+                        <%= link_to "Remove", "/groups/#{@group.id}/unjoin_grp?user_id=#{user.id}&comm_id=#{community.id}", class: "uibutton pull-right ", remote: true %>
+          <% end %>
           <%= link_to user.name, user %>
+        </p>
           <p><%= user.email %></p>
       </li>
       <% end %>
     <li style="clear:both;"></li>
     <% end %> 
   <% end %> <br>
- <h4>Members<%= link_to "add", '#', id: "invite",  class: "uibutton icon add pull-right" %></h4>
+ <h4>Members
+    <% if @group.is_admin?(current_user) %>
+      <%= link_to "add", '#', id: "invite",  class: "uibutton icon add pull-right" %>
+    <% end %> 
+ </h4>
   <% unless inv_users.nil? %>
     <% if inv_users.count > 0 %> 
       <% inv_users.each do |user|%>
-      <li style="width:250px;float:left;margin-left:15px;">
+      <li style="float:left;margin-left:15px;" class="span13 tr-hover">
         <div  class="img_zoom" style="float:left;" >
           <%= gravatar_for user, size: 52 %>
         </div>
+        <p class="marginRight25">
+          <% if @group.is_admin?(current_user) %>
+                        <%= link_to "Remove", "/groups/#{@group.id}/unjoin_grp?user_id=#{user.id}&comm_id=#{community.id}", class: "uibutton pull-right ", remote: true %>
+          <% end %>
           <%= link_to user.name, user %>
+        </p>
           <p><%= user.email %></p>
       </li>
       <% end %>
@@ -136,6 +178,7 @@
                   <div style="margin-right:10px;" class="pull-right">
                     <%= check_box_tag 'user_ids[]', user.id, uc.is_admin? %>
                     <%= hidden_field_tag 'user_all_ids[]', user.id %>
+                    <%= hidden_field_tag 'comm_id', community.id %>
                   </div>
                 </div>
               </ol>
@@ -171,6 +214,7 @@
               <%= f.text_field :user_tokens, id: "search_user" %>
             </div>
           </div>
+            <%= hidden_field_tag 'comm_id', community.id %>
         </div>
       </div>   
     </div>
@@ -219,7 +263,7 @@ $("#submit_add_mod").click(function(){
 });
 
 $(function() {
-  $("#search_user").tokenInput("/groups/<%= group.id %>/search_app_user", {
+  $("#search_user").tokenInput("/groups/<%= group.id %>/search_app_user?comm_id=<%= community.id %>", {
     crossDomain: false,
     theme: "facebook",
     resultsFormatter: function(item){ return "<li>" + "<img src='" + item.profile_pic + "' title='" + item.name + "' height='30px' width='30px' />" + "<div style='display: inline-block; padding-left: 10px;'><div class='full_name'>" + item.name + " " + ""+ "</div></div></li>" },

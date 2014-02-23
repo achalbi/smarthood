@@ -129,6 +129,11 @@ module SessionsHelper
     active_community.usercommunities.collect(&:user_id)
   end
 
+  def community_user_ids(id)
+    @community = Community.find(id)
+    @community.usercommunities.collect(&:user_id)
+  end
+
   def notification_count
     Activitynotification.where("recepient_id = ? AND is_unread = ?", current_user.id, true ).count
   end

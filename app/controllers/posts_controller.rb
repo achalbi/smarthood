@@ -71,7 +71,7 @@ class PostsController < ApplicationController
         @group_ids = current_user.user_groups.collect(&:group_id)
         @groups = Group.where('id IN (?)', @group_ids)
         @groupposts = Grouppost.where('group_id IN (?)', @group_ids)
-        @posts = @groupposts.paginate(page: params[:page], :per_page => 8).collect{|a| a.post}.uniq   
+        @posts = @groupposts.paginate(page: params[:page], :per_page => 4).collect{|a| a.post}.uniq   
           # @post.save
            #  flash[:success] = "Post created!"
          end
@@ -105,7 +105,7 @@ class PostsController < ApplicationController
         @cu_ids = current_user.communities.collect(&:id)
         @communities = Community.where('id IN (?)', @cu_ids)
         @communityposts = Communitypost.where('community_id IN (?)', @cu_ids)
-        @posts = @communityposts.paginate(page: params[:page], :per_page => 8).collect{|a| a.post}.uniq   
+        @posts = @communityposts.paginate(page: params[:page], :per_page => 4).collect{|a| a.post}.uniq   
         # @post.save
          #  flash[:success] = "Post created!"
      when "community"
@@ -127,7 +127,7 @@ class PostsController < ApplicationController
           @selected_comm  = []
           @selected_comm << @community
           @post = Post.new
-          @posts = @community.posts.paginate(page: params[:page], :per_page => 8).uniq
+          @posts = @community.posts.paginate(page: params[:page], :per_page => 4).uniq
        else
        end
      end
@@ -157,7 +157,7 @@ class PostsController < ApplicationController
   @communities = Community.where('id IN (?) ', current_user.joined_uc.collect(&:community_id))
   @cu_ids = @communities.collect(&:id)
   @communityposts = Communitypost.where('community_id IN (?)', @cu_ids)
-  @posts = @communityposts.paginate(page: params[:page], :per_page => 8).collect{|a| a.post}.uniq
+  @posts = @communityposts.paginate(page: params[:page], :per_page => 4).collect{|a| a.post}.uniq
 end
 
 def userLike

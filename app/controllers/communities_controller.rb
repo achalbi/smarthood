@@ -53,6 +53,8 @@ class CommunitiesController < ApplicationController
     @inv_req_grps = current_user.invited_groups.collect(&:group_id)
     @ucs = @selected_community.usercommunities unless @selected_community.nil?
   	@community = @selected_community
+    @my_groups_ids = current_user.user_groups.where("community_id = ? AND invitation = ? ", @selected_community.id, Uc_enum::JOINED ).collect(&:group_id).uniq
+    @groups = Group.where('id IN (?)', @my_groups_ids)
   end
 
 
@@ -84,10 +86,10 @@ class CommunitiesController < ApplicationController
     @selected_comm  = []
     @selected_comm << @community
     @post = Post.new
-     @group_ids = current_user.user_groups.where("community_id = ?", @selected_community.id).collect(&:group_id)
+     @group_ids = current_user.user_groups.where("community_id = ?", @community.id).collect(&:group_id)
       @post_ids = []
       unless @group_ids.blank?
-        @groups = Group.where('id IN (?) AND community_id = ?', @group_ids, @selected_community.id)
+        @groups = Group.where('id IN (?) AND community_id = ?', @group_ids, @community.id)
         @groupposts = Grouppost.where('group_id IN (?)', @group_ids)
         @post_ids = @groupposts.collect(&:post_id)
       end
@@ -572,8 +574,10 @@ def search_app_user
           @post_ids << @community.posts.collect(&:id)
           @posts = Post.where(id: @post_ids.uniq).paginate(page: params[:page], :per_page => 4)
       @selected_community.req_pending_cnt = User.where(['id IN (?)' , @community.requested_uc.collect(&:user_id)]).count
-        
+      
     end
+    @my_groups_ids = current_user.user_groups.where("community_id = ? AND invitation = ? ", @selected_community.id, Uc_enum::JOINED ).collect(&:group_id).uniq
+    @groups = Group.where('id IN (?)', @my_groups_ids)
   end
 
   def about_com
@@ -612,7 +616,12 @@ def search_app_user
     @selected_community.req_pending_cnt = User.where(['id IN (?)' , @community.requested_uc.collect(&:user_id)]).count
     @my_groups_ids = current_user.user_groups.where("community_id = ? AND invitation = ? ", @selected_community.id, Uc_enum::JOINED ).collect(&:group_id).uniq
     @groups = Group.where('id IN (?)', @my_groups_ids)
-    @other_groups = Group.where("community_id = ? AND id NOT IN (?)", @selected_community.id, @my_groups_ids)
+    @other_groups = []
+    if @my_groups_ids.blank?
+      @other_groups = Group.where("community_id = ? AND privacy != ?", @selected_community.id, Privacyenum::PRIVATE )
+    else
+      @other_groups = Group.where("community_id = ? AND id NOT IN (?) AND privacy != ?", @selected_community.id, @my_groups_ids, Privacyenum::PRIVATE)
+    end
     @group_ids = current_user.invited_groups.collect(&:group_id)
     @inv_groups = Group.where('id IN (?)', @group_ids)
  end
@@ -645,17 +654,16 @@ def search_app_user
     @inv_req_cu = Community.where(['id IN (?)' , current_user.communities.where('invitation = ?',Uc_enum::INVITED).collect(&:id)])
     
   end
+
   def show_group
      @group = Group.find(params[:id])
-     @users = @group.users
+    # @users = @group.users
     @album = Album.new
     @inv_users = User.where(['id IN (?)', @group.user_groups.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED,false).collect(&:user_id)])
     @ad_users = User.where(['id IN (?)', @group.user_groups.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED,true).collect(&:user_id)])
     @is_admin = @ad_users.include? current_user
-    @ucs = @group.user_groups.where("user_id = ?  AND is_admin=?",current_user.id, true )
-    @inv_users = User.where(['id IN (?)', @group.user_groups.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED,false).collect(&:user_id)])
-    @ad_users = User.where(['id IN (?)', @group.user_groups.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED,true).collect(&:user_id)])
-    @community = active_community
+    @ucs = @group.user_groups.where("group_id = ?",params[:id])
+    @community = Community.find(params[:comm_id])
   end
 
 def cu_list

@@ -135,9 +135,11 @@ $("#remove_image").click(function(){
 
 var currentPage = 1;
 var intervalID = -1000;
+var insideLoop ="false"; 
  
 function checkScroll() {
-  if (nearBottomOfPage()) {
+  if (nearBottomOfPage() && insideLoop!="true") {
+    insideLoop="true";
     currentPage++;
   $('#loading_page').show();
     jQuery.ajax('/posts/cus_post_paginate?page=' + currentPage, {asynchronous:true, evalScripts:true, method:'get', success: function(data, textStatus, jqXHR) {
@@ -150,12 +152,13 @@ function checkScroll() {
       }
       restartInterval();
     }
+    insideLoop ="false"; 
   },});
   }
 }
  
 function nearBottomOfPage() {
-  return scrollDistanceFromBottom() < 50;
+  return scrollDistanceFromBottom() < 150;
 }
  
 function scrollDistanceFromBottom(argument) {
@@ -167,7 +170,7 @@ function pageHeight() {
 }
  
 $('document').ready(function(){
-  intervalID = setInterval(checkScroll, 1000);
+  intervalID = setInterval(checkScroll, 500);
 })
 
 $("#community_post_select").click(function(){

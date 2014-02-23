@@ -43,7 +43,11 @@ class Group < ActiveRecord::Base
   end
 
   def follow!(user, group_id, invitation, is_admin, community_id)
-    user.user_groups.create!(group_id: group_id, invitation: invitation, is_admin: is_admin, community_id: community_id)
+    if self.user_groups.where("user_id = ?  AND invitation = ?",user, Uc_enum::UNJOINED ).exists?
+      self.user_groups.update_all({invitation: Uc_enum::JOINED}, {user_id: user.id})
+    else
+      user.user_groups.create!(group_id: group_id, invitation: invitation, is_admin: is_admin, community_id: community_id)
+    end
   end
 
   def self.search(search, exclude_group)
@@ -57,6 +61,23 @@ class Group < ActiveRecord::Base
       scoped  
     end  
   end 
+
+  def is_joined?(user, group)
+     group.user_groups.where("user_id = ?  AND invitation = ?",user, Uc_enum::JOINED ).exists?
+  end  
+
+  def can_admin_unjoin?(user)
+     @usergroups = self.user_groups.where("is_admin = ?  AND invitation = ? ",true, Uc_enum::JOINED )
+        if @usergroups.size > 1 && self.is_admin?(user)
+          return true
+        else
+          return false
+        end
+  end  
+
+  def is_admin?(current_user)
+    self.user_groups.where("is_admin = ?  AND invitation = ? AND user_id = ?",true, Uc_enum::JOINED, current_user ).exists?
+  end
 
 end
 	

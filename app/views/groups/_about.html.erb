@@ -1,5 +1,10 @@
 <div id="aboutDiv">
- <%= link_to "edit", '#', id: "edit_group",  class: " pull-right uibutton icon edit",:title => "Edit" %>
+  <% if current_user.is_admin?(@group) %>
+    <%= link_to "edit", '#', id: "edit_group",  class: " pull-right uibutton icon edit marginRight5",:title => "Edit" %>
+ <% end %>
+   <% if @group.is_joined?(current_user, @group) %>
+   <%= link_to "Unjoin", unjoin_grp_group_path(@group), class: "uibutton icon prev pull-right", remote: true %>
+ <% end %>
  <p><h4>Description : <small><%= group.description %></small></h4></p>
 
  <p><h4>Privacy : <%= group.privacy == Privacyenum::PRIVATE ? 'Private' : 'Public' %></h4></p>

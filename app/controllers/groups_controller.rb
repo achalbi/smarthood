@@ -31,7 +31,7 @@ class GroupsController < ApplicationController
         @usergroup.group_id = @group.id
         @usergroup.user_id = id
         @usergroup.is_admin = false
-        @usergroup.invitation = Uc_enum::INVITED
+        @usergroup.invitation = Uc_enum::JOINED
         @usergroup.community_id = params[:community_id]
         @usergroup.save
       end
@@ -45,9 +45,16 @@ class GroupsController < ApplicationController
     	flash[:error] = "Group not created!"
        # redirect_to :action => :index
      end 
-     respond_to do |format|
-       format.html { redirect_to :action => :index   }
-       format.js 
+     if params[:community_id].nil?
+         respond_to do |format|
+           format.html { redirect_to :action => :index   }
+           format.js { redirect_to @group   }
+         end
+     else
+          respond_to do |format|
+           format.html { }
+           format.js { redirect_to :controller => 'communities', :action => 'show_group', :id => @group.id, comm_id: params[:comm_id] }
+         end
      end
    end
 
@@ -86,7 +93,10 @@ class GroupsController < ApplicationController
 end
 
 def add_moderators
-
+  @group = Group.find(params[:id])
+  @group.user_groups.update_all({:is_admin => true}, {:user_id => params[:user_ids]})
+  @group.user_groups.update_all({:is_admin => false}, {:user_id => params[:user_all_ids]-params[:user_ids] })
+  redirect_to :controller => 'communities', :action => 'show_group', :id => @group.id, comm_id: params[:comm_id]
 end
 
 def groups_post_paginate
@@ -130,14 +140,23 @@ def invite_app_user
 
    end
  end 
+ unless params[:comm_id].nil?
+    redirect_to :controller => 'communities', :action => 'show_group', :id => params[:id], comm_id: params[:comm_id]
+ end
 end
 
 def search_app_user
-  @users = User.where("id IN (?)", active_community.usercommunities.collect(&:user_id))
+  @community = Community.find(params[:comm_id])
+  @group_users = []
+  unless params[:id].nil?
+    @group = Group.find(params[:id])
+    @group_users = @group.user_groups.where('invitation = ?',Uc_enum::JOINED).collect(&:user_id)
+  end
+  @users = User.where("id IN (?)", @community.usercommunities.collect(&:user_id)-@group_users)
   @users = @users.where("users.name like ? AND users.id != ?", "%#{params[:q]}%", current_user.id)
   @users_pp = []
   @users.each do |user|
-    user[:profile_pic] =  gravatar_for_url(user, size: 40)
+    user.profile_pic =  gravatar_for_url(user, size: 40)
     @users_pp << user
   end
   respond_to do |format|
@@ -202,6 +221,32 @@ def declinerequest
  @inv_req_cu = Community.where(['id IN (?)' , current_user.communities.where('invitation = ?',Uc_enum::INVITED).collect(&:id)])
  @inv_req_grps = current_user.invited_groups.collect(&:group_id)
 end
+
+def unjoin_grp
+  @usergroup
+  if params[:user_id].nil?
+    @usergroup = current_user.user_groups.find_by_group_id(params[:id])
+    @usergroup.invitation = Uc_enum::UNJOINED
+    @usergroup.save
+  else
+    @user = User.find(params[:user_id])
+    @usergroup = @user.user_groups.find_by_group_id(params[:id])
+    @usergroup.invitation = Uc_enum::MODERATOR_DECLINED
+    @usergroup.save
+    redirect_to :controller => 'communities', :action => 'show_group', :id => params[:id], comm_id: params[:comm_id]
+  end
+end
+
+def join_grp
+  @group = Group.find(params[:id])
+  @group.follow!(current_user, params[:id], Uc_enum::JOINED, false, params[:comm_id])
+  redirect_to :controller => 'communities', :action => 'show_group', :id => @group.id, comm_id: params[:comm_id]
+end
+
+def destroy
+  Group.find(params[:id]).destroy
+end
+
 
 private  
 def sort_column  

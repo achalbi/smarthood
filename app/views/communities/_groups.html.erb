@@ -16,7 +16,7 @@
         <section id="groups_sec" style="">
           <ul id="group_list" class="grid ">
           <% @groups.each do |group| %>
-              <%= render :partial => '/communities/group', :locals =>{:group => group} %>
+              <%= render :partial => '/communities/group', :locals =>{:group => group, community: community} %>
           <% end %>
           </ul>
         </section>
@@ -26,7 +26,7 @@
         <section id="groups_sec" style="">
           <ul id="group_list" class="grid ">
           <% @other_groups.each do |group| %>
-            <%= render :partial => '/communities/group', :locals =>{:group => group} %>
+            <%= render :partial => '/communities/group', :locals =>{:group => group, community: community} %>
           <% end %>
           </ul>
         </section>
@@ -34,7 +34,7 @@
       </div>
 
 
-<%= form_for( Group.new, remote: true, :html => {:multipart => true}) do |f| %>
+<%= form_for( Group.new, remote: true, :html => {:multipart => true, id: 'create_grp_form'}) do |f| %>
 <div id="modal_create_group" style="display:none;" >
   <div id="modal-from-dom2" class="modal hide fade in" style="display: block;width:700px;">
     <div class="modal-header">
@@ -80,6 +80,8 @@
             <%= photo_form.file_field :pic, id: "pic",style: "width:1px; height:1px; padding:0px;  left:0px;" %>  
 
             <% end %>
+            <%= hidden_field_tag 'comm_id', community.id %>
+
             <div class="input">
               <canvas id="imageCanvas" style = "border: 1px solid #ddd; padding:5px; align:center; width:200px;cursor:pointer" >select new image</canvas>
             </div>
@@ -88,7 +90,7 @@
       </div>
     </div>
     <div class="modal-footer" >
-      <%= f.submit "Create", class: "btn primary pull-right", id: "submit_group" %>  
+      <%= f.submit "Create", class: "btn primary pull-right busy", id: "submit_group" %>  
     </div>
   </div>
 </div>
@@ -166,11 +168,6 @@ $(document).ready(function(){
           $('#modal_create_group').modal('hide');
         });
 
-    $("#submit_group").click(function(){
-          $('#modal_create_group').modal('hide');
-        });
-
-
   });
 
 
@@ -221,7 +218,7 @@ function handleImage(e){
         }
 
         $(function() {
-          $("#search_users").tokenInput("/groups/search_app_user", {
+          $("#search_users").tokenInput("/groups/search_app_user?comm_id=<%= community.id %>", {
             crossDomain: false,
             theme: "facebook",
             resultsFormatter: function(item){ return "<li>" + "<img src='" + item.profile_pic + "' title='" + item.name + "' height='30px' width='30px' />" + "<div style='display: inline-block; padding-left: 10px;'><div class='full_name'>" + item.name + " " + ""+ "</div></div></li>" },
@@ -232,7 +229,13 @@ function handleImage(e){
           });
         });
 
-    
+$(document).ready(function(){
+  $('#submit_group').attr('data-loading-text', 'Creating...');
+});
+
+$("#submit_group").click(function(){
+  $(this).button('loading')
+});
 
 
 </script>

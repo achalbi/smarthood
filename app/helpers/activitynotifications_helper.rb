@@ -332,11 +332,11 @@ module ActivitynotificationsHelper
 			@users = User.where("id IN (?)", objectfor)
 		else
 		  	    if(object.privacy==Privacyenum::PUBLIC)
-		  	    	@users = active_community_user_ids #all community members
+		  	    	@users = community_user_ids(object.community_id) #all community members
 			    	@users = getActivitynotificationUserssettings(@users, objecttype, object, Privacyenum::PUBLIC).collect(&:user_id)
 			    	@users = @users + current_user.followers.collect(&:id)
 		  	    elsif(object.privacy==Privacyenum::MEMBERS)
-			    	@users = active_community_user_ids
+			    	@users = community_user_ids(object.community_id)
 			    	@users = getActivitynotificationUserssettings(@users, objecttype, object, Privacyenum::PUBLIC).collect(&:user_id)
 			    	@users = @users + current_user.followers.collect(&:id)
 			    elsif (object.privacy==Privacyenum::PRIVATE)
@@ -352,11 +352,11 @@ module ActivitynotificationsHelper
 			@users = User.where("id IN (?)", objectfor)
 		else
 		  	    if(object.privacy==Privacyenum::PUBLIC)
-		  	    	@users = active_community_user_ids #all community members
+		  	    	@users = community_user_ids(object.id) #all community members
 			    	@users = getActivitynotificationUserssettings(@users, objecttype, object, Privacyenum::PUBLIC).collect(&:user_id)
 			    	@users = @users + current_user.followers.collect(&:id)
 		  	    elsif(object.privacy==Privacyenum::MEMBERS)
-			    	@users = active_community_user_ids
+			    	@users = community_user_ids(object.id)
 			    	@users = getActivitynotificationUserssettings(@users, objecttype, object, Privacyenum::PUBLIC).collect(&:user_id)
 			    	@users = @users + current_user.followers.collect(&:id)
 			    elsif (object.privacy==Privacyenum::PRIVATE)

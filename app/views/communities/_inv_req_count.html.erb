@@ -1,3 +1,3 @@
-          <% unless ((@inv_req_cu.nil? || @inv_req_grps.blank?) || @inv_req_cu.count+@inv_req_grps.count == 0)%>
+          <% unless (!(@inv_req_cu.blank? || @inv_req_grps.blank?) || @inv_req_cu.count+@inv_req_grps.count == 0)%>
             <span class="pull-right label important" style="margin:5px;"><%= if @inv_req_cu.count+@inv_req_grps.count > 0 then @inv_req_cu.count+@inv_req_grps.count end %></span>
           <% end %>

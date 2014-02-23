@@ -15,7 +15,7 @@
                      <%= hidden_field_tag :type, "community" %> 
                      <%= hidden_field_tag :id, @community.id %> 
                      <div id="sel_grp_label"></div>
-                      <% @community.groups.each do |grp| %>
+                      <% @groups.each do |grp| %>
                           <div id="grp_label_<%= grp.id %>" style="display:none;margin:5px;" class="pull-left"><%=link_to grp.name, grp, remote: true %> </div>
                           <div style="display:none;">
                             <%= check_box_tag 'grp_ids[]', grp.id, nil, id:"grp_check_#{grp.id}" %>
@@ -25,22 +25,44 @@
         <% end %>
 
 <div id="modal_sel_grp" style="display:none;" >
-  <div id="modal-from-dom2" class="modal hide fade in" style="display: block;width:700px;">
+  <div id="modal-from-dom2" class="modal hide fade in" style="display: block;width:525px;">
     <div class="modal-header">
       <a href="#" id="closeX_sel_grp" class="close">×</a>
       <span style="font-size:20px;line-height: 2;">Select Groups</span>
     </div>
     <div class="modal-body" style="max-height:400px;">
       <div class="row">
-        <div class="span14 ui-front">
+        <div class=" ui-front">
         <section id="groups_sec" style="">
-            <% render :partial => 'groups/group_list', :locals => {:groups => @groups} %>
+            <div style="padding:5px;">
+              <% @groups.each do |grp| %>
+              <div class="bgClrChg2 span11 pull-left" style="cursor:pointer;margin-right:20px;">
+                  <div style="display:none;" class="pull-left">
+                    <%= check_box_tag 'grp_ids[]', grp.id %>
+                  </div>
+                  <p style="display:none;"><%= grp.id %></p>
+
+                  <ul class="users">
+                    <li style="padding-left:15px;" class="tr-hover1">
+                      <% unless grp.photo.nil? %>
+                         <%= link_to cl_image_tag(grp.photo.pic_url(:smallest), class:"image_al_c1 thumbnail pull-left ", id:"#{grp.photo.id}"), "#", remote: true,   style:"cursor:pointer;"%>
+
+                      <h5><%= link_to grp.name.capitalize, "#", class: "pull-left", style: "margin:2px 5px;" %>
+                      <a class="uibutton pull-right select_unselect" style="margin-right:3px;">Select </a>
+                      </h5><br><br><br>
+                      <span class="marginLeft5"><%= grp.description %></span>
+                    </li>
+                    <% end %>
+                  </ul>
+              </div>
+              <% end %>
+           </div>
         </section>
         </div>
       </div>
     </div>
     <div class="modal-footer" >
-      <%= link_to "Select","#", class: "btn primary pull-right", id: "selGroup" %>  
+      <%= link_to "Done","#", class: "btn primary pull-right", id: "selGroup" %>  
     </div>
   </div>
 </div>
@@ -58,5 +80,38 @@ $("#closeX_sel_grp").click(function(){
 $("#selGroup").click(function(){
   $('#modal_sel_grp').modal('hide');
 });
+
+
+
+var i=0;
+$(".bgClrChg2").click( function() {
+  var id = $(this).find('p').html();
+    console.log($(this).find(':checkbox').is(':checked'));
+  if($(this).find(':checkbox').is(':checked')){
+    $(this).find(':checkbox').prop("checked",false);
+    $("#grp_check_"+id).prop("checked",false);
+    $("#grp_label_"+id).hide();
+    $(this).removeClass('tabs_selected');
+    $(this).find('.select_unselect').html("Select");
+    i--;
+  }else{
+    $(this).find(':checkbox').prop("checked",true);
+       $("#grp_check_"+id).prop("checked",true);
+       $("#grp_label_"+id).show();
+       $(this).addClass('tabs_selected');
+       $(this).find('.select_unselect').html("Unselect");
+       i++;
+    //console.log('i++');
+  }
+  if(i==0){
+    $("#selGroup").hide();
+    $("#sel_grp_label").hide();
+  }else{
+    $("#selGroup").show();
+  $("#sel_grp_label").show();
+  }
+});
+$("#selGroup").hide();
+$("#sel_grp_label").hide();
 
 </script>

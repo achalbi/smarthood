@@ -93,7 +93,7 @@ function checkScroll() {
 }
  
 function nearBottomOfPage() {
-  return scrollDistanceFromBottom() < 50;
+  return scrollDistanceFromBottom() < 150;
 }
  
 function scrollDistanceFromBottom(argument) {
@@ -105,7 +105,7 @@ function pageHeight() {
 }
  
 $('document').ready(function(){
-  intervalID = setInterval(checkScroll, 1000);
+  intervalID = setInterval(checkScroll, 500);
   $('#posts_community_li').addClass('active');
   $('#about_community_li').removeClass('active');
   $('#photos_community_li').removeClass('active');
