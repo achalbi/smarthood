@@ -22,7 +22,7 @@ class GroupsController < ApplicationController
     @photo.save
     @group.photo = @photo 
   end
-  @group.community_id = active_community.id
+  @group.community_id = params[:community_id]
   if @group.save
     unless params[:group][:user_tokens].nil?
       @user_ids = params[:group][:user_tokens].split(",")
@@ -127,7 +127,8 @@ def invite_app_user
        @usergroup.group_id = params[:id]
        @usergroup.user_id = id
        @usergroup.is_admin = false
-       @usergroup.invitation = Uc_enum::INVITED
+       @usergroup.invitation = Uc_enum::JOINED
+       @usergroup.community_id = params[:comm_id]
        @usergroup.save
        getNotifiableUsers(Objecttypeenum::GROUP, @group, Objecttypeenum::USER, @user_ids, Uc_enum::INVITED)
      elsif (@usergroup.invitation==Uc_enum::REQUESTED || @usergroup.invitation==Uc_enum::MODERATOR_DECLINED)

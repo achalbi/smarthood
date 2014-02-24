@@ -55,8 +55,8 @@
           <%= gravatar_for user, size: 52 %>
         </div>
         <p class="marginRight25">
-          <% if @group.is_admin?(current_user) %>
-                        <%= link_to "Remove", "/groups/#{@group.id}/unjoin_grp?user_id=#{user.id}&comm_id=#{community.id}", class: "uibutton pull-right ", remote: true %>
+          <% if @group.is_admin?(current_user) && user.id != current_user.id %>
+                        <%= link_to "Remove", "/groups/#{@group.id}/unjoin_grp?user_id=#{user.id}&comm_id=#{community.id}", class: "uibutton pull-right ", remote: true, data: { confirm: "You sure?" } %>
           <% end %>
           <%= link_to user.name, user %>
         </p>
@@ -80,7 +80,7 @@
         </div>
         <p class="marginRight25">
           <% if @group.is_admin?(current_user) %>
-                        <%= link_to "Remove", "/groups/#{@group.id}/unjoin_grp?user_id=#{user.id}&comm_id=#{community.id}", class: "uibutton pull-right ", remote: true %>
+                        <%= link_to "Remove", "/groups/#{@group.id}/unjoin_grp?user_id=#{user.id}&comm_id=#{community.id}", class: "uibutton pull-right ", remote: true, data: { confirm: "You sure?" } %>
           <% end %>
           <%= link_to user.name, user %>
         </p>

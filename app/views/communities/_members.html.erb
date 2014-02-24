@@ -30,11 +30,16 @@
     <% if ad_users.count > 0  %>
     <h4><%="Moderator".pluralize(ad_users.count) %><%= link_to "edit", '#', id: "moderator",  class: "uibutton icon edit pull-right" %></h4>
       <% ad_users.each do |user|%>
-      <li style="width:250px;float:left;margin-left:15px;">
+      <li style="float:left;margin-left:15px;" class="tr-hover span13">
         <div  class="img_zoom" style="float:left;" >
           <%= gravatar_for user, size: 52 %>
         </div>
+         <p class="marginRight25">
+          <% if current_user.is_cu_admin?(community)  && user.id != current_user.id %>
+                        <%= link_to "Remove", "/communities/#{community.id}/unjoin_cu?user_id=#{user.id}", class: "uibutton pull-right ", remote: true, data: { confirm: "You sure?" } %>
+          <% end %>
           <%= link_to user.name, user %>
+        </p>
           <p><%= user.email %></p>
       </li>
       <% end %>
@@ -45,11 +50,16 @@
     <% if inv_users.count > 0 %> 
     <h4><%="Member".pluralize(ad_users.count) %></h4>
       <% inv_users.each do |user|%>
-      <li style="width:250px;float:left;margin-left:15px;">
+      <li style="float:left;margin-left:15px; " class="tr-hover span13">
         <div  class="img_zoom" style="float:left;" >
           <%= gravatar_for user, size: 52 %>
         </div>
+        <p class="marginRight25">
+           <% if current_user.is_cu_admin?(community) && user.id != current_user.id %>
+                        <%= link_to "Remove", "/communities/#{community.id}/unjoin_cu?user_id=#{user.id}", class: "uibutton pull-right ", remote: true, data: { confirm: "You sure?" } %>
+          <% end %>
           <%= link_to user.name, user %>
+        </p>
           <p><%= user.email %></p>
       </li>
       <% end %>

@@ -6,7 +6,7 @@
     <div id="div_new_post">
         <%= render 'communities/post_new', locals: { community: @selected_community} %>
     </div>
-              <div id="div_post" class="resources1">
+              <div id="div_post_<%= @selected_community.id.to_s %>" class="resources">
                   <%= render 'posts/post' %>
                
               </div>
@@ -78,7 +78,7 @@ function checkScroll() {
     currentPage++;
   $('#loading_page').show();
     jQuery.ajax('/communities/community_post_paginate?page=' + currentPage + '&id=' + '<%= @selected_community.id.to_s %>' , {asynchronous:true, evalScripts:true, method:'get', success: function(data, textStatus, jqXHR) {
-    $('.resources1').append($(data));
+    $('#div_post_<%= @selected_community.id.to_s %>').append($(data));
     $('#loading_page').hide();
     if(typeof jQuery(data) == 'undefined' ||jQuery(data).html() == null || $(data).find('.paginate_do').html()==null){
       clearInterval(intervalID);
@@ -105,7 +105,7 @@ function pageHeight() {
 }
  
 $('document').ready(function(){
-  intervalID = setInterval(checkScroll, 500);
+  intervalID = setInterval(checkScroll, 1000);
   $('#posts_community_li').addClass('active');
   $('#about_community_li').removeClass('active');
   $('#photos_community_li').removeClass('active');

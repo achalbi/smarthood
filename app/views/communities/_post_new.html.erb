@@ -11,14 +11,14 @@
                          <canvas id="imageCanvas1" style = "border: 1px solid #ddd; padding:2px; align:center;cursor:pointer; background-color:#ffffff;" width="132px" height="88px">Add pictures</canvas>
                         </div> 
 
-                      <% unless @groups.nil? %>
+                      <% unless @groups.blank? %>
                         <%= link_to  "Select groups","#", id: "group_post_select", class: "uibutton pull-left" %>
                       <% end %>
                      <%= f.submit "Post", id: "community_post_submit", class: "btn primary pull-right" %>
                      <%= hidden_field_tag :type, "community" %> 
                      <%= hidden_field_tag :id, @community.id %> 
                      <div id="sel_grp_label"></div>
-                     <% unless @groups.nil? %>
+                     <% unless @groups.blank? %>
                       <% @groups.each do |grp| %>
                           <div id="grp_label_<%= grp.id %>" style="display:none;margin:5px;" class="pull-left"><%=link_to grp.name, grp, remote: true %> </div>
                           <div style="display:none;">
@@ -40,7 +40,7 @@
         <div class=" ui-front">
         <section id="groups_sec" style="">
             <div style="padding:5px;">
-              <% unless @groups.nil? %>
+              <% unless @groups.blank? %>
               <% @groups.each do |grp| %>
               <div class="bgClrChg2 span11 pull-left" style="cursor:pointer;margin-right:20px;">
                   <div style="display:none;" class="pull-left">

@@ -53,7 +53,7 @@ class CommunitiesController < ApplicationController
     @inv_req_grps = current_user.invited_groups.collect(&:group_id)
     @ucs = @selected_community.usercommunities unless @selected_community.nil?
   	@community = @selected_community
-    @my_groups_ids = current_user.user_groups.where("community_id = ? AND invitation = ? ", @selected_community.id, Uc_enum::JOINED ).collect(&:group_id).uniq
+    @my_groups_ids = current_user.user_groups.where("community_id = ? AND invitation = ? ", @community.id, Uc_enum::JOINED ).collect(&:group_id).uniq
     @groups = Group.where('id IN (?)', @my_groups_ids)
   end
 
@@ -164,6 +164,8 @@ end
 if @uc_count < 1
   render js: %(window.location.href='#{root_path}')
 end
+    @my_groups_ids = current_user.user_groups.where("community_id = ? AND invitation = ? ", @community.id, Uc_enum::JOINED ).collect(&:group_id).uniq
+    @groups = Group.where('id IN (?)', @my_groups_ids)
 end
 
 def sendrequest
@@ -246,7 +248,6 @@ def join_cu
     @usercommunity.save
  end
   unless params[:id].nil?
-   
       @notifications_settings = current_user.activitynotificationsettings.where("community_id = ?", params[:id]).first
       if @notifications_settings.blank?
         createNotificationSettings(params[:id])
@@ -262,10 +263,17 @@ def join_cu
 end
 
 def unjoin_cu
- @usercommunity = current_user.usercommunities.find_by_community_id(params[:id])
+ @user = current_user
+ unless params[:user_id].nil?
+    @user = User.find(params[:user_id])
+ end
+ @usercommunity = @user.usercommunities.find_by_community_id(params[:id])
  @usercommunity.invitation = Uc_enum::UNJOINED
  @usercommunity.save
  deleteNotificationSettings(params[:id])
+  unless params[:user_id].nil?
+    redirect_to :action => :index, id: params[:id]
+  end
 end
 
 def show
@@ -298,6 +306,8 @@ def show
         @post_ids << @community.posts.collect(&:id)
         @posts = Post.where(id: @post_ids.uniq).paginate(page: params[:page], :per_page => 4)
   @ucs = @community.usercommunities
+  @my_groups_ids = current_user.user_groups.where("community_id = ? AND invitation = ? ", @community.id, Uc_enum::JOINED ).collect(&:group_id).uniq
+  @groups = Group.where('id IN (?)', @my_groups_ids)
   respond_to do |format|
    format.html {  }
    format.js {  }
@@ -335,6 +345,8 @@ def active_com
     @requested_users = User.where(['id IN (?)' , @community.requested_uc.collect(&:user_id)])
     @selected_community.req_pending_cnt = @requested_users.count
   end
+  @my_groups_ids = current_user.user_groups.where("community_id = ? AND invitation = ? ", @community.id, Uc_enum::JOINED ).collect(&:group_id).uniq
+  @groups = Group.where('id IN (?)', @my_groups_ids)
   @ucs = @community.usercommunities
 end
 

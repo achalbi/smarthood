@@ -123,11 +123,13 @@ class PostsController < ApplicationController
           @community = Community.find(params[:id])
           @selected_community = @community
           @post.communities << @community 
-        getNotifiableUsers(Objecttypeenum::POST, @post, Objecttypeenum::COMUNITY, @post.communities, Uc_enum::CREATED)  
           @selected_comm  = []
           @selected_comm << @community
           @post = Post.new
           @posts = @community.posts.paginate(page: params[:page], :per_page => 4).uniq
+          @my_groups_ids = current_user.user_groups.where("community_id = ? AND invitation = ? ", params[:id], Uc_enum::JOINED ).collect(&:group_id).uniq
+          @groups = Group.where('id IN (?)', @my_groups_ids)
+        getNotifiableUsers(Objecttypeenum::POST, @post, Objecttypeenum::COMUNITY, @post.communities, Uc_enum::CREATED)  
        else
        end
      end
