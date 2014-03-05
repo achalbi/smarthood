@@ -22,7 +22,8 @@ class UsersController < ApplicationController
   end
 
   def create
-  	@user = User.new(params[:user])
+  	debugger
+    @user = User.new(params[:user])
     @user.name = @user.user_info.first_name+@user.user_info.last_name
   	if @user.save
   		#flash[:success] = "User Created successfully!!!"

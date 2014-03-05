@@ -152,14 +152,15 @@ end
 @selected_comm  = []
 @selected_comm << active_community
 @post = Post.new
- @group_ids = current_user.user_groups.where("community_id = ?", @selected_community.id).collect(&:group_id)
+@community = Community.find(params[:id])
+ @group_ids = current_user.user_groups.where("community_id = ?", params[:id]).collect(&:group_id)
       @post_ids = []
       unless @group_ids.blank?
-        @groups = Group.where('id IN (?) AND community_id = ?', @group_ids, @selected_community.id)
+        @groups = Group.where('id IN (?) AND community_id = ?', @group_ids, params[:id])
         @groupposts = Grouppost.where('group_id IN (?)', @group_ids)
         @post_ids = @groupposts.collect(&:post_id)
       end
-        @post_ids << active_community.posts.collect(&:id)
+        @post_ids << @community.posts.collect(&:id)
         @posts = Post.where(id: @post_ids.uniq).paginate(page: params[:page], :per_page => 4)
 if @uc_count < 1
   render js: %(window.location.href='#{root_path}')
