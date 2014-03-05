@@ -546,7 +546,7 @@ def search_app_user
  def add_moderators
     Usercommunity.where("community_id = ? AND user_id IN (?)", params[:id], params[:user_all_ids]).update_all(is_admin: false)
     Usercommunity.where("community_id = ? AND user_id IN (?)", params[:id], params[:user_ids]).update_all(is_admin: true)
-    @users = User.where("user_id IN (?)", params[:user_ids])
+    @users = User.where("id IN (?)", params[:user_ids])
     @community = Community.find(params[:id])
       @users.each do |usr|
         getNotifiableUsers(Objecttypeenum::COMUNITY, @community, Objecttypeenum::USER, usr, Uc_enum::ADD_MODERATOR)
@@ -619,7 +619,7 @@ def search_app_user
       @requested_users = User.where(['id IN (?)' , @community.requested_uc.collect(&:user_id)])
       @community.req_pending_cnt = @requested_users.count
     end 
-    @ucs = @community.usercommunities
+    @ucs = @community.usercommunities.where('invitation = ?',Uc_enum::JOINED)
  end
 
  def groups_com

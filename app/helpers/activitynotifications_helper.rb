@@ -39,7 +39,7 @@ module ActivitynotificationsHelper
 				end
 			end 
 			if action == Uc_enum::ADD_MODERATOR
-				@users = objectfor			
+				@users << objectfor			
 			end
 
 		  when Objecttypeenum::EVENT then

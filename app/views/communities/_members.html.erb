@@ -28,7 +28,11 @@
 <ul class="users">
   <% unless ad_users.nil? %>
     <% if ad_users.count > 0  %>
-    <h4><%="Moderator".pluralize(ad_users.count) %><%= link_to "edit", '#', id: "moderator",  class: "uibutton icon edit pull-right" %></h4>
+    <h4><%="Moderator".pluralize(ad_users.count) %>
+      <% if current_user.is_cu_admin?(community)  %>
+        <%= link_to "edit", '#', id: "moderator",  class: "uibutton icon edit pull-right" %>
+      <% end %>
+    </h4>
       <% ad_users.each do |user|%>
       <li style="float:left;margin-left:15px;" class="tr-hover span13">
         <div  class="img_zoom" style="float:left;" >
