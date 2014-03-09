@@ -1,19 +1,33 @@
-<% provide(:title, 'Sign up') %>
-<h1>Sign up</h1>
-
-<div class="row">
-  <div class="span6 offset3">
-<br>
-
-    <%= simple_form_for(@user, :url => '/auth/identity/register') do |f| %>
-    <%= render 'shared/error_messages', object: f.object %>
-
-  <%# specify :input_html to avoid params nesting %>
-  <%= f.input :name, :input_html => {:name => 'name'} %>
-  <%= f.input :email, :input_html => {:name => 'email'} %>
-  <%= f.input :password, :as => 'password', :input_html => {:name => 'password'} %>
-  <%= f.input :password_confirmation, :label => "Confirm Password", :as => 'password', :input_html => {:name => 'password_confirmation'} %>
-  <button type='submit' , class: "btn primary" >Sign Up</button>
-<% end %>
+<% provide(:title, 'Home') %>
+<div class="hero-unit container-fluid " style="margin-top:70px;">
+  <div class="" style="width: 980px; margin: 0 auto">
+    <aside>
+      <section class="span8 center">
+        <div >
+          <h1 class="inlineBlock" style="padding: 42px 0 24px; font-size: 28px; line-height: 36px">
+            Come unite with friends, neighbours and the
+            <br>
+            world around you on Smarthood. 
+          </h1>
+        </div>
+      </section>
+    </aside>
+  <div class="span13">
+  <h1 style="font-size: 36px">
+      Sign Up
+    </h1>
+    <h5 class="center">
+      It’s free. If you have Facebook account, just login with it.
+    </h5>
+    <br>
+    <div>
+      <div>
+        <noscript>
+          &lt;div id="no_js_box"&gt;&lt;h2&gt;JavaScript is disabled on your browser.&lt;/h2&gt;&lt;p&gt;Please enable JavaScript on your browser or upgrade to a JavaScript-capable browser to register for Facebook.&lt;/p&gt;&lt;/div&gt;
+        </noscript>
+    </div>
+    <%= render 'static_pages/user_info_login' %>
   </div>
+  </div>
+</div>
 </div>

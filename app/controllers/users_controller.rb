@@ -5,7 +5,9 @@ class UsersController < ApplicationController
   before_filter :admin_user,     only: :destroy
 
   def new
+    if @user.nil?
      @user = env['omniauth.identity'] ||= User.new
+    end
      
   end
 
@@ -22,15 +24,15 @@ class UsersController < ApplicationController
   end
 
   def create
-  	debugger
     @user = User.new(params[:user])
     @user.name = @user.user_info.first_name+@user.user_info.last_name
   	if @user.save
+      authentication = Authentication.create(:provider => 'identity', :uid => @user.id, :user_id => @user.id)
   		#flash[:success] = "User Created successfully!!!"
       # Tell the UserMailer to send a welcome Email after save
         UserMailer.welcome_email(@user).deliver
         sign_in @user
-  		  redirect_to @user
+  		  redirect_to root_path
   	else 
   		render 'new'
   	end	

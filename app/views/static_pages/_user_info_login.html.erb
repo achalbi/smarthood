@@ -1,8 +1,8 @@
   
-<%= form_for( @user, url:'/auth/identity/register' , remote: true, :html => {:multipart => true}) do |f| %>
+<%= form_for( @user, :html => {:multipart => true}) do |f| %>
 
     <div class="row">
-        <div class="span14 ui-front">
+        <div class="span15 ui-front">
             
           <%= render 'shared/error_messages', object: f.object %>
           <%= f.fields_for :user_info do |ui| %>
