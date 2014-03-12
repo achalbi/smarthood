@@ -363,6 +363,20 @@ def joined_com
   @communities = @my_communities  
 end
 
+def my_com
+    @mod_comm_id = current_user.usercommunities.where("is_admin = ? AND invitation = ?", true, Uc_enum::JOINED ).collect(&:community_id)
+    @active_comm = []
+    @active_comm << active_community.id
+    @moderated_communities = Community.where(['id IN (?) AND id NOT IN (?)', @mod_comm_id, @active_comm ])
+    @comm_id = current_user.usercommunities.where("is_admin = ? AND invitation = ?", false, Uc_enum::JOINED ).collect(&:community_id)
+    @my_communities = Community.where(['id IN (?) AND id NOT IN (?)', @comm_id, @active_comm ])
+end
+
+def other_com
+    @comm_id = current_user.usercommunities.where(" invitation != ?", Uc_enum::JOINED ).collect(&:community_id)
+    @communities = Community.where(['id IN (?) ', @comm_id ])
+end
+
 def moderated_com
   @ucs = current_user.usercommunities.where("is_admin=?", true )
   @communities = []

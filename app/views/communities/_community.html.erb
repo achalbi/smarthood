@@ -1,31 +1,13 @@
-<li >
-<div  class="well"  style="float:left;padding:8px;margin-bottom:0px;position:relative;">
-<% unless community.photo.nil? %>
-  <div  class="img_zoom" id="div-img_<%= community.photo.id %>">
-         <%= link_to cl_image_tag(community.photo.pic_url(:small), class:"image_al_c1 thumbnail", id:"#{community.photo.id}"), "/communities/#{community.id}", remote: true,   style:"cursor:pointer;"%>
-          </div>
-<% end %>
-  <% unless (community.req_pending_cnt.nil? || community.req_pending_cnt == 0)%>
-  <span class="pull-right label important" style="margin:5px;margin-right:10px;position:absolute;right:0;"><%= if community.req_pending_cnt > 0 then community.req_pending_cnt end %></span>
-<!--   <span class="pull-right" style="font-size:10px;margin:7px 0px;"><%= if community.req_pending_cnt > 0 then "Pending req. " end %></span> -->
-  <% end %>
+<li style="padding-left:15px;cursor:pointer" class="tr-hover community" >
+  <% unless community.photo.nil? %>
+  <%= link_to cl_image_tag(community.photo.pic_url(:cover_pic_smaller), class:"image_al_c1 thumbnail pull-left ", id:"#{community.photo.id}")%>
 
-  <span >
-    <h5><%= link_to community.name, community %></h5>
-  </span>
-<span class="timestamp">
-  <% unless community.description.nil? %>
-   <% if community.description.length > 27 %>
-    <%= community.description.slice! 0..27 %>...<br>
-    <% else %>
-    <%= community.description %>&nbsp;
-   <% end %>
-  <% else %>
-  <%= " " %>
   <% end %>
-  
-  <span class="pull-right" title="Privacy: <%= privacy_str(community) %>"><%= privacy_str(community) %></span>
+  <div style="padding:7px;">
+  <span class="marginLeft5" style="font-size:large;"><%= link_to community.name.capitalize %>
   </span><br>
-
+  <span class="marginLeft5" style="font-size:small;"><%= community.description %></span><br>
+  <span class="marginLeft5" style="font-size:small;">Privacy: <%= privacy_str(community) %></span>
   </div>
-  </li>
+</li>
+<%= link_to "", "/communities/#{community.id}", remote: true %>

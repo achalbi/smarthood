@@ -23,32 +23,36 @@ $(document).ready(function(){
       <div id="comUnity_div">    
         <% unless @selected_community.nil? %>
         <li class="sidetabs sidetabs_selected" style="list-style-type: none;padding:5px; margin:5px;">
-          <h6><a><%= "Active: " << @selected_community.name %></a></h6>
+          <h6><a><%= "" << @selected_community.name %></a></h6>
         </li>
         <%= link_to "", active_com_communities_path, id: "active_comUnity", remote: true %>
-       <li class="sidetabs notActive" style="list-style-type: none;padding:5px; margin:5px;">
+      <!-- <li class="sidetabs notActive" style="list-style-type: none;padding:5px; margin:5px;">
           <h6><a>Moderated</a>
           <% unless (@requested_users_all.nil? || @requested_users_all == 0)%>
             <span class="pull-right label important" style="margin:5px;"><%= if @requested_users_all > 0 then @requested_users_all end %></span>
           <% end %>
         </h6>
         </li>
-        <%= link_to "", moderated_com_communities_path , id: "moderated_comUnity", remote: true %>
+        <%= link_to "", moderated_com_communities_path , id: "moderated_comUnity", remote: true %>-->
         <% end %>
         <li class="sidetabs notActive" style="list-style-type: none;padding:5px; margin:5px;">
-          <h6><a>Joined</a></h6>
+          <h6><a>My communities</a>
+          <% unless (@requested_users_all.nil? || @requested_users_all == 0)%>
+            <span class="pull-right label important" style="margin:5px;"><%= if @requested_users_all > 0 then @requested_users_all end %></span>
+          <% end %>            
+          </h6>
         </li>
-        <%= link_to "", joined_com_communities_path , id: "joined_comUnity", remote: true %>
+        <%= link_to "", my_com_communities_path , id: "joined_comUnity", remote: true %>
         <li class="sidetabs notActive"id="public_li" style="list-style-type: none;padding:5px; margin:5px;">
-          <h6><a>Public</a></h6>
+          <h6><a>Other communities</a></h6>
         </li>
-        <%= link_to "", public_com_communities_path,id: "public_comUnity", remote: true %>
-        <li class="sidetabs notActive" style="list-style-type: none;padding:5px; margin:5px;">
+        <%= link_to "", other_com_communities_path,id: "public_comUnity", remote: true %>
+        <!--<li class="sidetabs notActive" style="list-style-type: none;padding:5px; margin:5px;">
           <h6><a>Private</a></h6>
         </li>
-        <%= link_to "", private_com_communities_path , id: "private_comUnity", remote: true %>
+        <%= link_to "", private_com_communities_path , id: "private_comUnity", remote: true %> -->
         <li class="sidetabs notActive" style="list-style-type: none;padding:5px; margin:5px;">
-          <h6><a>Invites / Requests</a>
+          <h6><a>Invites</a>
             <span id="inv_req_count" class="pull-right">
             <%= render partial: 'communities/inv_req_count'%>
             </span>
