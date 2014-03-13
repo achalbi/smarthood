@@ -39,6 +39,15 @@ class PhotoUploader < CarrierWave::Uploader::Base
   # end
 
   # Create different versions of your uploaded files:
+  version :tiny do
+     cloudinary_transformation :width =>15, :height => 15, :crop => :fill, :gravity => :faces
+   end 
+
+  version :tiny_logo do
+     process :resize_to_fit => [350, 25]
+   end 
+
+
   version :smallest_half do
      cloudinary_transformation :width =>25, :height => 25, :crop => :fill, :gravity => :faces
    end 

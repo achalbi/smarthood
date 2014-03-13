@@ -6,7 +6,10 @@
       <div class="container-fluid canvas">
 
           <% if signed_in? %>
-        <%= link_to "Smarthood", home_page, id: "logo1", class: "brand ", style:"margin-left:150px;margin-top:5px;vertical-align: middle;background-color:transparent; " %>
+        <%= link_to "Smarthood:", home_page, id: "logo1", class: "brand ", style:"margin-left:20px;margin-top:5px;vertical-align: middle;background-color:transparent; " %>
+        <div id="logo_community_name">
+          <%= render partial: 'community-name', locals: {community: active_community } %>
+        </div>
         <nav>
           <ul class="nav pull-right">            
             <li id="fat-menu" class="dropdown">

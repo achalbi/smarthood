@@ -368,6 +368,9 @@ def my_com
     @active_comm = []
     @active_comm << active_community.id
     @moderated_communities = Community.where(['id IN (?) AND id NOT IN (?)', @mod_comm_id, @active_comm ])
+    @moderated_communities.each do |community|
+      community.req_pending_cnt = User.where(['id IN (?)' , community.requested_uc.collect(&:user_id)]).count
+    end
     @comm_id = current_user.usercommunities.where("is_admin = ? AND invitation = ?", false, Uc_enum::JOINED ).collect(&:community_id)
     @my_communities = Community.where(['id IN (?) AND id NOT IN (?)', @comm_id, @active_comm ])
 end

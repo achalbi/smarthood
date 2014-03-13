@@ -1,13 +1,16 @@
 <li style="padding-left:15px;cursor:pointer" class="tr-hover community" >
   <% unless community.photo.nil? %>
-  <%= link_to cl_image_tag(community.photo.pic_url(:cover_pic_smaller), class:"image_al_c1 thumbnail pull-left ", id:"#{community.photo.id}")%>
+  <%= link_to cl_image_tag(community.photo.pic_url(:cover_pic_smaller), class:"image_al_c1 thumbnail pull-left ", id:"#{community.photo.id}"), "#" %>
 
   <% end %>
   <div style="padding:7px;">
-  <span class="marginLeft5" style="font-size:large;"><%= link_to community.name.capitalize %>
+  <span class="marginLeft5" style="font-size:large;"><%= link_to community.name.capitalize, "#" %>
   </span><br>
   <span class="marginLeft5" style="font-size:small;"><%= community.description %></span><br>
-  <span class="marginLeft5" style="font-size:small;">Privacy: <%= privacy_str(community) %></span>
+  <span class="marginLeft5" style="font-size:small;">Privacy: <%= privacy_str(community) %></span><br>
+  <% unless (community.req_pending_cnt.nil? || community.req_pending_cnt == 0)%>
+    <span class="marginLeft5" style="font-size:small;">Requests: </span><span class="marginLeft5 label important" ><%= if community.req_pending_cnt > 0 then community.req_pending_cnt end %></span>
+  <% end %>
   </div>
 </li>
 <%= link_to "", "/communities/#{community.id}", remote: true %>
