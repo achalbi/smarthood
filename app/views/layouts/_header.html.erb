@@ -8,7 +8,7 @@
           <% if signed_in? %>
         <%= link_to "Smarthood:", home_page, id: "logo1", class: "brand ", style:"margin-left:20px;margin-top:5px;vertical-align: middle;background-color:transparent; " %>
         <div id="logo_community_name">
-          <%= render partial: 'community-name', locals: {community: active_community } %>
+          <%= render partial: '/static_pages/community-name', locals: {community: active_community } %>
         </div>
         <nav>
           <ul class="nav pull-right">            
