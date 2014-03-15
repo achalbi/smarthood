@@ -19,4 +19,20 @@ module CommunityHelper
 	end
 =end
 
+def protected?(community)
+  unless community.privacy == Privacyenum::PROTECTED && !community.usercommunities.where("user_id = ?  AND is_admin = ?", current_user.id, true ).exists?
+    return true
+  else
+    return false
+  end
+end
+
+def active?(community)
+  if community.id == active_community.id
+    return true
+  else
+    return false
+  end
+end
+
 end

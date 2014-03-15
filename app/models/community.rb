@@ -89,6 +89,17 @@ def is_private?(current_user)
 end
 
 
+
+def can_post?(user)
+  if self.protected? && self.is_active?(user, self)
+   return true
+  else
+   return false
+  end 
+end
+
+
+
   def is_requested?(current_user)
    @usercommunity = self.usercommunities.where("invitation = ? AND user_id = ?", Uc_enum::REQUESTED, current_user.id)
    if @usercommunity.count > 0

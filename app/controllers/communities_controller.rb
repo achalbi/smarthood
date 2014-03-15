@@ -110,6 +110,7 @@ end
 def update
   @community = Community.find(params[:id])
   @community.update_attributes(params[:community])
+  @selected_community = @community
   @ad_eds = @community.usercommunities.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED, true )
   @non_ad_eds = @community.usercommunities.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED, false)
   @users = @non_ad_eds.pluck(:user_id)
@@ -126,10 +127,10 @@ def update
   @selected_comm  = []
   @selected_comm << active_community
   @post = Post.new
-   @group_ids = current_user.user_groups.where("community_id = ?", @selected_community.id).collect(&:group_id)
+   @group_ids = current_user.user_groups.where("community_id = ?", @community.id).collect(&:group_id)
       @post_ids = []
       unless @group_ids.blank?
-        @groups = Group.where('id IN (?) AND community_id = ?', @group_ids, @selected_community.id)
+        @groups = Group.where('id IN (?) AND community_id = ?', @group_ids, @community.id)
         @groupposts = Grouppost.where('group_id IN (?)', @group_ids)
         @post_ids = @groupposts.collect(&:post_id)
       end

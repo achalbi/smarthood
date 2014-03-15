@@ -150,7 +150,9 @@ module SessionsHelper
     elsif obj.privacy == Privacyenum::INDIVIDUAL
       "Individual"
     elsif obj.privacy == Privacyenum::SECRET
-      "Secret"      
+      "Secret"  
+    elsif obj.privacy == Privacyenum::PROTECTED
+      "Protected"      
     end
   end
   

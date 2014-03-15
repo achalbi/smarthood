@@ -121,7 +121,7 @@ $(document).ready(function(){
           <div class="center_block clearfix">
             <%= label_tag :privacy %>
             <div class="input">
-              <%= f.select :privacy, options_for_select([["Public", Privacyenum::PUBLIC], ["Private", Privacyenum::PRIVATE], ["Secret", Privacyenum::SECRET]]) %>
+              <%= f.select :privacy, options_for_select([["Public", Privacyenum::PUBLIC], ["Private", Privacyenum::PRIVATE], ["Protected", Privacyenum::PROTECTED]]) %>
             </div>
           </div> 
           <div class="center_block clearfix">

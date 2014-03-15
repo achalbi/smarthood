@@ -17,7 +17,7 @@
 <% end %>
 <% end %>
 <% if post.comments.count > 3 %>
-<a class="pull-right" id="cmnts_<%= post.id %>" style="cursor:pointer;margin-right:5px;" >Show more...</a>
+<a class="pull-right" id="cmnts_<%= post.id %>" style="cursor:pointer;margin-right:5px;" >Show more...</a><br>
 <% end %>
 <ol style="padding:5px;margin:0;height:30px;overflow:hidden;">
 <%= gravatar_for(current_user, size: 30) %>

@@ -18,4 +18,5 @@ class Privacyenum
     Privacyenum.add_item :CUSTOM, 4
     Privacyenum.add_item :SECRET, 5
     Privacyenum.add_item :INDIVIDUAL, 6
+    Privacyenum.add_item :PROTECTED, 7
 end

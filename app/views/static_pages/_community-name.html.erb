@@ -1,2 +1,2 @@
-<%= link_to cl_image_tag(community.photo.pic_url(:tiny_logo), class:"pull-left ", id:"#{community.photo.id}", style:"margin-top:8px;vertical-align: middle;background-color:transparent; "), communities_path, remote: true %>
-<%= link_to community.name, communities_path, class: "brand ", style:"margin-left:-12px;margin-top:5px;vertical-align: middle;background-color:transparent; ", remote: true %>
+<%= link_to cl_image_tag(community.photo.pic_url(:tiny_logo), class:"pull-left ", id:"#{community.photo.id}", style:"margin-top:8px;vertical-align: middle; "), communities_path, remote: true %>
+<%= link_to community.name, communities_path, class: "brand ", style:"margin-left:-12px;margin-top:10px;vertical-align: middle;font-size:130% ", remote: true %>

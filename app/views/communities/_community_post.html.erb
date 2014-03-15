@@ -3,9 +3,11 @@
         <%= render 'communities/links', locals: { community: @selected_community} %>
   </ul>
   <div id="image" style="display:block" class="span13">
-    <div id="div_new_post">
-        <%= render 'communities/post_new', locals: { community: @selected_community} %>
-    </div>
+    <% unless (@selected_community.privacy == Privacyenum::PROTECTED && !current_user.is_cu_admin?(@selected_community)) %>
+      <div id="div_new_post">
+          <%= render 'communities/post_new', locals: { community: @selected_community} %>
+      </div>
+    <% end %>
               <div id="div_post_<%= @selected_community.id.to_s %>" class="resources">
                   <%= render 'posts/post' %>
                
@@ -17,6 +19,7 @@
 
 <script type="text/javascript">
 
+<% unless (@selected_community.privacy == Privacyenum::PROTECTED && !current_user.is_cu_admin?(@selected_community)) %>
 
  var imageLoader = document.getElementById('pic1');
     imageLoader.addEventListener('change', handleImage, false);
@@ -66,6 +69,7 @@
   }
 
 
+<% end %>
 
 
 var currentPage = 1;
