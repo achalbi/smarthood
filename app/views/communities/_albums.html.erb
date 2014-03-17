@@ -5,8 +5,8 @@
 
   <div id="gallery"  >
     <div id="grp_album">
-      <div id="gallery1" class="span12 pull-left">
-       <ul id="grid" > 
+      <div id="gallery1" class=" pull-left" style="width:520px;">
+       <ul id="grid" style="margin:0px"> 
          <% unless (@community.privacy == Privacyenum::PROTECTED && !current_user.is_cu_admin?(@community)) %>
 
            <li style="background-color:#ffffff!important;">

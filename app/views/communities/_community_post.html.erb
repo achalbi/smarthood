@@ -2,7 +2,7 @@
     <ul class="tabs">
         <%= render 'communities/links', locals: { community: @selected_community} %>
   </ul>
-  <div id="image" style="display:block" class="span13">
+  <div id="image" style="display:block;width:565px;" >
     <% unless (@selected_community.privacy == Privacyenum::PROTECTED && !current_user.is_cu_admin?(@selected_community)) %>
       <div id="div_new_post">
           <%= render 'communities/post_new', locals: { community: @selected_community} %>
