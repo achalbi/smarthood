@@ -4,6 +4,7 @@ class Photo < ActiveRecord::Base
   belongs_to :post
   belongs_to :user
   mount_uploader :pic, PhotoUploader
+  #mount_uploader :download, PhotoUploader
 
   has_many :photoalbums, dependent: :destroy
   has_many :albums, :through => :photoalbums

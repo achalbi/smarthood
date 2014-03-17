@@ -14,7 +14,7 @@
  <%= link_to  "Select communities","#", id: "community_post_select", class: "uibutton pull-left" %>
  <%= f.submit "Post", id: "community_post_submit", class: "btn primary pull-right" %>
   <%= hidden_field_tag :type, "communities" %> 
-                  <div id="sel_grp_label"></div>
+                  <div id="sel_comm_label"></div>
               <% @communities.each do |cu| %>
                   <div id="cu_label_<%= cu.id %>" style="display:none;margin:5px;" class="pull-left"><%=link_to cu.name, cu, remote: true %> </div>
                   <div style="display:none;">
@@ -33,38 +33,45 @@
 </div>
 
 <div id="modal_sel_cu" style="display:none;" >
-  <div id="modal-from-dom2" class="modal hide fade in" style="display: block;width:700px;">
+  <div id="modal-from-dom2" class="modal hide fade in" style="display: block;width:665px;">
     <div class="modal-header">
       <a href="#" id="closeX_sel_cu" class="close">×</a>
       <span style="font-size:20px;line-height: 2;">Select Communities</span>
     </div>
     <div class="modal-body" style="max-height:400px;">
       <div class="row">
-        <div class="span14 ui-front">
+        <div class=" ui-front">
         <section id="cus_sec" style="">
+          <div style="padding:5px;">
           <% unless @communities.nil? %>
-             <div style="padding:5px;">
                         <% @communities.each do |cu| %>
-                        <div class="bgClrChg2 well pull-left" style="cursor:pointer;width:140px;margin-right:20px;">
+                        <div class="bgClrChg2 span14 pull-left" style="cursor:pointer;margin-right:20px;">
                             <div style="display:none;" class="pull-left">
                               <%= check_box_tag 'cu_ids[]', cu.id %>
                             </div>
                             <p style="display:none;"><%= cu.id %></p>
+                            <ul class="users">
+                              <li style="padding-left:15px;" class="tr-hover1">
                             <% unless cu.photo.nil? %>
-                                <%= link_to cl_image_tag(cu.photo.pic_url(:smallest), class:"roundCorner albumLink", id:"cu_#{cu.id}") ,"#", class:"albumLink roundCorner", remote: true %>
-                            <% end %><br>
-                            <h5><%=  cu.name %></h5>
+                                <%=  cl_image_tag(cu.photo.pic_url(:smallest), class:"image_al_c1 thumbnail pull-left ", id:"cu_#{cu.id}") %>
+                            <% end %>
+                            <span class=" pull-left" style="font-size:medium;margin-top:5px; margin-left:10px;" ><%= cu.name.capitalize %></span>
+                             <a class="uibutton pull-right select_unselect" style="margin-right:3px;">Select </a>
+                             <br><br>
+                             <span class="marginLeft10"><%= cu.description %></span>
+                             </li>
+                            </ul>
                         </div>
                         <% end %>
+                        <% end %>
             </div>
-          <% end %>
 
         </section>
         </div>
       </div>
     </div>
     <div class="modal-footer" >
-      <%= link_to "Select","#", class: "btn primary pull-right", id: "selCU" %>  
+      <%= link_to "Done","#", class: "btn primary pull-right", id: "selCU" %>  
     </div>
   </div>
 </div>
@@ -137,7 +144,7 @@ var currentPage = 1;
 var intervalID = -1000;
 var insideLoop ="false"; 
  
-function checkScroll() {
+function checkScroll_comms_post() {
   if (nearBottomOfPage() && insideLoop!="true") {
     insideLoop="true";
     currentPage++;
@@ -170,7 +177,7 @@ function pageHeight() {
 }
  
 $('document').ready(function(){
-  intervalID = setInterval(checkScroll, 500);
+  intervalID = setInterval(checkScroll_comms_post, 1000);
 })
 
 $("#community_post_select").click(function(){
@@ -184,19 +191,34 @@ $("#selCU").click(function(){
   $('#modal_sel_cu').modal('hide');
 });
 
+var i=0;
 $(".bgClrChg2").click( function() {
   var id = $(this).find('p').html();
   if($(this).find(':checkbox').is(':checked')){
-    $(this).find(':checkbox').removeAttr("checked");
-    $("#cu_check_"+id).removeAttr("checked");
+    $(this).find(':checkbox').prop("checked",false);
+    $("#cu_check_"+id).prop("checked",false);
     $("#cu_label_"+id).hide();
     $(this).removeClass('tabs_selected');
+    $(this).find('.select_unselect').html("Select");
+    i--;
   }else{
     $(this).find(':checkbox').attr("checked",true);
        $("#cu_check_"+id).attr("checked",true);
        $("#cu_label_"+id).show();
        $(this).addClass('tabs_selected');
+       $(this).find('.select_unselect').html("Unselect");
+       i++;
+  }
+  if(i==0){
+    $("#selCU").hide();
+    $("#sel_comm_label").hide();
+  }else{
+    $("#selCU").show();
+  $("#sel_comm_label").show();
   }
 
 });
+$("#selCU").hide();
+$("#sel_comm_label").hide();
+
 </script>

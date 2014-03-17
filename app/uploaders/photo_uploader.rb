@@ -32,7 +32,9 @@ class PhotoUploader < CarrierWave::Uploader::Base
   # end
 
   # Process files as they are uploaded:
-  process :resize_to_fit => [1200, 4999]
+  process :resize_to_limit => [1200, 4999]
+
+  cloudinary_transformation :quality => 85
   #
   # def scale(width, height)
   #   # do something

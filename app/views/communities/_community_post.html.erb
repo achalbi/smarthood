@@ -72,16 +72,16 @@
 <% end %>
 
 
-var currentPage = 1;
+var currentPage<%= @selected_community.id.to_s %> = 1;
 var intervalID = -1000;
 var insideLoop ="false"; 
 
-function checkScroll() {
+function checkScroll_comm_post() {
   if (nearBottomOfPage() && insideLoop!="true" ) {
     insideLoop ="true";
-    currentPage++;
+    currentPage<%= @selected_community.id.to_s %>++;
   $('#loading_page').show();
-    jQuery.ajax('/communities/community_post_paginate?page=' + currentPage + '&id=' + '<%= @selected_community.id.to_s %>' , {asynchronous:true, evalScripts:true, method:'get', success: function(data, textStatus, jqXHR) {
+    jQuery.ajax('/communities/community_post_paginate?page=' + currentPage<%= @selected_community.id.to_s %> + '&id=' + '<%= @selected_community.id.to_s %>' , {asynchronous:true, evalScripts:true, method:'get', success: function(data, textStatus, jqXHR) {
     $('#div_post_<%= @selected_community.id.to_s %>').append($(data));
     $('#loading_page').hide();
     if(typeof jQuery(data) == 'undefined' ||jQuery(data).html() == null || $(data).find('.paginate_do').html()==null){
@@ -109,7 +109,7 @@ function pageHeight() {
 }
  
 $('document').ready(function(){
-  intervalID = setInterval(checkScroll, 1000);
+  intervalID = setInterval(checkScroll_comm_post, 1000);
   $('#posts_community_li').addClass('active');
   $('#about_community_li').removeClass('active');
   $('#photos_community_li').removeClass('active');
@@ -128,6 +128,7 @@ $('#posts_community_li').click(function(){
   $('#members_community_li').removeClass('active');
   $('#groups_community_li').removeClass('active');
   $(this).next('a').click();
+  currentPage<%= @selected_community.id.to_s %> = 1;
 
 });
 $('#about_community_li').click(function(){

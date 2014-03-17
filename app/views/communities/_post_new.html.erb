@@ -30,7 +30,7 @@
         <% end %>
 
 <div id="modal_sel_grp" style="display:none;" >
-  <div id="modal-from-dom2" class="modal hide fade in" style="display: block;width:525px;">
+  <div id="modal-from-dom2" class="modal hide fade in" style="display: block;width:665px;">
     <div class="modal-header">
       <a href="#" id="closeX_sel_grp" class="close">×</a>
       <span style="font-size:20px;line-height: 2;">Select Groups</span>
@@ -42,7 +42,7 @@
             <div style="padding:5px;">
               <% unless @groups.blank? %>
               <% @groups.each do |grp| %>
-              <div class="bgClrChg2 span11 pull-left" style="cursor:pointer;margin-right:20px;">
+              <div class="bgClrChg2 span14 pull-left" style="cursor:pointer;margin-right:20px;">
                   <div style="display:none;" class="pull-left">
                     <%= check_box_tag 'grp_ids[]', grp.id %>
                   </div>
@@ -51,14 +51,13 @@
                   <ul class="users">
                     <li style="padding-left:15px;" class="tr-hover1">
                       <% unless grp.photo.nil? %>
-                         <%= link_to cl_image_tag(grp.photo.pic_url(:smallest), class:"image_al_c1 thumbnail pull-left ", id:"#{grp.photo.id}"), "#", remote: true,   style:"cursor:pointer;"%>
-
-                      <h5><%= link_to grp.name.capitalize, "#", class: "pull-left", style: "margin:2px 5px;" %>
+                         <%= cl_image_tag(grp.photo.pic_url(:smallest), class:"image_al_c1 thumbnail pull-left ", id:"#{grp.photo.id}") %>
+                      <% end %>
+                      <span class=" pull-left" style="font-size:medium;margin-top:5px; margin-left:10px;" ><%=  grp.name.capitalize %></span>
                       <a class="uibutton pull-right select_unselect" style="margin-right:3px;">Select </a>
-                      </h5><br><br><br>
-                      <span class="marginLeft5"><%= grp.description %></span>
+                      <br><br>
+                      <span class="marginLeft10"><%= grp.description %></span>
                     </li>
-                    <% end %>
                   </ul>
               </div>
               <% end %>
@@ -93,7 +92,7 @@ $("#selGroup").click(function(){
 var i=0;
 $(".bgClrChg2").click( function() {
   var id = $(this).find('p').html();
-    console.log($(this).find(':checkbox').is(':checked'));
+    //console.log($(this).find(':checkbox').is(':checked'));
   if($(this).find(':checkbox').is(':checked')){
     $(this).find(':checkbox').prop("checked",false);
     $("#grp_check_"+id).prop("checked",false);

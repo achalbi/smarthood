@@ -17,6 +17,14 @@ class AlbumsController < ApplicationController
             @album.photos << @photo
         end
         @album.save
+        @pic_arr = []
+        @album.photos.each do |photo|
+          @pic_arr << File.basename( photo.pic_url, ".*" )
+        end
+        @str = @album.title+"_"+@album.id.to_s
+        @str = @str.downcase.tr(" ", "_")
+            Cloudinary::Uploader.add_tag(@str, @pic_arr)
+       #  @cld = Cloudinary::Uploader.multi(@str, :format => 'zip')
       if @album.privacy == Privacyenum::PUBLIC
         @post = Post.new
         @post.content = "New album: '" + @album.title << "' was created by '" << current_user.name << "'. " 
