@@ -18,29 +18,37 @@
           <div class="span14 ui-front "  >
 
            <%= render 'shared/error_messages', object: f.object %>
-           <div class="center_block clearfix pull-left">
+           <div class="center_block clearfix ">
             <%= f.label :title %>
             <div class="input">
               <%= f.text_field :title, :placeholder=>"Title" %>
             </div>
           </div>
 
-          <div class="center_block clearfix pull-left">
+          <div class="center_block clearfix ">
             <%= f.label :description %>
             <div class="input">
               <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title=>"Description", rows: 3, cols: 75  %> 
             </div>
           </div>
           <span class=" overrideClass">
-            <div class="center_block clearfix pull-left">
-              <%= f.label "privacy:" %>
+            <div class="center_block clearfix">
+              <%= f.label :privacy %>
               <div class="input">
                 <%= f.select :privacy, options_for_select([["Public", Privacyenum::PUBLIC], ["Private", Privacyenum::PRIVATE]]) %>
               </div>
             </div>
           </span>
-          
-          <div class="center_block clearfix pull-left">
+          <span class=" overrideClass">
+            <br>
+          </span>
+          <div class="center_block clearfix">
+            <%= f.label  "Album downloadable" %>
+            <div class="input">
+              <%= check_box_tag :downloadable %>
+            </div>
+          </div>
+          <div class="center_block clearfix ">
           <%= fields_for :photos, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
             <%= photo_form.file_field :pic, id: "pic1", :multiple => true, style: "width:0px; height:0px; padding:0px;  left:0px;" %>  
           <% end %>

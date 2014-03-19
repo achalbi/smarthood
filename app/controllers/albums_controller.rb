@@ -24,7 +24,11 @@ class AlbumsController < ApplicationController
         @str = @album.title+"_"+@album.id.to_s
         @str = @str.downcase.tr(" ", "_")
             Cloudinary::Uploader.add_tag(@str, @pic_arr)
-       #  @cld = Cloudinary::Uploader.multi(@str, :format => 'zip')
+            if params[:downloadable]
+                  @cld = Cloudinary::Uploader.multi(@str, :format => 'zip')
+                  @album.downloadlink = @cld["url"]
+                  @album.save
+            end
       if @album.privacy == Privacyenum::PUBLIC
         @post = Post.new
         @post.content = "New album: '" + @album.title << "' was created by '" << current_user.name << "'. " 

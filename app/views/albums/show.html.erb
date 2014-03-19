@@ -3,18 +3,29 @@
 	<div class=" span2 center" style="display:none; height:110px;width:110px;background-color:#f2f2f2;">
 		<input type="button" id="fullscn" class="center pull-right uibutton" value="Fullscreen" style="margin-left:auto;margin-right:20px;margin-top:40px;"> 
 	</div>
-	<span id="buttonset" class="well span4 pull-left" >
-    <label for="option-fullscreen" >Fullscreen : &nbsp;</label>
-                  <input type="checkbox" id="option-fullscreen"> 
-                  <input type="checkbox" id="option-slideshow" style="display:none;" checked><label for="option-slideshow" style="display:none;">Slideshow</label>
-              </span><br><br><br><br><br><br>
+  <% if current_user.nil? %>
+     <br><br>
+  <% end %>
+              <ul class="breadcrumb buttonset" style="width:667px;height:22px;">
+                    <li><a href="#" class="marginLeft10 marginRight10">Albums</a><span class="divider">/</span> </li>
+                    <li><a href="/albums/<%= @album.id %>" class="marginLeft10"><%= @album.title %></a></li>
+                    <span style="margin-right:5px;float:right;">
+                      <li><label for="option-fullscreen" >Fullscreen : &nbsp;
+                  <input type="checkbox" id="option-fullscreen" >  &nbsp;</label></li>
+                  <li><label for="option-slideshow" style="display:none ">Slideshow
+                  <input type="checkbox" id="option-slideshow" style="" checked></label></li>
+                      <% unless @album.downloadlink.blank? %>
+                        <li class="marginLeft25"><%= link_to "Download", @album.downloadlink , id: "download",  class: "uibutton" %></li>
+                      <% end %>
+                    </span>
+                  </ul>   
 
 	<ul id="grid" >
       <div id="galleries">
         <% @album.photos.each do |photo| %>
           <li>
             <div  class="img_zoom" id="div-img_<%= photo.id %>" >
-                <a href="<%= photo.pic_url %>"  class="lightview1 editPhotos"   rel="group1" data-gallery="gallery"
+                <a href="<%= photo.pic_url %>"  class="lightview1 editPhotos "   rel="group1" data-gallery="gallery"
                 , title="<%= @album.title %>">
                 <%= cl_image_tag(photo.pic_url(:smaller), class:"thumbnail")  %></a> 
             </div>
@@ -88,14 +99,19 @@ $(function () {
     });
 
     // Create a buttonset out of the checkbox options:
-    $('#buttonset').buttonset();
+    $('.buttonset').buttonset();
 
     // Listen to options changes:
-    $('#buttonset input, #effect').change(function () {
+    $('#galleries').imagegallery('option', {
+            fullscreen: true,
+            slideshow: $('#option-slideshow').is(':checked') && 4000
+        });
+
+    $('.buttonset input, #effect').change(function () {
         $('#galleries').imagegallery('option', {
             show: $('#effect').val(),
             hide: $('#effect').val(),
-            fullscreen: $('#option-fullscreen').is(':checked'),
+            fullscreen: true,
             slideshow: $('#option-slideshow').is(':checked') && 4000
         });
     });
@@ -112,10 +128,12 @@ $(function () {
             } else if (root.mozRequestFullScreen) {
                 root.mozRequestFullScreen();
             }
+            $(".header").hide();
         } else {
             (document.webkitCancelFullScreen ||
                 document.mozCancelFullScreen ||
                 $.noop).apply(document);
+            $(".header").show();
         }
     });
 
@@ -144,6 +162,11 @@ $(function () {
     });*/
 
 });
+
+$(document).keydown(function(e) {
+  if (e.keyCode == 27) { $(".header").show();}   // esc
+});
+
 $(document).ready(function(){
 				
 	$("#fullscn").click(function(){
@@ -151,7 +174,18 @@ $(document).ready(function(){
 		$('#option-fullscreen').click();
 
 	});
+
+            $("a.fancybox-album").fancybox({
+            padding    : 0,
+            'transitionIn'  : 'elastic',
+            'transitionOut' : 'elastic',
+            'speedIn'   : 600, 
+            'speedOut'    : 200, 
+            'overlayShow' : false
+          });
+
   
 });
+
 
 </script>
