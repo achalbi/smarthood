@@ -59,6 +59,9 @@ EMS::Application.routes.draw do
   end
 
   resources :albums do
+    member do
+      get :gen_downloadable_link
+    end
     collection do
       get :edit,:list,:updates,:delete_photos
     end

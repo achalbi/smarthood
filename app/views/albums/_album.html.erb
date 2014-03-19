@@ -33,6 +33,8 @@
                     <span style="margin-right:5px;float:right;"><li><%= link_to "Share", '#', id: "share",  class: "uibutton icon add" %></li>
                       <% unless @album.downloadlink.blank? %>
                         <li><%= link_to "Download", @album.downloadlink , id: "download",  class: "uibutton" %></li>
+                      <% else %>
+                       <li><%= link_to "Generate downloadable link", gen_downloadable_link_album_path(@album.id) , id: "gen_download",  class: "uibutton", remote: true %></li>
                       <% end %>
                     </span>
                   </ul>

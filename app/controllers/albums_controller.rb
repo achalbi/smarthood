@@ -51,6 +51,24 @@ class AlbumsController < ApplicationController
          format.js {  }
       end
   end
+
+  def gen_downloadable_link
+    @album = Album.find(params[:id])
+    @share = Share.new
+    @pic_arr = []
+    @album.photos.each do |photo|
+      @pic_arr << File.basename( photo.pic_url, ".*" )
+    end
+      @str = @album.title+"_"+@album.id.to_s
+      @str = @str.downcase.tr(" ", "_")
+      Cloudinary::Uploader.add_tag(@str, @pic_arr)
+    @cld = Cloudinary::Uploader.multi(@str, :format => 'zip')
+    @album.downloadlink = @cld["url"]
+    @album.save
+  end
+
+
+
 =begin
   def create_from_photos
     unless params[:photo].nil?
