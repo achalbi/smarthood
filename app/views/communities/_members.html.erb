@@ -2,6 +2,7 @@
   <ul class="tabs">
     <%= render 'communities/links' %>
   </ul>
+  <% if community.is_active?(current_user, community) %>
   <% unless (community.privacy == Privacyenum::PROTECTED && !current_user.is_cu_admin?(community)) %>
 
     
@@ -28,6 +29,7 @@
     <% end %> 
     <% end %>
   
+  <% end %>
   <% end %>
 
 <ul class="users">

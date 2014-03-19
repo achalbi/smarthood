@@ -2,11 +2,13 @@
   <ul class="tabs">
     <%= render 'communities/links' %>
   </ul>
+  <% if community.is_active?(current_user, community) %>
   <ul class="users">
     <li>
       <a class="uibutton pull-right add icon" id="create_group" > Create group </a>
     </li>
   </ul>
+  <% end %>
 <br>
       <div class="row" >
         <div class="span13 ui-front" id="comm_groups_list">

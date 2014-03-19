@@ -2,12 +2,14 @@
     <li id="about_community_li"><a ><h4>About</h4></a></li><%= link_to "", about_com_community_path(@community) , id: "about_community", remote: true %>
     <li id="photos_community_li"><a ><h4>Photos</h4></a></li><%= link_to "", photos_com_community_path(@community) , id: "photos_community", remote: true %>
    <li id="members_community_li"><a ><h4>Members
+        <% if current_user.is_cu_admin?(@community)  %>
         <% unless (@community.req_pending_cnt.nil? || @community.req_pending_cnt == 0)%>
         <span class="pull-right label important" style="margin:5px;margin-right:10px;position:absolute;right:0;"><%= if @community.req_pending_cnt > 0 then @community.req_pending_cnt end %></span>
         &nbsp;<% end %>
+        <% end %>
     </h4></a></li><%= link_to "", members_com_community_path(@community) , id: "members_community", remote: true %>
     <li id="groups_community_li"><a ><h4>Groups</h4></a></li><%= link_to "", groups_com_community_path(@community) , id: "groups_community", remote: true %>
 
-<% if @community.is_active?(current_user, @community) %>
+<% unless @community.is_active?(current_user, @community) %>
 		<%= render 'setactive', :@community => @community %>
 <% end %>

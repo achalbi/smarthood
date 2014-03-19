@@ -645,6 +645,7 @@ def search_app_user
     @community = Community.find(params[:id])
     @selected_community = @community
     @selected_community.req_pending_cnt = User.where(['id IN (?)' , @community.requested_uc.collect(&:user_id)]).count
+    @community.req_pending_cnt = @selected_community.req_pending_cnt
     @my_groups_ids = current_user.user_groups.where("community_id = ? AND invitation = ? ", @selected_community.id, Uc_enum::JOINED ).collect(&:group_id).uniq
     @groups = Group.where('id IN (?)', @my_groups_ids)
     @other_groups = []

@@ -39,9 +39,9 @@ class Community < ActiveRecord::Base
      @usercommunity = community.usercommunities.where("user_id = ?  AND invitation = ?",user, Uc_enum::JOINED )[0]
      unless @usercommunity.nil?
         if @usercommunity.status =="active"
-          return false
+          return true
         else
-         return true
+         return false
         end
      end
     end

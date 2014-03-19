@@ -26,22 +26,23 @@
 <script type="text/javascript">
 var bool = true;
 $(document).ready(function(){
+
+	$('#settings_div').hide();
+});
 	$(".markAsRead").click(function(){
 		bool = false;
 		$(this).parent().parent().removeClass("sidetabs_selected");
 		$(this).hide();
 		 
 	});
-	$('#settings_div').hide();
-});
 	$(".sidetabs").click(function(){
 		if(bool){
 			$(this).children().find('.markAsRead').click();
 			$(this).next('a').click();
 		}
 		bool = true;
-		  $(".sidetabs").removeClass('sidetabs_selected');
-		  $(this).addClass('sidetabs_selected');
+	//	  $(".sidetabs").removeClass('sidetabs_selected');
+	//	  $(this).addClass('sidetabs_selected');
 	});
 
 	

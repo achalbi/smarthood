@@ -7,7 +7,7 @@
     <div id="grp_album">
       <div id="gallery1" class=" pull-left" style="width:520px;">
        <ul id="grid" style="margin:0px"> 
-        <% if @selected_community.is_active?(current_user, @selected_community) %>
+        <% if @community.is_active?(current_user, @community) %>
          <% unless (@community.privacy == Privacyenum::PROTECTED && !current_user.is_cu_admin?(@community)) %>
 
            <li style="background-color:#ffffff!important;">
