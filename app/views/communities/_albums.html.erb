@@ -7,6 +7,7 @@
     <div id="grp_album">
       <div id="gallery1" class=" pull-left" style="width:520px;">
        <ul id="grid" style="margin:0px"> 
+        <% if @community.usercommunities[0].status == 'active' %>
          <% unless (@community.privacy == Privacyenum::PROTECTED && !current_user.is_cu_admin?(@community)) %>
 
            <li style="background-color:#ffffff!important;">
@@ -15,6 +16,7 @@
             </div>
            </li>               
          <% end %>  
+         <% end %>
       <% unless albums.nil? %>
         <% albums.each do |album| %>
           <% unless album.photos[0].nil? %>
@@ -65,11 +67,11 @@
          <div class="input">    
            <%= fields_for :photos, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
 
-           <%= photo_form.file_field :pic, id: "pic_com", :multiple => true, style: "width:1px; height:1px; padding:0px;  left:0px;" %>  
+           <%= photo_form.file_field :pic, id: "pic_com", :multiple => true, style: "width:0px; height:0px; padding:0px;  left:0px;" %>  
            <% end %>
            <%= hidden_field_tag :type, "communities" %>
            <%= hidden_field_tag :id, active_community.id %>
-           <canvas id="imageCanvas_com" style = "border: 1px solid #ddd; padding:5px; align:center" >select photos</canvas>
+           <canvas id="imageCanvas_com" style = "border: 1px solid #ddd; padding:5px; align:center;cursor:pointer;" >click to add photos</canvas>
          </div>
        </div>
      </div>
@@ -106,14 +108,30 @@ $("#imageCanvas_com").click(function(){
 
 var canvas = document.getElementById('imageCanvas_com');
 var ctx = canvas.getContext('2d');
-ctx.font="30px Arial";
-ctx.fillText("Select photos",10,50);
+  ctx.font="15px Arial";
+  ctx.fillText("Click here to add photos (Max: 50 files)",25,75);
 
 function handleImage(e){
   var canvas = document.getElementById('imageCanvas_com');
   var ctx = canvas.getContext('2d');
   var iCnt=0;
   var files = e.target.files;
+    if(files.length>50){
+      alert("Maximum of 50 files can be selected");
+      $('#pic_com').val('');
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.font="20px Arial";
+      ctx.fillText("Click here to add photos",10,50);
+      return;
+    }
+   if(files.length<1){
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.font="20px Arial";
+      ctx.fillText("Click here to add photos",10,50);
+      return;
+    }
   canvas.width = 600;
   canvas.height = 155*(Math.ceil(files.length/4));
   for( var i = 0, len = files.length; i < len; i++) 

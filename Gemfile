@@ -10,6 +10,7 @@ gem 'bootstrap-will_paginate', '0.0.6'
 #gem 'aws-sdk'
 #gem 'rmagick'
 gem 'carrierwave'
+#gem 'attachinary'
 gem 'cloudinary'
 gem 'mini_magick', '3.5.0'
 gem 'flash_cookie_session'
@@ -25,6 +26,8 @@ gem "geocoder"
 gem 'rails3-jquery-autocomplete'
 gem "font-awesome-rails"
 gem 'jquery-tokeninput-rails'
+#gem 'client_side_validations'
+#gem "jquery-fileupload-rails"
 #gem 'jquery-lazy-images'
 gem 'koala'
 #gem 'bootstrap-multiselect-rails'

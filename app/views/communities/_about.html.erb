@@ -7,9 +7,7 @@
 <div id="aboutDiv">
 
 
- <% if community.is_active?(current_user, community) %>
-     <%= render 'setactive', :@community => community %>
- <% elsif community.is_private?(current_user) %>
+ <% if community.is_private?(current_user) %>
      <% unless community.is_requested?(current_user) %>
        <%= link_to "Send request", sendrequest_community_path(community), class: "uibutton icon secure pull-right", remote: true %>
      <% end %>

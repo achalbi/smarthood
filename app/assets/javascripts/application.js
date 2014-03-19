@@ -30,3 +30,6 @@
 
 // jquery.lazy-images
 // bootstrap-multiselect
+// jquery-fileupload/basic
+// cloudinary/jquery.cloudinary
+// attachinary

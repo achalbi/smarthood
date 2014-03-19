@@ -6,7 +6,7 @@
     </ul>
   </div>
 
-  <%= form_for(@album, remote: true, :html => {:multipart => true}) do  |f| %> 
+  <%= form_for(@album, remote: true, :html => {:multipart => true, :class => 'fileupload'}) do  |f| %> 
   <div id="modal" style="display:none" >
     <div id="modal-from-dom" class="modal hide fade in" style="display: block;width:700px;">
       <div class="modal-header">
@@ -39,15 +39,12 @@
               </div>
             </div>
           </span>
-          
-          <div class="center_block clearfix pull-left">
-          <%= fields_for :photos, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
-            <%= photo_form.file_field :pic, id: "pic1", :multiple => true, style: "width:0px; height:0px; padding:0px;  left:0px;" %>  
-          <% end %>
-              <div class="input">
-                <canvas id="imageCanvas1" style = "border: 1px solid #ddd; padding:5px; align:center;cursor:pointer;" >Click here to add photos</canvas>
-              </div>
-         </div>
+           <span class=" overrideClass">
+              <div class="center_block clearfix pull-left">
+                  <div class="input">
+                      <%= f.attachinary_file_field :photos %>
+                  </div>
+             </div>
           </span>
         </div>
       </div>
@@ -97,71 +94,15 @@ $(document).ready(function(){
     $('#modal').modal('hide');
   });
 
-  var imageLoader = document.getElementById('pic1');
-  imageLoader.addEventListener('change', handleImage, false);
-  $("#imageCanvas1").click(function(){
-    $("#pic1").click();
-  });
-
-  var canvas = document.getElementById('imageCanvas1');
-  var ctx = canvas.getContext('2d');
-  ctx.font="15px Arial";
-  ctx.fillText("Click here to add photos (Max: 50 files)",25,75);
-
-  function handleImage(e){
-    var canvas = document.getElementById('imageCanvas1');
-    var ctx = canvas.getContext('2d');
-    var iCnt=0;
-    var files = e.target.files;
-    if(files.length>50){
-      alert("Maximum of 50 files can be selected");
-      $('#pic1').val('');
-      ctx.setTransform(1, 0, 0, 1, 0, 0);
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.font="20px Arial";
-      ctx.fillText("Click here to add photos",10,50);
-      return;
-    }
-   if(files.length<1){
-      ctx.setTransform(1, 0, 0, 1, 0, 0);
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.font="20px Arial";
-      ctx.fillText("Click here to add photos",10,50);
-      return;
-    }
-    canvas.width = 500;
-    canvas.height = 155*(Math.ceil(files.length/3));
-    for( var i = 0, len = files.length; i < len; i++) 
-    {
-      if(files[i])
-      {
-        var reader = new FileReader();
-        reader.onload = function(event){
-          var img = new Image();
-
-          img.onload = function(){
-            var ratioPx = 150;
-            var sWidth =ratioPx;
-            var ratio = img.width/sWidth;
-            var sHeight = img.height/ratio;   
-            if(sHeight>ratioPx){
-             sHeight =ratioPx;
-             ratio = img.height/sHeight;
-             sWidth = img.width/ratio;  
-           }
-           ctx.drawImage(img, 155*(iCnt%3),155*(Math.floor(iCnt/3)),sWidth,sHeight);
-                  //ctx.drawImage(img,0,0,sWidth,sHeight);
-                  iCnt++;
-                }
-                img.src = event.target.result;
-              }
-              reader.readAsDataURL(e.target.files[i]);     
-            }
-          }
-        }
+try{
+  $('.attachinary-input').attachinary();
+}catch(err){
+  alert(err.message);
+}
 
 
-      });
+});
+      
 
 
    </script>

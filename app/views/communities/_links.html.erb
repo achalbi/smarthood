@@ -7,3 +7,7 @@
         &nbsp;<% end %>
     </h4></a></li><%= link_to "", members_com_community_path(@community) , id: "members_community", remote: true %>
     <li id="groups_community_li"><a ><h4>Groups</h4></a></li><%= link_to "", groups_com_community_path(@community) , id: "groups_community", remote: true %>
+
+<% if @community.usercommunities[0].status != 'active' %>
+		<%= render 'setactive', :@community => @community %>
+<% end %>

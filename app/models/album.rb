@@ -7,6 +7,7 @@ class Album < ActiveRecord::Base
   has_many :posts, :as => :postable
   has_many :photoalbums, dependent: :destroy
   has_many :photos, :through => :photoalbums
+  #has_attachments :photos, accept: [:jpg, :png, :gif]
 
   validates :title,  presence: true
 
