@@ -377,8 +377,9 @@ def my_com
 end
 
 def other_com
-    @comm_id = current_user.usercommunities.where(" invitation != ?", Uc_enum::JOINED ).collect(&:community_id)
-    @communities = Community.where(['id IN (?) ', @comm_id ])
+    @my_comm_id = current_user.usercommunities.where("invitation = ?", Uc_enum::JOINED ).collect(&:community_id).uniq
+    @comm_id = Usercommunity.where(" user_id != ?", current_user.id ).collect(&:community_id).uniq
+    @communities = Community.where('id IN (?) AND  id NOT IN (?)', @comm_id, @my_comm_id )
 end
 
 def moderated_com

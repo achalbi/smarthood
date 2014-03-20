@@ -1,20 +1,24 @@
       <div class="row">
         <div class="span13 ui-front">
           <div id="inv_cu">
+            <% unless @moderated_communities.blank? %>
              <ul class='users' id='my_comm_ul' style='margin-left:0px;'>
                 <li style="padding-left:15px;background-color:lemonchiffon;"  ><h3 class="marginLeft5">Communities I am Moderating...</h3></li><br>
                 <% @moderated_communities.each do |comm| %>
                   <%=  render  partial: 'community', locals: {community: comm }%>
                 <% end %> 
              </ul>
+            <% end %> 
           </div><br>
           <div id="inv_groups">
+            <% unless @my_communities.blank? %>
              <ul class='users' id='my_comm_ul' style='margin-left:0px;'>
                 <li style="padding-left:15px;background-color:lemonchiffon" class="tr-hover" ><h3 class="marginLeft5">Communities I am Member of...</h3></li><br>
                 <% @my_communities.each do |comm| %>
                   <%=  render  partial: 'community', locals: {community: comm }%>
                 <% end %>
              </ul>
+            <% end %>
           </div>
         </div>
       </div>
