@@ -237,6 +237,13 @@ end
 
 def join_cu
  @usercommunity = Usercommunity.where("community_id = ? AND user_id = ?", params[:id], current_user.id).first
+  @usercommunities = Usercommunity.where(['status=? and user_id=?','active',current_user.id])
+  unless @usercommunities.blank?
+    @usercommunities.each do |uc|
+      uc.status=""
+      uc.save
+    end
+  end
  if @usercommunity.blank?
    @usercommunity = Usercommunity.new 
    @usercommunity.community_id = params[:id]
