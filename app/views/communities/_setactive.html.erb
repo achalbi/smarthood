@@ -1,1 +1,6 @@
  <%= link_to "Set active", setactive_community_path(@community), id: "set_comUnity",  class: "marginLeft10 pull-right uibutton icon prev", style:"margin-bottom:10px;margin-right:10px;", :title => "Set active", remote: true %>
+<script type="text/javascript">
+$("#set_comUnity").click(function(){
+	$(this).hide();
+});
+</script>

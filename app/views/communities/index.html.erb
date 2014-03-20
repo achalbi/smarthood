@@ -91,13 +91,15 @@ $(document).ready(function(){
          <div class="center_block clearfix">
           <%= f.label :name %>
           <div class="input">
-            <%= f.text_field :name, :placeholder=>"Title" %></div>
+            <%= f.text_field :name, :placeholder=>"Title", 'data-validation' => "length",
+     'data-validation-length' =>"3-25", 'data-validation-error-msg' => "The community name has to be a value between 3-25 characters" %>
+          </div>
           </div>
 
           <div class="center_block clearfix">
             <%= f.label :location %>
             <div class="input ">
-              <%= f.text_field :address, :placeholder => :location, :size => 43, class: 'cu_with_autocomplete inherit_width', 'data-autocompleteUrl' => search_address_communities_path, id: "create_community_address" %>&nbsp;&nbsp;&nbsp;
+              <%= f.text_field :address, :placeholder => :location, :size => 43, class: 'cu_with_autocomplete inherit_width', 'data-autocompleteUrl' => search_address_communities_path, id: "create_community_address", 'data-validation' => "required", 'data-validation-error-msg' => "Location can't be blank" %>&nbsp;&nbsp;&nbsp;
 
               <%= link_to "View map", '#', id: "view_map_link_crt",  class: "uibutton icon prev" %>
             </div>
@@ -108,7 +110,8 @@ $(document).ready(function(){
           <div class="center_block clearfix">
             <%= f.label :description %>
             <div class="input">
-              <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title=>"Description", rows: 3, cols: 75  %> 
+              <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title=>"Description", rows: 3, cols: 75, 'data-validation' => "length alphanumeric",
+     'data-validation-length' =>"3-500", 'data-validation-error-msg' => "The community description has to be an alphanumeric value between 3-500 characters"  %> 
             </div>
           </div>
                 <div class="center_block clearfix">
@@ -149,11 +152,14 @@ $(document).ready(function(){
 
 <script type="text/javascript">
 $(document).ready(function(){
-  $('#crtComUnity').attr('data-loading-text', 'Creating...');
-});
-
-$("#crtComUnity").click(function(){
-  $(this).button('loading')
+  $.validate({
+    modules : 'security',
+    onSuccess : function() {
+      $('#crtComUnity').attr('data-loading-text', 'Creating...');
+      $('#crtComUnity').button('loading');
+     // return false; // Will stop the submission of the form
+    },
+  });
 });
 
 

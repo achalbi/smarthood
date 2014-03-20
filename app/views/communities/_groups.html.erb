@@ -52,13 +52,15 @@
          <div class="center_block clearfix">
           <%= f.label :name %>
           <div class="input">
-            <%= f.text_field :name, :placeholder=>"Title" %></div>
+            <%= f.text_field :name, :placeholder=>"Name", 'data-validation' => "length",
+     'data-validation-length' =>"3-25", 'data-validation-error-msg' => "The group name has to be a value between 3-25 characters" %></div>
           </div>
 
           <div class="center_block clearfix">
             <%= f.label :description %>
             <div class="input">
-              <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title=>"Description", rows: 3, cols: 75  %> 
+              <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title=>"Description", rows: 3, cols: 75, 'data-validation' => "length ",
+     'data-validation-length' =>"3-500", 'data-validation-error-msg' => "The group description has to be a value between 3-500 characters"  %> 
             </div>
           </div>
 
@@ -71,7 +73,7 @@
           <div class="center_block clearfix"><br>
             <%= f.label "Invite members:" %>
             <div class="input ui-front ">
-              <%= f.text_field :user_tokens, id: "search_users" %>
+              <%= f.text_field :user_tokens, id: "search_users", 'data-validation' => "required", 'data-validation-error-msg' => "Please add members to the group" %>
             </div>
           </div>
           <%= hidden_field_tag :community_id, @community.id %>
@@ -102,6 +104,17 @@
 
 
 <script type="text/javascript">
+
+$(document).ready(function(){
+  $.validate({
+    onSuccess : function() {
+      $('#submit_group').attr('data-loading-text', 'Creating...');
+      $('#submit_group').button('loading');
+    },
+  });
+});
+
+
 
 $(document).ready(function(){
   $('#posts_community_li').removeClass('active');
@@ -231,13 +244,6 @@ function handleImage(e){
           });
         });
 
-$(document).ready(function(){
-  $('#submit_group').attr('data-loading-text', 'Creating...');
-});
-
-$("#submit_group").click(function(){
-  $(this).button('loading')
-});
 
 
 </script>

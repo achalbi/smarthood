@@ -141,13 +141,12 @@ def update
 end
 
 def setactive
- @uc_count = current_user.usercommunities.where('status=?','active').count
- @usercommunity = Usercommunity.where(['status=? and user_id=?','active',current_user.id])[0]
- unless @usercommunity.nil?
-  @usercommunity.status=""
-  @usercommunity.save
-end
-@usercommunitySel = Usercommunity.where(['community_id=? and user_id=?',params[:id],current_user.id])[0]
+ @usercommunity = Usercommunity.where(['status=? and user_id=?','active',current_user.id]).first
+  unless @usercommunity.nil?
+    @usercommunity.status=""
+    @usercommunity.save
+  end
+@usercommunitySel = Usercommunity.where(['community_id=? and user_id=?',params[:id],current_user.id]).first
 @usercommunitySel.status="active"
 @usercommunitySel.save
 @selected_comm  = []
@@ -163,7 +162,7 @@ end
       end
         @post_ids << @community.posts.collect(&:id)
         @posts = Post.where(id: @post_ids.uniq).paginate(page: params[:page], :per_page => 4)
-if @uc_count < 1
+if @usercommunity.nil?
   render js: %(window.location.href='#{root_path}')
 end
     @my_groups_ids = current_user.user_groups.where("community_id = ? AND invitation = ? ", @community.id, Uc_enum::JOINED ).collect(&:group_id).uniq
@@ -171,15 +170,18 @@ end
 end
 
 def sendrequest
- @usercommunity = Usercommunity.new 
- @usercommunity.community_id = params[:id]
- @usercommunity.user_id = current_user.id
- @usercommunity.invitation = Uc_enum::REQUESTED
- @usercommunity.is_admin = false
- @usercommunity.status=""
- @usercommunity.save
+ @usercommunity = Usercommunity.where("community_id = ? AND user_id = ?", params[:id], current_user.id).first
+  unless @usercommunity.blank?
+     @usercommunity = Usercommunity.new 
+     @usercommunity.community_id = params[:id]
+     @usercommunity.user_id = current_user.id
+     @usercommunity.invitation = Uc_enum::REQUESTED
+     @usercommunity.is_admin = false
+     @usercommunity.status=""
+     @usercommunity.save
+  end
  @community = Community.find(params[:id])
- getNotifiableUsers(Objecttypeenum::COMUNITY, @community, nil, nil, Uc_enum::REQUESTED)
+ getNotifiableUsers(Objecttypeenum::COMUNITY, @community, Objecttypeenum::USER, current_user.id, Uc_enum::REQUESTED)
 
 end
 
@@ -275,6 +277,12 @@ def unjoin_cu
  @user = current_user
  unless params[:user_id].nil?
     @user = User.find(params[:user_id])
+ end
+ if active_community.id.to_s == params[:id]
+    @smarthood_com_id = Community.where(name: 'Smarthood')[0].id
+    @usercommunity = @user.usercommunities.find_by_community_id(@smarthood_com_id)
+    @usercommunity.status="active"
+    @usercommunity.save
  end
  @usercommunity = @user.usercommunities.find_by_community_id(params[:id])
  @usercommunity.invitation = Uc_enum::UNJOINED
@@ -667,8 +675,8 @@ def search_app_user
  end
 
  def create_album
-     @com = Community.find(params[:id])
-    @album = current_user.albums.build(params[:album])
+     @community = Community.find(params[:id])
+     @album = current_user.albums.build(params[:album])
         @album.save
         @photos = params[:photos][:pic]
         @photos.each do |pic|
@@ -677,9 +685,9 @@ def search_app_user
             @album.photos << @photo
           end
         @album.save
-        @com.albums << @album
-        @com.save
-        @albums = @com.albums
+        @community.albums << @album
+        @community.save
+        @albums = @community.albums
         getNotifiableUsers(Objecttypeenum::ALBUM, @album, nil, nil, Uc_enum::CREATED)
         #flash[:success] = "Album created"
       respond_to do |format|
