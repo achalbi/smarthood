@@ -1,21 +1,22 @@
           <% unless @inv_req_cu.blank?  %>
             <% if @inv_req_cu.count > 0 %>
-                <div style="background-color: lemonchiffon">
-                  <h4 class="marginLeft5">Community join <%="request".pluralize(@inv_req_cu.count) %></h4>
+                <div >
                   <ul class="users">
-                    <% @inv_req_cu.each do |cu| %>
-                    <li style="padding-left:15px;" class="tr-hover">
-                      <% unless cu.photo.nil? %>
-                         <%= link_to cl_image_tag(cu.photo.pic_url(:smallest), class:"image_al_c1 thumbnail pull-left ", id:"#{cu.photo.id}"), "/communities/#{cu.id}", remote: true,   style:"cursor:pointer;"%>
+                    <% @inv_req_cu.each do |community| %>
+                    <li style="padding-left:15px;cursor:pointer;position:relative;" class="tr-hover community" >
+                          <% unless community.photo.nil? %>
+                          <%= link_to cl_image_tag(community.photo.pic_url(:cover_pic_smaller), class:"image_al_c1 thumbnail pull-left ", id:"#{community.photo.id}"), "#" %>
 
-                      <% end %> 
-                      <h5><%= link_to cu.name.capitalize, cu, class: "pull-left", style: "margin:2px 5px;" %>
-
-                      <a href="<%= declinerequest_community_path(cu) << '?user_id='%><%= current_user.id %>"class="uibutton pull-right" data-remote="true" id="decline" style="margin-right:5px;"> Decline <i class="icon-remove"></i></a>
-                      <a href="<%= acceptrequest_community_path(cu) << '?user_id='%><%= current_user.id %>"class="uibutton pull-right" data-remote="true" id="accept" style="margin-right:3px;"><i class="icon-ok"></i> Accept </a>
-
-                      </h5><br><br><br>
-                      <span class="marginLeft5"><%= cu.description %></span>
+                          <% end %>
+                          <div style="padding:7px;">
+                          <span class="marginLeft5" style="font-size:large;padding:5px !important;"><%= link_to community.name.capitalize, "#" %>
+                          </span><br><br>
+                          <span class="marginLeft5" style="font-size:small;padding:5px !important;"><%= community.description %></span><br>
+                          <span class="marginLeft5" style="font-size:small;padding:5px !important;">Privacy: <%= privacy_str(community) %></span><br>
+                          <span class="margin15 padding5 pull-right" style="font-size:small;position:absolute;bottom: 0;right: 0;">
+                            <a href="<%= declinerequest_community_path(community) << '?user_id='%><%= current_user.id %>"class="uibutton pull-right" data-remote="true" id="decline" style="margin-right:5px;"> Decline <i class="icon-remove"></i></a>
+                            <a href="<%= acceptrequest_community_path(community) << '?user_id='%><%= current_user.id %>"class="uibutton pull-right" data-remote="true" id="accept" style="margin-right:3px;"><i class="icon-ok"></i> Accept </a>
+                          </span>
                     </li>
                     <% end %>
                   </ul>

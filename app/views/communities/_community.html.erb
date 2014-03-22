@@ -9,7 +9,7 @@
   <span class="marginLeft5" style="font-size:small;padding:5px !important;"><%= community.description %></span><br>
   <span class="marginLeft5" style="font-size:small;padding:5px !important;">Privacy: <%= privacy_str(community) %></span><br>
   <% unless (community.req_pending_cnt.nil? || community.req_pending_cnt == 0)%>
-    <span class="marginLeft5" style="font-size:small;padding:5px !important;"><%=  'Request'.pluralize(community.req_pending_cnt) %>:</span><span class=" label important" style="right:0;padding-bottom:2px;"><%= if community.req_pending_cnt > 0 then community.req_pending_cnt end %></span>
+    <span class="marginLeft5" style="font-size:small;padding:5px !important;">Pending <%=  'request'.pluralize(community.req_pending_cnt) %>:</span><span class=" label important" style="right:0;padding-bottom:2px;"><%= if community.req_pending_cnt > 0 then community.req_pending_cnt end %></span>
   <% end %>
   </div>
   <% if community.is_requested?(current_user) %>

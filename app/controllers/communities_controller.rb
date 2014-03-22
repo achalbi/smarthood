@@ -204,10 +204,14 @@ def acceptrequest
  @ad_users = User.where(['id IN (?)', @admin_users])
  @requested_users = nil
  @ucs = @community.usercommunities.where("user_id = ?  AND is_admin=?",current_user.id, true )
- @group_ids = current_user.invited_groups.collect(&:group_id)
- @inv_groups = Group.where('id IN (?)', @group_ids)
+ #@group_ids = current_user.invited_groups.collect(&:group_id)
+ #@inv_groups = Group.where('id IN (?)', @group_ids)
  @inv_req_cu = Community.where(['id IN (?)' , current_user.communities.where('invitation = ?',Uc_enum::INVITED).collect(&:id)])
- @inv_req_grps = current_user.invited_groups.collect(&:group_id)
+ #@inv_req_grps = current_user.invited_groups.collect(&:group_id)
+  @requested_users_all = 0
+  @my_mod_communities.each do |community|
+     @requested_users_all += User.where(['id IN (?)' , community.requested_uc.collect(&:user_id)]).count
+  end
   if @ucs.count > 0
     @requested_users = User.where(['id IN (?)' , @community.requested_uc.collect(&:user_id)])
   end 
@@ -293,7 +297,9 @@ def unjoin_cu
  end
  @usercommunity = @user.usercommunities.find_by_community_id(params[:id])
  @usercommunity.invitation = Uc_enum::UNJOINED
+ @usercommunity.status=""
  @usercommunity.save
+ @community = Community.find(params[:id])
  deleteNotificationSettings(params[:id])
  flash[:success] = "Unjoined community: " + @community.name
   unless params[:user_id].nil?
