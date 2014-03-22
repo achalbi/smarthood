@@ -8,6 +8,7 @@ class IssueTrackersController < ApplicationController
     TicketAction.create(description: "Wont-Fix")
     TicketAction.create(description: "Invalid")
     TicketAction.create(description: "Re-opened")
+    TicketAction.create(description: "Not Reproducible")
     TicketAction.create(description: "Closed")
     TicketAction.create(description: "Comment")
     @issue = IssueTracker.new
