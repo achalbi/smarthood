@@ -71,7 +71,9 @@ module SessionsHelper
        @usercommunity.status="active"
        @usercommunity.save
     end
-    Community.find(Usercommunity.where(['status=? and user_id=?','active',current_user.id])[0].community_id)
+    @comm1 = Community.find(Usercommunity.where(['status=? and user_id=?','active',current_user.id])[0].community_id)
+    @comm1.req_pending_cnt = User.where(['id IN (?)' , @comm1.requested_uc.collect(&:user_id)]).count
+    return @comm1
   end
 
   def remote_ip

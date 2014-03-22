@@ -1,2 +1,4 @@
+$('#members_community_li').click();
+$('#mem_req_count').html("<%= escape_javascript(render '/communities/mem_req_count', locals: {requested_users_all: @requested_users_all}) %>");
 $('#inv_cu').html("<%= escape_javascript(render '/communities/inv_cu', locals: {inv_req_cu: @inv_req_cu }) %>");
 $('#inv_req_count').html("<%= escape_javascript(render '/communities/inv_req_count', locals: {inv_req_cu: @inv_req_cu, inv_req_grps: @inv_req_grps }) %>");

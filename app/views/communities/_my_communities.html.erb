@@ -1,22 +1,59 @@
       <div class="row">
         <div class="span13 ui-front">
+          <ul class="tabs">
+            <li class="active" id="mod_li" style="text-shadow: none;"><a href="#"><h4 style="width:100px;">Moderated
+              <% @mod_cnt = 0 %>
+              <% @moderated_communities.each do |comm| %>
+                <% @mod_cnt = @mod_cnt + comm.req_pending_cnt %>
+              <% end %> 
+              <% if @mod_cnt != 0 %>
+              <span class="pull-right label important" style="margin:5px;right:0;padding-bottom:2px;">
+                <%= @mod_cnt %>
+              </span>
+              <% end %> 
+              
+            </h4></a></li>
+            <li id="mem_li"><a href="#" ><h4>Membered
+            <% @mem_cnt = 0 %>
+              <% @my_communities.each do |comm| %>
+                <% @mem_cnt = @mem_cnt + comm.req_pending_cnt %>
+              <% end %> 
+              <% if @mem_cnt != 0 %>
+              <span class="pull-right label important" style="margin:5px;right:0;padding-bottom:2px;">
+                <%= @mem_cnt %>
+              </span>
+              <% end %> 
+            </h4></a></li>
+            <li id="act_li" ><a href="#" ><h4 style="width:70px;">Active
+                <% unless (active_community.req_pending_cnt.nil? || active_community.req_pending_cnt == 0)%>
+                <span class="pull-right label important" style="margin:5px;right:0;padding-bottom:2px;"><%= if active_community.req_pending_cnt > 0 then active_community.req_pending_cnt end %></span>
+                <% end %>
+            </h4></a></li>
+          </ul>
           <div id="inv_cu">
             <% unless @moderated_communities.blank? %>
              <ul class='users' id='my_comm_ul' style='margin-left:0px;'>
-                <li style="padding-left:15px;background-color:lemonchiffon;"  ><h3 class="marginLeft5">Communities I am Moderating...</h3></li><br>
+              <div id="active_community_div">
+              <%=  render  partial: 'community', locals: {community: active_community }%><br>
+              </div>
+                <!-- <li style="padding-left:15px;" class="well" ><h3 class="marginLeft5">Communities I am Moderating...</h3></li> -->
+              <div id="moderated_community_div">
                 <% @moderated_communities.each do |comm| %>
                   <%=  render  partial: 'community', locals: {community: comm }%>
                 <% end %> 
+              </div>
              </ul>
             <% end %> 
           </div><br>
           <div id="inv_groups">
             <% unless @my_communities.blank? %>
              <ul class='users' id='my_comm_ul' style='margin-left:0px;'>
-                <li style="padding-left:15px;background-color:lemonchiffon" class="tr-hover" ><h3 class="marginLeft5">Communities I am Member of...</h3></li><br>
+                <!-- <li style="padding-left:15px;" class=" well" ><h3 class="marginLeft5">Communities I am Member of...</h3></li> -->
+              <div id="member_community_div">
                 <% @my_communities.each do |comm| %>
                   <%=  render  partial: 'community', locals: {community: comm }%>
                 <% end %>
+              </div>
              </ul>
             <% end %>
           </div>
@@ -25,5 +62,36 @@
 <script type="text/javascript">
 $("li.community").click(function(){
   $(this).next('a').click();
+});
+
+$(function(){
+  $('#moderated_community_div').show();
+  $('#member_community_div').hide();
+  $('#active_community_div').hide();
+});
+
+$('#mod_li').click(function(){
+  $('#mod_li').addClass('active');
+  $('#mem_li').removeClass('active');
+  $('#act_li').removeClass('active');
+  $('#moderated_community_div').show();
+  $('#member_community_div').hide();
+  $('#active_community_div').hide();
+});
+$('#mem_li').click(function(){
+  $('#mem_li').addClass('active');
+  $('#mod_li').removeClass('active');
+  $('#act_li').removeClass('active');
+  $('#member_community_div').show();
+  $('#active_community_div').hide();
+  $('#moderated_community_div').hide();
+});
+$('#act_li').click(function(){
+  $('#act_li').addClass('active');
+  $('#mem_li').removeClass('active');
+  $('#mod_li').removeClass('active');
+  $('#active_community_div').show();
+  $('#member_community_div').hide();
+  $('#moderated_community_div').hide();
 });
 </script>

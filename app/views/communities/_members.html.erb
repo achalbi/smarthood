@@ -2,11 +2,11 @@
   <ul class="tabs">
     <%= render 'communities/links' %>
   </ul>
-  <% if community.is_active?(current_user, community) %>
   <% unless (community.privacy == Privacyenum::PROTECTED && !current_user.is_cu_admin?(community)) %>
 
-    
+  <% if community.is_active?(current_user, community) %>
     <%= render 'communities/invite_members', :locals => { :community => community }  %>
+  <% end %>
 
     <% unless requested_users.nil?  %>
     <% if requested_users.count > 0 %>
@@ -26,10 +26,9 @@
       </ul>
     </div>
     <br>
-    <% end %> 
     <% end %>
+    <% end %> 
   
-  <% end %>
   <% end %>
 
 <ul class="users">

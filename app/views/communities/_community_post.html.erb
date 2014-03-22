@@ -183,6 +183,9 @@ $('#groups_community_li').click(function(){
  <% elsif @selected_community.is_public?(current_user) %>
    <%= link_to "Join", join_cu_community_path(@selected_community), class: "uibutton icon prev pull-right", remote: true, id: "join_req_com" %>
  <% end %>
+   <% if @community.is_requested?(current_user) %>
+    <span class=" padding5 label warning pull-right" style="font-size:small;"><strong>Request pending to join the community</strong></span><br>
+  <% end %>
 
  <p><h4><strong>Description : </strong><small><%= @selected_community.description %></small></h4></p>
 

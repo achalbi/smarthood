@@ -623,7 +623,7 @@ a.disabled {
 }
 
 .padding5{
-  padding: 5px;
+  padding: 5px !important;
 }
 
 
@@ -849,4 +849,8 @@ border-bottom: 1px solid #ccc;
 
 .help-block{
   color: red !important;
+}
+
+.c-pointer{
+  cursor: pointer;
 }

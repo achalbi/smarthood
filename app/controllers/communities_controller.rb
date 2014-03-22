@@ -69,7 +69,7 @@ class CommunitiesController < ApplicationController
       @community.photo = @photo 
     end
     @community.save
-      #flash[:success] = "community created!"
+      flash[:success] = "community: " + @community.name + " created!"
       @usercommunity = @community.follow!(current_user, @community.id)
       @usercommunity.invitation= Uc_enum::JOINED
       @usercommunity.is_admin = true
@@ -98,7 +98,7 @@ class CommunitiesController < ApplicationController
       getNotifiableUsers(Objecttypeenum::COMUNITY, @community, nil, nil, Uc_enum::CREATED)
 
   else
-    #	flash[:error] = "community not created!"
+    #	flash[:error] = "community: " + @community.name + " not created!"
   end 
   respond_to do |format|
    format.html { redirect_to :action => :index   }
@@ -110,6 +110,7 @@ end
 def update
   @community = Community.find(params[:id])
   @community.update_attributes(params[:community])
+  flash[:success] = "community: " + @community.name + " updated!"
   @selected_community = @community
   @ad_eds = @community.usercommunities.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED, true )
   @non_ad_eds = @community.usercommunities.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED, false)
@@ -153,6 +154,7 @@ def setactive
 @selected_comm << active_community
 @post = Post.new
 @community = Community.find(params[:id])
+flash[:success] = "community: " + @community.name + " is set as active!"
  @group_ids = current_user.user_groups.where("community_id = ?", params[:id]).collect(&:group_id)
       @post_ids = []
       unless @group_ids.blank?
@@ -171,7 +173,7 @@ end
 
 def sendrequest
  @usercommunity = Usercommunity.where("community_id = ? AND user_id = ?", params[:id], current_user.id).first
-  unless @usercommunity.blank?
+  if @usercommunity.blank?
      @usercommunity = Usercommunity.new 
      @usercommunity.community_id = params[:id]
      @usercommunity.user_id = current_user.id
@@ -179,9 +181,13 @@ def sendrequest
      @usercommunity.is_admin = false
      @usercommunity.status=""
      @usercommunity.save
+   else
+    @usercommunity.invitation = Uc_enum::REQUESTED
+     @usercommunity.save
   end
  @community = Community.find(params[:id])
- getNotifiableUsers(Objecttypeenum::COMUNITY, @community, Objecttypeenum::USER, current_user.id, Uc_enum::REQUESTED)
+ flash[:success] = "Request sent to community: " + @community.name
+ getNotifiableUsers(Objecttypeenum::COMUNITY, @community, Objecttypeenum::USER, current_user, Uc_enum::REQUESTED)
 
 end
 
@@ -264,6 +270,7 @@ def join_cu
         createNotificationSettings(params[:id])
       end
       @community = Community.find(params[:id])
+      flash[:success] = "Joined community: " + @community.name
     getNotifiableUsers(Objecttypeenum::COMUNITY, @community, Objecttypeenum::USER, current_user, Uc_enum::JOINED)
   
   end
@@ -288,6 +295,7 @@ def unjoin_cu
  @usercommunity.invitation = Uc_enum::UNJOINED
  @usercommunity.save
  deleteNotificationSettings(params[:id])
+ flash[:success] = "Unjoined community: " + @community.name
   unless params[:user_id].nil?
     redirect_to :action => :index, id: params[:id]
   end
@@ -389,6 +397,9 @@ def my_com
     end
     @comm_id = current_user.usercommunities.where("is_admin = ? AND invitation = ?", false, Uc_enum::JOINED ).collect(&:community_id)
     @my_communities = Community.where(['id IN (?) AND id NOT IN (?)', @comm_id, @active_comm ])
+    @my_communities.each do |community|
+      community.req_pending_cnt = User.where(['id IN (?)' , community.requested_uc.collect(&:user_id)]).count
+    end
 end
 
 def other_com
@@ -689,7 +700,7 @@ def search_app_user
         @community.save
         @albums = @community.albums
         getNotifiableUsers(Objecttypeenum::ALBUM, @album, nil, nil, Uc_enum::CREATED)
-        #flash[:success] = "Album created"
+        flash[:success] = "Album: " + @album.title + " created!"
       respond_to do |format|
          format.html {  }
          format.js {  }

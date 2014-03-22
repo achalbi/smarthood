@@ -168,6 +168,11 @@ module ActivitynotificationsHelper
 
 	def build_body_text(objecttype, object, objectfortype, objectfor, action)
 		body_text = ""
+		if objectfortype == Objecttypeenum::USER_IDS
+			if objectfor.count == 1
+				objectfor = User.where("id IN (?)", objectfor).first
+			end
+		end
 		case objecttype
 		  when Objecttypeenum::COMUNITY then
 		  		if action == Notificationtypeenum::CREATED

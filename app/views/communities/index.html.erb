@@ -22,11 +22,11 @@ $(document).ready(function(){
       <%= link_to "Create Community", '#', id: "ComUnity",  class: " pull-right uibutton icon add" %><br><br>
       <div id="comUnity_div">    
         <% unless @selected_community.nil? %>
-        <li class="sidetabs sidetabs_selected" style="list-style-type: none;padding:5px; margin:5px;">
+        <!-- <<li class="sidetabs sidetabs_selected" style="list-style-type: none;padding:5px; margin:5px;">
           <h6><a><%= "" << @selected_community.name %></a></h6>
         </li>
         <%= link_to "", active_com_communities_path, id: "active_comUnity", remote: true %>
-      <!-- <li class="sidetabs notActive" style="list-style-type: none;padding:5px; margin:5px;">
+      li class="sidetabs notActive" style="list-style-type: none;padding:5px; margin:5px;">
           <h6><a>Moderated</a>
           <% unless (@requested_users_all.nil? || @requested_users_all == 0)%>
             <span class="pull-right label important" style="margin:5px;"><%= if @requested_users_all > 0 then @requested_users_all end %></span>
@@ -37,9 +37,9 @@ $(document).ready(function(){
         <% end %>
         <li class="sidetabs notActive" style="list-style-type: none;padding:5px; margin:5px;">
           <h6><a>My communities</a>
-          <% unless (@requested_users_all.nil? || @requested_users_all == 0)%>
-            <span class="pull-right label important" style="margin:5px;"><%= if @requested_users_all > 0 then @requested_users_all end %></span>
-          <% end %>            
+          <span id="mem_req_count"  class="pull-right">
+            <%= render partial: 'communities/mem_req_count'%>
+          </span>
           </h6>
         </li>
         <%= link_to "", my_com_communities_path , id: "joined_comUnity", remote: true %>
@@ -110,8 +110,8 @@ $(document).ready(function(){
           <div class="center_block clearfix">
             <%= f.label :description %>
             <div class="input">
-              <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title=>"Description", rows: 3, cols: 75, 'data-validation' => "length alphanumeric",
-     'data-validation-length' =>"3-500", 'data-validation-error-msg' => "The community description has to be an alphanumeric value between 3-500 characters"  %> 
+              <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title=>"Description", rows: 3, cols: 75, 'data-validation' => "length ",
+     'data-validation-length' =>"3-500", 'data-validation-error-msg' => "The community description has to be a value between 3-500 characters"  %> 
             </div>
           </div>
                 <div class="center_block clearfix">
@@ -184,6 +184,10 @@ $(".sidetabs").click(function(){
 });
 
 $("#ComUnity").click(function(){
+  $('#modal').modal({
+      keyboard: true,
+      backdrop: "static",
+    })
   $('#modal').modal('show');
 });
 $("#closeX").click(function(){

@@ -1,16 +1,19 @@
-<li style="padding-left:15px;cursor:pointer" class="tr-hover community" >
+<li style="padding-left:15px;cursor:pointer;position:relative;" class="tr-hover community" >
   <% unless community.photo.nil? %>
   <%= link_to cl_image_tag(community.photo.pic_url(:cover_pic_smaller), class:"image_al_c1 thumbnail pull-left ", id:"#{community.photo.id}"), "#" %>
 
   <% end %>
   <div style="padding:7px;">
-  <span class="marginLeft5" style="font-size:large;"><%= link_to community.name.capitalize, "#" %>
-  </span><br>
-  <span class="marginLeft5" style="font-size:small;"><%= community.description %></span><br>
-  <span class="marginLeft5" style="font-size:small;">Privacy: <%= privacy_str(community) %></span><br>
+  <span class="marginLeft5" style="font-size:large;padding:5px !important;"><%= link_to community.name.capitalize, "#" %>
+  </span><br><br>
+  <span class="marginLeft5" style="font-size:small;padding:5px !important;"><%= community.description %></span><br>
+  <span class="marginLeft5" style="font-size:small;padding:5px !important;">Privacy: <%= privacy_str(community) %></span><br>
   <% unless (community.req_pending_cnt.nil? || community.req_pending_cnt == 0)%>
-    <span class="marginLeft5" style="font-size:small;">Requests: </span><span class="marginLeft5 label important" ><%= if community.req_pending_cnt > 0 then community.req_pending_cnt end %></span>
+    <span class="marginLeft5" style="font-size:small;padding:5px !important;"><%=  'Request'.pluralize(community.req_pending_cnt) %>:</span><span class=" label important" style="right:0;padding-bottom:2px;"><%= if community.req_pending_cnt > 0 then community.req_pending_cnt end %></span>
   <% end %>
   </div>
+  <% if community.is_requested?(current_user) %>
+    <span class="margin15 padding5 label warning pull-right" style="font-size:small;position:absolute;bottom: 0;right: 0;"><strong>Request pending to join the community</strong></span><br>
+  <% end %>
 </li>
 <%= link_to "", "/communities/#{community.id}", remote: true %>

@@ -36,7 +36,7 @@ class GroupsController < ApplicationController
         @usergroup.save
       end
     end
-   # flash[:success] = "Group created!"
+   flash[:success] = "Group:" + @group.name + " created!"
     @group.follow!(current_user, @group.id, Uc_enum::JOINED, true,  params[:community_id])
     #UserGroup.where("user_id = ? AND group_id = ?",current_user.id, @group.id).update_all(is_admin: true, invitation: Uc_enum::JOINED)
       # redirect_to :action => :index

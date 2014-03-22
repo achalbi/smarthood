@@ -100,8 +100,8 @@ end
 
 
 
-  def is_requested?(current_user)
-   @usercommunity = self.usercommunities.where("invitation = ? AND user_id = ?", Uc_enum::REQUESTED, current_user.id)
+  def is_requested?(user)
+   @usercommunity = self.usercommunities.where("invitation = ? AND user_id = ?", Uc_enum::REQUESTED, user.id)
    if @usercommunity.count > 0
      return true
    else

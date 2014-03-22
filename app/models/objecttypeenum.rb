@@ -22,6 +22,7 @@ class Objecttypeenum
     Objecttypeenum.add_item :POST, "Post"
     Objecttypeenum.add_item :COMMENT, "Comment"
     Objecttypeenum.add_item :USER, "User"
+    Objecttypeenum.add_item :USER_IDS, "User_id"
     Objecttypeenum.add_item :BUYSELL, "Buysell"
 
 =begin

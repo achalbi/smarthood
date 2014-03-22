@@ -1,3 +1,6 @@
+      <% flash.each do |key, value| %>
+        <div class="c-pointer alert alert-<%= key %>"><%= value %></div>
+      <% end %>
     <li class="active" id="posts_community_li"><a ><h4>Posts</h4></a></li><%= link_to "", posts_com_community_path(@community) , id: "posts_community", remote: true %>
     <li id="about_community_li"><a ><h4>About</h4></a></li><%= link_to "", about_com_community_path(@community) , id: "about_community", remote: true %>
     <li id="photos_community_li"><a ><h4>Photos</h4></a></li><%= link_to "", photos_com_community_path(@community) , id: "photos_community", remote: true %>
@@ -13,3 +16,8 @@
 <% unless @community.is_active?(current_user, @community) %>
 		<%= render 'setactive', :@community => @community %>
 <% end %>
+<script type="text/javascript">
+$(".alert").click(function(){
+    $(this).hide('slow');
+});
+</script>
