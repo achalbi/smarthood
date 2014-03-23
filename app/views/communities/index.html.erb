@@ -22,11 +22,15 @@ $(document).ready(function(){
       <%= link_to "Create Community", '#', id: "ComUnity",  class: " pull-right uibutton icon add" %><br><br>
       <div id="comUnity_div">    
         <% unless @selected_community.nil? %>
-        <!-- <<li class="sidetabs sidetabs_selected" style="list-style-type: none;padding:5px; margin:5px;">
-          <h6><a><%= "" << @selected_community.name %></a></h6>
+        <li class="sidetabs sidetabs_selected" style="list-style-type: none;padding:5px; margin:5px;">
+          <h6><a>Active community</a>
+            <span id="act_req_count"  class="pull-right">
+              <%= render partial: 'communities/act_req_count'%>
+            </span>
+          </h6>
         </li>
         <%= link_to "", active_com_communities_path, id: "active_comUnity", remote: true %>
-      li class="sidetabs notActive" style="list-style-type: none;padding:5px; margin:5px;">
+      <!-- <li class="sidetabs notActive" style="list-style-type: none;padding:5px; margin:5px;">
           <h6><a>Moderated</a>
           <% unless (@requested_users_all.nil? || @requested_users_all == 0)%>
             <span class="pull-right label important" style="margin:5px;"><%= if @requested_users_all > 0 then @requested_users_all end %></span>
@@ -52,7 +56,7 @@ $(document).ready(function(){
         </li>
         <%= link_to "", private_com_communities_path , id: "private_comUnity", remote: true %> -->
         <li class="sidetabs notActive" style="list-style-type: none;padding:5px; margin:5px;">
-          <h6><a>Invites</a>
+          <h6><a>Invite from communities</a>
             <span id="inv_req_count" class="pull-right">
             <%= render partial: 'communities/inv_req_count'%>
             </span>

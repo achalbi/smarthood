@@ -1,0 +1,3 @@
+            <% unless (active_community.req_pending_cnt.nil? || active_community.req_pending_cnt == 0)%>
+                <span class="pull-right label important" style="margin:5px;"><%= if active_community.req_pending_cnt > 0 then active_community.req_pending_cnt end %></span>
+                <% end %>

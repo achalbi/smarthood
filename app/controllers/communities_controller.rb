@@ -37,6 +37,7 @@ class CommunitiesController < ApplicationController
         @post_ids << @selected_community.posts.collect(&:id)
         @posts = Post.where(id: @post_ids.uniq).paginate(page: params[:page], :per_page => 4)
       #@posts = @selected_community.posts.paginate(page: params[:page], :per_page => 4)
+        @selected_community.req_pending_cnt = 0
       if @ucs.count > 0
         @requested_users = User.where(['id IN (?)' , @selected_community.requested_uc.collect(&:user_id)])
         @selected_community.req_pending_cnt = @requested_users.count
@@ -47,8 +48,9 @@ class CommunitiesController < ApplicationController
     @my_mod_communities = Community.where(['id IN (?)', @ucs_all.collect(&:community_id)]) 
     @requested_users_all = 0
     @my_mod_communities.each do |community|
-      @requested_users_all += User.where(['id IN (?)' , community.requested_uc.collect(&:user_id)]).count
+      @requested_users_all +=  community.requested_uc.collect(&:user_id).size
     end
+    @requested_users_all -= @selected_community.req_pending_cnt
     @inv_req_cu = Community.where(['id IN (?)' , current_user.communities.where('invitation = ?',Uc_enum::INVITED).collect(&:id)])
     @inv_req_grps = current_user.invited_groups.collect(&:group_id)
     @ucs = @selected_community.usercommunities unless @selected_community.nil?
@@ -210,8 +212,9 @@ def acceptrequest
  #@inv_req_grps = current_user.invited_groups.collect(&:group_id)
   @requested_users_all = 0
   @my_mod_communities.each do |community|
-     @requested_users_all += User.where(['id IN (?)' , community.requested_uc.collect(&:user_id)]).count
+     @requested_users_all += community.requested_uc.collect(&:user_id).size
   end
+  @requested_users_all -= active_community.requested_uc.collect(&:user_id).size
   if @ucs.count > 0
     @requested_users = User.where(['id IN (?)' , @community.requested_uc.collect(&:user_id)])
   end 
@@ -242,6 +245,14 @@ def declinerequest
  @inv_groups = Group.where('id IN (?)', @group_ids)
  @inv_req_cu = Community.where(['id IN (?)' , current_user.communities.where('invitation = ?',Uc_enum::INVITED).collect(&:id)])
  @inv_req_grps = current_user.invited_groups.collect(&:group_id)
+   @requested_users_all = 0
+  @my_mod_communities.each do |community|
+     @requested_users_all += community.requested_uc.collect(&:user_id).size
+  end
+  @requested_users_all -= active_community.requested_uc.collect(&:user_id).size
+  if @ucs.count > 0
+    @requested_users = User.where(['id IN (?)' , @community.requested_uc.collect(&:user_id)])
+  end 
   if @ucs.count > 0
     @requested_users = User.where(['id IN (?)' , @community.requested_uc.collect(&:user_id)])
   end   
@@ -399,12 +410,12 @@ def my_com
     @active_comm << active_community.id
     @moderated_communities = Community.where(['id IN (?) AND id NOT IN (?)', @mod_comm_id, @active_comm ])
     @moderated_communities.each do |community|
-      community.req_pending_cnt = User.where(['id IN (?)' , community.requested_uc.collect(&:user_id)]).count
+      community.req_pending_cnt = community.requested_uc.collect(&:user_id).size
     end
     @comm_id = current_user.usercommunities.where("is_admin = ? AND invitation = ?", false, Uc_enum::JOINED ).collect(&:community_id)
     @my_communities = Community.where(['id IN (?) AND id NOT IN (?)', @comm_id, @active_comm ])
     @my_communities.each do |community|
-      community.req_pending_cnt = User.where(['id IN (?)' , community.requested_uc.collect(&:user_id)]).count
+      community.req_pending_cnt = community.requested_uc.collect(&:user_id).size
     end
 end
 
@@ -420,7 +431,7 @@ def moderated_com
   @req_pending_cnt = 0
   @my_mod_communities = Community.where(['id IN (?)', @ucs.collect(&:community_id)]) 
   @my_mod_communities.each do |community|
-    community.req_pending_cnt = User.where(['id IN (?)' , community.requested_uc.collect(&:user_id)]).count
+    community.req_pending_cnt = community.requested_uc.collect(&:user_id).size
     @communities << community
   end
 end
