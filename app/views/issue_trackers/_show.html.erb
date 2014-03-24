@@ -6,7 +6,7 @@
 			                                     data: { confirm: "You sure?" }, remote: true,
 			                                     title: @issue.title %>
 			 <% end %>
-			<%= @issue.ticket_id+": "+@issue.title %>
+			<%= @issue.ticket_id + ": " + @issue.title %>
 			<%= link_to "Edit", '#', id: "edit_issue_link",  class: " pull-right uibutton icon edit", style: "margin-right:15px;",:title => "Create issue" %>
 
 		</h2>

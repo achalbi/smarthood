@@ -1,12 +1,14 @@
           <div id="gallery"  >
             <div id="grp_album">
                     <div id="gallery1" class=" pull-left" style="width: 550px;">
-                       <ul id="grid" >    
+                       <ul id="grid" >
+                       <% if @group.is_joined?(current_user, @group) %>    
                        <li style="background-color:#ffffff!important;">
                         <div id="upload_pics_grp"  style = "border:2px dashed #ddd; width:85px; height:85px; padding:10px;  left:40px; text-align:middle; z-index: 1;  cursor:pointer;  float:left; margin-bottom:25px;
                         " class="bgClrChg">  <h5> Create Album </h5>
                         </div>
                        </li>               
+                       <% end %>  
                       <% unless albums.nil? %>
                                <% albums.each do |album| %>
                                    <% unless album.photos[0].nil? %>

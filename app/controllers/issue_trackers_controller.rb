@@ -19,8 +19,8 @@ class IssueTrackersController < ApplicationController
   end
 
   def create
-    @issue = IssueTracker.create(params[:issue_tracker])
-    @issue.ticket_id = "CU_"+IssueTracker.last.id.to_s
+    @issue = IssueTracker.create!(params[:issue_tracker])
+    @issue.ticket_id = "CU_" + @issue.id.to_s
     @issue.author = current_user
     @issue.assignee = User.find_by_email("achal.rvce@gmail.com")
     @issue.status = @issue.issue_ticket_actions[0].ticket_action.description
