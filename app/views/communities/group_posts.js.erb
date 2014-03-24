@@ -1,0 +1,1 @@
+$("#show_group_div").html("<%= escape_javascript(render partial: 'communities/group_posts', locals: {:post => @post, :posts => @posts, group: @group} ) %>");

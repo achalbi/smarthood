@@ -1,0 +1,60 @@
+<div id="posts_groups">  
+	<ul class="users" id="posts_groups_ul" >
+		<div id="posts" style="overflow:auto;">
+      <% if @group.is_joined?(current_user, @group) %>
+			   <%= render :partial => 'posts/group_post', :locals => {:post => @post, :group => @group} %>
+      <% end %>
+			<br>
+			<div id="div_post_<%= @group.id.to_s %>" class="resources">
+				<%= render partial: 'posts/post', locals: {posts: @posts, group: @group}  %>
+			</div>
+			<p id="group_id" class='active_hide'><%= @group.id %></p>
+			<div id="loading_page" class="center loading_page" ><img src="http://res.cloudinary.com/rashi/image/upload/v1377924529/loading7_gvb06y.gif"></div>
+		</div>
+
+	</ul>
+	<br>
+</div>
+<script type="text/javascript">
+
+var currentPage<%= @group.id.to_s %> = 1;
+var intervalID = -1000;
+var insideLoop ="false"; 
+
+function checkScroll_grp_post() {
+  if (nearBottomOfPage() && insideLoop!="true" ) {
+    insideLoop ="true";
+    currentPage<%= @group.id.to_s %>++;
+  $('#loading_page').show();
+    jQuery.ajax('/groups/post_paginate?id=<%= @group.id.to_s %>&page=' + currentPage<%= @group.id.to_s %>  , {asynchronous:true, evalScripts:true, method:'get', success: function(data, textStatus, jqXHR) {
+    $('#div_post_<%= @group.id.to_s %>').append($(data));
+    $('#loading_page').hide();
+    if(typeof jQuery(data) == 'undefined' ||jQuery(data).html() == null || $(data).find('.paginate_do').html()==null){
+      clearInterval(intervalID);
+      for (var i = 1; i < 99999; i++){
+         window.clearInterval(i);
+      }
+      restartInterval();
+    }
+    insideLoop = "false";
+  },});
+  }
+}
+
+
+function nearBottomOfPage() {
+  return scrollDistanceFromBottom() < 150;
+}
+ 
+function scrollDistanceFromBottom(argument) {
+  return pageHeight() - (window.pageYOffset + self.innerHeight);
+}
+ 
+function pageHeight() {
+  return Math.max(document.body.scrollHeight, document.body.offsetHeight);
+}
+
+$('document').ready(function(){
+  intervalID = setInterval(checkScroll_grp_post, 1000);
+});
+</script>

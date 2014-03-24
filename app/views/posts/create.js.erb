@@ -1,12 +1,12 @@
-<% unless @activity.nil? %>
+<% if @post_type == 'activity' %>
 $("#posts").html("<%= escape_javascript(render( :partial => 'posts/activity_post', :locals => {:post => @post}, :activity => @activity )) %><br><br><div id='div_post' class='resources'><%= escape_javascript(render( partial: 'posts/post', locals: {posts: @posts, activity: @activity} )) %></div><p id='activity_id' class='active_hide'><%= @activity.id %></p>");
 <% end %>
 
-<% unless @group.nil? %>
+<% if @post_type == 'group' %>
 $("#posts").html("<%= escape_javascript(render( :partial => 'posts/group_post', :locals => {:post => @post}, :group => @group )) %><br><br><div id='div_post' class='resources'><%= escape_javascript(render( partial: 'posts/post', locals: {posts: @posts, group: @group} )) %></div><p id='group_id' class='active_hide'><%= @group.id %></p>");
 <% end %>
 
-<% unless @groups.nil? %>
+<% if @post_type == 'groups' %>
 $('#group_list').html("<%= escape_javascript(render :partial => 'posts/groups_post', :locals => {:post => @post}, :groups => @groups) %>");
 $('#groups_sec').html("<%= escape_javascript(render :partial => 'groups/group_list', :locals => {:groups => @groups}) %>")
 
@@ -39,9 +39,10 @@ $("#sel_grp_label").hide();
 <% end %>
 
 
-<% unless @communities.nil? %>
+<% if @post_type == 'communities' %>
 $('#cu_post').html("<%= escape_javascript(render :partial => 'posts/communities_post', :locals => {:post => @post}, :communities => @communities) %>");
 <% end %>
-<% unless @community.nil? %>
+<% if @post_type == 'community' %>
 $('#community_tabs').html("<%= escape_javascript(render :partial => 'communities/community_post', locals: {posts: @posts, community: @community}) %>");
 <% end %>
+$(".busy").button('reset');

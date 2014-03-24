@@ -1,19 +1,18 @@
+  <li style="padding-left:15px;cursor:pointer;position:relative;" class="tr-hover group" >
+  <% unless group.photo.nil? %>
+  <%= link_to cl_image_tag(group.photo.pic_url(:cover_pic_smallest), class:"image_al_c1 thumbnail pull-left ", id:"#{group.photo.id}"), "#" %>
+
+  <% end %>
+            <div style="margin-left:95px;margin-top:10px;">
+                <address>
+                  <strong><%= link_to group.name.capitalize, "#" %></strong><br>
+                  <%= group.description %><br>
+                  Privacy: <%= privacy_str(group) %><br>
+                  <%= pluralize(group.joined_users.count, "Member") %>  in the group
+                </address>
+            </div>
+</li>
 
 
-<li style="width:250px;float:left;margin-left:15px;">
-<div  class="img_zoom">
-  <span style="margin: auto;"  >
-   <h5> <div  class="img_zoom" id="div-img_<%= group.photo.id %>" >
-      <% unless group.photo.nil? %>
-         <%= link_to cl_image_tag(group.photo.pic_url(:smallest), class:"image_al_c1 thumbnail pull-left ", id:"#{group.photo.id}"), "/communities/#{group.id}/show_group?comm_id=#{community.id}", remote: true,   style:"cursor:pointer;"%>
 
-      <% end %>
-        </div>
-    <% if group.name.length > 20 %>
-     <%= link_to group.name.slice(0..20).capitalize+"...",  "/communities/#{group.id}/show_group?comm_id=#{community.id}", title: group.name, class: "pull-left", style: "margin:10px;", remote: true %>
-    <% else %>
-    <%= link_to group.name.capitalize,  "/communities/#{group.id}/show_group?comm_id=#{community.id}", class: "pull-left", style: "margin:2px 5px;", remote: true %>
-    <% end %></h5>
-  </span>
-  </div>
-  </li>
+<%= link_to "", "/communities/#{community.id}/show_group?grp_id=#{group.id}", remote: true %>

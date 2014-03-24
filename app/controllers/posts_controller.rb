@@ -26,6 +26,7 @@ class PostsController < ApplicationController
       @posts = @activity.posts.order("id DESC").all
       getNotifiableUsers(Objecttypeenum::POST, @post, Objecttypeenum::ACTIVITY, @activity, Uc_enum::CREATED)
       @post =Post.new
+      @post_type = 'activity'
       respond_to do |format|
        format.html { redirect_to @activity, format: 'js' }
        format.js {  }
@@ -44,12 +45,13 @@ class PostsController < ApplicationController
     @posts = @group.posts.order("id DESC").all
     getNotifiableUsers(Objecttypeenum::POST, @post, Objecttypeenum::GROUP, @group, Uc_enum::CREATED)
     @post =Post.new
+    @post_type = 'group'
     respond_to do |format|
      format.html { }
      format.js {  }
    end
  when "groups"
-  if params[:grp_ids].nil?
+      if params[:grp_ids].nil?
         #flash[:error] = "Please select Group"
         @post = Post.new
         @groups = Group.where('id IN (?)', current_user.user_groups.collect(&:group_id))
@@ -74,7 +76,8 @@ class PostsController < ApplicationController
         @posts = @groupposts.paginate(page: params[:page], :per_page => 4).collect{|a| a.post}.uniq   
           # @post.save
            #  flash[:success] = "Post created!"
-         end
+        @post_type = 'groups'
+      end
        when "communities"
         if params[:cu_ids].nil?
           @post = current_user.posts.build(params[:post])
@@ -106,6 +109,7 @@ class PostsController < ApplicationController
         @communities = Community.where('id IN (?)', @cu_ids)
         @communityposts = Communitypost.where('community_id IN (?)', @cu_ids)
         @posts = @communityposts.paginate(page: params[:page], :per_page => 4).collect{|a| a.post}.uniq   
+        @post_type = 'communities'
         # @post.save
          #  flash[:success] = "Post created!"
      when "community"
@@ -129,7 +133,8 @@ class PostsController < ApplicationController
           @posts = @community.posts.paginate(page: params[:page], :per_page => 4).uniq
           @my_groups_ids = current_user.user_groups.where("community_id = ? AND invitation = ? ", params[:id], Uc_enum::JOINED ).collect(&:group_id).uniq
           @groups = Group.where('id IN (?)', @my_groups_ids)
-        getNotifiableUsers(Objecttypeenum::POST, @post, Objecttypeenum::COMUNITY, @post.communities, Uc_enum::CREATED)  
+          @post_type = 'community'
+          getNotifiableUsers(Objecttypeenum::POST, @post, Objecttypeenum::COMUNITY, @post.communities, Uc_enum::CREATED)  
        else
        end
      end

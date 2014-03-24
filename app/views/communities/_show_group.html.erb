@@ -1,99 +1,63 @@
+
 <div class="row">
         <div class="marginLeft15 ui-front">
-        <section id="groups_sec" style="">
-          <ul id="group_list" class="grid users">
-          <li class="span13 tr-hover">
+          <ul id="group_list" class="users">
+          <li style="padding-left:15px;position:relative;border-bottom:0px;" class="tr-hover " >
               <% if @group.is_admin?(current_user) %>
-                  <%= link_to "edit", '#', id: "edit_group",  class: " pull-right uibutton icon edit ",:title => "Edit" %>
+                  <%= link_to "edit", '#', id: "edit_group",  class: " pull-right uibutton icon edit button_toggle ",:title => "Edit" %>
                <% end %>
                <span class="pull-right "> &nbsp;</span>
                   <% if @group.is_joined?(current_user, @group) %>
                     <% if @group.is_admin?(current_user) %>
                       <% if @group.can_admin_unjoin?(current_user) %>
-                        <%= link_to "Unjoin", unjoin_grp_group_path(@group), class: "uibutton icon prev pull-right", remote: true %>
+                        <%= link_to "Unjoin", unjoin_grp_group_path(@group), class: "uibutton icon prev pull-right button_toggle", remote: true %>
                       <% end %>
                     <% else %>
-                        <%= link_to "Unjoin", unjoin_grp_group_path(@group), class: "uibutton icon prev pull-right", remote: true %>
+                        <%= link_to "Unjoin", unjoin_grp_group_path(@group), class: "uibutton icon prev pull-right button_toggle", remote: true %>
                     <% end %>
                   <% else %>
                     <% if @group.privacy == Privacyenum::PUBLIC %>
-                        <%= link_to "Join", "/groups/#{@group.id}/join_grp?comm_id=#{community.id}", class: "uibutton icon prev pull-right", remote: true %>
+                        <%= link_to "Join", "/groups/#{@group.id}/join_grp?comm_id=#{community.id}", class: "uibutton icon prev pull-right button_toggle", remote: true %>
                     <% end %>
                   <% end %>
                <span class="pull-right "> &nbsp;</span>
                <% if @group.is_admin?(current_user) %>
                   <%= link_to "delete", @group, method: :delete, remote: true,
                                            data: { confirm: "You sure?" },
-                                           class: "pull-right uibutton",
+                                           class: "pull-right uibutton button_toggle",
                                            title: @group.name %>
                <% end %>
-               <span class="pull-right "> &nbsp;</span>
-            <%= cl_image_tag(group.photo.pic_url(:smaller), class:"image_al_c1 thumbnail pull-left gravatar", id:"#{group.photo.id}") %>
-            <div class="pull-left">
-             <h5> <strong> Name: </strong> <%= group.name %> </h5>
-             <% unless group.description.blank? %>
-               <h5> <strong> Description: </strong> <%= group.description %> </h5>
-             <% end %>
-             <h5> <strong> privacy: </strong> <%= privacy_str(group) %> </h5>
-              <br><br><br>
-            </div>
-          </li>
+                <% unless group.photo.nil? %>
+                <div class="pull-left">
+                <%= link_to cl_image_tag(group.photo.pic_url(:cover_pic_smallest), class:"image_al_c1 thumbnail ", id:"#{group.photo.id}"), "#" %>
+
+                </div>
+                <% end %>
+
+                <div style="margin-left:95px;margin-top:10px;">
+                <address>
+                  <strong><%= link_to group.name.capitalize, "#" %></strong><br>
+                  <%= group.description %><br>
+                  Privacy: <%= privacy_str(group) %><br>
+                  <%= pluralize(group.joined_users.count, "Member") %>  in the group
+                </address>
+                </div>
+                
+              </li>
           </ul>
-        </section>
-
-<ul class="users marginLeft15">
-  <% unless ad_users.nil? %>
-    <% if ad_users.count > 0  %>
-    <h4><%="Moderator".pluralize(ad_users.count) %>
-      <% if @group.is_admin?(current_user) %>
-       <%= link_to "edit", '#', id: "moderator",  class: "uibutton icon edit pull-right" %>
-      <% end %>
-     </h4>
-      <% ad_users.each do |user|%>
-      <li style="float:left;margin-left:15px;margin-right:15px; " class="span13 tr-hover">
-        <div  class="img_zoom" style="float:left;" >
-          <%= gravatar_for user, size: 52 %>
-        </div>
-        <p class="marginRight25">
-          <% if @group.is_admin?(current_user) && user.id != current_user.id %>
-                        <%= link_to "Remove", "/groups/#{@group.id}/unjoin_grp?user_id=#{user.id}&comm_id=#{community.id}", class: "uibutton pull-right ", remote: true, data: { confirm: "You sure?" } %>
-          <% end %>
-          <%= link_to user.name, user %>
-        </p>
-          <p><%= user.email %></p>
-      </li>
-      <% end %>
-    <li style="clear:both;"></li>
-    <% end %> 
-  <% end %> <br>
- <h4>Members
-    <% if @group.is_admin?(current_user) %>
-      <%= link_to "add", '#', id: "invite",  class: "uibutton icon add pull-right" %>
-    <% end %> 
- </h4>
-  <% unless inv_users.nil? %>
-    <% if inv_users.count > 0 %> 
-      <% inv_users.each do |user|%>
-      <li style="float:left;margin-left:15px;" class="span13 tr-hover">
-        <div  class="img_zoom" style="float:left;" >
-          <%= gravatar_for user, size: 52 %>
-        </div>
-        <p class="marginRight25">
-          <% if @group.is_admin?(current_user) %>
-                        <%= link_to "Remove", "/groups/#{@group.id}/unjoin_grp?user_id=#{user.id}&comm_id=#{community.id}", class: "uibutton pull-right ", remote: true, data: { confirm: "You sure?" } %>
-          <% end %>
-          <%= link_to user.name, user %>
-        </p>
-          <p><%= user.email %></p>
-      </li>
-      <% end %>
-    <li style="clear:both;"></li>
-    <% end %>
-  <% end %>
-</ul>
-
+          <br>
+          <div style="margin-left:15px;">
+              <ul class="tabs  ">
+                <li class="active" id="members_grp_tab"><%= link_to "Members","/communities/#{community.id}/group_members?grp_id=#{@group.id}", remote: true %></li>
+                <li id="post_grp_tab"><%= link_to "Posts","/communities/#{community.id}/group_posts?grp_id=#{@group.id}", remote: true %></li>
+                <li id="photos_grp_tab"><%= link_to "Photos","/communities/#{community.id}/group_photos?grp_id=#{@group.id}", remote: true %></li>
+              </ul>
+          </div>
+        <div id="show_group_div">
+          <%= render partial: 'communities/group_members', locals: {ad_users: @ad_users, inv_users: @inv_users, community: @community} %>
         </div>
       </div>
+</div>
 
 
 <%= form_for( @group, remote: true, :html => {:multipart => true}) do |f| %>
@@ -236,6 +200,9 @@ $(document).ready(function(){
 });
 
 
+$("#grp_list").click(function(){
+  $("#groups_community_li").click();
+});
 
 
 $("#invite").on( "click", function() {
@@ -272,6 +239,9 @@ $(function() {
     zindex: 11001,
     hintText: "Type in a user name",
   });
+
+  $('.button_toggle').hide();
+
 });
 
 
@@ -338,6 +308,40 @@ $("#edit_group").click(function(){
             }
           }
   }
+
+$('.tr-hover').hover(function() {
+    $(this).find('.button_toggle').stop(true, true).show(400);
+}, function() {
+    $(this).find('.button_toggle').stop(true, true).hide(400);
+});
+
+
+
+$('#members_grp_tab').click(function(){
+  $('#members_grp_tab').addClass('active');
+  $('#post_grp_tab').removeClass('active');
+  $('#photos_grp_tab').removeClass('active');
+ // $("#my_groups").show();
+ // $("#other_groups").hide();
+//  $("#other_groups").hide();
+});
+
+$('#post_grp_tab').click(function(){
+  $('#post_grp_tab').addClass('active');
+  $('#members_grp_tab').removeClass('active');
+  $('#photos_grp_tab').removeClass('active');
+  currentPage<%= @group.id.to_s %> = 1;
+  //$("#my_groups").hide();
+  //$("#other_groups").show();
+});
+
+$('#photos_grp_tab').click(function(){
+  $('#photos_grp_tab').addClass('active');
+  $('#members_grp_tab').removeClass('active');
+  $('#post_grp_tab').removeClass('active');
+//  $("#my_groups").show();
+//  $("#other_groups").hide();
+});
 
 
 </script>

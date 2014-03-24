@@ -650,23 +650,32 @@ a.disabled {
 .active_hide{
   display:none;
 }
-
+/*
 div#event_list ul.tabs li.active{
   text-shadow: none;
+   background-color: #ffffff !important;
+
 }
 
 ul#group_list ul.tabs li.active{
   text-shadow: none;
+   background-color: #ffffff !important;
+
 }
 
 ul.tabs li.active{
   text-shadow: none;
+   background-color: #ffffff !important;
+
 }
 
 
 div#camera_rolls ul.tabs li.active{
   text-shadow: none;
+   background-color: #ffffff !important;
+
 }
+*/
 
 .inherit_width{
   width: inherit;
@@ -854,3 +863,8 @@ border-bottom: 1px solid #ccc;
 .c-pointer{
   cursor: pointer;
 }
+
+ .tabs .active > a:hover {
+   background-color: #eee !important;
+   cursor:pointer !important;
+ }

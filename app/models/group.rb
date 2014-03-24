@@ -62,6 +62,9 @@ class Group < ActiveRecord::Base
     end  
   end 
 
+  def joined_users
+    self.user_groups.where("invitation = ?", Uc_enum::JOINED )
+  end
   def is_joined?(user, group)
      group.user_groups.where("user_id = ?  AND invitation = ?",user, Uc_enum::JOINED ).exists?
   end  

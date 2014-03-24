@@ -1,0 +1,75 @@
+<table class="span6">
+        <thead>
+          <tr class="tr-hover">
+            <th >
+             <%="Moderator".pluralize(ad_users.count) %>
+                <% if @group.is_admin?(current_user) %>
+                 <%= link_to "edit", '#', id: "moderator",  class: "uibutton icon edit pull-right button_toggle" %>
+                <% end %>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+            <% ad_users.each do |user|%>
+          <tr class="tr-hover">
+            <td>
+            <div  class="img_zoom" style="float:left;" >
+              <%= gravatar_for user, size: 52 %>
+            </div>
+                <address>
+                  <strong> <%= link_to user.name, user %></strong><br>
+                  <a mailto="<%= user.email %>"><%= user.email %></a>
+                </address>
+              <p>
+                <% if @group.is_admin?(current_user) && user.id != current_user.id %>
+                              <%= link_to "Remove", "/groups/#{@group.id}/unjoin_grp?user_id=#{user.id}&comm_id=#{community.id}", class: "uibutton pull-right button_toggle", remote: true, data: { confirm: "You want to remove the user from the group ?" } %>
+                <% end %>
+              </p>               
+            </td>
+          </tr>
+          <% end %>
+            
+        </tbody>
+      </table>
+
+      <table class="span6">
+        <thead>
+          <tr class="tr-hover">
+            <th >
+              <%="Member".pluralize(inv_users.count) %>
+              <% if @group.is_admin?(current_user) %>
+                <%= link_to "add", '#', id: "invite",  class: "uibutton icon add pull-right button_toggle" %>
+              <% end %> 
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if inv_users.count > 0 %>
+            <% inv_users.each do |user|%>
+              <tr class="tr-hover" >
+                <td >
+                <div  class="img_zoom" style="float:left;" >
+                  <%= gravatar_for user, size: 52 %>
+                </div>
+                    <address>
+                      <strong> <%= link_to user.name, user %></strong><br>
+                      <a mailto="<%= user.email %>"><%= user.email %></a>
+                    </address>
+                  <p>
+                    <% if @group.is_admin?(current_user) && user.id != current_user.id %>
+                                  <%= link_to "Remove", "/groups/#{@group.id}/unjoin_grp?user_id=#{user.id}&comm_id=#{community.id}", class: "uibutton pull-right button_toggle", remote: true, data: { confirm: "You want to remove the user from the group ?" } %>
+                    <% end %>
+                  </p>               
+                </td>
+              </tr>
+            <% end %>
+          <% else %>
+          <tr>
+            <td>
+              <address>No Members in the group</address>
+            </td>
+          </tr>
+          <% end %>
+            
+        </tbody>
+      </table>

@@ -732,14 +732,34 @@ def search_app_user
   end
 
   def show_group
-     @group = Group.find(params[:id])
-    # @users = @group.users
-    @album = Album.new
+    @group = Group.find(params[:grp_id])
     @inv_users = User.where(['id IN (?)', @group.user_groups.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED,false).collect(&:user_id)])
     @ad_users = User.where(['id IN (?)', @group.user_groups.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED,true).collect(&:user_id)])
     @is_admin = @ad_users.include? current_user
-    @ucs = @group.user_groups.where("group_id = ?",params[:id])
-    @community = Community.find(params[:comm_id])
+    @ucs = @group.user_groups.where("group_id = ?",params[:grp_id])
+    @community = Community.find(params[:id])
+  end
+
+  def group_posts
+     @group = Group.find(params[:grp_id])
+     @post = Post.new
+     @posts = @group.posts.paginate(page: params[:page], :per_page => 4)
+  end
+
+
+  def group_members
+    @group = Group.find(params[:grp_id])
+    @inv_users = User.where(['id IN (?)', @group.user_groups.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED,false).collect(&:user_id)])
+    @ad_users = User.where(['id IN (?)', @group.user_groups.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED,true).collect(&:user_id)])
+    @is_admin = @ad_users.include? current_user
+    @community = Community.find(params[:id])
+  end
+
+  def group_photos
+    @group = Group.find(params[:grp_id])
+    @album = Album.new
+    @albums = @group.albums
+    #@community = Community.find(params[:id])
   end
 
 def cu_list

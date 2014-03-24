@@ -3,35 +3,37 @@
     <%= render 'communities/links' %>
   </ul>
   <% if community.is_active?(current_user, community) %>
-  <ul class="users">
-    <li>
-      <a class="uibutton pull-right add icon" id="create_group" > Create group </a>
-    </li>
-  </ul>
+    <a class="uibutton pull-right " id="create_group" > Create group </a>
   <% end %>
-<br>
+
+<ul class="tabs span13" id="group_link">
+  <li class="active" id="my_groups_li"><a href="#">My groups</a></li>
+  <li id="other_groups_li"><a href="#">other groups</a></li>
+</ul>
       <div class="row" >
         <div class="span13 ui-front" id="comm_groups_list">
-          <% if @groups.count > 0 %>
-          <h4>My groups: </h4>
-          <% end %>
-        <section id="groups_sec" style="">
-          <ul id="group_list" class="grid ">
-          <% @groups.each do |group| %>
-              <%= render :partial => '/communities/group', :locals =>{:group => group, community: community} %>
-          <% end %>
-          </ul>
-        </section>
-          <% if @other_groups.count > 0 %>
-            <h4>Other community groups: </h4>
-          <% end %>
-        <section id="groups_sec" style="">
-          <ul id="group_list" class="grid ">
-          <% @other_groups.each do |group| %>
-            <%= render :partial => '/communities/group', :locals =>{:group => group, community: community} %>
-          <% end %>
-          </ul>
-        </section>
+              <section id="my_groups" style="">
+                <% if @groups.count > 0 %>
+                       <ul class='users' id='group_list' style='margin-left:0px;'>
+                      <% @groups.each do |group| %>
+                          <%= render :partial => '/communities/group', :locals =>{:group => group, community: community} %>
+                      <% end %>
+                      </ul>
+                 <% else %>
+                    <p class="marginLeft15">No groups to display</p>
+                <% end %>
+              </section>
+            <section id="other_groups" style="">
+                <% if @other_groups.count > 0 %>
+                     <ul class='users' id='group_list' style='margin-left:0px;'>
+                    <% @other_groups.each do |group| %>
+                      <%= render :partial => '/communities/group', :locals =>{:group => group, community: community} %>
+                    <% end %>
+                    </ul>
+                <% else %>
+                    <p class="marginLeft15">No groups to display</p>
+                <% end %>
+            </section>
         </div>
       </div>
 
@@ -117,12 +119,50 @@ $(document).ready(function(){
 
 
 $(document).ready(function(){
+
+  $("li.group").click(function(){
+    $(this).next('a').click();
+    $("#group_link").hide();
+    $("#my_groups").hide();
+    $("#other_groups").hide();
+    $("#create_group").hide();
+  });
+
+  $("#other_groups").hide();
+
+
   $('#posts_community_li').removeClass('active');
   $('#about_community_li').removeClass('active');
   $('#photos_community_li').removeClass('active');
   $('#members_community_li').removeClass('active');
   $('#groups_community_li').addClass('active');
 });
+
+
+$('#my_groups_li').click(function(){
+  $('#my_groups_li').addClass('active');
+  $('#other_groups_li').removeClass('active');
+  $("#my_groups").show();
+  $("#other_groups").hide();
+});
+
+$('#other_groups_li').click(function(){
+  $('#other_groups_li').addClass('active');
+  $('#my_groups_li').removeClass('active');
+  $("#my_groups").hide();
+  $("#other_groups").show();
+});
+
+$('#posts_community_li').click(function(){
+  $('#posts_community_li').addClass('active');
+  $('#about_community_li').removeClass('active');
+  $('#photos_community_li').removeClass('active');
+  $('#members_community_li').removeClass('active');
+  $('#groups_community_li').removeClass('active');
+  $(this).next('a').click();
+
+});
+
 
 
 $('#posts_community_li').click(function(){
