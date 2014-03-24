@@ -2,7 +2,7 @@
 <div class="row">
         <div class="marginLeft15 ui-front">
           <ul id="group_list" class="users">
-          <li style="padding-left:15px;position:relative;border-bottom:0px;" class="tr-hover " >
+          <li style="padding-left:15px;position:relative;border-bottom:0px;" class="tr-hover tr-hover-btn" >
               <% if @group.is_admin?(current_user) %>
                   <%= link_to "edit", '#', id: "edit_group",  class: " pull-right uibutton icon edit button_toggle ",:title => "Edit" %>
                <% end %>
@@ -244,8 +244,6 @@ $(function() {
 
 });
 
-
-
 $("#edit_group").click(function(){
       $('#modal_edit_grp').modal('show');
     });
@@ -309,11 +307,6 @@ $("#edit_group").click(function(){
           }
   }
 
-$('.tr-hover').hover(function() {
-    $(this).find('.button_toggle').stop(true, true).show(400);
-}, function() {
-    $(this).find('.button_toggle').stop(true, true).hide(400);
-});
 
 
 

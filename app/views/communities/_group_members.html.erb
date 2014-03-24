@@ -73,3 +73,16 @@
             
         </tbody>
       </table>
+
+      <script type="text/javascript">
+
+$(function(){
+  $('.button_toggle').hide();
+
+$('.tr-hover').hover(function() {
+    $(this).find('.button_toggle').stop(true, true).show(400);
+}, function() {
+    $(this).find('.button_toggle').stop(true, true).hide(400);
+});
+});
+      </script>
