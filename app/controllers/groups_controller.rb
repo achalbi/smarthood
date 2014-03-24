@@ -96,7 +96,7 @@ def add_moderators
   @group = Group.find(params[:id])
   @group.user_groups.update_all({:is_admin => true}, {:user_id => params[:user_ids]})
   @group.user_groups.update_all({:is_admin => false}, {:user_id => params[:user_all_ids]-params[:user_ids] })
-  redirect_to :controller => 'communities', :action => 'show_group', :id => @group.id, comm_id: params[:comm_id]
+   redirect_to :controller => 'communities', :action => 'show_group', :grp_id => @group.id, id: params[:comm_id]
 end
 
 def groups_post_paginate
@@ -142,7 +142,7 @@ def invite_app_user
    end
  end 
  unless params[:comm_id].nil?
-    redirect_to :controller => 'communities', :action => 'show_group', :id => params[:id], comm_id: params[:comm_id]
+   redirect_to :controller => 'communities', :action => 'show_group', :grp_id => @group.id, id: params[:comm_id]
  end
 end
 
@@ -232,16 +232,18 @@ def unjoin_grp
   else
     @user = User.find(params[:user_id])
     @usergroup = @user.user_groups.find_by_group_id(params[:id])
-    @usergroup.invitation = Uc_enum::MODERATOR_DECLINED
+    @usergroup.invitation = Uc_enum::UNJOINED
     @usergroup.save
-    redirect_to :controller => 'communities', :action => 'show_group', :id => params[:id], comm_id: params[:comm_id]
+    redirect_to :controller => 'communities', :action => 'show_group', :grp_id => @group.id, id: params[:comm_id]
+
   end
 end
 
 def join_grp
   @group = Group.find(params[:id])
   @group.follow!(current_user, params[:id], Uc_enum::JOINED, false, params[:comm_id])
-  redirect_to :controller => 'communities', :action => 'show_group', :id => @group.id, comm_id: params[:comm_id]
+  redirect_to :controller => 'communities', :action => 'show_group', :grp_id => @group.id, id: params[:comm_id]
+
 end
 
 def destroy

@@ -1,7 +1,7 @@
       <div class="row">
         <div class="span13 ui-front">
           <ul class="tabs">
-            <li class="active" id="mod_li" style="text-shadow: none;"><a href="#"><h4 style="width:249px;"><%= "Community".pluralize(@moderated_communities.count) %> you moderate
+            <li class="active" id="mod_li" style="text-shadow: none;"><a href="#"><h4 style="width:249px;"><%= "Community".pluralize(@moderated_communities.count) %> I moderate
               <% @mod_cnt = 0 %>
               <% @moderated_communities.each do |comm| %>
                 <% @mod_cnt = @mod_cnt + comm.req_pending_cnt %>
@@ -13,7 +13,7 @@
               <% end %> 
               
             </h4></a></li>
-            <li id="mem_li"><a href="#" ><h4 style="width:248px;"><%= "Community".pluralize(@my_communities.count) %> you as a member
+            <li id="mem_li"><a href="#" ><h4 style="width:248px;"><%= "Community".pluralize(@my_communities.count) %> me as a member
             <% @mem_cnt = 0 %>
               <% @my_communities.each do |comm| %>
                 <% @mem_cnt = @mem_cnt + comm.req_pending_cnt %>

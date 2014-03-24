@@ -74,6 +74,81 @@
         </tbody>
       </table>
 
+
+
+<%= form_for( @group, url: add_moderators_group_path(@group), method: :get, remote: true) do |f| %>
+<div id="modal_add_mod" style="display:none;" >
+  <div id="modal-from-dom__add_mod" class="modal hide fade in" style="display: block;">
+    <div class="modal-header">
+      <a href="#" id="close_add_mod" class="close">×</a>
+      <span style="font-size:20px;line-height: 2;">Edit Moderators</span>
+    </div>
+    <div class="modal-body" style="max-height:350px;">
+      <div class="row">
+        <div class=" ui-front">         
+         <%= render 'shared/error_messages', object: f.object %>
+         <aside class="">
+          <section>
+            <!-- <h2 style="margin-left:65px;padding:3px;">Moderators</h2> -->
+            <ul class="user" style="overflow:auto;">
+              <% @ucs.each do |uc| %>
+              <% user = User.find(uc.user_id) %>
+              <ol>
+                <div style="background-color:#f0f0f0;padding:5px;" class="span5">
+                  <%= link_to user.name, "#" %>
+                  <%= gravatar_for user, size: 25 %>
+                  <div style="margin-right:10px;" class="pull-right">
+                    <%= check_box_tag 'user_ids[]', user.id, uc.is_admin? %>
+                    <%= hidden_field_tag 'user_all_ids[]', user.id %>
+                    <%= hidden_field_tag 'comm_id', community.id %>
+                  </div>
+                </div>
+              </ol>
+              <% end %>
+            </ul>     
+          </section>
+        </aside>
+      </div>
+    </div>   
+  </div>
+  <div class="modal-footer" >
+    <%= f.submit "Update", class: "btn primary pull-right", id: "submit_add_mod" %>  
+  </div>
+</div>
+</div>
+<% end %>
+
+
+
+<%= form_for( @group, url: invite_app_user_group_path(@group), method: :get, remote: true) do |f| %>
+<div id="modal_invite" style="display:none;" >
+  <div id="modal-from-dom2" class="modal hide fade in" style="display: block;width:700px;">
+    <div class="modal-header">
+      <a href="#" id="close_invite" class="close">×</a>
+      <span style="font-size:20px;line-height: 2;">Invite</span>
+    </div>
+    <div class="modal-body" style="max-height:550px;">
+      <div class="row">
+        <div class="span14 ui-front">
+          <div class="center_block clearfix"><br>
+            <%= f.label "Invite by User name:" %>
+            <div class="input ui-front">
+              <%= f.text_field :user_tokens, id: "search_user" %>
+            </div>
+          </div>
+            <%= hidden_field_tag 'comm_id', community.id %>
+        </div>
+      </div>   
+    </div>
+    <div class="modal-footer" >
+      <%= f.submit "Invite", class: "btn primary pull-right", id: "invite_submit" %>  
+    </div>
+  </div>
+
+</div>
+<% end %>
+
+
       <script type="text/javascript">
 
 $(function(){
@@ -85,4 +160,46 @@ $('.tr-hover').hover(function() {
     $(this).find('.button_toggle').stop(true, true).hide(400);
 });
 });
+
+
+
+$("#invite").on( "click", function() {
+ $('#modal_invite').modal('show');
+});
+
+$("#close_invite").click(function(){
+  $('#modal_invite').modal('hide');
+});
+
+$("#invite_submit").click(function(){
+  $('#modal_invite').modal('hide');
+});
+
+$("#moderator").on( "click", function() {
+ $('#modal_add_mod').modal('show');
+});
+
+$("#close_add_mod").click(function(){
+  $('#modal_add_mod').modal('hide');
+});
+
+$("#submit_add_mod").click(function(){
+  $('#modal_add_mod').modal('hide');
+});
+
+$(function() {
+  $("#search_user").tokenInput("/groups/<%= @group.id %>/search_app_user?comm_id=<%= community.id %>", {
+    crossDomain: false,
+    theme: "facebook",
+    resultsFormatter: function(item){ return "<li>" + "<img src='" + item.profile_pic + "' title='" + item.name + "' height='30px' width='30px' />" + "<div style='display: inline-block; padding-left: 10px;'><div class='full_name'>" + item.name + " " + ""+ "</div></div></li>" },
+    tokenFormatter: function(item) { return  "<li>" + "<img src='" + item.profile_pic + "' title='" + item.name + "' height='30px' width='30px' />" + "<div style='display: inline-block; padding-left: 10px;'><div class='full_name'>" + item.name +"</div></div></li>" },
+    preventDuplicates: true ,
+    zindex: 11001,
+    hintText: "Type in a user name",
+  });
+
+  $('.button_toggle').hide();
+
+});
+
       </script>

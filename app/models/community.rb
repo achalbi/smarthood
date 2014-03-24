@@ -98,7 +98,9 @@ def can_post?(user)
   end 
 end
 
-
+def users_count
+  self.usercommunities.where("invitation = ?", Uc_enum::JOINED).count
+end
 
   def is_requested?(user)
    @usercommunity = self.usercommunities.where("invitation = ? AND user_id = ?", Uc_enum::REQUESTED, user.id)
@@ -116,4 +118,6 @@ end
 def follow!(user, community_id)
   user.usercommunities.create!(community_id: community_id)
 end
+
+
 end

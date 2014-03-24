@@ -5,7 +5,7 @@
   <% if community.is_active?(current_user, community) %>
     <a class="uibutton pull-right " id="create_group" > Create group </a>
   <% end %>
-
+<div id="loading_page" class="center" ><img src="/assets/loading.gif"></div>
 <ul class="tabs span13" id="group_link">
   <li class="active" id="my_groups_li"><a href="#">My groups</a></li>
   <li id="other_groups_li"><a href="#">other groups</a></li>
@@ -114,6 +114,7 @@ $(document).ready(function(){
       $('#submit_group').button('loading');
     },
   });
+  $('#loading_page').hide();
 });
 
 
@@ -122,10 +123,7 @@ $(document).ready(function(){
 
   $("li.group").click(function(){
     $(this).next('a').click();
-    $("#group_link").hide();
-    $("#my_groups").hide();
-    $("#other_groups").hide();
-    $("#create_group").hide();
+    $('#loading_page').show();
   });
 
   $("#other_groups").hide();

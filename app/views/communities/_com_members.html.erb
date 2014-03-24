@@ -1,0 +1,86 @@
+<table class="span6">
+        <thead>
+          <tr class="tr-hover">
+            <th >
+             <%="Moderator".pluralize(ad_users.count) %>
+                <% if current_user.is_cu_admin?(community) %>
+                 <%= link_to "edit", '#', id: "moderator",  class: "uibutton icon edit pull-right button_toggle" %>
+                <% end %>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+            <% ad_users.each do |user|%>
+          <tr class="tr-hover">
+            <td>
+            <div  class="img_zoom" style="float:left;" >
+              <%= gravatar_for user, size: 52 %>
+            </div>
+                <address>
+                  <strong> <%= link_to user.name, user %></strong><br>
+                  <a mailto="<%= user.email %>"><%= user.email %></a>
+                </address>
+              <p>
+                <% if current_user.is_cu_admin?(community) && user.id != current_user.id %>
+                        <%= link_to "Remove", "/communities/#{community.id}/unjoin_cu?user_id=#{user.id}", class: "uibutton pull-right button_toggle ", remote: true, data: { confirm: "You want to remove the user from the community ?" } %>
+                    <% end %>
+              </p>               
+            </td>
+          </tr>
+          <% end %>
+            
+        </tbody>
+      </table>
+
+      <table class="span6">
+        <thead>
+          <tr class="tr-hover">
+            <th >
+              <%="Member".pluralize(inv_users.count) %>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if inv_users.count > 0 %>
+            <% inv_users.each do |user|%>
+              <tr class="tr-hover" >
+                <td >
+                <div  class="img_zoom" style="float:left;" >
+                  <%= gravatar_for user, size: 52 %>
+                </div>
+                    <address>
+                      <strong> <%= link_to user.name, user %></strong><br>
+                      <a mailto="<%= user.email %>"><%= user.email %></a>
+                    </address>
+                  <p>
+                    <% if current_user.is_cu_admin?(community) && user.id != current_user.id %>
+                        <%= link_to "Remove", "/communities/#{community.id}/unjoin_cu?user_id=#{user.id}", class: "uibutton pull-right button_toggle", remote: true, data: { confirm: "You want to remove the user from the community ?" } %>
+                    <% end %>
+                  </p>               
+                </td>
+              </tr>
+            <% end %>
+          <% else %>
+          <tr>
+            <td>
+              <address>No Members in the group</address>
+            </td>
+          </tr>
+          <% end %>
+            
+        </tbody>
+      </table>
+
+
+      <script type="text/javascript">
+
+$(function(){
+  $('.button_toggle').hide();
+
+$('.tr-hover').hover(function() {
+    $(this).find('.button_toggle').stop(true, true).show(400);
+}, function() {
+    $(this).find('.button_toggle').stop(true, true).hide(400);
+});
+});
+      </script>

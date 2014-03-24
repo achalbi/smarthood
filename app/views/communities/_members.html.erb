@@ -11,16 +11,19 @@
     <% unless requested_users.nil?  %>
     <% if requested_users.count > 0 %>
     <div style="background-color: lemonchiffon">
-      <h4 class="marginLeft5">Join <%="Request".pluralize(requested_users.count) %></h4>
+      <h3 class="marginLeft15">Join <%="request".pluralize(requested_users.count) %></h3>
       <ul class="users">
-        <% requested_users.each do |req_user| %>
+        <% requested_users.each do |user| %>
         <li style="padding-left:15px;" class="tr-hover">
-          <%= gravatar_for req_user, size: 50 %> 
-          <h5><%= req_user.name %>
-            <a href="<%= declinerequest_community_path(community) << '?user_id='%><%= req_user.id %>"class="uibutton pull-right" data-remote="true" id="decline" style="margin-right:5px;"> Decline <i class="icon-remove"></i></a>
-            <a href="<%= acceptrequest_community_path(community) << '?user_id='%><%= req_user.id %>"class="uibutton pull-right" data-remote="true" id="accept" style="margin-right:3px;"><i class="icon-ok"></i> Accept </a>
-          </h5>
-          <p><%= req_user.email %></p>
+          <div  class="img_zoom" style="float:left;" >
+                  <%= gravatar_for user, size: 52 %>
+                </div>
+            <a href="<%= declinerequest_community_path(community) << '?user_id='%><%= user.id %>"class="uibutton pull-right button-toggle" data-remote="true" id="decline" style="margin-right:5px;"> Decline <i class="icon-remove"></i></a>
+            <a href="<%= acceptrequest_community_path(community) << '?user_id='%><%= user.id %>"class="uibutton pull-right button-toggle" data-remote="true" id="accept" style="margin-right:3px;"><i class="icon-ok"></i> Accept </a>
+                    <address>
+                      <strong> <%= link_to user.name, user %></strong><br>
+                      <a mailto="<%= user.email %>"><%= user.email %></a>
+                    </address>
         </li>
         <% end %>
       </ul>
@@ -31,52 +34,10 @@
   
   <% end %>
 
-<ul class="users">
-  <% unless ad_users.nil? %>
-    <% if ad_users.count > 0  %>
-    <h4><%="Moderator".pluralize(ad_users.count) %>
-      <% if current_user.is_cu_admin?(community)  %>
-        <%= link_to "edit", '#', id: "moderator",  class: "uibutton icon edit pull-right" %>
-      <% end %>
-    </h4>
-      <% ad_users.each do |user|%>
-      <li style="float:left;margin-left:15px;" class="tr-hover span13">
-        <div  class="img_zoom" style="float:left;" >
-          <%= gravatar_for user, size: 52 %>
-        </div>
-         <p class="marginRight25">
-          <% if current_user.is_cu_admin?(community)  && user.id != current_user.id %>
-                        <%= link_to "Remove", "/communities/#{community.id}/unjoin_cu?user_id=#{user.id}", class: "uibutton pull-right ", remote: true, data: { confirm: "You sure?" } %>
-          <% end %>
-          <%= link_to user.name, user %>
-        </p>
-          <p><%= user.email %></p>
-      </li>
-      <% end %>
-    <li style="clear:both;"></li>
-    <% end %> 
-  <% end %> 
-  <% unless inv_users.nil? %>
-    <% if inv_users.count > 0 %> 
-    <h4><%="Member".pluralize(ad_users.count) %></h4>
-      <% inv_users.each do |user|%>
-      <li style="float:left;margin-left:15px; " class="tr-hover span13">
-        <div  class="img_zoom" style="float:left;" >
-          <%= gravatar_for user, size: 52 %>
-        </div>
-        <p class="marginRight25">
-           <% if current_user.is_cu_admin?(community) && user.id != current_user.id %>
-                        <%= link_to "Remove", "/communities/#{community.id}/unjoin_cu?user_id=#{user.id}", class: "uibutton pull-right ", remote: true, data: { confirm: "You sure?" } %>
-          <% end %>
-          <%= link_to user.name, user %>
-        </p>
-          <p><%= user.email %></p>
-      </li>
-      <% end %>
-    <li style="clear:both;"></li>
-    <% end %>
-  <% end %>
-</ul>
+<div id="show_com_members">
+  <%= render partial: 'communities/com_members', locals: {ad_users: @ad_users, inv_users: @inv_users, community: @community} %>
+
+</div>
 
 
 
@@ -187,6 +148,16 @@
 
 
 <script type="text/javascript">
+
+$(function(){
+  $('.button-toggle').hide();
+
+$('.tr-hover').hover(function() {
+    $(this).find('.button-toggle').stop(true, true).show(400);
+}, function() {
+    $(this).find('.button-toggle').stop(true, true).hide(400);
+});
+});
 
 $(document).ready(function(){
   $('#posts_community_li').removeClass('active');

@@ -3,13 +3,13 @@
   <%= link_to cl_image_tag(group.photo.pic_url(:cover_pic_smallest), class:"image_al_c1 thumbnail pull-left ", id:"#{group.photo.id}"), "#" %>
 
   <% end %>
-            <div style="margin-left:95px;margin-top:10px;">
-                <address>
-                  <strong><%= link_to group.name.capitalize, "#" %></strong><br>
-                  <%= group.description %><br>
-                  Privacy: <%= privacy_str(group) %><br>
-                  <%= pluralize(group.joined_users.count, "Member") %>  in the group
-                </address>
+            <div style="margin-left:95px;margin-top:5px;">
+              <address>
+                <strong> <%= link_to group.name.capitalize, "#", style: "font-size:13px;" %></strong> <br>
+                <strong>Description : &nbsp;</strong> <%= group.description %><br>
+                <strong>Privacy : &nbsp;</strong><%= privacy_str(group) %><br>
+                 <strong><%= "Member".pluralize(group.users.count) %> : </strong><%= pluralize(group.users.count, "person") %> <br> 
+              </address>  
             </div>
 </li>
 

@@ -34,13 +34,13 @@
                 </div>
                 <% end %>
 
-                <div style="margin-left:95px;margin-top:10px;">
-                <address>
-                  <strong><%= link_to group.name.capitalize, "#" %></strong><br>
-                  <%= group.description %><br>
-                  Privacy: <%= privacy_str(group) %><br>
-                  <%= pluralize(group.joined_users.count, "Member") %>  in the group
-                </address>
+                <div style="margin-left:95px;margin-top:5px;">
+                  <address>
+                    <strong> <%= link_to group.name.capitalize, "#", style: "font-size:13px;" %></strong> <br>
+                    <strong>Description : &nbsp;</strong> <%= group.description %><br>
+                    <strong>Privacy : &nbsp;</strong><%= privacy_str(group) %><br>
+                     <strong><%= "Member".pluralize(group.users.count) %> : </strong><%= pluralize(group.users.count, "person") %> <br> 
+                  </address> 
                 </div>
                 
               </li>
@@ -196,7 +196,7 @@
 <script type="text/javascript">
 $(document).ready(function(){
   $('.gravatar').addClass('thumbnail');  
-
+    $('.button_toggle').hide();
 });
 
 
@@ -205,44 +205,6 @@ $("#grp_list").click(function(){
 });
 
 
-$("#invite").on( "click", function() {
- $('#modal_invite').modal('show');
-});
-
-$("#close_invite").click(function(){
-  $('#modal_invite').modal('hide');
-});
-
-$("#invite_submit").click(function(){
-  $('#modal_invite').modal('hide');
-});
-
-$("#moderator").on( "click", function() {
- $('#modal_add_mod').modal('show');
-});
-
-$("#close_add_mod").click(function(){
-  $('#modal_add_mod').modal('hide');
-});
-
-$("#submit_add_mod").click(function(){
-  $('#modal_add_mod').modal('hide');
-});
-
-$(function() {
-  $("#search_user").tokenInput("/groups/<%= group.id %>/search_app_user?comm_id=<%= community.id %>", {
-    crossDomain: false,
-    theme: "facebook",
-    resultsFormatter: function(item){ return "<li>" + "<img src='" + item.profile_pic + "' title='" + item.name + "' height='30px' width='30px' />" + "<div style='display: inline-block; padding-left: 10px;'><div class='full_name'>" + item.name + " " + ""+ "</div></div></li>" },
-    tokenFormatter: function(item) { return  "<li>" + "<img src='" + item.profile_pic + "' title='" + item.name + "' height='30px' width='30px' />" + "<div style='display: inline-block; padding-left: 10px;'><div class='full_name'>" + item.name +"</div></div></li>" },
-    preventDuplicates: true ,
-    zindex: 11001,
-    hintText: "Type in a user name",
-  });
-
-  $('.button_toggle').hide();
-
-});
 
 $("#edit_group").click(function(){
       $('#modal_edit_grp').modal('show');
@@ -314,9 +276,6 @@ $('#members_grp_tab').click(function(){
   $('#members_grp_tab').addClass('active');
   $('#post_grp_tab').removeClass('active');
   $('#photos_grp_tab').removeClass('active');
- // $("#my_groups").show();
- // $("#other_groups").hide();
-//  $("#other_groups").hide();
 });
 
 $('#post_grp_tab').click(function(){
@@ -324,16 +283,12 @@ $('#post_grp_tab').click(function(){
   $('#members_grp_tab').removeClass('active');
   $('#photos_grp_tab').removeClass('active');
   currentPage<%= @group.id.to_s %> = 1;
-  //$("#my_groups").hide();
-  //$("#other_groups").show();
 });
 
 $('#photos_grp_tab').click(function(){
   $('#photos_grp_tab').addClass('active');
   $('#members_grp_tab').removeClass('active');
   $('#post_grp_tab').removeClass('active');
-//  $("#my_groups").show();
-//  $("#other_groups").hide();
 });
 
 
