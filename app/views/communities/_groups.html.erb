@@ -5,7 +5,6 @@
   <% if community.is_active?(current_user, community) %>
     <a class="uibutton pull-right " id="create_group" > Create group </a>
   <% end %>
-<div class="center loading_page" ><img src="/assets/loading.gif"></div>
 <ul class="tabs span13" id="group_link">
   <li class="active" id="my_groups_li"><a href="#">My groups</a></li>
   <li id="other_groups_li"><a href="#">other groups</a></li>
@@ -151,62 +150,6 @@ $('#other_groups_li').click(function(){
   $("#other_groups").show();
 });
 
-$('#posts_community_li').click(function(){
-  $('#posts_community_li').addClass('active');
-  $('#about_community_li').removeClass('active');
-  $('#photos_community_li').removeClass('active');
-  $('#members_community_li').removeClass('active');
-  $('#groups_community_li').removeClass('active');
-  $(this).next('a').click();
-
-});
-
-
-
-$('#posts_community_li').click(function(){
-  $('#posts_community_li').addClass('active');
-  $('#about_community_li').removeClass('active');
-  $('#photos_community_li').removeClass('active');
-  $('#members_community_li').removeClass('active');
-  $('#groups_community_li').removeClass('active');
-  $(this).next('a').click();
-
-});
-$('#about_community_li').click(function(){
-  $('#posts_community_li').removeClass('active');
-  $('#about_community_li').addClass('active');
-  $('#photos_community_li').removeClass('active');
-  $('#members_community_li').removeClass('active');
-  $('#groups_community_li').removeClass('active');
-  $(this).next('a').click();
-
-});
-$('#photos_community_li').click(function(){
-  $('#posts_community_li').removeClass('active');
-  $('#about_community_li').removeClass('active');
-  $('#photos_community_li').addClass('active');
-  $('#members_community_li').removeClass('active');
-  $('#groups_community_li').removeClass('active');
-  $(this).next('a').click();
-});
-
-$('#members_community_li').click(function(){
-  $('#posts_community_li').removeClass('active');
-  $('#about_community_li').removeClass('active');
-  $('#photos_community_li').removeClass('active');
-  $('#members_community_li').addClass('active');
-  $('#groups_community_li').removeClass('active');
-  $(this).next('a').click();
-});
-
-$('#groups_community_li').click(function(){
-  $('#posts_community_li').removeClass('active');
-  $('#about_community_li').removeClass('active');
-  $('#photos_community_li').removeClass('active');
-  $('#members_community_li').removeClass('active');
-  $('#groups_community_li').addClass('active');
-  $(this).next('a').click();
-});
 
 $(document).ready(function(){
   $('.gravatar').addClass('thumbnail');  

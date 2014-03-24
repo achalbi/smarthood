@@ -1,11 +1,11 @@
 class Group < ActiveRecord::Base
   belongs_to :User
   belongs_to :photo
-  attr_accessible :description, :name, :privacy, :photo_attributes, :user_tokens
+  attr_accessible :description, :name, :privacy, :photo_attributes, :user_tokens, :profile_pic
   accepts_nested_attributes_for :photo
 
   attr_reader :user_tokens
-  attr_accessor :user_ids
+  attr_accessor :user_ids, :profile_pic
   def user_tokens=(ids)
     self.user_ids = ids.split(",")
   end

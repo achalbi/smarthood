@@ -151,13 +151,13 @@ def search_app_user
   @group_users = []
   unless params[:id].nil?
     @group = Group.find(params[:id])
-    @group_users = @group.user_groups.where('invitation = ?',Uc_enum::JOINED).collect(&:user_id)
+    @group_users = @group.user_groups.where('invitation = ?',Uc_enum::JOINED).collect(&:user_id).uniq
   end
-  @users = User.where("id IN (?)", @community.usercommunities.collect(&:user_id)-@group_users)
+  @users = User.where("id IN (?)", @community.usercommunities.collect(&:user_id).uniq-@group_users)
   @users = @users.where("users.name like ? AND users.id != ?", "%#{params[:q]}%", current_user.id)
   @users_pp = []
   @users.each do |user|
-    user.profile_pic =  gravatar_for_url(user, size: 40)
+    user[:profile_pic] =  gravatar_for_url(user, size: 40)
     @users_pp << user
   end
   respond_to do |format|
