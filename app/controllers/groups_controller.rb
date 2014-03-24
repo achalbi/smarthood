@@ -53,7 +53,7 @@ class GroupsController < ApplicationController
      else
           respond_to do |format|
            format.html { }
-           format.js { redirect_to :controller => 'communities', :action => 'show_group', :id => @group.id, comm_id: params[:comm_id] }
+           format.js { redirect_to :controller => 'communities', :action => 'show_group', :grp_id => @group.id, id: params[:comm_id] }
          end
      end
    end
