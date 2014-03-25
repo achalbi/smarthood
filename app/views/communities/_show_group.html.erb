@@ -276,6 +276,7 @@ $('#members_grp_tab').click(function(){
   $('#members_grp_tab').addClass('active');
   $('#post_grp_tab').removeClass('active');
   $('#photos_grp_tab').removeClass('active');
+  $('.loading_page').show();
 });
 
 $('#post_grp_tab').click(function(){
@@ -283,12 +284,14 @@ $('#post_grp_tab').click(function(){
   $('#members_grp_tab').removeClass('active');
   $('#photos_grp_tab').removeClass('active');
   currentPage<%= @group.id.to_s %> = 1;
+  $('.loading_page').show();
 });
 
 $('#photos_grp_tab').click(function(){
   $('#photos_grp_tab').addClass('active');
   $('#members_grp_tab').removeClass('active');
   $('#post_grp_tab').removeClass('active');
+  $('.loading_page').show();
 });
 
 

@@ -49,6 +49,10 @@ class PhotoUploader < CarrierWave::Uploader::Base
      process :resize_to_fit => [350, 25]
    end 
 
+  version :smallest_fit do
+     process :resize_to_fit => [350, 25]
+   end 
+
 
   version :smallest_half do
      cloudinary_transformation :width =>25, :height => 25, :crop => :fill, :gravity => :faces

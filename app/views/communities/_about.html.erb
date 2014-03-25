@@ -9,37 +9,32 @@
 
  <% if community.is_private?(current_user) %>
      <% unless community.is_requested?(current_user) %>
-       <%= link_to "Send request", sendrequest_community_path(community), class: "uibutton icon secure pull-right", remote: true, id: "send_req" %>
+       <%= link_to "Send request", sendrequest_community_path(community), class: "uibutton icon secure pull-right show_loading", style:"margin-right:5px;", remote: true, id: "send_req" %>
      <% end %>
  <% elsif community.is_public?(current_user) %>
-   <%= link_to "Join", join_cu_community_path(community), class: "uibutton icon prev pull-right", remote: true, id: "join_com" %>
+   <%= link_to "Join", join_cu_community_path(community), class: "uibutton icon prev pull-right show_loading", remote: true, id: "join_com", style:"margin-right:5px;" %>
  <% end %>
- <span class="marginLeft5">
+ <span class="marginLeft15">
   <% if community.is_joined?(current_user, community) %>
-   <%= link_to "Unjoin", unjoin_cu_community_path(community), class: "uibutton icon prev pull-right margin", remote: true, id: "unjoin_com" %>
+   <%= link_to "Unjoin", unjoin_cu_community_path(community), class: "uibutton icon prev pull-right marginLeft10 show_loading", remote: true, id: "unjoin_com", style:"margin-right:5px;" %>
  <% end %>
  </span>
 
  <% if current_user.is_cu_admin?(community) %>
-    <%= link_to "edit", '#', id: "edit_comUnity",  class: "marginRight10 pull-right uibutton icon edit",:title => "Edit" %>
- <% end %><br><br>
-<!--  <p><h1><%= community.name %></h1></p> -->
- 
- <p><h4><strong>Description : </strong><small><%= community.description %></small></h4></p>
-
- <p><h4><strong>Location : </strong><%= community.address %></h4></p>
+    <%= link_to "edit", '#', id: "edit_comUnity",  class: "marginRight10 pull-right uibutton icon edit",:title => "Edit", style:"margin-right:5px;" %>
+ <% end %>
+<address>
+    <strong> <%= link_to community.name.capitalize, "#", style: "font-size:14px;" %></strong> <br>
+    <strong>Description : &nbsp;</strong> <%= community.description %><br>
+    <strong>Privacy : &nbsp;</strong><%= privacy_str(community) %><br>
+  <% unless (community.req_pending_cnt.nil? || community.req_pending_cnt == 0)%>
+    <strong><%=  'Request'.pluralize(community.req_pending_cnt) %> pending : &nbsp;</strong> <span class=" label important" style="right:0;padding-bottom:2px;"><%= if community.req_pending_cnt > 0 then community.req_pending_cnt end %></span><br>
+  <% end %>
+  <strong><%= "Member".pluralize(community.users_count) %> : </strong><%= pluralize(community.users_count, "person") %> <br> 
+    <strong>Location : &nbsp;</strong><%= community.address %><br><br>
 
  <%= render :partial => "events/maps", :locals => { :location => community } %><br>
-<p><h4><strong>Privacy : </strong><%= privacy_str(community) %></h4></p>
- <p ><h4 ><strong>Host : </strong><span style="margin:5px;">
-  <%= link_to community.user.name, community.user %>
-</span></h4></p>
-<div  class="img_zoom" style="float:left;" >
-  <%= gravatar_for community.user, size: 100 %>
-</div>
-<br><br><br><br><br><br><br><br>
-
-
+  </address>
 </div>
 
 
@@ -120,6 +115,11 @@
 
 <script type="text/javascript">
 
+  $('.show_loading').click(function(){
+    $('.loading_page').show();    
+  });
+
+
 $("#send_req").click(function(){
   $(this).hide();
 });
@@ -134,7 +134,6 @@ $("#unjoin_com").click(function(){
 
 $(document).ready(function(){
   $.validate({
-    modules : 'security',
     onSuccess : function() {
       $('#updComUnity').attr('data-loading-text', 'Updating...');
       $('#updComUnity').button('loading');
@@ -145,7 +144,7 @@ $(document).ready(function(){
 
 
 $(document).ready(function(){
-  $('#edit_comUnity').hide();
+//  $('#edit_comUnity').hide();
   $('.gravatar').addClass('thumbnail pop_up');  
   $('#view_map_link2').hide();
 
@@ -158,11 +157,11 @@ $(document).ready(function(){
 
 });
 
-$('#aboutDiv').hover(function(){
+/*$('#aboutDiv').hover(function(){
   $('#edit_comUnity').toggle();
 },function(){
   $('#edit_comUnity').toggle();
-});
+});*/
 
 $("#edit_comUnity").click(function(){
   $('#modal2').modal('show');

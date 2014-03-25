@@ -1,1 +1,2 @@
+$('.loading_page').hide();
 $("#show_group_div").html("<%= escape_javascript(render partial: 'groups/albums', locals: {group: @group, albums: @group.albums, album: @album} ) %>");

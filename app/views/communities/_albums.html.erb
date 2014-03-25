@@ -81,6 +81,8 @@
  </div>
  <div class="modal-footer" >
   <%= f.submit "Create Album", class: "btn primary pull-right busy", id: "crtAlb_com" %> 
+  <%= f.submit "", :class => 'active_hide reset_form', :type => 'reset' %> 
+
 </div>
 </div>
 </div>
@@ -90,10 +92,28 @@
 
 <script type="text/javascript">
 $("#upload_pics_com").click(function(){
-  $('#modal_com').modal('show');
+    $('#modal_com').modal({
+    //  keyboard: true,
+      backdrop: "static",
+    });
+ // $('#modal_com').modal('show');
 });
+
 $("#closeX_com").click(function(){
   $('#modal_com').modal('hide');
+  $('.reset_form').click();
+
+
+  $('#pic_com').val('');
+  var canvas = document.getElementById('imageCanvas_com');
+  var ctx = canvas.getContext('2d');
+  canvas.width = 300;
+  canvas.height = 155;
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.font="15px Arial";
+      ctx.fillText("Click here to add photos (Max: 50 files)",25,75);
+
 });
 
 
@@ -124,24 +144,29 @@ function handleImage(e){
   var ctx = canvas.getContext('2d');
   var iCnt=0;
   var files = e.target.files;
-    if(files.length>50){
+   if(files.length>50){
       alert("Maximum of 50 files can be selected");
       $('#pic_com').val('');
       ctx.setTransform(1, 0, 0, 1, 0, 0);
+      canvas.width = 300;
+      canvas.height = 155;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.font="20px Arial";
-      ctx.fillText("Click here to add photos",10,50);
+      ctx.font="15px Arial";
+      ctx.fillText("Click here to add photos (Max: 50 files)",25,75);
       return;
     }
    if(files.length<1){
+    $('#pic_com').val('');
       ctx.setTransform(1, 0, 0, 1, 0, 0);
+      canvas.width = 300;
+      canvas.height = 155;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.font="20px Arial";
-      ctx.fillText("Click here to add photos",10,50);
+      ctx.font="15px Arial";
+      ctx.fillText("Click here to add photos (Max: 50 files)",25,75);
       return;
     }
-  canvas.width = 600;
-  canvas.height = 155*(Math.ceil(files.length/4));
+  canvas.width = 453;
+  canvas.height = 155*(Math.ceil(files.length/3));
   for( var i = 0, len = files.length; i < len; i++) 
   {
     if(files[i])
@@ -160,7 +185,7 @@ function handleImage(e){
            ratio = img.height/sHeight;
            sWidth = img.width/ratio;  
          }
-         ctx.drawImage(img, 155*(iCnt%4),155*(Math.floor(iCnt/4)),sWidth,sHeight);
+         ctx.drawImage(img, 155*(iCnt%3),155*(Math.floor(iCnt/3)),sWidth,sHeight);
                           //ctx.drawImage(img,0,0,sWidth,sHeight);
                           iCnt++;
                         }

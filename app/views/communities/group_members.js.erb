@@ -1,1 +1,2 @@
+$('.loading_page').hide();
 $("#show_group_div").html("<%= escape_javascript(render partial: 'communities/group_members', locals: {ad_users: @ad_users, inv_users: @inv_users, community: @community} ) %>");

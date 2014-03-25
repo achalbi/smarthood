@@ -7,7 +7,7 @@
 
                         <% end %>
                          <div class=" pull-left">
-                            <%= f.text_area :content, placeholder: "Compose new post...", :rows=>6, class: "span10" %>
+                            <%= f.text_area :content, placeholder: "Compose new post...", :rows=>6, class: "span10", 'data-validation' => "required", 'data-validation-error-msg' => "Post can't be blank" %>
                          <canvas id="imageCanvas1" style = "border: 1px solid #ddd; padding:2px; align:center;cursor:pointer; background-color:#ffffff;" width="132px" height="88px">Add pictures</canvas>
                         </div> 
 
@@ -20,7 +20,9 @@
                      <div id="sel_grp_label"></div>
                      <% unless @groups.blank? %>
                       <% @groups.each do |grp| %>
-                          <div id="grp_label_<%= grp.id %>" style="display:none;margin:5px;" class="pull-left"><%=link_to grp.name, grp, remote: true %> </div>
+                          <div id="grp_label_<%= grp.id %>" style="display:none;" class="pull-left">
+                            <%= link_to cl_image_tag(grp.photo.pic_url(:tiny_logo), class:" marginLeft20", id:"#{grp.photo.id}"), "#" %>
+                           <strong> <%= link_to grp.name, "#", style: "margin-left:3px;" %> </strong></div>
                           <div style="display:none;">
                             <%= check_box_tag 'grp_ids[]', grp.id, nil, id:"grp_check_#{grp.id}" %>
                           </div>
@@ -33,7 +35,7 @@
   <div id="modal-from-dom2" class="modal hide fade in" style="display: block;width:665px;">
     <div class="modal-header">
       <a href="#" id="closeX_sel_grp" class="close">×</a>
-      <span style="font-size:20px;line-height: 2;">Select Groups</span>
+      <h3>Select groups</h3>
     </div>
     <div class="modal-body" style="max-height:400px;">
       <div class="row">
@@ -41,26 +43,29 @@
         <section id="groups_sec" style="">
             <div style="padding:5px;">
               <% unless @groups.blank? %>
-              <% @groups.each do |grp| %>
+                  <ul class="users">
+              <% @groups.each do |group| %>
               <div class="bgClrChg2 span14 pull-left" style="cursor:pointer;margin-right:20px;">
                   <div style="display:none;" class="pull-left">
-                    <%= check_box_tag 'grp_ids[]', grp.id %>
+                    <%= check_box_tag 'grp_ids[]', group.id %>
                   </div>
-                  <p style="display:none;"><%= grp.id %></p>
+                  <p style="display:none;"><%= group.id %></p>
 
-                  <ul class="users">
-                    <li style="padding-left:15px;" class="tr-hover1">
-                      <% unless grp.photo.nil? %>
-                         <%= cl_image_tag(grp.photo.pic_url(:smallest), class:"image_al_c1 thumbnail pull-left ", id:"#{grp.photo.id}") %>
-                      <% end %>
-                      <span class=" pull-left" style="font-size:medium;margin-top:5px; margin-left:10px;" ><%=  grp.name.capitalize %></span>
-                      <a class="uibutton pull-right select_unselect" style="margin-right:3px;">Select </a>
-                      <br><br>
-                      <span class="marginLeft10"><%= grp.description %></span>
-                    </li>
-                  </ul>
+                     <li style="padding-left:15px;cursor:pointer;position:relative;" class="tr-hover group" >
+                        <%= link_to cl_image_tag(group.photo.pic_url(:cover_pic_smallest), class:"image_al_c1 thumbnail pull-left ", id:"#{group.photo.id}"), "#" %>
+                                 <a class="uibutton pull-right select_unselect" style="margin-right:3px;">Select </a>
+                                  <div style="margin-left:95px;margin-top:5px;">
+                                    <address>
+                                      <strong> <%= link_to group.name.capitalize, "#", style: "font-size:13px;" %></strong> <br>
+                                      <strong>Description : &nbsp;</strong> <%= group.description %><br>
+                                      <strong>Privacy : &nbsp;</strong><%= privacy_str(group) %><br>
+                                       <strong><%= "Member".pluralize(group.users.count) %> : </strong><%= pluralize(group.users.count, "person") %> <br> 
+                                    </address>  
+                                  </div>
+                      </li>
               </div>
               <% end %>
+                  </ul>
               <% end %>
            </div>
         </section>
@@ -75,6 +80,17 @@
 
 
 <script type="text/javascript">
+
+$(document).ready(function(){
+  $.validate({
+//    validateOnBlur : false,
+    onSuccess : function() {
+      $('.loading_page').show();
+      $('#community_post_submit').attr('data-loading-text', 'Posting...');
+      $('#community_post_submit').button('loading');
+    },
+  });
+});
 
 $("#group_post_select").click(function(){
   $('#modal_sel_grp').modal('show');

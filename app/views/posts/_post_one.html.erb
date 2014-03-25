@@ -116,7 +116,7 @@
                   <div class="container_pics" >
                    <% post.photos.each do |photo| %>
                       <div  class="img_zoom" >
-                        <%= cl_image_tag(photo.pic_url(:small), class:"image_al_c")  %></a> 
+                        <%= cl_image_tag(photo.pic_url(:medium_large), class:"image_al_c")  %> 
                     </div>
                     <% break %>
                   <% end %>

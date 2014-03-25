@@ -277,6 +277,7 @@ def join_cu
    @usercommunity.save
  else
     @usercommunity.invitation = Uc_enum::JOINED
+    @usercommunity.status="active"
     @usercommunity.save
  end
   unless params[:id].nil?
@@ -476,7 +477,7 @@ def get_geo_coordinates
 end
 
 def search_app_user
-  @users = User.where("name like ? AND id != ?", "%#{params[:q]}%", current_user.id)
+  @users = User.where("LOWER(name) like LOWER(?) AND id != ?", "%#{params[:q]}%", current_user.id)
         @users_pp = []
         @users.each do |user|
           user[:profile_pic] =  gravatar_for_url(user, size: 40)
@@ -662,6 +663,7 @@ def search_app_user
   end
 
   def photos_com
+    flash.clear
     @community = Community.find(params[:id])
     @albums = @community.albums
     @selected_community = @community

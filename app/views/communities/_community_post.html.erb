@@ -39,6 +39,15 @@
     var ctx = canvas.getContext('2d');
     var iCnt=0;
     var files = e.target.files;
+    if(files.length<1){
+      $('#pic1').val('');
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.clearRect(0, 0, 132, 88);
+      ctx.font="8pt tahoma ";
+      ctx.fillStyle = 'grey';
+      ctx.fillText("Add picture",35,46);
+      return;
+    }
     canvas.width = 132;
     canvas.height = 88*(Math.ceil(files.length/1));
     for( var i = 0, len = files.length; i < len; i++) 
@@ -131,33 +140,31 @@ $('#posts_community_li').click(function(){
 </script>
 <% else %>
   
-
+<div class="center loading_page active_hide" ><img src="/assets/loading.gif"></div>
 <div id="aboutDiv">
  <% if @selected_community.is_private?(current_user) %>
      <% unless @selected_community.is_requested?(current_user) %>
-       <%= link_to "Send request", sendrequest_community_path(@selected_community), class: "uibutton icon secure pull-right", remote: true, id: "send_req_com" %>
+       <%= link_to "Send request", sendrequest_community_path(@selected_community), class: "uibutton icon secure pull-right show_loading", remote: true, id: "send_req_com" %>
      <% end %>
  <% elsif @selected_community.is_public?(current_user) %>
-   <%= link_to "Join", join_cu_community_path(@selected_community), class: "uibutton icon prev pull-right", remote: true, id: "join_req_com" %>
+   <%= link_to "Join", join_cu_community_path(@selected_community), class: "uibutton icon prev pull-right show_loading", remote: true, id: "join_req_com" %>
  <% end %>
    <% if @community.is_requested?(current_user) %>
     <span class=" padding5 label warning pull-right" style="font-size:small;"><strong>Request pending to join the community</strong></span><br>
   <% end %>
+<br>
+<address>
+    <strong> <%= link_to community.name.capitalize, "#", style: "font-size:14px;" %></strong> <br>
+    <strong>Description : &nbsp;</strong> <%= community.description %><br>
+    <strong>Privacy : &nbsp;</strong><%= privacy_str(community) %><br>
+  <% unless (community.req_pending_cnt.nil? || community.req_pending_cnt == 0)%>
+    <strong><%=  'Request'.pluralize(community.req_pending_cnt) %> pending : &nbsp;</strong> <span class=" label important" style="right:0;padding-bottom:2px;"><%= if community.req_pending_cnt > 0 then community.req_pending_cnt end %></span><br>
+  <% end %>
+  <strong><%= "Member".pluralize(community.users_count) %> : </strong><%= pluralize(community.users_count, "person") %> <br> 
+    <strong>Location : &nbsp;</strong><%= community.address %><br><br>
 
- <p><h4><strong>Description : </strong><small><%= @selected_community.description %></small></h4></p>
-
- <p><h4><strong>Location : </strong><%= @selected_community.address %></h4></p>
-
- <%= render :partial => "events/maps", :locals => { :location => @selected_community } %><br>
-<p><h4><strong>Privacy : </strong><%= privacy_str(@selected_community) %></h4></p>
- <p ><h4 ><strong>Host : </strong><span style="margin:5px;">
-  <%= link_to @selected_community.user.name, @selected_community.user %>
-</span></h4></p>
-<div  class="img_zoom" style="float:left;" >
-  <%= gravatar_for @selected_community.user, size: 100 %>
-</div>
-
-
+ <%= render :partial => "events/maps", :locals => { :location => community } %><br>
+  </address>
 </div>
 <script type="text/javascript">
 
@@ -172,6 +179,11 @@ $("#send_req_com").click(function(){
 $("#join_req_com").click(function(){
   $(this).hide();
 });
+
+  $('.show_loading').click(function(){
+    $('.loading_page').show();    
+  });
+
 
 </script>
 

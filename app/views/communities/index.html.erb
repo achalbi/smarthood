@@ -22,7 +22,7 @@ $(document).ready(function(){
       <%= link_to "Create Community", '#', id: "ComUnity",  class: " pull-right uibutton icon add" %><br><br>
       <div id="comUnity_div">    
         <% unless @selected_community.nil? %>
-        <li class="sidetabs sidetabs_selected" style="list-style-type: none;padding:5px; margin:5px;">
+        <li class="sidetabs sidetabs_selected show_loading" style="list-style-type: none;padding:5px; margin:5px;">
           <h6><a>Active community</a>
             <span id="act_req_count"  class="pull-right">
               <%= render partial: 'communities/act_req_count'%>
@@ -39,7 +39,7 @@ $(document).ready(function(){
         </li>
         <%= link_to "", moderated_com_communities_path , id: "moderated_comUnity", remote: true %>-->
         <% end %>
-        <li class="sidetabs notActive" style="list-style-type: none;padding:5px; margin:5px;">
+        <li class="sidetabs notActive show_loading" style="list-style-type: none;padding:5px; margin:5px;">
           <h6><a>My communities</a>
           <span id="mem_req_count"  class="pull-right">
             <%= render partial: 'communities/mem_req_count'%>
@@ -47,7 +47,7 @@ $(document).ready(function(){
           </h6>
         </li>
         <%= link_to "", my_com_communities_path , id: "joined_comUnity", remote: true %>
-        <li class="sidetabs notActive"id="public_li" style="list-style-type: none;padding:5px; margin:5px;">
+        <li class="sidetabs notActive show_loading"id="public_li" style="list-style-type: none;padding:5px; margin:5px;">
           <h6><a>Other communities</a></h6>
         </li>
         <%= link_to "", other_com_communities_path,id: "public_comUnity", remote: true %>
@@ -55,7 +55,7 @@ $(document).ready(function(){
           <h6><a>Private</a></h6>
         </li>
         <%= link_to "", private_com_communities_path , id: "private_comUnity", remote: true %> -->
-        <li class="sidetabs notActive" style="list-style-type: none;padding:5px; margin:5px;">
+        <li class="sidetabs notActive show_loading" style="list-style-type: none;padding:5px; margin:5px;">
           <h6><a>Invite from communities</a>
             <span id="inv_req_count" class="pull-right">
             <%= render partial: 'communities/inv_req_count'%>
@@ -135,18 +135,19 @@ $(document).ready(function(){
             <%= label_tag "Add picture:" %>
             <%= f.fields_for :photo, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
 
-            <%= photo_form.file_field :pic, id: "pic",style: "width:1px; height:1px; padding:0px;  left:0px;" %>  
+            <%= photo_form.file_field :pic, id: "pic",style: "width:0px; height:0px; padding:0px;  left:0px;" %>  
 
             <% end %>
             <div class="input">
-              <canvas id="imageCanvas" style = "border: 1px solid #ddd; padding:5px; align:center; width:200px;cursor:pointer" >select new image</canvas>
+              <canvas id="imageCanvas" style = "border: 1px solid #ddd; padding:5px; align:center;cursor:pointer" >select new image</canvas>
             </div>
           </div>
         </div>
       </div>
     </div>
     <div class="modal-footer" >
-      <%= f.submit "Create", class: "btn primary pull-right busy", id: "crtComUnity" %>  
+      <%= f.submit "Create", class: "btn primary pull-right busy", id: "crtComUnity" %> 
+      <%= f.submit "", :class => 'active_hide reset_form', :type => 'reset' %> 
     </div>
   </div>
 </div>
@@ -179,10 +180,10 @@ $(".sidetabs").click(function(){
   $(this).addClass('sidetabs_selected');
   if($(this).hasClass('notActive')){
     $('#cu_pic').hide('slow');
-    $('.tabs').hide();
+//    $('.tabs').hide();
   }else{
     $('#cu_pic').show('slow');
-    $('.tabs').show();
+//    $('.tabs').show();
   }
   $(this).next('a').click();
 });
@@ -196,6 +197,17 @@ $("#ComUnity").click(function(){
 });
 $("#closeX").click(function(){
   $('#modal').modal('hide');
+  $('.reset_form').click();
+
+  $('#pic').val('');
+  var canvas = document.getElementById('imageCanvas');
+  var ctx = canvas.getContext('2d');
+  canvas.width = 300;
+  canvas.height = 155;
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.font="15px Arial";
+      ctx.fillText("Click here to add picture",25,75);
 });
 
 
@@ -246,15 +258,25 @@ $("#imageCanvas").click(function(){
 });
 var canvas = document.getElementById('imageCanvas');
 var ctx = canvas.getContext('2d');
-ctx.font="30px Arial";
-ctx.fillText("Add picture",10,50);
+  ctx.font="15px Arial";
+  ctx.fillText("Click here to add picture",25,75);
 
 function handleImage(e){
   var canvas = document.getElementById('imageCanvas');
   var ctx = canvas.getContext('2d');
   var iCnt=0;
   var files = e.target.files;
-  canvas.width = 180;
+   if(files.length<1){
+      $('#pic').val('');
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      canvas.width = 300;
+      canvas.height = 155;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.font="15px Arial";
+      ctx.fillText("Click here to add picture",25,75);
+      return;
+    }
+  canvas.width = 200;
   canvas.height = 155*(Math.ceil(files.length/4));
   for( var i = 0, len = files.length; i < len; i++) 
   {
@@ -265,7 +287,7 @@ function handleImage(e){
         var img = new Image();
 
         img.onload = function(){
-          var ratioPx = 150;
+          var ratioPx = 195;
           var sWidth =ratioPx;
           var ratio = img.width/sWidth;
           var sHeight = img.height/ratio;   
@@ -285,7 +307,9 @@ function handleImage(e){
           }
         }
 
-
+  $('.show_loading').click(function(){
+    $('.loading_page').show();    
+  });
 
 
         </script>
