@@ -23,7 +23,7 @@ class PostsController < ApplicationController
       @post.communities << active_community 
       @activity.posts << @post
       @post.activityposts[0].update_attributes(:event_id => @activity.event_id)
-      @posts = @activity.posts.order("id DESC").all
+      @posts = @activity.posts.paginate(page: params[:page], :per_page => 4).collect{|a| a.post}.uniq 
       getNotifiableUsers(Objecttypeenum::POST, @post, Objecttypeenum::ACTIVITY, @activity, Uc_enum::CREATED)
       @post =Post.new
       @post_type = 'activity'
@@ -42,7 +42,7 @@ class PostsController < ApplicationController
     end
     @post.communities << active_community 
     @group.posts << @post
-    @posts = @group.posts.order("id DESC").all
+    @posts = @group.posts.paginate(page: params[:page], :per_page => 4).collect{|a| a.post}.uniq 
     getNotifiableUsers(Objecttypeenum::POST, @post, Objecttypeenum::GROUP, @group, Uc_enum::CREATED)
     @post =Post.new
     @post_type = 'group'
@@ -130,7 +130,7 @@ class PostsController < ApplicationController
           @selected_comm  = []
           @selected_comm << @community
           @post = Post.new
-          @posts = @community.posts.paginate(page: params[:page], :per_page => 4).uniq
+          @posts = @community.posts.paginate(page: params[:page], :per_page => 4).collect{|a| a.post}.uniq
           @my_groups_ids = current_user.user_groups.where("community_id = ? AND invitation = ? ", params[:id], Uc_enum::JOINED ).collect(&:group_id).uniq
           @groups = Group.where('id IN (?)', @my_groups_ids)
           @post_type = 'community'
