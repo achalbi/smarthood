@@ -22,7 +22,7 @@
                 </address>
               <p>
                 <% if current_user.is_cu_admin?(community) && user.id != current_user.id %>
-                        <%= link_to "Remove", "/communities/#{community.id}/unjoin_cu?user_id=#{user.id}", class: "uibutton pull-right button_toggle ", remote: true, data: { confirm: "You want to remove the user from the community ?" } %>
+                        <%= link_to "Remove", "/communities/#{community.id}/unjoin_cu?user_id=#{user.id}", class: "uibutton pull-right button_toggle remove_user", remote: true %>
                     <% end %>
               </p>               
             </td>
@@ -54,7 +54,7 @@
                     </address>
                   <p>
                     <% if current_user.is_cu_admin?(community) && user.id != current_user.id %>
-                        <%= link_to "Remove", "/communities/#{community.id}/unjoin_cu?user_id=#{user.id}", class: "uibutton pull-right button_toggle", remote: true, data: { confirm: "You want to remove the user from the community ?" } %>
+                        <%= link_to "Remove", "/communities/#{community.id}/unjoin_cu?user_id=#{user.id}", class: "uibutton pull-right button_toggle remove_user", remote: true %>
                     <% end %>
                   </p>               
                 </td>
@@ -82,5 +82,19 @@
       }, function() {
         $(this).find('.button_toggle').stop(true, true).hide(400);
       });
+
+
+        $('.remove_user').click(function(){
+          var answer = confirm('You want to remove this user from the community ?');
+            if (answer)
+            {
+              $(this).closest('tr').hide();
+            }
+            else
+            {
+              
+            }
+          
+        });
     });
       </script>

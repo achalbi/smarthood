@@ -316,10 +316,12 @@ def unjoin_cu
  @usercommunity.status=""
  @usercommunity.save
  @community = Community.find(params[:id])
- deleteNotificationSettings(params[:id], current_user.id)
+ deleteNotificationSettings(params[:id], @user.id)
  flash[:success] = "Unjoined community: " + @community.name
   unless params[:user_id].nil?
-    redirect_to :action => :index, id: params[:id]
+   respond_to do |format|
+      format.all { render :nothing => true, :status => 200 }
+   end
   end
 end
 

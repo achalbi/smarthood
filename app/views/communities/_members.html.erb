@@ -18,8 +18,8 @@
           <div  class="img_zoom" style="float:left;" >
                   <%= gravatar_for user, size: 52 %>
                 </div>
-            <a href="<%= declinerequest_community_path(community) << '?user_id='%><%= user.id %>"class="uibutton pull-right button-toggle" data-remote="true" id="decline" style="margin-right:5px;"> Decline <i class="icon-remove"></i></a>
-            <a href="<%= acceptrequest_community_path(community) << '?user_id='%><%= user.id %>"class="uibutton pull-right button-toggle" data-remote="true" id="accept" style="margin-right:3px;"><i class="icon-ok"></i> Accept </a>
+            <a href="<%= declinerequest_community_path(community) << '?user_id='%><%= user.id %>"class="uibutton pull-right button-toggle decline_user" data-remote="true" id="decline" style="margin-right:5px;"> Decline <i class="icon-remove"></i></a>
+            <a href="<%= acceptrequest_community_path(community) << '?user_id='%><%= user.id %>"class="uibutton pull-right button-toggle accept_user" data-remote="true" id="accept" style="margin-right:3px;"><i class="icon-ok"></i> Accept </a>
                     <address>
                       <strong> <%= link_to user.name, user %></strong><br>
                       <a mailto="<%= user.email %>"><%= user.email %></a>
@@ -46,7 +46,7 @@
                   <%= gravatar_for user, size: 52 %>
                 </div>
                 <% if current_user.is_cu_admin?(community) %>
-                    <a href="<%= declinerequest_community_path(community) << '?user_id='%><%= user.id %>"class="uibutton pull-right button-toggle" data-remote="true" id="decline" style="margin-right:5px;"> Uninvite <i class="icon-remove"></i></a>
+                    <a href="<%= declinerequest_community_path(community) << '?user_id='%><%= user.id %>"class="uibutton pull-right button-toggle decline_user" data-remote="true" id="decline" style="margin-right:5px;"> Uninvite <i class="icon-remove"></i></a>
                 <% end %>
                     <address>
                      <% unless user.name.nil? %> <strong> <%= link_to user.name, user %></strong><br><% end %>
@@ -185,10 +185,10 @@ $('.tr-hover').hover(function() {
     $(this).find('.button-toggle').stop(true, true).hide(400);
 });
 
-  $('#accept').click(function(){
+  $('.accept_user').click(function(){
     $(this).closest('li').hide();
   });
-  $('#decline').click(function(){
+  $('.decline_user').click(function(){
     $(this).closest('li').hide();
   });
 });
