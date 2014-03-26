@@ -165,7 +165,7 @@
     </div>   
   </div>
   <div class="modal-footer" >
-    <%= f.submit "Update", class: "btn primary pull-right", id: "submit_add_mod" %>  
+    <%= f.submit "Update", class: "btn primary pull-right busy", id: "submit_add_mod" %>  
   </div>
 </div>
 </div>
@@ -178,6 +178,7 @@
 
 $(function(){
   $('.button-toggle').hide();
+  $(".modal-backdrop").remove();
 
 $('.tr-hover').hover(function() {
     $(this).find('.button-toggle').stop(true, true).show(400);
@@ -235,7 +236,10 @@ function requestCallback(response)
 }
 
 $("#invite_cu").on( "click", function() {
- $('#modal_invite').modal('show');
+ $('#modal_invite').modal({
+      //keyboard: true,
+      backdrop: "static",
+    });
 });
 
 $("#close_invite").click(function(){
@@ -243,11 +247,15 @@ $("#close_invite").click(function(){
 });
 
 $("#invite_submit").click(function(){
-  $('#modal_invite').modal('hide');
+      $(this).attr('data-loading-text', 'Inviting...');
+      $(this).button('loading');
 });
 
 $("#invite_email").on( "click", function() {
- $('#modal_invite_email').modal('show');
+ $('#modal_invite_email').modal({
+      //keyboard: true,
+      backdrop: "static",
+    });
 });
 
 $("#close_invite_email").click(function(){
@@ -255,11 +263,15 @@ $("#close_invite_email").click(function(){
 });
 
 $("#invite_email_submit").click(function(){
-  $('#modal_invite_email').modal('hide');
+  $(this).attr('data-loading-text', 'Inviting...');
+  $(this).button('loading');
 });
 
 $("#moderator").on( "click", function() {
- $('#modal_add_mod').modal('show');
+ $('#modal_add_mod').modal({
+      //keyboard: true,
+      backdrop: "static",
+    });
 });
 
 $("#close_add_mod").click(function(){
@@ -267,7 +279,8 @@ $("#close_add_mod").click(function(){
 });
 
 $("#submit_add_mod").click(function(){
-  $('#modal_add_mod').modal('hide');
+  $(this).attr('data-loading-text', 'Updating...');
+  $(this).button('loading');
 });
 
 $(function() {
