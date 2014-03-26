@@ -147,9 +147,9 @@ module ActivitynotificationsHelper
 		end
 	end
 
-	def createNotificationSettings(cu_id)
+	def createNotificationSettings(cu_id, user_id)
         @notifications_settings = Activitynotificationsetting.new
-        @notifications_settings.user_id = current_user.id
+        @notifications_settings.user_id = user_id
         @notifications_settings.community_id = cu_id
         @notifications_settings.app = true
         @notifications_settings.email = true
@@ -162,8 +162,8 @@ module ActivitynotificationsHelper
 		
 	end
 
-	def deleteNotificationSettings(cu_id)
-		Activitynotificationsetting.where("community_id = ? AND user_id = ?", cu_id, current_user.id).first.destroy
+	def deleteNotificationSettings(cu_id, user_id)
+		Activitynotificationsetting.where("community_id = ? AND user_id = ?", cu_id, user_id).first.destroy
 	end
 
 	def build_body_text(objecttype, object, objectfortype, objectfor, action)

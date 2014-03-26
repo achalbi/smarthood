@@ -34,6 +34,33 @@
   
   <% end %>
 
+
+    <% unless inv_pending_users.nil?  %>
+    <% if inv_pending_users.count > 0 %>
+    <div style="background-color: lemonchiffon">
+      <h3 class="marginLeft15">Invitation pending with <%="user".pluralize(inv_pending_users.count) %></h3>
+      <ul class="users">
+        <% inv_pending_users.each do |user| %>
+        <li style="padding-left:15px;" class="tr-hover">
+          <div  class="img_zoom" style="float:left;" >
+                  <%= gravatar_for user, size: 52 %>
+                </div>
+                <% if current_user.is_cu_admin?(community) %>
+                    <a href="<%= declinerequest_community_path(community) << '?user_id='%><%= user.id %>"class="uibutton pull-right button-toggle" data-remote="true" id="decline" style="margin-right:5px;"> Uninvite <i class="icon-remove"></i></a>
+                <% end %>
+                    <address>
+                     <% unless user.name.nil? %> <strong> <%= link_to user.name, user %></strong><br><% end %>
+                      <a mailto="<%= user.email %>"><%= user.email %></a>
+                    </address>
+        </li>
+        <% end %>
+      </ul>
+    </div>
+    <br>
+    <% end %>
+    <% end %> 
+
+
 <div id="show_com_members">
   <%= render partial: 'communities/com_members', locals: {ad_users: @ad_users, inv_users: @inv_users, community: @community} %>
 
@@ -157,7 +184,15 @@ $('.tr-hover').hover(function() {
 }, function() {
     $(this).find('.button-toggle').stop(true, true).hide(400);
 });
+
+  $('#accept').click(function(){
+    $(this).closest('li').hide();
+  });
+  $('#decline').click(function(){
+    $(this).closest('li').hide();
+  });
 });
+
 
 $(document).ready(function(){
   $('#posts_community_li').removeClass('active');

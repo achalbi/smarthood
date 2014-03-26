@@ -8,7 +8,7 @@ class ActivitynotificationsController < ApplicationController
   		@notifications = Activitynotification.where("recepient_id = ?", current_user.id ).order("created_at DESC")
 		  @notifications_settings = current_user.activitynotificationsettings.where("community_id = ?", active_community.id).first
       if @notifications_settings.blank?
-        createNotificationSettings(active_community.id)
+        createNotificationSettings(active_community.id, current_user.id)
 
       # Album.update_all(privacy: 1)
       # Community.update_all(privacy: 1)

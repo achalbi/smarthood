@@ -84,7 +84,7 @@ class CommunitiesController < ApplicationController
       end 
       @usercommunity.status="active"
       @usercommunity.save
-      createNotificationSettings(@community.id)
+      createNotificationSettings(@community.id, current_user.id)
     @selected_comm  = []
     @selected_comm << @community
     @post = Post.new
@@ -210,6 +210,8 @@ def acceptrequest
  #@inv_groups = Group.where('id IN (?)', @group_ids)
  @inv_req_cu = Community.where(['id IN (?)' , current_user.communities.where('invitation = ?',Uc_enum::INVITED).collect(&:id)])
  #@inv_req_grps = current_user.invited_groups.collect(&:group_id)
+  @ucs_all = current_user.usercommunities.where("is_admin=?", true )
+  @my_mod_communities = Community.where(['id IN (?)', @ucs_all.collect(&:community_id)]) 
   @requested_users_all = 0
   @my_mod_communities.each do |community|
      @requested_users_all += community.requested_uc.collect(&:user_id).size
@@ -221,9 +223,9 @@ def acceptrequest
   #@usr = User.find(params[:user_id])
   @usr = []
   @usr << params[:user_id]
-  @notifications_settings = current_user.activitynotificationsettings.where("community_id = ?", params[:id]).first
+  @notifications_settings = Activitynotificationsetting.where("community_id = ? and user_id = ?", params[:id], params[:user_id]).first
     if @notifications_settings.blank?
-      createNotificationSettings(params[:id])
+      createNotificationSettings(params[:id], params[:user_id])
     end
   getNotifiableUsers(Objecttypeenum::COMUNITY, @community, Objecttypeenum::USER, @usr, Uc_enum::ACCEPTED)  
 end
@@ -245,6 +247,8 @@ def declinerequest
  @inv_groups = Group.where('id IN (?)', @group_ids)
  @inv_req_cu = Community.where(['id IN (?)' , current_user.communities.where('invitation = ?',Uc_enum::INVITED).collect(&:id)])
  @inv_req_grps = current_user.invited_groups.collect(&:group_id)
+  @ucs_all = current_user.usercommunities.where("is_admin=?", true )
+  @my_mod_communities = Community.where(['id IN (?)', @ucs_all.collect(&:community_id)])
    @requested_users_all = 0
   @my_mod_communities.each do |community|
      @requested_users_all += community.requested_uc.collect(&:user_id).size
@@ -259,7 +263,6 @@ def declinerequest
 end
 
 def join_cu
- @usercommunity = Usercommunity.where("community_id = ? AND user_id = ?", params[:id], current_user.id).first
   @usercommunities = Usercommunity.where(['status=? and user_id=?','active',current_user.id])
   unless @usercommunities.blank?
     @usercommunities.each do |uc|
@@ -267,6 +270,7 @@ def join_cu
       uc.save
     end
   end
+ @usercommunity = Usercommunity.where("community_id = ? AND user_id = ?", params[:id], current_user.id).first
  if @usercommunity.blank?
    @usercommunity = Usercommunity.new 
    @usercommunity.community_id = params[:id]
@@ -283,7 +287,7 @@ def join_cu
   unless params[:id].nil?
       @notifications_settings = current_user.activitynotificationsettings.where("community_id = ?", params[:id]).first
       if @notifications_settings.blank?
-        createNotificationSettings(params[:id])
+        createNotificationSettings(params[:id], current_user.id)
       end
       @community = Community.find(params[:id])
       flash[:success] = "Joined community: " + @community.name
@@ -312,7 +316,7 @@ def unjoin_cu
  @usercommunity.status=""
  @usercommunity.save
  @community = Community.find(params[:id])
- deleteNotificationSettings(params[:id])
+ deleteNotificationSettings(params[:id], current_user.id)
  flash[:success] = "Unjoined community: " + @community.name
   unless params[:user_id].nil?
     redirect_to :action => :index, id: params[:id]
@@ -576,7 +580,7 @@ def search_app_user
        @usercommunity.invitation = Uc_enum::INVITED
      elsif (@usercommunity.invitation==Uc_enum::REQUESTED || @usercommunity.invitation==Uc_enum::MODERATOR_DECLINED)
        @usercommunity.invitation = Uc_enum::JOINED
-     elsif @usercommunity.invitation == Uc_enum::USER_DECLINED
+     elsif  (@usercommunity.invitation == Uc_enum::USER_DECLINED || @usercommunity.invitation == Uc_enum::UNJOINED)
        @usercommunity.invitation = Uc_enum::INVITED
      end
        @usercommunity.save
@@ -600,7 +604,7 @@ def search_app_user
        @usercommunity.invitation = Uc_enum::INVITED
      elsif (@usercommunity.invitation==Uc_enum::REQUESTED || @usercommunity.invitation==Uc_enum::MODERATOR_DECLINED)
        @usercommunity.invitation = Uc_enum::JOINED
-     elsif @usercommunity.invitation == Uc_enum::USER_DECLINED
+     elsif  (@usercommunity.invitation == Uc_enum::USER_DECLINED || @usercommunity.invitation == Uc_enum::UNJOINED)
        @usercommunity.invitation = Uc_enum::INVITED
      end
        @usercommunity.save
@@ -686,7 +690,8 @@ def search_app_user
     if @ucs.count > 0
       @requested_users = User.where(['id IN (?)' , @community.requested_uc.collect(&:user_id)])
       @community.req_pending_cnt = @requested_users.count
-    end 
+    end
+    @inv_pending_users = User.where(['id IN (?)' , @community.invited_uc.collect(&:user_id)])
     @ucs = @community.usercommunities.where('invitation = ?',Uc_enum::JOINED)
  end
 

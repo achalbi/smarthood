@@ -115,6 +115,10 @@ def requested_uc
  @usercommunity = self.usercommunities.where(["invitation = ?", Uc_enum::REQUESTED]) 
 end
 
+def invited_uc
+ @usercommunity = self.usercommunities.where(["invitation = ?", Uc_enum::INVITED]) 
+end
+
 def follow!(user, community_id)
   user.usercommunities.create!(community_id: community_id)
 end
