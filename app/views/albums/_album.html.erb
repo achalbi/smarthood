@@ -26,10 +26,10 @@
 
     <%= form_for  @album, :url => { :action => "edit" },  :method => :get, remote: true do  |f| %>
           <div style="margin-right:120px;"  >
-               <div id="album_indiv" style="margin-left:250px;  margin-bottom:0px;">
-                  <ul class="breadcrumb" style="width:667px;height:22px;">
-                    <li><a href="#" class="marginLeft10 marginRight10">Albums</a><span class="divider">/</span> </li>
-                    <li><a href="/albums/<%= @album.id %>" class="marginLeft10"><%= @album.title %></a></li>
+               <div id="album_indiv" style=" margin-bottom:0px;">
+                  <ul class="breadcrumb" style="width:535px;height:22px;">
+                    <li><a href="#" class="marginLeft10 marginRight10" style="line-height:21px;">Albums</a><span class="divider" style="line-height:21px;" >></span> </li>
+                    <li><a href="#" class="marginLeft5" style="line-height:21px;"  ><%= @album.title %></a></li>
                     <span style="margin-right:5px;float:right;"><li><%= link_to "Share", '#', id: "share",  class: "uibutton icon add" %></li>
                       <% unless @album.downloadlink.blank? %>
                         <li><%= link_to "Download", @album.downloadlink , id: "download",  class: "uibutton" %></li>
@@ -87,12 +87,12 @@
             </h4>
     </div>
     <span style="clear:both;" ></span>
-    <div id="gallery1" class="pull-left span17">
-      <ul id="grid">
+    <div id="gallery1" class="pull-left">
+      <ul id="grid" style="margin:0px;">
         <% @album.photos.each do |photo| %>
-          <li>
+          <li style="margin-left:0px;">
                   <a href="<%= photo.pic_url %>"  class="fancybox-album" rel="group1">
-                  <%= cl_image_tag(photo.pic_url(:small), class:"thumbnail", style: "margin:0px!important;", alt: "http://res.cloudinary.com/rashi/image/upload/v1377921346/RYW-Logo-smaller_rbkszn.png")  %></a> 
+                  <%= cl_image_tag(photo.pic_url(:small_mid), class:"thumbnail", style: "margin:0px!important;", alt: "http://res.cloudinary.com/rashi/image/upload/v1377921346/RYW-Logo-smaller_rbkszn.png")  %></a> 
               </li>
             
         <% end %>

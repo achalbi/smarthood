@@ -704,7 +704,8 @@ div#camera_rolls ul.tabs li.active{
 }
 
 .tabs_selected{
-  background-color: #c0c0c0!important;
+  background-color: #c0c0c0 !important;
+   &:hover { background-color: #c0c0c0 !important; }
 }
 
 

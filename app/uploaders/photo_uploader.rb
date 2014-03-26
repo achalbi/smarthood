@@ -67,6 +67,10 @@ class PhotoUploader < CarrierWave::Uploader::Base
   version :smaller do
          cloudinary_transformation :width =>100, :height => 100, :crop => :fill, :gravity => :faces
    end 
+  version :small_mid do
+         cloudinary_transformation :width =>125, :height => 125, :crop => :fill, :gravity => :faces
+   end
+
   version :small do
      cloudinary_transformation :width => 150, :height => 150, :crop => :fill, :gravity => :faces
 
@@ -89,9 +93,13 @@ class PhotoUploader < CarrierWave::Uploader::Base
    version :large do
      process :resize_to_fit => [650, 650]
    end
-     version :cover_pic_smallest do
+   version :cover_pic_smallest_mid do
+     process :resize_to_fit => [50, 300]
+   end
+   version :cover_pic_smallest do
      process :resize_to_fit => [75, 300]
    end
+   
   version :cover_pic_smaller do
      process :resize_to_fit => [175, 400]
    end
@@ -102,7 +110,7 @@ class PhotoUploader < CarrierWave::Uploader::Base
   # Add a white list of extensions which are allowed to be uploaded.
   # For images you might use something like this:
    def extension_white_list
-     %w(jpg jpeg gif png)
+     %w(jpg jpeg gif png bmp)
    end
 
   # Override the filename of the uploaded files:

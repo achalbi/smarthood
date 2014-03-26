@@ -1,2 +1,2 @@
 $("#grp_name").click();
-$("#comm_groups_list").html("<%= escape_javascript(render partial: 'communities/show_group', locals: { group: @group} ) %>");
+$("#comm_groups_list").html("<%= escape_javascript(render partial: 'communities/show_group', locals: { group: @group, community: @community} ) %>");

@@ -67,7 +67,7 @@
 </div>
 <% end %>
 
-
+<!-- 
 <%= form_for( @community, url: add_moderators_community_path(@community), method: :get, remote: true) do |f| %>
 <div id="modal_add_mod" style="display:none;" >
   <div id="modal-from-dom__add_mod" class="modal hide fade in" style="display: block;">
@@ -81,7 +81,7 @@
          <%= render 'shared/error_messages', object: f.object %>
          <aside class="">
           <section>
-            <!-- <h2 style="margin-left:65px;padding:3px;">Moderators</h2> -->
+             <h2 style="margin-left:65px;padding:3px;">Moderators</h2> 
             <ul class="user" style="overflow:auto;">
               <% @ucs.each do |uc| %>
               <% user = User.find(uc.user_id) %>
@@ -109,5 +109,5 @@
 </div>
 <% end %>
 
-
+ -->
 <% end %>

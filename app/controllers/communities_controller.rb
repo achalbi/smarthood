@@ -634,6 +634,7 @@ def search_app_user
   end
 
   def posts_com
+    flash.clear
     unless params[:id].nil?
       @selected_comm  = []
       @community = Community.find(params[:id])
@@ -657,6 +658,7 @@ def search_app_user
   end
 
   def about_com
+    flash.clear
     @community = Community.find(params[:id])
     @selected_community = @community
     @selected_community.req_pending_cnt = User.where(['id IN (?)' , @community.requested_uc.collect(&:user_id)]).count
@@ -671,6 +673,7 @@ def search_app_user
   end
 
  def members_com
+    flash.clear
     @community = Community.find(params[:id])
     @ad_eds = @community.usercommunities.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED, true )
     @non_ad_eds = @community.usercommunities.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED, false)
@@ -688,6 +691,7 @@ def search_app_user
  end
 
  def groups_com
+    flash.clear
     @community = Community.find(params[:id])
     @selected_community = @community
     @selected_community.req_pending_cnt = User.where(['id IN (?)' , @community.requested_uc.collect(&:user_id)]).count

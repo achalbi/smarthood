@@ -192,7 +192,7 @@ $("#ComUnity").click(function(){
   $('#modal').modal({
       keyboard: true,
       backdrop: "static",
-    })
+    });
   $('#modal').modal('show');
 });
 $("#closeX").click(function(){
@@ -310,6 +310,19 @@ function handleImage(e){
   $('.show_loading').click(function(){
     $('.loading_page').show();    
   });
+
+
+$(document).ready(function(){
+  $.validate({
+//    validateOnBlur : false,
+    onSuccess : function() {
+      $('.loading_page').show();
+      $('#community_post_submit').attr('data-loading-text', 'Posting...');
+      $('#community_post_submit').button('loading');
+    },
+  });
+});
+
 
 
         </script>

@@ -7,7 +7,7 @@
                   </div>
                   <p style="display:none;"><%= grp.id %></p>
                   <% unless grp.photo.nil? %>
-                      <%= link_to cl_image_tag(grp.photo.pic_url(:smallest), class:"roundCorner albumLink", id:"grp_#{grp.id}") ,"#", class:"albumLink roundCorner", remote: true %>
+                      <%= link_to cl_image_tag(grp.photo.pic_url(:small_mid), class:"roundCorner albumLink", id:"grp_#{grp.id}") ,"#", class:"albumLink roundCorner", remote: true %>
                   <% end %><br>
                   <h5><%=  grp.name %></h5>
               </div>

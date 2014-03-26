@@ -43,7 +43,7 @@
   <div id="modal-from-dom2" class="modal hide fade in" style="display: block;width:700px;">
     <div class="modal-header">
       <a href="#" id="close2X" class="close">×</a>
-      <span style="font-size:20px;line-height: 2;">Edit</span>
+      <h3>Edit community</h3>
     </div>
     <div class="modal-body" style="max-height:550px;">
       <div class="row">
@@ -164,10 +164,13 @@ $(document).ready(function(){
 });*/
 
 $("#edit_comUnity").click(function(){
-  $('#modal2').modal('show');
+    $('#modal2').modal({
+      backdrop: "static"
+    })
 });
 $("#close2X").click(function(){
   $('#modal2').modal('hide');
+  $('#about_community').click();
 });
 
 
@@ -228,8 +231,16 @@ function handleImage(e){
   var files = e.target.files;
   canvas.width = 180;
   canvas.height = 155*(Math.ceil(files.length/4));
+     if(files.length<1){
+      $('#pic2').val('');
+      $('#community_pic').show();
+      $('#imageCanvas2').hide();
+      return;
+    }
   for( var i = 0, len = files.length; i < len; i++) 
   {
+          $('#community_pic').hide();
+          $('#imageCanvas2').show();
     if(files[i])
     {
       var reader = new FileReader();
@@ -272,9 +283,7 @@ function handleImage(e){
         });
 
         $("#community_pic").click(function(){
-          $('#community_pic').hide();
           $('#pic2').click();
-          $('#imageCanvas2').show();
         });
 
 

@@ -1,5 +1,5 @@
         <%= form_for(Post.new, remote: true,  :html => {:multipart => true}) do |f| %>
-            <div id="textarea_div" style="resize: both;border: 1px solid #d4dae8;overflow: hidden;background-color:#f2f2f2;">
+            <div id="textarea_div" style="border: 1px solid #d4dae8;overflow: hidden;background-color:#f2f2f2;">
             <%= render 'shared/error_messages', object: f.object %>
                         <%= fields_for :photo, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
                          
@@ -17,17 +17,29 @@
                      <%= f.submit "Post", id: "community_post_submit", class: "btn primary pull-right" %>
                      <%= hidden_field_tag :type, "community" %> 
                      <%= hidden_field_tag :id, @community.id %> 
+                     <br>
+                     <br>
                      <div id="sel_grp_label"></div>
+                     <ul class="users"style="margin-top:70px;margin-left:130px;" >
                      <% unless @groups.blank? %>
                       <% @groups.each do |grp| %>
-                          <div id="grp_label_<%= grp.id %>" style="display:none;" class="pull-left">
-                            <%= link_to cl_image_tag(grp.photo.pic_url(:tiny_logo), class:" marginLeft20", id:"#{grp.photo.id}"), "#" %>
-                           <strong> <%= link_to grp.name, "#", style: "margin-left:3px;" %> </strong></div>
+                       <li id="grp_label_<%= grp.id %>" style="padding-left:15px;position:relative;" class=" active_hide group" >
+                        <%= link_to cl_image_tag(grp.photo.pic_url(:cover_pic_smallest_mid), class:"image_al_c1 thumbnail pull-left ", id:"#{grp.photo.id}"), "#" %>
+                                   <div style="margin-left:65px;margin-top:5px;">
+                                    <address>
+                                      <strong> <%= link_to grp.name.capitalize, "#", style: "font-size:13px;" %></strong> <br>
+                                      <strong>Description : &nbsp;</strong> <%= grp.description %><br>
+                                      <strong>Privacy : &nbsp;</strong><%= privacy_str(grp) %><br>
+                                       
+                                    </address>  
+                                  </div>
+                      </li>
                           <div style="display:none;">
                             <%= check_box_tag 'grp_ids[]', grp.id, nil, id:"grp_check_#{grp.id}" %>
-                          </div>
+                         </div>
                       <% end %>
                     <% end %>
+                    </ul>
               </div>
         <% end %>
 
@@ -51,7 +63,7 @@
                   </div>
                   <p style="display:none;"><%= group.id %></p>
 
-                     <li style="padding-left:15px;cursor:pointer;position:relative;" class="tr-hover group" >
+                     <li style="padding-left:15px;cursor:pointer;position:relative;" class=" group" >
                         <%= link_to cl_image_tag(group.photo.pic_url(:cover_pic_smallest), class:"image_al_c1 thumbnail pull-left ", id:"#{group.photo.id}"), "#" %>
                                  <a class="uibutton pull-right select_unselect" style="margin-right:3px;">Select </a>
                                   <div style="margin-left:95px;margin-top:5px;">

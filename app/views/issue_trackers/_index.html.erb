@@ -59,7 +59,7 @@
 
 
 <%= form_for( @issue, remote: true,  :html => {:multipart => true}) do |f| %>
-  <div id="modal_issue" style="display:none" >
+  <div id="modal_issue" class="modal_issue" style="display:none" >
           <div id="modal-from-dom" class="modal hide fade in" style="display: block;width:700px;">
             <div class="modal-header">
               <a href="#" id="close_issue" class="close">×</a>
@@ -72,7 +72,7 @@
 		               <div class="center_block clearfix">
 		                  <%= f.label :title %>
 		                  	<div class="input">
-             					<%= f.text_area :title, :placeholder=>"Title", class: ' inherit_width', :title => "Title", rows: 2, cols: 75  %> 
+             					<%= f.text_area :title, :placeholder=>"Title", class: ' inherit_width', :title => "Title", rows: 2, cols: 75, 'data-validation' => "required", 'data-validation-error-msg' => "Title can't be blank"   %> 
 		              		</div>
 		                </div>
 		                <div class="center_block clearfix">
@@ -157,7 +157,9 @@
           	 </div>
            </div>
             <div class="modal-footer" >
-              <%= f.submit "Create", class: "btn primary pull-right ", id: "create_issue_submit" %>  
+              <%= f.submit "Create", class: "btn primary pull-right ", id: "create_issue_submit" %> 
+                    <%= f.submit "", :class => 'active_hide reset_form', :type => 'reset' %> 
+ 
             </div>
           </div>          
         </div>
@@ -165,15 +167,16 @@
 <script type="text/javascript">
 
     $("#create_issue_link").click(function(){
-      $('#modal_issue').modal('show');
+       $('.modal_issue').modal({
+    //  keyboard: true,
+     //	 backdrop: "static"
+    	});
     });
     $("#close_issue").click(function(){
-          $('#modal_issue').modal('hide');
-        });
+          $('.modal_issue').modal('hide');
+            $('.reset_form').click();
+     });
 
-    $("#create_issue_submit").click(function(){
-          $('#modal_issue').modal('hide');
-        });
 
 var imageLoader = document.getElementById('pic');
 imageLoader.addEventListener('change', handleImage, false);
@@ -223,6 +226,17 @@ function handleImage(e){
 
 $(".quick_filter").click(function(){
 	$("#search_submit").click();
+});
+
+
+$(document).ready(function(){
+  $.validate({
+//    validateOnBlur : false,
+    onSuccess : function() {
+      $('#create_issue_submit').attr('data-loading-text', 'Creating...');
+      $('#create_issue_submit').button('loading');
+    },
+  });
 });
 
 </script>

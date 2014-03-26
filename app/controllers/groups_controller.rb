@@ -200,6 +200,10 @@ def create_album
     @group = Group.find(params[:id])
     @group.update_attributes(params[:group])
     getNotifiableUsers(Objecttypeenum::GROUP, @group, nil, nil, Uc_enum::UPDATED)
+        respond_to do |format|
+           format.html { }
+           format.js { redirect_to :controller => 'communities', :action => 'show_group', :grp_id => @group.id, id: @group.community_id }
+         end
   end
 
 def acceptrequest

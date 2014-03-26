@@ -5,14 +5,14 @@
 
   <div id="gallery"  >
     <div id="grp_album">
-      <div id="gallery1" class=" pull-left" style="width:520px;">
+      <div id="gallery1" class=" pull-left">
        <ul id="grid" style="margin:0px"> 
         <% if @community.is_active?(current_user, @community) %>
          <% unless (@community.privacy == Privacyenum::PROTECTED && !current_user.is_cu_admin?(@community)) %>
 
-           <li style="background-color:#ffffff!important;">
-            <div id="upload_pics_com"  style = "border:2px dashed #ddd; width:85px; height:85px; padding:10px;  left:40px; text-align:middle; z-index: 1;  cursor:pointer;  float:left; margin-bottom:25px;
-            " class="bgClrChg">  <h5> Create Album </h5>
+           <li style="background-color:#ffffff!important;margin-left:0px;">
+            <div id="upload_pics_com"  style = "border:2px dashed #ddd; width:110px; height:110px; padding:10px;  left:40px; text-align:middle; z-index: 1;  cursor:pointer;  float:left; margin-bottom:3px;
+            " class="bgClrChg">  <h5 class="center" style="margin:38px 0 0 0 "> Create Album </h5>
             </div>
            </li>               
          <% end %>  
@@ -53,7 +53,7 @@
           <%= f.label :description %>
           <div class="input">
             <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title=>"Description", rows: 3, cols: 75, 'data-validation' => "length ",
-     'data-validation-length' =>"3-500", 'data-validation-error-msg' => "The community description has to be an alphanumeric value between 3-500 characters"   %> 
+     'data-validation-length' =>"3-250", 'data-validation-error-msg' => "The community description has to be an alphanumeric value between 3-250 characters"   %> 
           </div>
         </div>
         <span class="overrideClass">

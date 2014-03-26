@@ -1,9 +1,6 @@
-                        <li>
+                        <li style="margin:0 0 10px 5px;">
                         <div  class="img_zoom" >
-                         <%= link_to cl_image_tag(album.photos[0].pic_url(:smaller), class:"image_al_c thumbnail") , album, class:"albumLink", remote: true %>
-                           <h5 style="float:right;"><%= link_to album.title, album, class:"albumLink", remote: true %></h5>
+                         <%= link_to cl_image_tag(album.photos[0].pic_url(:small_mid), class:"image_al_c thumbnail") , album, class:"albumLink", remote: true %>
+                           <span style="font-size:13px;" class="center"><%= link_to album.title.length > 17 ? album.title.slice(0..17) + "..." : album.title , album, class:"albumLink", remote: true, title: "#{album.title}" %></span>
                       </div>
                       </li>
-                      <script type="text/javascript">
-                      	hideProgress();
-                      </script>
