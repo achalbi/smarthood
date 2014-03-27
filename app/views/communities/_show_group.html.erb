@@ -47,7 +47,7 @@
           </ul>
            <div class="center loading_sub active_hide" ><img src="/assets/loading-sub.gif"></div>
           <br>
-          <div style="margin-left:15px;">
+          <div>
               <ul class="tabs  ">
                 <li class="active" id="members_grp_tab"><%= link_to "Members","/communities/#{community.id}/group_members?grp_id=#{@group.id}", remote: true %></li>
                 <li id="post_grp_tab"><%= link_to "Posts","/communities/#{community.id}/group_posts?grp_id=#{@group.id}", remote: true %></li>
@@ -66,7 +66,7 @@
   <div id="modal-from-dom2" class="modal hide fade in" style="display: block;width:700px;">
     <div class="modal-header">
       <a href="#" id="closeX_edit_grp" class="close">×</a>
-      <span style="font-size:20px;line-height: 2;">Edit Group</span>
+      <h3> Edit group</h3>
     </div>
     <div class="modal-body" style="max-height:550px;">
       <div class="row">
@@ -76,13 +76,15 @@
          <div class="center_block clearfix">
           <%= f.label :name %>
           <div class="input">
-            <%= f.text_field :name, :placeholder=>"Title" %></div>
+            <%= f.text_field :name, :placeholder=>"Title", 'data-validation' => "length",
+     'data-validation-length' =>"3-25", 'data-validation-error-msg' => "The group name has to be a value between 3-25 characters" %></div>
           </div>
 
           <div class="center_block clearfix">
             <%= f.label :description %>
             <div class="input">
-              <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title=>"Description", rows: 3, cols: 75  %> 
+              <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title=>"Description", rows: 3, cols: 75, 'data-validation' => "length ",
+     'data-validation-length' =>"3-250", 'data-validation-error-msg' => "The group description has to be a value between 3-250 characters"  %> 
             </div>
           </div>
 
@@ -97,7 +99,7 @@
           <div class="center_block clearfix">
             <%= label_tag "Change picture:" %>
             <%= f.fields_for :photo, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
-              <%= photo_form.file_field :pic, id: "pic2",style: "width:1px; height:1px; padding:0px;  left:0px;" %>  
+              <%= photo_form.file_field :pic, id: "pic2",style: "width:0px; height:0px; padding:0px;  left:0px;" %>  
             <% end %>
             <div class="input"> 
               <% unless @group.photo.nil? %>
@@ -111,7 +113,7 @@
       </div>   
     </div>
     <div class="modal-footer" >
-      <%= f.submit "Update", class: "btn primary pull-right", id: "updGroup" %>  
+      <%= f.submit "Update", class: "btn primary pull-right busy", id: "updGroup" %>  
     </div>
   </div>
 </div>
@@ -161,7 +163,7 @@
 </div>
 <% end %>
 
-
+<!-- 
 
 <%= form_for( group, url: invite_app_user_group_path(group), method: :get, remote: true) do |f| %>
 <div id="modal_invite" style="display:none;" >
@@ -189,7 +191,7 @@
   </div>
 
 </div>
-<% end %>
+<% end %> -->
 
 
 
@@ -198,6 +200,7 @@
 $(document).ready(function(){
   $('.gravatar').addClass('thumbnail');  
     $('.button_toggle').hide();
+    $('#modal_edit_grp').modal('hide');
 });
 
 
@@ -207,59 +210,79 @@ $("#grp_list").click(function(){
 
 
 
+$(document).ready(function(){
+  $.validate({
+    onSuccess : function() {
+      $('#updGroup').attr('data-loading-text', 'Updating...');
+      $('#updGroup').button('loading');
+    },
+  });
+  $('.loading_page').hide();
+});
+
+
+
 $("#edit_group").click(function(){
-      $('#modal_edit_grp').modal('show');
+      $('#modal_edit_grp').modal({
+        backdrop: "static"
+      });
     });
     $("#closeX_edit_grp").click(function(){
           $('#modal_edit_grp').modal('hide');
         });
 
     $("#updGroup").click(function(){
-          $('#modal_edit_grp').modal('hide');
+      $('.loading_page').show();
         });
 
     $("#group_edit_pic").click(function(){
-      $('#group_edit_pic').hide();
       $('#pic2').click();
-      $('#imageCanvas2').show();
     });
 
-      var imageLoader = document.getElementById('pic2');
-    imageLoader.addEventListener('change', handleImage, false);
-    $("#imageCanvas2").click(function(){
-        $("#pic2").click();
-    });
-        var canvas = document.getElementById('imageCanvas2');
-    var ctx = canvas.getContext('2d');
-    ctx.font="30px Arial";
-    ctx.fillText("Change picture",10,50);
+var imageLoader = document.getElementById('pic2');
+imageLoader.addEventListener('change', handleImage, false);
+$("#imageCanvas2").click(function(){
+  $("#pic2").click();
+});
+var canvas = document.getElementById('imageCanvas2');
+var ctx = canvas.getContext('2d');
+ctx.font="30px Arial";
+ctx.fillText("Change picture",10,50);
 
-  function handleImage(e){
-    var canvas = document.getElementById('imageCanvas2');
-    var ctx = canvas.getContext('2d');
-    var iCnt=0;
-    var files = e.target.files;
-    canvas.width = 180;
-    canvas.height = 155*(Math.ceil(files.length/4));
-    for( var i = 0, len = files.length; i < len; i++) 
-          {
-          if(files[i])
-            {
-              var reader = new FileReader();
-              reader.onload = function(event){
-                var img = new Image();
+function handleImage(e){
+  var canvas = document.getElementById('imageCanvas2');
+  var ctx = canvas.getContext('2d');
+  var iCnt=0;
+  var files = e.target.files;
+  canvas.width = 180;
+  canvas.height = 155*(Math.ceil(files.length/4));
+     if(files.length<1){
+      $('#pic2').val('');
+      $('#group_edit_pic').show();
+      $('#imageCanvas2').hide();
+      return;
+    }
+  for( var i = 0, len = files.length; i < len; i++) 
+  {
+          $('#group_edit_pic').hide();
+          $('#imageCanvas2').show();
+    if(files[i])
+    {
+      var reader = new FileReader();
+      reader.onload = function(event){
+        var img = new Image();
 
-                img.onload = function(){
-                  var ratioPx = 150;
-                  var sWidth =ratioPx;
-                  var ratio = img.width/sWidth;
-                  var sHeight = img.height/ratio;   
-                    if(sHeight>ratioPx){
-                       sHeight =ratioPx;
-                       ratio = img.height/sHeight;
-                       sWidth = img.width/ratio;  
-                    }
-                  ctx.drawImage(img, 155*(iCnt%4),155*(Math.floor(iCnt/4)),sWidth,sHeight);
+        img.onload = function(){
+          var ratioPx = 150;
+          var sWidth =ratioPx;
+          var ratio = img.width/sWidth;
+          var sHeight = img.height/ratio;   
+          if(sHeight>ratioPx){
+           sHeight =ratioPx;
+           ratio = img.height/sHeight;
+           sWidth = img.width/ratio;  
+         }
+         ctx.drawImage(img, 155*(iCnt%4),155*(Math.floor(iCnt/4)),sWidth,sHeight);
                   //ctx.drawImage(img,0,0,sWidth,sHeight);
                   iCnt++;
                 }
@@ -268,8 +291,7 @@ $("#edit_group").click(function(){
               reader.readAsDataURL(e.target.files[i]);     
             }
           }
-  }
-
+        }
 
 
 

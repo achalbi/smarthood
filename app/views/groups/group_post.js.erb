@@ -2,7 +2,7 @@ $('#group_list').html("<%= escape_javascript(render :partial => 'posts/groups_po
 $('#groups_sec').html("<%= escape_javascript(render :partial => 'groups/group_list', :locals => {:groups => @groups}) %>")
 $('#group_pic').hide('slow');
 $('#grp_stats').hide('slow');
-
+/*
 var i=0;
 $(".bgClrChg2").click( function() {
   var id = $(this).find('p').html();
@@ -10,14 +10,14 @@ $(".bgClrChg2").click( function() {
     $(this).find(':checkbox').removeAttr("checked");
     $("#grp_check_"+id).removeAttr("checked");
     $("#grp_label_"+id).hide();
-    $(this).removeClass('tabs_selected');
+ //   $(this).removeClass('tabs_selected');
     i--;
   }else{
     $(this).find(':checkbox').attr("checked",true);
        $("#grp_check_"+id).attr("checked",true);
        $("#grp_label_"+id).show();
        i++;
-       $(this).addClass('tabs_selected');
+    //   $(this).addClass('tabs_selected');
   }
   if(i==0){
   	$("#group_post_submit").hide();
@@ -28,5 +28,5 @@ $(".bgClrChg2").click( function() {
   }
 });
 $("#group_post_submit").hide();
-$("#sel_grp_label").hide();
+$("#sel_grp_label").hide();*/
 

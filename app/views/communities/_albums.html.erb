@@ -11,8 +11,7 @@
          <% unless (@community.privacy == Privacyenum::PROTECTED && !current_user.is_cu_admin?(@community)) %>
 
            <li style="background-color:#ffffff!important;margin-left:0px;">
-            <div id="upload_pics_com"  style = "border:2px dashed #ddd; width:110px; height:110px; padding:10px;  left:40px; text-align:middle; z-index: 1;  cursor:pointer;  float:left; margin-bottom:3px;
-            " class="bgClrChg">  <h5 class="center" style="margin:38px 0 0 0 "> Create Album </h5>
+            <div id="upload_pics_com"  style = "border:2px dashed #ddd; width:110px; height:110px; padding:10px;  left:40px; text-align:middle; z-index: 1;  cursor:pointer;  float:left; margin-bottom:3px;" class="bgClrChg">  <h5 class="center" style="margin:38px 0 0 0 "> Create Album </h5>
             </div>
            </li>               
          <% end %>  

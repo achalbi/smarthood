@@ -56,7 +56,7 @@ $(document).ready(function(){
         </li>
         <%= link_to "", private_com_communities_path , id: "private_comUnity", remote: true %> -->
         <li class="sidetabs notActive show_loading" style="list-style-type: none;padding:5px; margin:5px;">
-          <h6><a>Invite from communities</a>
+          <h6><a>Invitation from communities</a>
             <span id="inv_req_count" class="pull-right">
             <%= render partial: 'communities/inv_req_count'%>
             </span>
@@ -259,7 +259,7 @@ $("#imageCanvas").click(function(){
 var canvas = document.getElementById('imageCanvas');
 var ctx = canvas.getContext('2d');
   ctx.font="15px Arial";
-  ctx.fillText("Click here to add picture",25,75);
+  ctx.fillText("Click here to add a picture",25,75);
 
 function handleImage(e){
   var canvas = document.getElementById('imageCanvas');
@@ -273,7 +273,7 @@ function handleImage(e){
       canvas.height = 155;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.font="15px Arial";
-      ctx.fillText("Click here to add picture",25,75);
+      ctx.fillText("Click here to add a picture",25,75);
       return;
     }
   canvas.width = 200;

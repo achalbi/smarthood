@@ -93,6 +93,15 @@ function checkScroll_comm_post() {
     insideLoop ="true";
     currentPage<%= @selected_community.id.to_s %>++;
   $('#loading_page').show();
+      if($('#div_post_<%= @selected_community.id.to_s %>').length == 0){
+      console.log(currentPag<%= @selected_community.id.to_s %>);
+      clearInterval(intervalID);
+      for (var i = 1; i < 99999; i++){
+         window.clearInterval(i);
+      }
+      insideLoop = "false";
+      return;
+    }
     jQuery.ajax('/communities/community_post_paginate?page=' + currentPage<%= @selected_community.id.to_s %> + '&id=' + '<%= @selected_community.id.to_s %>' , {asynchronous:true, evalScripts:true, method:'get', success: function(data, textStatus, jqXHR) {
     $('#div_post_<%= @selected_community.id.to_s %>').append($(data));
     $('#loading_page').hide();

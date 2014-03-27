@@ -149,6 +149,15 @@ function checkScroll_comms_post() {
     insideLoop="true";
     currentPage++;
   $('#loading_page').show();
+    if($('.resources1').length == 0){
+      console.log(currentPage);
+      clearInterval(intervalID);
+      for (var i = 1; i < 99999; i++){
+         window.clearInterval(i);
+      }
+      insideLoop = "false";
+      return;
+    }
     jQuery.ajax('/posts/cus_post_paginate?page=' + currentPage, {asynchronous:true, evalScripts:true, method:'get', success: function(data, textStatus, jqXHR) {
     $('.resources1').append($(data));
     $('#loading_page').hide();

@@ -1,4 +1,4 @@
-  <div id="image" style="display:block;margin-left:15px;">
+  <div id="image" style="display:block;">
     <div id="textarea_div" style="resize: both;border: 1px solid #d4dae8;overflow: hidden;background-color:#f2f2f2;">
 <%= form_for(@post, remote: true,  :html => {:multipart => true}) do |f| %>
     <%= render 'shared/error_messages', object: f.object %>
@@ -8,8 +8,8 @@
 
                 <% end %>
                  <div class=" pull-left">
-                    <%= f.text_area :content, placeholder: "Compose new post...", :rows=>6, class: "span10" %>
-                 <canvas id="imageCanvas-grp" style = "border: 1px solid #ddd; padding:2px; align:center;cursor:pointer; background-color:#ffffff;" width="122px" height="88px">Add pictures</canvas>
+                    <%= f.text_area :content, placeholder: "Compose new post...", :rows=>6, class: "span10", 'data-validation' => "required", 'data-validation-error-msg' => "Post can't be blank" %>
+                 <canvas id="imageCanvas-grp" style = "border: 1px solid #ddd; padding:2px; align:center;cursor:pointer; background-color:#ffffff;" width="137px" height="88px">Add pictures</canvas>
                 </div> 
  <%= f.submit "Post", class: "btn primary pull-right busy", id: "submit_grp_post" %>
   <%= hidden_field_tag :type, "group" %>  
@@ -33,10 +33,15 @@ $("#remove_image").click(function(){
 
 });
 
-$("#submit_grp_post").click(function(){
-   $('#submit_grp_post').attr('data-loading-text', 'Posting...');
-   $('#submit_grp_post').button('loading');
-});
+$(document).ready(function(){
+  $.validate({
+    onSuccess : function() {
+      $('.loading_page').show();
+      $('#submit_grp_post').attr('data-loading-text', 'Posting...');
+      $('#submit_grp_post').button('loading');
+    },
+  });
+  });
 
 
  var imageLoader = document.getElementById('pic-grp');
@@ -55,7 +60,7 @@ $("#submit_grp_post").click(function(){
     var ctx = canvas.getContext('2d');
     var iCnt=0;
     var files = e.target.files;
-    canvas.width = 122;
+    canvas.width = 137;
     canvas.height = 88*(Math.ceil(files.length/1));
     for( var i = 0, len = files.length; i < len; i++) 
           {

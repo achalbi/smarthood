@@ -57,7 +57,7 @@
                     </address>
                   <p>
                     <% if @group.is_admin?(current_user) && user.id != current_user.id %>
-                                  <%= link_to "Remove", "/groups/#{@group.id}/unjoin_grp?user_id=#{user.id}&comm_id=#{community.id}", class: "uibutton pull-right button_toggle", remote: true, data: { confirm: "You want to remove the user from the group ?" } %>
+                                  <%= link_to "Remove", "/groups/#{@group.id}/unjoin_grp?user_id=#{user.id}&comm_id=#{community.id}", class: "uibutton pull-right button_toggle remove_user", remote: true %>
                     <% end %>
                   </p>               
                 </td>
@@ -81,30 +81,35 @@
   <div id="modal-from-dom__add_mod" class="modal hide fade in" style="display: block;">
     <div class="modal-header">
       <a href="#" id="close_add_mod" class="close">×</a>
-      <span style="font-size:20px;line-height: 2;">Edit Moderators</span>
+      <h3>Set moderators</h3>
     </div>
-    <div class="modal-body" style="max-height:350px;">
+    <span style="font-size:11px;line-height: 3;margin-right:10px;" class="pull-right">(Check to set member as a Moderator)</span>
+    <div class="modal-body" style="max-height:350px;width:535px;">
       <div class="row">
         <div class=" ui-front">         
          <%= render 'shared/error_messages', object: f.object %>
          <aside class="">
           <section>
             <!-- <h2 style="margin-left:65px;padding:3px;">Moderators</h2> -->
-            <ul class="user" style="overflow:auto;">
+            <ul class="users" style="overflow:auto;">
               <% @ucs.each do |uc| %>
               <% user = User.find(uc.user_id) %>
-              <ol>
-                <div style="background-color:#f0f0f0;padding:5px;" class="span5">
-                  <%= link_to user.name, "#" %>
-                  <%= gravatar_for user, size: 25 %>
+                 <li style="margin-left:15px;" class="tr-hover">
+                    <div class="checkboxFive pull-right marginRight15" style="margin-top:5px;">
+                        <%= check_box_tag 'user_ids[]', user.id, uc.is_admin?, id: "checkboxFiveInput#{uc.id}" %>
+                      <label for="checkboxFiveInput<%= uc.id %>"></label>
+                    </div>
+                    <div  class="img_zoom" style="float:left;margin-left:15px;" >
+                      <%= gravatar_for user, size: 52 %>
+                    </div>
+                      <%= link_to user.name, user %>
+                      <p><%= user.email %></p>
                   <div style="margin-right:10px;" class="pull-right">
-                    <%= check_box_tag 'user_ids[]', user.id, uc.is_admin? %>
                     <%= hidden_field_tag 'user_all_ids[]', user.id %>
-                    <%= hidden_field_tag 'comm_id', community.id %>
                   </div>
-                </div>
-              </ol>
+                </li>
               <% end %>
+                    <%= hidden_field_tag 'comm_id', community.id %>
             </ul>     
           </section>
         </aside>
@@ -125,13 +130,13 @@
   <div id="modal-from-dom2" class="modal hide fade in" style="display: block;width:700px;">
     <div class="modal-header">
       <a href="#" id="close_invite" class="close">×</a>
-      <span style="font-size:20px;line-height: 2;">Invite</span>
+      <h3>Add community members to the group</h3>
     </div>
     <div class="modal-body" style="max-height:550px;">
       <div class="row">
         <div class="span14 ui-front">
           <div class="center_block clearfix"><br>
-            <%= f.label "Invite by User name:" %>
+            <%= f.label "Search community members:" %>
             <div class="input ui-front">
               <%= f.text_field :user_tokens, id: "search_user" %>
             </div>
@@ -141,7 +146,7 @@
       </div>   
     </div>
     <div class="modal-footer" >
-      <%= f.submit "Invite", class: "btn primary pull-right", id: "invite_submit" %>  
+      <%= f.submit "Add", class: "btn primary pull-right", id: "invite_submit" %>  
     </div>
   </div>
 
@@ -155,16 +160,26 @@ $(function(){
   $('.button_toggle').hide();
 
 $('.tr-hover').hover(function() {
-    $(this).find('.button_toggle').stop(true, true).show(400);
+    $(this).find('.button_toggle').show();
 }, function() {
-    $(this).find('.button_toggle').stop(true, true).hide(400);
+    $(this).find('.button_toggle').hide();
 });
+
+  $('.remove_user').click(function(){
+     var answer = confirm('You want to remove this user from the group ?');
+    if (answer){
+      $(this).closest('tr').hide();
+      }
+   });
 });
 
 
 
 $("#invite").on( "click", function() {
- $('#modal_invite').modal('show');
+ $('#modal_invite').modal({
+      //keyboard: true,
+      backdrop: "static",
+    });
 });
 
 $("#close_invite").click(function(){
@@ -172,11 +187,16 @@ $("#close_invite").click(function(){
 });
 
 $("#invite_submit").click(function(){
-  $('#modal_invite').modal('hide');
+  $(this).attr('data-loading-text', 'Adding...');
+  $(this).button('loading');
+  $('.loading_page').hide();
 });
 
 $("#moderator").on( "click", function() {
- $('#modal_add_mod').modal('show');
+ $('#modal_add_mod').modal({
+      //keyboard: true,
+      backdrop: "static",
+    });
 });
 
 $("#close_add_mod").click(function(){
@@ -184,7 +204,9 @@ $("#close_add_mod").click(function(){
 });
 
 $("#submit_add_mod").click(function(){
-  $('#modal_add_mod').modal('hide');
+  $(this).attr('data-loading-text', 'Updating...');
+  $(this).button('loading');
+  $('.loading_page').hide();
 });
 
 $(function() {
@@ -199,6 +221,8 @@ $(function() {
   });
 
   $('.button_toggle').hide();
+  $(".modal-backdrop").remove();
+
 
 });
 

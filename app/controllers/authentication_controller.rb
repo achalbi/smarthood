@@ -7,7 +7,7 @@ class AuthenticationController < ApplicationController
   def create
   omniauth = request.env["omniauth.auth"]
   authentication = Authentication.find_by_provider_and_uid(omniauth['provider'], omniauth['uid'])
-  session['fb_auth'] = omniauth
+  #session['fb_auth'] = omniauth
   session['fb_access_token'] = omniauth['credentials']['token']
   session['fb_error'] = nil
   #if params[:code]
@@ -22,7 +22,7 @@ class AuthenticationController < ApplicationController
       user.fb_uid = omniauth['uid'] # code needs to be removed
       user.save
       
-      user_session = session['fb_auth']['extra']['raw_info']
+      user_session = omniauth['extra']['raw_info']
       unless user_session.nil?
         if  user.user_info.nil?
           user.user_info =  UserInfo.new
@@ -78,7 +78,7 @@ class AuthenticationController < ApplicationController
       user.password = rand(36**10).to_s(36)
       user.password_confirmation = user.password
 
-      user_session = session['fb_auth']['extra']['raw_info']
+      user_session = omniauth['extra']['raw_info']
       user.user_info =  UserInfo.new
       user.user_info.first_name = user_session['first_name']
       user.user_info.last_name = user_session['last_name']

@@ -749,7 +749,7 @@ def search_app_user
     @inv_users = User.where(['id IN (?)', @group.user_groups.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED,false).collect(&:user_id)])
     @ad_users = User.where(['id IN (?)', @group.user_groups.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED,true).collect(&:user_id)])
     @is_admin = @ad_users.include? current_user
-    @ucs = @group.user_groups.where("group_id = ?",params[:grp_id])
+    @ucs = @group.user_groups.where("group_id = ? AND invitation = ?",params[:grp_id], Uc_enum::JOINED)
     @community = Community.find(params[:id])
   end
 
@@ -765,7 +765,7 @@ def search_app_user
     @inv_users = User.where(['id IN (?)', @group.user_groups.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED,false).collect(&:user_id)])
     @ad_users = User.where(['id IN (?)', @group.user_groups.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED,true).collect(&:user_id)])
     @is_admin = @ad_users.include? current_user
-    @ucs = @group.user_groups.where("group_id = ?",params[:grp_id])
+    @ucs = @group.user_groups.where("group_id = ? AND invitation = ?",params[:grp_id], Uc_enum::JOINED)
     @community = Community.find(params[:id])
   end
 
@@ -774,6 +774,16 @@ def search_app_user
     @album = Album.new
     @albums = @group.albums
     #@community = Community.find(params[:id])
+  end
+
+  def destroy
+    Community.find(params[:id]).destroy
+     if active_community.id.to_s == params[:id]
+        @smarthood_com_id = Community.where(name: 'Smarthood')[0].id
+        @usercommunity = @user.usercommunities.find_by_community_id(@smarthood_com_id)
+        @usercommunity.status="active"
+        @usercommunity.save
+     end
   end
 
 def cu_list

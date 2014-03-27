@@ -15,13 +15,17 @@
    <%= link_to "Join", join_cu_community_path(community), class: "uibutton icon prev pull-right show_loading", remote: true, id: "join_com", style:"margin-right:5px;" %>
  <% end %>
  <span class="marginLeft15">
-  <% if community.is_joined?(current_user, community) %>
+  <% if community.is_joined?(current_user, community) && community.can_admin_unjoin?(current_user) %>
    <%= link_to "Unjoin", unjoin_cu_community_path(community), class: "uibutton icon prev pull-right marginLeft10 show_loading", remote: true, id: "unjoin_com", style:"margin-right:5px;" %>
  <% end %>
  </span>
 
  <% if current_user.is_cu_admin?(community) %>
     <%= link_to "edit", '#', id: "edit_comUnity",  class: "marginRight10 pull-right uibutton icon edit",:title => "Edit", style:"margin-right:5px;" %>
+ <% end %>
+
+ <% if current_user.is_cu_admin?(community) %>
+    <%= link_to "delete", community, method: :delete, remote: true, data: { confirm: "Do you really want to delete this community?" }, class: "pull-right uibutton button_toggle", title: community.name, style:"margin-right:5px;" %>
  <% end %>
 <address>
     <strong> <%= link_to community.name.capitalize, "#", style: "font-size:14px;" %></strong> <br>
@@ -73,7 +77,7 @@
             <%= f.label :description %>
             <div class="input">
               <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title => "Description", rows: 3, cols: 75, 'data-validation' => "length ",
-     'data-validation-length' =>"3-500", 'data-validation-error-msg' => "The community description has to be an alphanumeric value between 3-500 characters"  %> 
+     'data-validation-length' =>"3-500", 'data-validation-error-msg' => "The community description has to be between 3-500 characters"  %> 
             </div>
           </div>
                 <div class="center_block clearfix">
@@ -166,7 +170,7 @@ $(document).ready(function(){
 $("#edit_comUnity").click(function(){
     $('#modal2').modal({
       backdrop: "static"
-    })
+    });
 });
 $("#close2X").click(function(){
   $('#modal2').modal('hide');

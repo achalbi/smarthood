@@ -42,7 +42,7 @@
   <div id="modal-from-dom2" class="modal hide fade in" style="display: block;width:700px;">
     <div class="modal-header">
       <a href="#" id="closeX" class="close">×</a>
-      <span style="font-size:20px;line-height: 2;">Create Group</span>
+      <h3>Create Group</h3>
     </div>
     <div class="modal-body" style="max-height:550px;">
       <div class="row">
@@ -61,7 +61,7 @@
             <%= f.label :description %>
             <div class="input">
               <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title=>"Description", rows: 3, cols: 75, 'data-validation' => "length ",
-     'data-validation-length' =>"3-500", 'data-validation-error-msg' => "The group description has to be a value between 3-500 characters"  %> 
+     'data-validation-length' =>"3-250", 'data-validation-error-msg' => "The group description has to be a value between 3-250 characters"  %> 
             </div>
           </div>
 
@@ -82,13 +82,13 @@
             <%= label_tag "Add picture:" %>
             <%= f.fields_for :photo, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
 
-            <%= photo_form.file_field :pic, id: "pic",style: "width:1px; height:1px; padding:0px;  left:0px;" %>  
+            <%= photo_form.file_field :pic, id: "pic",style: "width:0px; height:0px; padding:0px;  left:0px;" %>  
 
             <% end %>
             <%= hidden_field_tag 'comm_id', community.id %>
 
             <div class="input">
-              <canvas id="imageCanvas" style = "border: 1px solid #ddd; padding:5px; align:center; width:200px;cursor:pointer" >select new image</canvas>
+              <canvas id="imageCanvas" style = "border: 1px solid #ddd; padding:5px; align:center;cursor:pointer" >select new image</canvas>
             </div>
           </div>
         </div>
@@ -174,26 +174,36 @@ $("#imageCanvas").click(function(){
 });
 var canvas = document.getElementById('imageCanvas');
 var ctx = canvas.getContext('2d');
-ctx.font="30px Arial";
-ctx.fillText("Add picture",10,50);
+  ctx.font="15px Arial";
+  ctx.fillText("Click here to add a picture",25,75);
 
 function handleImage(e){
   var canvas = document.getElementById('imageCanvas');
   var ctx = canvas.getContext('2d');
   var iCnt=0;
   var files = e.target.files;
-  canvas.width = 180;
+   if(files.length<1){
+      $('#pic').val('');
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      canvas.width = 300;
+      canvas.height = 155;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.font="15px Arial";
+      ctx.fillText("Click here to add a picture",25,75);
+      return;
+    }
+  canvas.width = 200;
   canvas.height = 155*(Math.ceil(files.length/4));
   for( var i = 0, len = files.length; i < len; i++) 
   {
     if(files[i])
     {
       var reader = new FileReader();
-      reader.onload = function(group){
+      reader.onload = function(event){
         var img = new Image();
 
         img.onload = function(){
-          var ratioPx = 150;
+          var ratioPx = 195;
           var sWidth =ratioPx;
           var ratio = img.width/sWidth;
           var sHeight = img.height/ratio;   
@@ -206,12 +216,13 @@ function handleImage(e){
                   //ctx.drawImage(img,0,0,sWidth,sHeight);
                   iCnt++;
                 }
-                img.src = group.target.result;
+                img.src = event.target.result;
               }
               reader.readAsDataURL(e.target.files[i]);     
             }
           }
         }
+
 
         $(function() {
           $("#search_users").tokenInput("/groups/search_app_user?comm_id=<%= community.id %>", {

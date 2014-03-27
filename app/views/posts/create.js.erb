@@ -1,16 +1,18 @@
+$(".busy").button('reset');
 <% if @post_type == 'activity' %>
 $("#posts").html("<%= escape_javascript(render( :partial => 'posts/activity_post', :locals => {:post => @post}, :activity => @activity )) %><br><br><div id='div_post' class='resources'><%= escape_javascript(render( partial: 'posts/post', locals: {posts: @posts, activity: @activity} )) %></div><p id='activity_id' class='active_hide'><%= @activity.id %></p>");
 <% end %>
 
 <% if @post_type == 'group' %>
-$("#posts").html("<%= escape_javascript(render( :partial => 'posts/group_post', :locals => {:post => @post}, :group => @group )) %><br><br><div id='div_post' class='resources'><%= escape_javascript(render( partial: 'posts/post', locals: {posts: @posts, group: @group} )) %></div><p id='group_id' class='active_hide'><%= @group.id %></p>");
+$('.loading_page').hide();
+$("#posts").html("<%= escape_javascript(render( :partial => 'posts/group_post', :locals => {:post => @post}, :group => @group )) %><br><br><div id='div_post_<%= @group.id.to_s %>' class='resources'><%= escape_javascript(render( partial: 'posts/post', locals: {posts: @posts, group: @group} )) %></div><p id='group_id' class='active_hide'><%= @group.id %></p>");
 <% end %>
 
 <% if @post_type == 'groups' %>
 $('#group_list').html("<%= escape_javascript(render :partial => 'posts/groups_post', :locals => {:post => @post}, :groups => @groups) %>");
 $('#groups_sec').html("<%= escape_javascript(render :partial => 'groups/group_list', :locals => {:groups => @groups}) %>")
 
-var i=0;
+/*var i=0;
 $(".bgClrChg2").click( function() {
   var id = $(this).find('p').html();
   if($(this).find(':checkbox').is(':checked')){
@@ -27,15 +29,15 @@ $(".bgClrChg2").click( function() {
        $(this).addClass('tabs_selected');
   }
   if(i==0){
-  	$("#group_post_submit").hide();
-  	$("#sel_grp_label").hide();
+    $("#group_post_submit").hide();
+    $("#sel_grp_label").hide();
   }else{
-  	$("#group_post_submit").show();
-	  $("#sel_grp_label").show();
+    $("#group_post_submit").show();
+    $("#sel_grp_label").show();
   }
 });
 $("#group_post_submit").hide();
-$("#sel_grp_label").hide();
+$("#sel_grp_label").hide();*/
 <% end %>
 
 
@@ -45,4 +47,3 @@ $('#cu_post').html("<%= escape_javascript(render :partial => 'posts/communities_
 <% if @post_type == 'community' %>
 $('#community_tabs').html("<%= escape_javascript(render :partial => 'communities/community_post', locals: {posts: @posts, community: @community}) %>");
 <% end %>
-$(".busy").button('reset');

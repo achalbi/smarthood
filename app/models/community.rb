@@ -88,6 +88,18 @@ def is_private?(current_user)
   end
 end
 
+  def is_admin?(user)
+    self.usercommunities.where("user_id = ? AND is_admin=?", user, true).exists?
+  end
+
+  def can_admin_unjoin?(user)
+     @usercommunities = self.usercommunities.where("is_admin = ?  AND invitation = ? ",true, Uc_enum::JOINED )
+        if @usercommunities.size > 1 && self.is_admin?(user)
+          return true
+        else
+          return false
+        end
+  end  
 
 
 def can_post?(user)

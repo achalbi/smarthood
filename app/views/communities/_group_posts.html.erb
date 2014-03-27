@@ -9,8 +9,8 @@
 				<%= render partial: 'posts/post', locals: {posts: @posts, group: @group}  %>
 			</div>
 			<p id="group_id" class='active_hide'><%= @group.id %></p>
-			<div id="loading_page" class="center loading_page" ><img src="http://res.cloudinary.com/rashi/image/upload/v1377924529/loading7_gvb06y.gif"></div>
-		</div>
+    </div>
+			<div id="loading_page" class="center " ><img src="/assets/loading-sub.gif"></div>
 
 	</ul>
 	<br>
@@ -26,6 +26,15 @@ function checkScroll_grp_post() {
     insideLoop ="true";
     currentPage<%= @group.id.to_s %>++;
   $('#loading_page').show();
+    if($('#div_post_<%= @group.id.to_s %>').length == 0){
+      console.log(currentPage<%= @group.id.to_s %>);
+      clearInterval(intervalID);
+      for (var i = 1; i < 99999; i++){
+         window.clearInterval(i);
+      }
+      insideLoop = "false";
+      return;
+    }
     jQuery.ajax('/groups/post_paginate?id=<%= @group.id.to_s %>&page=' + currentPage<%= @group.id.to_s %>  , {asynchronous:true, evalScripts:true, method:'get', success: function(data, textStatus, jqXHR) {
     $('#div_post_<%= @group.id.to_s %>').append($(data));
     $('#loading_page').hide();
@@ -55,6 +64,6 @@ function pageHeight() {
 }
 
 $('document').ready(function(){
-  intervalID = setInterval(checkScroll_grp_post, 1000);
+  intervalID = setInterval(checkScroll_grp_post, 500);
 });
 </script>

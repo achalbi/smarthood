@@ -130,13 +130,13 @@ def invite_app_user
        @usergroup.invitation = Uc_enum::JOINED
        @usergroup.community_id = params[:comm_id]
        @usergroup.save
-       getNotifiableUsers(Objecttypeenum::GROUP, @group, Objecttypeenum::USER, @user_ids, Uc_enum::INVITED)
-     elsif (@usergroup.invitation==Uc_enum::REQUESTED || @usergroup.invitation==Uc_enum::MODERATOR_DECLINED)
+     else   #if (@usergroup.invitation==Uc_enum::REQUESTED || @usergroup.invitation==Uc_enum::MODERATOR_DECLINED)
        @usergroup.invitation = Uc_enum::JOINED
-     elsif @usergroup.invitation == Uc_enum::USER_DECLINED
-       @usergroup.invitation = Uc_enum::INVITED
-       getNotifiableUsers(Objecttypeenum::GROUP, @group, Objecttypeenum::USER, @user_ids, Uc_enum::INVITED)
+    # elsif @usergroup.invitation == Uc_enum::USER_DECLINED
+    #   @usergroup.invitation = Uc_enum::INVITED
+    #   getNotifiableUsers(Objecttypeenum::GROUP, @group, Objecttypeenum::USER, @user_ids, Uc_enum::INVITED)
      end
+     getNotifiableUsers(Objecttypeenum::GROUP, @group, Objecttypeenum::USER, @user_ids, Uc_enum::JOINED)
      @usergroup.save
 
    end
@@ -238,7 +238,7 @@ def unjoin_grp
     @usergroup = @user.user_groups.find_by_group_id(params[:id])
     @usergroup.invitation = Uc_enum::UNJOINED
     @usergroup.save
-    redirect_to :controller => 'communities', :action => 'show_group', :grp_id => @group.id, id: params[:comm_id]
+    redirect_to :controller => 'communities', :action => 'show_group', :grp_id => params[:id], id: params[:comm_id]
 
   end
 end
@@ -246,7 +246,7 @@ end
 def join_grp
   @group = Group.find(params[:id])
   @group.follow!(current_user, params[:id], Uc_enum::JOINED, false, params[:comm_id])
-  redirect_to :controller => 'communities', :action => 'show_group', :grp_id => @group.id, id: params[:comm_id]
+  redirect_to :controller => 'communities', :action => 'show_group', :grp_id => params[:id], id: params[:comm_id]
 
 end
 

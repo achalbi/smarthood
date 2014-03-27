@@ -28,9 +28,7 @@
                                    <div style="margin-left:65px;margin-top:5px;">
                                     <address>
                                       <strong> <%= link_to grp.name.capitalize, "#", style: "font-size:13px;" %></strong> <br>
-                                      <strong>Description : &nbsp;</strong> <%= grp.description %><br>
-                                      <strong>Privacy : &nbsp;</strong><%= privacy_str(grp) %><br>
-                                       
+                                      <%= grp.description %><br>
                                     </address>  
                                   </div>
                       </li>
@@ -44,12 +42,13 @@
         <% end %>
 
 <div id="modal_sel_grp" style="display:none;" >
-  <div id="modal-from-dom2" class="modal hide fade in" style="display: block;width:665px;">
+  <div id="modal-from-dom2" class="modal hide fade in" style="display: block;width:565px;">
     <div class="modal-header">
       <a href="#" id="closeX_sel_grp" class="close">×</a>
       <h3>Select groups</h3>
     </div>
-    <div class="modal-body" style="max-height:400px;">
+    <span style="font-size:11px;line-height: 3;margin-right:10px;" class="pull-right">(Check to select groups for the post)</span>
+    <div class="modal-body" style="max-height:400px;width:535px;padding-top:0;">
       <div class="row">
         <div class=" ui-front">
         <section id="groups_sec" style="">
@@ -57,12 +56,25 @@
               <% unless @groups.blank? %>
                   <ul class="users">
               <% @groups.each do |group| %>
-              <div class="bgClrChg2 span14 pull-left" style="cursor:pointer;margin-right:20px;">
+
+                   <li style="margin-left:15px;" class="tr-hover select_unselect_group c-pointer">
+                    <p style="display:none;"><%= group.id %></p>
+                    <div class="checkboxFive pull-right marginRight15" style="margin-top:12px;">
+                        <%= check_box_tag 'grp_ids[]', group.id ,nil, id: "checkboxFiveInput#{group.id}" %>
+                      <label for="checkboxFiveInput<%= group.id %>"></label>
+                    </div>
+                    <div  class="img_zoom" style="float:left;margin-left:15px;" >
+                      <%= link_to cl_image_tag(group.photo.pic_url(:cover_pic_smallest_mid), class:"image_al_c1 thumbnail pull-left ", id:"#{group.photo.id}"), "#" %>
+                    </div>
+                                    <address style="margin-left:82px;margin-top:5px;">
+                                      <strong> <%= link_to group.name.capitalize, "#", style: "font-size:13px;" %></strong> <br>
+                                       <%= group.description %><br>
+                                    </address> 
+                  </li>
+<!--               <div class="bgClrChg2 span14 pull-left" style="cursor:pointer;margin-right:20px;">
                   <div style="display:none;" class="pull-left">
                     <%= check_box_tag 'grp_ids[]', group.id %>
                   </div>
-                  <p style="display:none;"><%= group.id %></p>
-
                      <li style="padding-left:15px;cursor:pointer;position:relative;" class=" group" >
                         <%= link_to cl_image_tag(group.photo.pic_url(:cover_pic_smallest), class:"image_al_c1 thumbnail pull-left ", id:"#{group.photo.id}"), "#" %>
                                  <a class="uibutton pull-right select_unselect" style="margin-right:3px;">Select </a>
@@ -75,7 +87,7 @@
                                     </address>  
                                   </div>
                       </li>
-              </div>
+              </div> -->
               <% end %>
                   </ul>
               <% end %>
@@ -102,10 +114,11 @@ $(document).ready(function(){
       $('#community_post_submit').button('loading');
     },
   });
-});
 
 $("#group_post_select").click(function(){
-  $('#modal_sel_grp').modal('show');
+  $('#modal_sel_grp').modal({
+      backdrop: "static",
+    });
 });
 $("#closeX_sel_grp").click(function(){
   $('#modal_sel_grp').modal('hide');
@@ -117,35 +130,18 @@ $("#selGroup").click(function(){
 
 
 
-var i=0;
-$(".bgClrChg2").click( function() {
+$(".select_unselect_group").click( function() {
   var id = $(this).find('p').html();
-    //console.log($(this).find(':checkbox').is(':checked'));
   if($(this).find(':checkbox').is(':checked')){
     $(this).find(':checkbox').prop("checked",false);
     $("#grp_check_"+id).prop("checked",false);
     $("#grp_label_"+id).hide();
-    $(this).removeClass('tabs_selected');
-    $(this).find('.select_unselect').html("Select");
-    i--;
   }else{
     $(this).find(':checkbox').prop("checked",true);
        $("#grp_check_"+id).prop("checked",true);
        $("#grp_label_"+id).show();
-       $(this).addClass('tabs_selected');
-       $(this).find('.select_unselect').html("Unselect");
-       i++;
-    //console.log('i++');
-  }
-  if(i==0){
-    $("#selGroup").hide();
-    $("#sel_grp_label").hide();
-  }else{
-    $("#selGroup").show();
-  $("#sel_grp_label").show();
   }
 });
-$("#selGroup").hide();
-$("#sel_grp_label").hide();
 
+});
 </script>
