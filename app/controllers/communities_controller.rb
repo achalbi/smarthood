@@ -232,7 +232,11 @@ end
 
 def declinerequest
  @usercommunity = Usercommunity.where(['community_id=? and user_id=?',params[:id],params[:user_id]])[0]
- @usercommunity.invitation = Uc_enum::MODERATOR_DECLINED
+ if current_user.id = params[:user_id]
+   @usercommunity.invitation = Uc_enum::USER_DECLINED
+ else
+   @usercommunity.invitation = Uc_enum::MODERATOR_DECLINED
+ end
  @usercommunity.save
  @community = Community.find(params[:id])
  @ad_eds = @community.usercommunities.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED, true )
@@ -318,6 +322,32 @@ def unjoin_cu
  @community = Community.find(params[:id])
  deleteNotificationSettings(params[:id], @user.id)
  flash[:success] = "Unjoined community: " + @community.name
+  unless params[:user_id].nil?
+   respond_to do |format|
+      format.all { render :nothing => true, :status => 200 }
+   end
+  end
+end
+
+
+def remove_user_cu
+ @user = User.find(params[:user_id])
+ @usercommunity = @user.usercommunities.find_by_community_id(params[:id])
+  if @usercommunity.status == "active"
+    @usercommunity.invitation = Uc_enum::UNJOINED
+    @usercommunity.status=""
+    @usercommunity.save
+    @smarthood_com_id = Community.where(name: 'Smarthood')[0].id
+    @usercommunity = @user.usercommunities.find_by_community_id(@smarthood_com_id)
+    @usercommunity.status="active"
+    @usercommunity.save
+  else
+    @usercommunity.invitation = Uc_enum::UNJOINED
+    @usercommunity.save
+  end
+ @community = Community.find(params[:id])
+ deleteNotificationSettings(params[:id], @user.id)
+ #flash[:success] = @user.name + " removed from the community: " + @community.name
   unless params[:user_id].nil?
    respond_to do |format|
       format.all { render :nothing => true, :status => 200 }

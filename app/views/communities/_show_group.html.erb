@@ -16,8 +16,10 @@
                         <%= link_to "Unjoin", unjoin_grp_group_path(@group), class: "uibutton icon prev pull-right button_toggle", remote: true %>
                     <% end %>
                   <% else %>
+                    <% unless (community.privacy == Privacyenum::PROTECTED && !current_user.is_cu_admin?(community)) %>
                     <% if @group.privacy == Privacyenum::PUBLIC %>
                         <%= link_to "Join", "/groups/#{@group.id}/join_grp?comm_id=#{community.id}", class: "uibutton icon prev pull-right button_toggle", remote: true %>
+                    <% end %>
                     <% end %>
                   <% end %>
                <span class="pull-right "> &nbsp;</span>

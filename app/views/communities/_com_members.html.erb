@@ -22,7 +22,7 @@
                 </address>
               <p>
                 <% if current_user.is_cu_admin?(community) && user.id != current_user.id %>
-                        <%= link_to "Remove", "/communities/#{community.id}/unjoin_cu?user_id=#{user.id}", class: "uibutton pull-right button_toggle remove_user", remote: true %>
+                        <%= link_to "Remove", "/communities/#{community.id}/remove_user_cu?user_id=#{user.id}", class: "uibutton pull-right button_toggle remove_user", remote: true %>
                     <% end %>
               </p>               
             </td>
@@ -54,7 +54,7 @@
                     </address>
                   <p>
                     <% if current_user.is_cu_admin?(community) && user.id != current_user.id %>
-                        <%= link_to "Remove", "/communities/#{community.id}/unjoin_cu?user_id=#{user.id}", class: "uibutton pull-right button_toggle remove_user", remote: true %>
+                        <%= link_to "Remove", "/communities/#{community.id}/remove_user_cu?user_id=#{user.id}", class: "uibutton pull-right button_toggle remove_user", remote: true %>
                     <% end %>
                   </p>               
                 </td>

@@ -2,8 +2,10 @@
   <ul class="tabs">
     <%= render 'communities/links' %>
   </ul>
+    <% unless (community.privacy == Privacyenum::PROTECTED && !current_user.is_cu_admin?(community)) %>
   <% if community.is_active?(current_user, community) %>
     <a class="uibutton pull-right " id="create_group" > Create group </a>
+  <% end %>
   <% end %>
 <ul class="tabs span13" id="group_link">
   <li class="active" id="my_groups_li"><a href="#">My groups</a></li>
