@@ -20,11 +20,16 @@
                      <br>
                      <br>
                      <div id="sel_grp_label"></div>
-                     <ul class="users"style="margin-top:70px;margin-left:130px;" >
+                     <ul class="users"style="margin-top:70px;margin-left:150px;" >
+                             <h4 style="padding-left:55px;position:relative;" class="sel_grp_head" >
+                              <strong>
+                                Selected groups
+                              </strong>
+                             </h4>
                      <% unless @groups.blank? %>
                       <% @groups.each do |grp| %>
-                       <li id="grp_label_<%= grp.id %>" style="padding-left:15px;position:relative;" class=" active_hide group" >
-                        <%= link_to cl_image_tag(grp.photo.pic_url(:cover_pic_smallest_mid), class:"image_al_c1 thumbnail pull-left ", id:"#{grp.photo.id}"), "#" %>
+                       <li id="grp_label_<%= grp.id %>" style="padding-left:55px;position:relative;" class=" active_hide group" >
+                        <%= link_to cl_image_tag(grp.photo.pic_url(:smallest), class:"image_al_c1 thumbnail pull-left ", id:"#{grp.photo.id}"), "#" %>
                                    <div style="margin-left:65px;margin-top:5px;">
                                     <address>
                                       <strong> <%= link_to grp.name.capitalize, "#", style: "font-size:13px;" %></strong> <br>
@@ -64,7 +69,7 @@
                       <label for="checkboxFiveInput<%= group.id %>"></label>
                     </div>
                     <div  class="img_zoom" style="float:left;margin-left:15px;" >
-                      <%= link_to cl_image_tag(group.photo.pic_url(:cover_pic_smallest_mid), class:"image_al_c1 thumbnail pull-left ", id:"#{group.photo.id}"), "#" %>
+                      <%= link_to cl_image_tag(group.photo.pic_url(:smallest), class:"image_al_c1 thumbnail pull-left ", id:"#{group.photo.id}"), "#" %>
                     </div>
                                     <address style="margin-left:82px;margin-top:5px;">
                                       <strong> <%= link_to group.name.capitalize, "#", style: "font-size:13px;" %></strong> <br>
@@ -129,19 +134,27 @@ $("#selGroup").click(function(){
 });
 
 
-
+var i=0;
 $(".select_unselect_group").click( function() {
   var id = $(this).find('p').html();
   if($(this).find(':checkbox').is(':checked')){
     $(this).find(':checkbox').prop("checked",false);
     $("#grp_check_"+id).prop("checked",false);
     $("#grp_label_"+id).hide();
+    i--;
   }else{
     $(this).find(':checkbox').prop("checked",true);
        $("#grp_check_"+id).prop("checked",true);
        $("#grp_label_"+id).show();
+       i++;
+  }
+  if(i>0){
+    $(".sel_grp_head").show();
+  }else{
+    $(".sel_grp_head").hide();
   }
 });
+    $(".sel_grp_head").hide();
 
 });
 </script>

@@ -1,17 +1,16 @@
-<a href="<%= user_path(current_user) %>" data-remote="true">
-  <%= gravatar_for current_user, size: 100 %>
-</a>
-<h1>
-  <%= current_user.name %>
-</h1>
-<span>
-  <%= link_to "view my profile", current_user, remote: true %>
-</span>
+<div  class="img_zoom" style="float:left;" >
+	<a href="<%= user_path(current_user) %>" data-remote="true">
+  		<%= gravatar_for current_user, size: 100 %>
+	</a>
+</div>
+<address style="margin-top:10px;">
+	<strong> <%= link_to current_user.name, current_user, remote: true  %></strong><br>
+	<a><%= current_user.email %></a>
+	<span><%= current_user.address.city  %></span>
+	<span><%= current_user.address.country  %></span><br>
+</address>
 <script type="text/javascript">
 $(document).ready(function(){
-
   $('.gravatar').addClass('thumbnail');
-
-    
 });
 </script>

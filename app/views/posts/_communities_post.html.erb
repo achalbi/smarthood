@@ -1,72 +1,98 @@
-  <div id="image" style="display:block" class="span13">
-<%= form_for(@post, remote: true,  :html => {:multipart => true}) do |f| %>
-    <div id="textarea_div" style="resize: both;border: 1px solid #d4dae8;overflow: hidden;background-color:#f2f2f2;">
+<div class="center loading_page active_hide" ><img src="/assets/loading.gif"></div>
+<div id="image" style="display:block" class="span13">
+  <%= form_for(@post, remote: true,  :html => {:multipart => true}) do |f| %>
+  <div id="textarea_div" style="border: 1px solid #d4dae8;overflow: hidden;background-color:#f2f2f2;">
     <%= render 'shared/error_messages', object: f.object %>
-                <%= fields_for :photo, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
-                 
-                <%= photo_form.file_field :pic, id: "pic1",style: "width:1px; height:1px; padding:0px;  left:0px;display:none;" %>  
+    <%= fields_for :photo, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
 
-                <% end %>
-                 <div class=" pull-left">
-                    <%= f.text_area :content, placeholder: "Compose new post...", :rows=>6, class: "span10" %>
-                 <canvas id="imageCanvas1" style = "border: 1px solid #ddd; padding:2px; align:center;cursor:pointer; background-color:#ffffff;" width="132px" height="88px">Add pictures</canvas>
-                </div> 
- <%= link_to  "Select communities","#", id: "community_post_select", class: "uibutton pull-left" %>
- <%= f.submit "Post", id: "community_post_submit", class: "btn primary pull-right" %>
-  <%= hidden_field_tag :type, "communities" %> 
-                  <div id="sel_comm_label"></div>
-              <% @communities.each do |cu| %>
-                  <div id="cu_label_<%= cu.id %>" style="display:none;margin:5px;" class="pull-left"><%=link_to cu.name, cu, remote: true %> </div>
-                  <div style="display:none;">
-                    <%= check_box_tag 'cu_ids[]', cu.id, nil, id:"cu_check_#{cu.id}" %>
-                  </div>
-              <% end %>
-      </div>
-<% end %>
-              <div id="div_post" class="resources1">
-                  <%= render 'posts/post' %>
-               
-              </div>
-               <div id="loading_page" class="center" ><img src="http://res.cloudinary.com/rashi/image/upload/v1377924529/loading7_gvb06y.gif"></div>
-            </div>
+    <%= photo_form.file_field :pic, id: "pic1",style: "width:1px; height:1px; padding:0px;  left:0px;display:none;" %>  
+
+    <% end %>
+    <div class=" pull-left">
+      <%= f.text_area :content, placeholder: "Compose new post...", :rows=>6, class: "span10", 'data-validation' => "required", 'data-validation-error-msg' => "Post can't be blank" %>
+      <canvas id="imageCanvas1" style = "border: 1px solid #ddd; padding:2px; align:center;cursor:pointer; background-color:#ffffff;" width="132px" height="88px">Add pictures</canvas>
+    </div> 
+    <%= link_to  "Select communities","#", id: "community_post_select", class: "uibutton pull-left" %>
+    <%= f.submit "Post", id: "community_post_submit", class: "btn primary pull-right" %>
+    <%= hidden_field_tag :type, "communities" %> 
+    <div id="sel_comm_label"></div>
+    <ul class="users" style="margin-top:70px;margin-left:150px;" >
+       <h4 style="padding-left:55px;position:relative;" class="sel_com_head">
+        <strong>
+          Selected communities
+        </strong>
+       </h4>
+
+  <% @communities.each do |cu| %>
+      <!--     <div id="cu_label_<%= cu.id %>" style="display:none;margin:5px;" class="pull-left"><%=link_to cu.name, cu, remote: true %> </div> -->
+       <li id="cu_label_<%= cu.id %>" style="padding-left:55px;position:relative;" class=" active_hide community" >
+        <%= link_to cl_image_tag(cu.photo.pic_url(:smallest), class:"image_al_c1 thumbnail pull-left ", id:"#{cu.photo.id}"), "#" %>
+        <div style="margin-left:65px;margin-top:5px;">
+           <address>
+             <strong><%= link_to cu.name.capitalize, "#", style: "font-size:13px;" %></strong><br>
+              <%= cu.description %><br>
+           </address>  
+        </div>
+       </li>      
+    <div style="display:none;">
+      <% if active_community.id == cu.id %>
+        <%= check_box_tag 'cu_ids[]', cu.id, active_community.id, id:"cu_check_#{cu.id}" %>
+      <% else %>
+        <%= check_box_tag 'cu_ids[]', cu.id, nil, id:"cu_check_#{cu.id}" %>
+      <% end %>
+    </div>
+    <% end %>
+    </ul>
+  </div>
+  <% end %>
+  <div id="div_post" class="home_page_post">
+    <%= render 'posts/post' %>
+
+  </div>
+  <div id="loading_page" class="center" ><img src="/assets/loading-sub.gif"></div>
+</div>
 
 </div>
 
 <div id="modal_sel_cu" style="display:none;" >
-  <div id="modal-from-dom2" class="modal hide fade in" style="display: block;width:665px;">
+  <div id="modal-from-dom2" class="modal hide fade in" style="display: block;width:565px;">
     <div class="modal-header">
       <a href="#" id="closeX_sel_cu" class="close">×</a>
-      <span style="font-size:20px;line-height: 2;">Select Communities</span>
+      <h3>Select communities</h3>
     </div>
-    <div class="modal-body" style="max-height:400px;">
+    <span style="font-size:11px;line-height: 3;margin-right:10px;" class="pull-right">(Check to select communities for the post)</span>
+    <div class="modal-body" style="max-height:400px;width:535px;padding-top:0;">
       <div class="row">
         <div class=" ui-front">
-        <section id="cus_sec" style="">
-          <div style="padding:5px;">
-          <% unless @communities.nil? %>
-                        <% @communities.each do |cu| %>
-                        <div class="bgClrChg2 span14 pull-left" style="cursor:pointer;margin-right:20px;">
-                            <div style="display:none;" class="pull-left">
-                              <%= check_box_tag 'cu_ids[]', cu.id %>
-                            </div>
-                            <p style="display:none;"><%= cu.id %></p>
-                            <ul class="users">
-                              <li style="padding-left:15px;" class="tr-hover1">
-                            <% unless cu.photo.nil? %>
-                                <%=  cl_image_tag(cu.photo.pic_url(:smallest), class:"image_al_c1 thumbnail pull-left ", id:"cu_#{cu.id}") %>
-                            <% end %>
-                            <span class=" pull-left" style="font-size:medium;margin-top:5px; margin-left:10px;" ><%= cu.name.capitalize %></span>
-                             <a class="uibutton pull-right select_unselect" style="margin-right:3px;">Select </a>
-                             <br><br>
-                             <span class="marginLeft10"><%= cu.description %></span>
-                             </li>
-                            </ul>
-                        </div>
-                        <% end %>
-                        <% end %>
+          <section id="cus_sec" style="">
+            <div style="padding:5px;">
+              <% unless @communities.nil? %>
+                <ul class="users">
+                <% @communities.each do |cu| %>
+                  <li style="margin-left:15px;" class="tr-hover select_unselect_community c-pointer">
+                    <p style="display:none;"><%= cu.id %></p>
+                    <div class="checkboxFive pull-right marginRight15" style="margin-top:12px;">
+                      <% if active_community.id == cu.id %>
+                      <%= check_box_tag 'cu_ids[]', cu.id ,active_community.id, id: "checkboxFiveInput#{cu.id}" %>
+                      <% else %>
+                      <%= check_box_tag 'cu_ids[]', cu.id ,nil, id: "checkboxFiveInput#{cu.id}" %>
+                      <% end %>
+                      <label for="checkboxFiveInput<%= cu.id %>"></label>
+                    </div>
+                    <div  class="img_zoom" style="float:left;margin-left:15px;" >
+                      <%= link_to cl_image_tag(cu.photo.pic_url(:smallest), class:"image_al_c1 thumbnail pull-left ", id:"#{cu.photo.id}"), "#" %>
+                    </div>
+                    <address style="margin-left:82px;margin-top:5px;">
+                      <strong> <%= link_to cu.name.capitalize, "#", style: "font-size:13px;" %></strong> <br>
+                      <%= cu.description %><br>
+                    </address> 
+                  </li>
+                <% end %>
+                </ul>
+              <% end %>
             </div>
 
-        </section>
+          </section>
         </div>
       </div>
     </div>
@@ -77,56 +103,75 @@
 </div>
 
 <script type="text/javascript">
-$("#image_upload1").click(function(){
-      
-   $("#image_upload1").before($("div#image").html().replace('NEW_RECORD', new Date().getTime()) ); 
-   
-  });
+  $("#image_upload1").click(function(){
 
-$("#remove_image").click(function(){
-  $("#pic1").val("");
-  $("#image").hide();
-  $("#image_upload1").show();
-
+  $("#image_upload1").before($("div#image").html().replace('NEW_RECORD', new Date().getTime()) );
 });
 
- var imageLoader = document.getElementById('pic1');
-    imageLoader.addEventListener('change', handleImage, false);
-    $("#imageCanvas1").click(function(){
-        $("#pic1").click();
-    });
-        var canvas = document.getElementById('imageCanvas1');
-    var ctx = canvas.getContext('2d');
-    ctx.font="8pt tahoma ";
-    ctx.fillStyle = 'grey';
-    ctx.fillText("Add picture",35,46);
+$(document).ready(function(){
+    $("#cu_label_<%= active_community.id.to_s %>").show();
+  $.validate({
+    onSuccess : function() {
+      $('.loading_page').show();
+      $('#community_post_submit').attr('data-loading-text', 'Posting...');
+      $('#community_post_submit').button('loading');
+    },
+  });
+  });
+
+  $("#remove_image").click(function(){
+    $("#pic1").val("");
+    $("#image").hide();
+    $("#image_upload1").show();
+
+  });
+
+  var imageLoader = document.getElementById('pic1');
+  imageLoader.addEventListener('change', handleImage, false);
+  $("#imageCanvas1").click(function(){
+    $("#pic1").click();
+  });
+  var canvas = document.getElementById('imageCanvas1');
+  var ctx = canvas.getContext('2d');
+  ctx.font="8pt tahoma ";
+  ctx.fillStyle = 'grey';
+  ctx.fillText("Add picture",35,46);
 
   function handleImage(e){
     var canvas = document.getElementById('imageCanvas1');
     var ctx = canvas.getContext('2d');
     var iCnt=0;
     var files = e.target.files;
+    if(files.length<1){
+      $('#pic1').val('');
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.clearRect(0, 0, 132, 88);
+      ctx.font="8pt tahoma ";
+      ctx.fillStyle = 'grey';
+      ctx.fillText("Add picture",35,46);
+      return;
+    }
     canvas.width = 132;
     canvas.height = 88*(Math.ceil(files.length/1));
     for( var i = 0, len = files.length; i < len; i++) 
-          {
-          if(files[i])
-            {
-              var reader = new FileReader();
-              reader.onload = function(event){
-                var img = new Image();
+    {
+      if(files[i])
+      {
+        var reader = new FileReader();
+        reader.onload = function(event){
+          var img = new Image();
 
-                img.onload = function(){
-                  var ratioPx = 150;
-                  var sWidth =ratioPx;
-                  var ratio = img.width/sWidth;
-                  var sHeight = img.height/ratio;   
-                    if(sHeight>ratioPx){
-                       sHeight =ratioPx;
-                       ratio = img.height/sHeight;
-                       sWidth = img.width/ratio;  
-                    }
-                  ctx.drawImage(img, 155*(iCnt%4),155*(Math.floor(iCnt/4)),sWidth,sHeight);
+          img.onload = function(){
+            var ratioPx = 150;
+            var sWidth =ratioPx;
+            var ratio = img.width/sWidth;
+            var sHeight = img.height/ratio;   
+            if(sHeight>ratioPx){
+             sHeight =ratioPx;
+             ratio = img.height/sHeight;
+             sWidth = img.width/ratio;  
+           }
+           ctx.drawImage(img, 155*(iCnt%4),155*(Math.floor(iCnt/4)),sWidth,sHeight);
                   //ctx.drawImage(img,0,0,sWidth,sHeight);
                   iCnt++;
                 }
@@ -135,62 +180,64 @@ $("#remove_image").click(function(){
               reader.readAsDataURL(e.target.files[i]);     
             }
           }
-  }
+        }
 
 
 
 
-var currentPage = 1;
-var intervalID = -1000;
-var insideLoop ="false"; 
- 
-function checkScroll_comms_post() {
-  if (nearBottomOfPage() && insideLoop!="true") {
-    insideLoop="true";
-    currentPage++;
-  $('#loading_page').show();
-    if($('.resources1').length == 0){
-      console.log(currentPage);
+        var currentPage = 1;
+        var intervalID = -1000;
+        var insideLoop ="false"; 
+
+        function checkScroll_comms_post() {
+          if (nearBottomOfPage() && insideLoop!="true") {
+            insideLoop="true";
+            currentPage++;
+            $('#loading_page').show();
+    //console.log($('.home_page_post').length);
+    if($('.home_page_post').length == 0){
       clearInterval(intervalID);
       for (var i = 1; i < 99999; i++){
-         window.clearInterval(i);
-      }
-      insideLoop = "false";
-      return;
-    }
-    jQuery.ajax('/posts/cus_post_paginate?page=' + currentPage, {asynchronous:true, evalScripts:true, method:'get', success: function(data, textStatus, jqXHR) {
-    $('.resources1').append($(data));
+       window.clearInterval(i);
+     }
+     insideLoop = "false";
+     return;
+   }
+   jQuery.ajax('/posts/cus_post_paginate?page=' + currentPage, {asynchronous:true, evalScripts:true, method:'get', success: function(data, textStatus, jqXHR) {
+    $('.home_page_post').append($(data));
     $('#loading_page').hide();
     if(typeof jQuery(data) == 'undefined' ||jQuery(data).html() == null || $(data).find('.paginate_do').html()==null){
       clearInterval(intervalID);
       for (var i = 1; i < 99999; i++){
-         window.clearInterval(i);
-      }
-      restartInterval();
-    }
-    insideLoop ="false"; 
-  },});
-  }
+       window.clearInterval(i);
+     }
+     restartInterval();
+   }
+   insideLoop ="false"; 
+ },});
+ }
 }
- 
+
 function nearBottomOfPage() {
   return scrollDistanceFromBottom() < 150;
 }
- 
+
 function scrollDistanceFromBottom(argument) {
   return pageHeight() - (window.pageYOffset + self.innerHeight);
 }
- 
+
 function pageHeight() {
   return Math.max(document.body.scrollHeight, document.body.offsetHeight);
 }
- 
+
 $('document').ready(function(){
   intervalID = setInterval(checkScroll_comms_post, 1000);
 })
 
 $("#community_post_select").click(function(){
-  $('#modal_sel_cu').modal('show');
+  $('#modal_sel_cu').modal({
+    backdrop: "static",
+  });
 });
 $("#closeX_sel_cu").click(function(){
   $('#modal_sel_cu').modal('hide');
@@ -200,34 +247,29 @@ $("#selCU").click(function(){
   $('#modal_sel_cu').modal('hide');
 });
 
-var i=0;
-$(".bgClrChg2").click( function() {
+var j=1;
+$(".select_unselect_community").click( function() {
   var id = $(this).find('p').html();
   if($(this).find(':checkbox').is(':checked')){
     $(this).find(':checkbox').prop("checked",false);
     $("#cu_check_"+id).prop("checked",false);
     $("#cu_label_"+id).hide();
-    $(this).removeClass('tabs_selected');
-    $(this).find('.select_unselect').html("Select");
-    i--;
+    j--;
   }else{
-    $(this).find(':checkbox').attr("checked",true);
-       $("#cu_check_"+id).attr("checked",true);
-       $("#cu_label_"+id).show();
-       $(this).addClass('tabs_selected');
-       $(this).find('.select_unselect').html("Unselect");
-       i++;
+    $(this).find(':checkbox').prop("checked",true);
+    $("#cu_check_"+id).prop("checked",true);
+    $("#cu_label_"+id).show();
+    j++;
   }
-  if(i==0){
-    $("#selCU").hide();
-    $("#sel_comm_label").hide();
+
+ if(j>0){
+    $(".sel_com_head").show();
   }else{
-    $("#selCU").show();
-  $("#sel_comm_label").show();
+    $(".sel_com_head").hide();
   }
 
 });
-$("#selCU").hide();
-$("#sel_comm_label").hide();
+
+
 
 </script>

@@ -28,7 +28,7 @@
     $("#imageCanvas1").click(function(){
         $("#pic1").click();
     });
-        var canvas = document.getElementById('imageCanvas1');
+    var canvas = document.getElementById('imageCanvas1');
     var ctx = canvas.getContext('2d');
     ctx.font="8pt tahoma ";
     ctx.fillStyle = 'grey';
@@ -94,7 +94,6 @@ function checkScroll_comm_post() {
     currentPage<%= @selected_community.id.to_s %>++;
   $('#loading_page').show();
       if($('#div_post_<%= @selected_community.id.to_s %>').length == 0){
-      console.log(currentPag<%= @selected_community.id.to_s %>);
       clearInterval(intervalID);
       for (var i = 1; i < 99999; i++){
          window.clearInterval(i);

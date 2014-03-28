@@ -35,7 +35,7 @@
             <% if is_community_active? %>
             <li class="active_side_tab"><%= link_to "Home", root_path, id: 'root_home' %></li>
             <% end %>
-            <li><%= link_to "Community", communities_path %><span style="display:none"><%= link_to "", communities_path, id: 'home_comunity' %></span></li>
+            <li><%= link_to "Communities", communities_path %><span style="display:none"><%= link_to "", communities_path, id: 'home_comunity' %></span></li>
            <% if is_community_active? %>
             <!--<li><%= link_to "Users", users_path %></li>
             <li><%= link_to "Create Events", new_event_path %></li>-->
