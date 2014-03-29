@@ -1,88 +1,120 @@
      <table id="table_<%= post.id %>">
       <tr>
-        <td width="70px" style="padding:2px;">
-      <div class="pull-left paginate_do">
-        <section class="grid">
-          <li>
+        <td style="padding:2px;">
+      <div class="paginate_do">
+        <section class="users">
+          <div class="pull-right" style="padding:5px 0 0 5px;margin:1px 0 0 0;">
+            <% if current_user?(post.user) %>
+             <strong style="font-size:15px;margin-right:3px;"> <%= link_to "×", post, method: :delete, remote: true, style: "color:#99A7C3 !important;",
+                                               data: { confirm: "You sure?" },
+                                               title: "delete the post" %></strong>
+            <% end %><br>
+          </div>
+          <li style="border-bottom:0px;padding: 5px 5px 0 5px;">
             <a href="/users/<%=post.user.id %>/" data-remote="true" style="cursor:pointer;border:0px;padding:0px;" class="pop_up" rel="popover" data-content='<%= gravatar_for post.user, size: 100 %>' data-original-title="<%= post.user.name %>" >
                     <%= gravatar_for post.user, size: 50 %>
             </a>
+                    <address style="margin-top:5px;">
+                      <strong style="font-size:14px;letter-spacing:0.02em;"> <%= link_to post.user.name, post.user, remote: true %></strong><br>
+                      <span class="timestamp" >
+                        <%= time_ago_in_words(post.created_at) %> ago.
+                      </span>
+                    </address>
+          </li>
+          <li>
+                  <span class="content" style="font-size:15px;border:0px;padding: 5px 5px 0 5px;"><%= post.content.gsub(/\n/, '<br>').html_safe %></span>
           </li>
         </section>
       </div>
       </td>
-      <td style="padding:0px;" class="post_grid">
+    </tr>
+    <tr>
+      <td style="padding:0px;border:0px;" class="post_grid">
         <div class="container_pics" >
          <% post.photos.each do |photo| %>
             <li style="border-top: 0px;">
-            <div  class="img_zoom" >
+            <div  class="img_zoom" style="margin-left:7px;margin-right:7px;">
           <% if (post.postable_type != Objecttypeenum::EVENT && post.postable_type != Objecttypeenum::ACTIVITY && post.postable_type != Objecttypeenum::ALBUM && post.postable_type != Objecttypeenum::BUYSELL)%>
             <a href="<%= photo.pic_url %>" rel="rettyPhoto[<%= post.id %>]" class="lightview" data-lightview-group="thumbnail-<%= post.id %>" data-lightview-group-options="controls: 'thumbnails'">
-            <%= cl_image_tag(photo.pic_url(:medium_large), class:"image_al_c")  %></a> 
+            <%= cl_image_tag(photo.pic_url(:large_mid), class:"image_al_c")  %></a> 
           <% end %>
           <% if post.postable_type == Objecttypeenum::EVENT %>
-            <%= link_to cl_image_tag(photo.pic_url(:medium_large), class:" albumLink", id:"#{photo.id}") , post.postable, remote: true %>
+            <%= link_to cl_image_tag(photo.pic_url(:large_mid), class:" albumLink", id:"#{photo.id}") , post.postable, remote: true %>
           <% end %>
           <% if post.postable_type == Objecttypeenum::ACTIVITY %>
-            <%= link_to cl_image_tag(photo.pic_url(:medium_large), class:" albumLink", id:"#{photo.id}") , post.postable, remote: true %>
+            <%= link_to cl_image_tag(photo.pic_url(:large_mid), class:" albumLink", id:"#{photo.id}") , post.postable, remote: true %>
           <% end %>
           <% if post.postable_type == Objecttypeenum::ALBUM %>
-            <%= link_to cl_image_tag(photo.pic_url(:medium_large), class:" albumLink", id:"#{photo.id}") , post.postable, remote: true %>
+            <%= link_to cl_image_tag(photo.pic_url(:large_mid), class:" albumLink", id:"#{photo.id}") , post.postable, remote: true %>
           <% end %>
           <% if post.postable_type == Objecttypeenum::BUYSELL %>
-            <%= link_to cl_image_tag(photo.pic_url(:medium_large), class:" albumLink", id:"#{photo.id}") , post.postable, remote: true %>
+            <%= link_to cl_image_tag(photo.pic_url(:large_mid), class:" albumLink", id:"#{photo.id}") , post.postable, remote: true %>
           <% end %>
           </div>
           </li>
           <% break %>
         <% end %>
         </div>
-          <div class="pull-right" style="padding:5px 0 0 5px;margin:1px 0 0 0;">
-          <span class="timestamp" >
-            Posted <%= time_ago_in_words(post.created_at) %> ago.
-          </span>
-        <% if current_user?(post.user) %>
-          <%= link_to "delete", post, method: :delete, remote: true,
-                                           data: { confirm: "You sure?" },
-                                           title: post.content %>
-        <% end %><br>
-          </div>
+
         
-        <div style="background-color:#f0f0f0;padding:5px;margin:4px 0px;">
-        <span class="content" style="font-size:15px"><%= post.content.gsub(/\n/, '<br>').html_safe %></span>
+        <div style="background-color:#f0f0f0;padding:5px;margin:5px 0px 4px 0px;">
+          <span class="timestamp hfive" style="margin-left:5px;">Posted to <%="community".pluralize(post.communities.count) %>
+                  </span>
+        <ul class="users">
+        <% unless post.communities.count == 1 && post.communities[0].id == active_community.id %>
+        <% end %>
+          <% unless post.communities[0].nil? %>
+                  <% j=0 %>
+                 <!--  <strong style="font-size:14px;" > -->
+                    <span  class="center_block">
+                  <% post.communities.each do |cu| %>
+                  <!--
+                  <% j+=1 %>
+                  &nbsp;<%= link_to cu.name, cu, remote:true %><%= "," if post.communities.count != j %> 
+                  -->
+                  <li style="margin-left:5px;position:relative;width:180px;" class="pull-left">
+                    <%= link_to cl_image_tag(cu.photo.pic_url(:smallest), class:"image_al_c1 thumbnail pull-left ", id:"#{cu.photo.id}"), "#" %>
+                    <div style="margin-left:65px;margin-top:5px;">
+                       <address>
+                         <strong><%= link_to cu.name.capitalize, "#", style: "font-size:13px;word-wrap:break-word;" %></strong><br>
+                          <span style="word-wrap:break-word;"><%= cu.description.length > 17 ? cu.description.slice(0..17) + "..." : cu.description %></span><br>
+                       </address>  
+                    </div>
+                   </li>  
+                  <% end %>
+                  </span>
+                 <!--  </strong> -->
+          <% end %>
+        </ul>
         <% unless post.activities[0].nil? %>
           <% unless post.activities[0].is_admin %>
             <span class="content">Activity: <%= post.activities[0].title %></span>
           <% end %>
         <% end %>
-          <% unless post.groups[0].nil? %>
+        <ul class="users">
+        <% unless post.groups[0].nil? %>
                 <% i=0 %>
-                <span  class="center_block"><span class="timestamp hfive"><%="Group".pluralize(post.groups.count) %>:
-                </span>
+                <span  class="center_block">
+                  <li class="timestamp hfive" style="margin:0 0 0 5px;position:relative;width:550px;padding:0px;"> Posted to <%="Group".pluralize(post.groups.count) %>
+                </li>
                 <% post.groups.each do |group| %>
                 <% i+=1 %>
-                &nbsp;<%= link_to group.name, group, remote:true %><%= "," if post.groups.count != i %>
+                    <li style="margin-left:5px;position:relative;width:180px;" class="pull-left">
+                    <%= link_to cl_image_tag(group.photo.pic_url(:smallest), class:"image_al_c1 thumbnail pull-left ", id:"#{group.photo.id}"), "#" %>
+                    <div style="margin-left:65px;margin-top:5px;">
+                       <address>
+                         <strong><%= link_to group.name.capitalize, "#", style: "font-size:13px;word-wrap:break-word;" %></strong><br>
+                          <span style="word-wrap:break-word;"><%= group.description.length > 17 ? group.description.slice(0..17) + "..." : group.description %></span><br>
+                       </address>  
+                    </div>
+                   </li>  
+<!-- 
+                &nbsp;<%= link_to group.name, group, remote:true %><%= "," if post.groups.count != i %> -->
                 <% end %>
               </span>
         <br>
         <% end %>
-        
-        <% unless post.communities.count == 1 && post.communities[0].id == active_community.id %>
-          <% unless post.communities[0].nil? %>
-                  <% j=0 %>
-                  <span  class="center_block"><span class="timestamp hfive"><%="Community".pluralize(post.communities.count) %>:
-                  </span>
-                  <% post.communities.each do |cu| %>
-                  <% j+=1 %>
-                  &nbsp;<%= link_to cu.name, cu, remote:true %><%= "," if post.communities.count != j %>
-                  <% end %>
-                  </span>
-                  <ul class="groupsList">
-                  <ol>
-                  </ol>
-                  </ul>
-          <% end %>
-        <% end %>
+        </ul>
         <div id="<%= post.id %>_userlike" style="border-top:1px solid #ddd;padding:5px 0 0 5px;margin:5px 0 0 0;">
               <%= render :partial => "posts/likes", :locals => { :post => post} %>
         </div>

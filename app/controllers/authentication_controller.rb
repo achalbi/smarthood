@@ -27,6 +27,9 @@ class AuthenticationController < ApplicationController
         if  user.user_info.nil?
           user.user_info =  UserInfo.new
         end
+        if @user.address.nil? 
+          @user.address = Address.new
+        end
         user.user_info.first_name = user_session['first_name']
         user.user_info.last_name = user_session['last_name']
         user.email = user_session['email']

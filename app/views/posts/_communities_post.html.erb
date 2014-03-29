@@ -13,24 +13,21 @@
       <canvas id="imageCanvas1" style = "border: 1px solid #ddd; padding:2px; align:center;cursor:pointer; background-color:#ffffff;" width="132px" height="88px">Add pictures</canvas>
     </div> 
     <%= link_to  "Select communities","#", id: "community_post_select", class: "uibutton pull-left" %>
-    <%= f.submit "Post", id: "community_post_submit", class: "btn primary pull-right" %>
+       <!-- <span style="margin-left:5px;font-size:14px;line-height:2;" class="sel_com_head timestamp hfive">Post to community</span>
+ -->
+     <%= f.submit "Post", id: "community_post_submit", class: "btn primary pull-right" %>
     <%= hidden_field_tag :type, "communities" %> 
     <div id="sel_comm_label"></div>
-    <ul class="users" style="margin-top:70px;margin-left:150px;" >
-       <h4 style="padding-left:55px;position:relative;" class="sel_com_head">
-        <strong>
-          Selected communities
-        </strong>
-       </h4>
-
+    <ul class="users" style="display: block;margin-top:120px;">
+      <li style="margin-left:5px;font-size:14px;line-height:1.5;padding: 2px 0 2px 0;" class="sel_com_head timestamp hfive">Post to community</li>
   <% @communities.each do |cu| %>
       <!--     <div id="cu_label_<%= cu.id %>" style="display:none;margin:5px;" class="pull-left"><%=link_to cu.name, cu, remote: true %> </div> -->
-       <li id="cu_label_<%= cu.id %>" style="padding-left:55px;position:relative;" class=" active_hide community" >
+       <li id="cu_label_<%= cu.id %>" style="margin-left:5px;position:relative;width:180px;" class=" active_hide community pull-left" >
         <%= link_to cl_image_tag(cu.photo.pic_url(:smallest), class:"image_al_c1 thumbnail pull-left ", id:"#{cu.photo.id}"), "#" %>
         <div style="margin-left:65px;margin-top:5px;">
            <address>
-             <strong><%= link_to cu.name.capitalize, "#", style: "font-size:13px;" %></strong><br>
-              <%= cu.description %><br>
+             <strong><%= link_to cu.name.capitalize, "#", style: "font-size:13px;word-wrap:break-word;" %></strong><br>
+              <span style="word-wrap:break-word;"><%= cu.description.length > 17 ? cu.description.slice(0..17) + "..." : cu.description %></span><br>
            </address>  
         </div>
        </li>      
@@ -107,7 +104,6 @@
 
   $("#image_upload1").before($("div#image").html().replace('NEW_RECORD', new Date().getTime()) );
 });
-
 $(document).ready(function(){
     $("#cu_label_<%= active_community.id.to_s %>").show();
   $.validate({
@@ -194,7 +190,7 @@ $(document).ready(function(){
             insideLoop="true";
             currentPage++;
             $('#loading_page').show();
-    //console.log($('.home_page_post').length);
+    console.log($('.home_page_post').length);
     if($('.home_page_post').length == 0){
       clearInterval(intervalID);
       for (var i = 1; i < 99999; i++){
@@ -231,7 +227,7 @@ function pageHeight() {
 }
 
 $('document').ready(function(){
-  intervalID = setInterval(checkScroll_comms_post, 1000);
+  intervalID = setInterval(checkScroll_comms_post, 500);
 })
 
 $("#community_post_select").click(function(){

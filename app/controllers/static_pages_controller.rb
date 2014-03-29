@@ -12,9 +12,13 @@ class StaticPagesController < ApplicationController
       @cu_ids = @communities.collect(&:id)
       @communityposts = Communitypost.where('community_id IN (?)', @cu_ids)
       @posts = @communityposts.paginate(page: params[:page], :per_page => 4).collect{|a| a.post}.uniq
+      if current_user.address.nil? 
+        current_user.address = Address.new
+      end
     else
       @user = env['omniauth.identity'] ||= User.new
       @user.user_info = UserInfo.new
+      @user.address = Address.new
     end
   end
   
