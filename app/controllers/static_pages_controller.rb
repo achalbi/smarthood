@@ -16,7 +16,7 @@ class StaticPagesController < ApplicationController
       @group_ids = current_user.user_groups.where("invitation = ?", Uc_enum::JOINED).collect(&:group_id)
       unless @group_ids.blank?
         @grouppost_ids = Grouppost.where('group_id IN (?)', @group_ids).collect(&:post_id)
-        @post_ids << @group_ids
+        @post_ids = @post_ids + @group_ids
       end
       @posts = Post.where('id IN (?)', @post_ids).paginate(page: params[:page], :per_page => 4)
       #@posts = @communityposts.paginate(page: params[:page], :per_page => 4).collect{|a| a.post}.uniq
