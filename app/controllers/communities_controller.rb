@@ -27,7 +27,7 @@ class CommunitiesController < ApplicationController
       @requested_users = nil
       @ucs = @selected_community.usercommunities.where("user_id = ?  AND is_admin=?",current_user.id, true )
 
-      @group_ids = current_user.user_groups.where("community_id = ?", @selected_community.id).collect(&:group_id)
+      @group_ids = current_user.user_groups.where("community_id = ? AND invitation = ?", @selected_community.id, Uc_enum::JOINED ).collect(&:group_id)
       @post_ids = []
       unless @group_ids.blank?
         @groups = Group.where('id IN (?) AND community_id = ?', @group_ids, @selected_community.id)

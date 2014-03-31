@@ -103,27 +103,5 @@
 <script type="text/javascript">
 
 
-window.fbAsyncInit = function() {
-  FB.init({
-    appId: '<%= ENV["FACEBOOK_APP_ID"] %>',
-    cookie: true
-  });
-  $('#sign_in_fb').click(function(e) {
-    e.preventDefault();
-    return FB.login(function(response) {
-      if (response.authResponse) {
-        return window.location = '/auth/facebook/';
-      }
-    });
-  });
-  return $('#sign_out_fb').click(function(e) {
-    FB.getLoginStatus(function(response) {
-      if (response.authResponse) {
-        return FB.logout();
-      }
-    });
-    return true;
-  });
-};
 
 </script>

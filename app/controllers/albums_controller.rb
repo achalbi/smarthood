@@ -31,7 +31,7 @@ class AlbumsController < ApplicationController
             end
       if @album.privacy == Privacyenum::PUBLIC
         @post = Post.new
-        @post.content = "New album: '" + @album.title << "' was created by '" << current_user.name << "'. " 
+        @post.content = "<span class='timestamp' style='font-size:15px;'>added " + view_context.pluralize(@album.photos.count, "photo") + " to the album </span><strong><a href='/albums/" + @album.id.to_s + "' style='font-size:15px;word-wrap:break-word;' data-remote='true' > " + @album.title + " </a>.</strong>"
         @post.user_id = current_user.id
         @post.postable = @album
         @post.save

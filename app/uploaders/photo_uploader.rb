@@ -91,7 +91,7 @@ class PhotoUploader < CarrierWave::Uploader::Base
      process :resize_to_fit => [500, 500]
    end
    version :large_mid do
-     process :resize_to_fit => [565, 565]
+     cloudinary_transformation :width => 565, :height => 350, :crop => :fill, :gravity => :faces
    end
    version :large do
      process :resize_to_fit => [650, 650]
@@ -109,6 +109,22 @@ class PhotoUploader < CarrierWave::Uploader::Base
   version :cover_pic_small do
      process :resize_to_fit => [350, 400]
    end
+
+   version :photogrid_one do
+     cloudinary_transformation :width => 565, :height => 350, :crop => :fill, :gravity => :faces
+   end
+
+   version :photogrid_two do
+     cloudinary_transformation :width => 280, :height => 175, :crop => :fill, :gravity => :faces
+   end
+   version :photogrid_three_one do
+     cloudinary_transformation :width => 349, :height => 350, :crop => :fill, :gravity => :faces
+   end
+
+   version :photogrid_three_two do
+     cloudinary_transformation :width => 210, :height => 173, :crop => :fill, :gravity => :faces
+   end
+
 
   # Add a white list of extensions which are allowed to be uploaded.
   # For images you might use something like this:

@@ -168,6 +168,7 @@ class PostsController < ApplicationController
   @cu_ids = @communities.collect(&:id)
   @communityposts = Communitypost.where('community_id IN (?)', @cu_ids)
   @posts = @communityposts.paginate(page: params[:page], :per_page => 4).collect{|a| a.post}.uniq
+  @post_type = 'communities'
 end
 
 def userLike

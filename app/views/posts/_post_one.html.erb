@@ -15,15 +15,21 @@
                     <%= gravatar_for post.user, size: 50 %>
             </a>
                     <address style="margin-top:5px;">
-                      <strong style="font-size:14px;letter-spacing:0.02em;"> <%= link_to post.user.name, post.user, remote: true %></strong><br>
+                      <strong style="font-size:15px;letter-spacing:0.02em;"> <%= link_to post.user.name, post.user, remote: true %></strong>
+                      <% unless (post.postable_type != Objecttypeenum::EVENT && post.postable_type != Objecttypeenum::ACTIVITY && post.postable_type != Objecttypeenum::ALBUM && post.postable_type != Objecttypeenum::BUYSELL)%>
+                       <%= post.content.gsub(/\n/, '<br>').html_safe %>
+                      <% end %>
+                       <br>
                       <span class="timestamp" >
                         <%= time_ago_in_words(post.created_at) %> ago.
                       </span>
                     </address>
           </li>
-          <li>
+            <% if (post.postable_type != Objecttypeenum::EVENT && post.postable_type != Objecttypeenum::ACTIVITY && post.postable_type != Objecttypeenum::ALBUM && post.postable_type != Objecttypeenum::BUYSELL)%>
+          <li style="margin-top:0;padding-top:0;">
                   <span class="content" style="font-size:15px;border:0px;padding: 5px 5px 0 5px;"><%= post.content.gsub(/\n/, '<br>').html_safe %></span>
           </li>
+            <% end %>
         </section>
       </div>
       </td>
@@ -31,33 +37,54 @@
     <tr>
       <td style="padding:0px;border:0px;" class="post_grid">
         <div class="container_pics" >
-         <% post.photos.each do |photo| %>
             <li style="border-top: 0px;">
-            <div  class="img_zoom" style="margin-left:7px;margin-right:7px;">
-          <% if (post.postable_type != Objecttypeenum::EVENT && post.postable_type != Objecttypeenum::ACTIVITY && post.postable_type != Objecttypeenum::ALBUM && post.postable_type != Objecttypeenum::BUYSELL)%>
-            <a href="<%= photo.pic_url %>" rel="rettyPhoto[<%= post.id %>]" class="lightview" data-lightview-group="thumbnail-<%= post.id %>" data-lightview-group-options="controls: 'thumbnails'">
-            <%= cl_image_tag(photo.pic_url(:large_mid), class:"image_al_c")  %></a> 
-          <% end %>
-          <% if post.postable_type == Objecttypeenum::EVENT %>
-            <%= link_to cl_image_tag(photo.pic_url(:large_mid), class:" albumLink", id:"#{photo.id}") , post.postable, remote: true %>
-          <% end %>
-          <% if post.postable_type == Objecttypeenum::ACTIVITY %>
-            <%= link_to cl_image_tag(photo.pic_url(:large_mid), class:" albumLink", id:"#{photo.id}") , post.postable, remote: true %>
-          <% end %>
-          <% if post.postable_type == Objecttypeenum::ALBUM %>
-            <%= link_to cl_image_tag(photo.pic_url(:large_mid), class:" albumLink", id:"#{photo.id}") , post.postable, remote: true %>
-          <% end %>
-          <% if post.postable_type == Objecttypeenum::BUYSELL %>
-            <%= link_to cl_image_tag(photo.pic_url(:large_mid), class:" albumLink", id:"#{photo.id}") , post.postable, remote: true %>
-          <% end %>
+            <div  class="img_zoom center  " style="margin-left:7px;margin-right:7px;display :block;width:570px;height:355">
+              <% i = 0 %>
+         <% post.photos.each do |photo| %>
+            <div  >
+              <% i += 1 %>
+
+              <% if (post.postable_type != Objecttypeenum::EVENT && post.postable_type != Objecttypeenum::ACTIVITY && post.postable_type != Objecttypeenum::ALBUM && post.postable_type != Objecttypeenum::BUYSELL)%>
+                        <!-- <a href="<%= photo.pic_url %>" rel="rettyPhoto[<%= post.id %>]" class="lightview" data-lightview-group="thumbnail-<%= post.id %>" data-lightview-group-options="controls: 'thumbnails'"> -->
+                 <a href="<%= photo.pic_url %>" rel="group[<%= post.id %>]" class="fancybox-album center">
+                <%= cl_image_tag(photo.pic_url(:large_mid), class:"image_al_c")  %></a> 
+                <% break %>
+              <% end %>
+
+            <% if post.postable_type == Objecttypeenum::EVENT  ||  post.postable_type == Objecttypeenum::ACTIVITY ||  post.postable_type == Objecttypeenum::BUYSELL || post.postable_type == Objecttypeenum::ALBUM %>
+
+                <% if post.photos.count == 1 %>
+                  <%= link_to cl_image_tag(photo.pic_url(:photogrid_one), class:"albumLink padding1", id:"#{photo.id}") ,  photo.pic_url, class: "fancybox-album",rel: "#{post.id}" %>
+                <% end %>
+
+                <% if post.photos.count == 2 %>
+                  <%= link_to cl_image_tag(photo.pic_url(:photogrid_two), class:"albumLink pull-left padding1",rel: "#{post.id}", id:"#{photo.id}") , photo.pic_url, class: "fancybox-album",rel: "#{post.id}" , title: "#{post.postable.title}"  %>
+                <% end %>
+
+                  <% if post.photos.count == 3 %>
+                    <% if i == 1 %>
+                      <%= link_to cl_image_tag(photo.pic_url(:photogrid_three_one), class:" albumLink pull-left padding1", style: "display:block;", id:"#{photo.id}") , photo.pic_url, class: "fancybox-album", rel: "#{post.id}", title: "#{post.postable.title}" %>
+                    <% else %>
+                      <%= link_to cl_image_tag(photo.pic_url(:photogrid_three_two), class:" albumLink pull-left padding1", style: "display:block;", id:"#{photo.id}") ,  photo.pic_url, class: "fancybox-album", rel: "#{post.id}", title: "#{post.postable.title}" %>
+                    <% end %>
+                  <% end %>
+
+                  <% if post.photos.count > 3 %>
+                      <%= link_to cl_image_tag(photo.pic_url(:photogrid_two), class:" albumLink pull-left padding1", style: "display:block;", id:"#{photo.id}") ,  photo.pic_url, class: "fancybox-album",rel: "#{post.id}", title: "#{post.postable.title}" %>
+                    <% if i > 3 %>
+                      <% break %>
+                    <% end %>
+                  <% end %>
+
+            <% end %>
+          </div>
+        <% end %>
           </div>
           </li>
-          <% break %>
-        <% end %>
-        </div>
 
+        </div>
         
-        <div style="background-color:#f0f0f0;padding:5px;margin:5px 0px 4px 0px;">
+        <div style="background-color:#f0f0f0;padding:5px;margin:5px 0px 4px 0px;" class="clear-float">
           <span class="timestamp hfive" style="margin-left:5px;">Posted to <%="community".pluralize(post.communities.count) %>
                   </span>
         <ul class="users">
@@ -191,4 +218,6 @@
         </div>
 <% end %>
 
- 
+    <script type="text/javascript">
+
+    </script>

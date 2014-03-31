@@ -74,7 +74,7 @@
          <% @camera_roll.each do |photo| %>
           <li>
           <div  class="img_zoom" >
-            <a href="<%= photo.pic_url %>"  class="lightview1" rel="group1"
+            <a href="<%= photo.pic_url %>"  class="fancybox-album" rel="group1"
            >
             <%= cl_image_tag(photo.pic_url(:smaller), class:"image_al_c thumbnail", alt: "http://res.cloudinary.com/rashi/image/upload/v1377921346/RYW-Logo-smaller_rbkszn.png")  %></a> 
         </div>
@@ -258,7 +258,7 @@
             $("#share").hide();
             
           });
-          $("a.lightview1").fancybox({
+/*          $("a.lightview1").fancybox({
             padding    : 0,
             afterShow: function() { 
                 $('<div class="expander"></div>').appendTo(this.inner).click(function() {
@@ -273,7 +273,7 @@
             'speedIn'   : 600, 
             'speedOut'    : 200, 
             'overlayShow' : false
-          });
+          });*/
 
               $('.image_al_c1').click(function(){
                var id = this.id;

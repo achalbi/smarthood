@@ -70,7 +70,7 @@
 				<% @issue.issue_ticket_actions.reverse_each do |ita| %>
 				<% ita.issue_ticket_action_photos.each do |itap| %>
 				<li>
-					<a href="<%= itap.photo.pic_url %>" class="fancybox_photo" rel="group_photo">
+					<a href="<%= itap.photo.pic_url %>" class="fancybox-album" rel="group_photo">
 						<%= cl_image_tag(itap.photo.pic_url(:small), class:"thumbnail", style: "margin:0px!important;")  %></a> 
 	                  <!-- 
 					<%= link_to cl_image_tag(itap.photo.pic_url(:small), class:"image_al_c thumbnail") , itap.photo.pic_url, class:"albumLink", remote: true %>
@@ -326,14 +326,14 @@
 
 
 	<script type="text/javascript">
-	$("a.fancybox_photo").fancybox({
+/*	$("a.fancybox_photo").fancybox({
 		padding    : 0,
 		'transitionIn'  : 'elastic',
 		'transitionOut' : 'elastic',
 		'speedIn'   : 600, 
 		'speedOut'    : 200, 
 		'overlayShow' : false
-	});
+	});*/
 
 
 	$(document).ready(function(){

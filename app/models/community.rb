@@ -93,12 +93,16 @@ end
   end
 
   def can_admin_unjoin?(user)
+    if self.is_admin?(user)
      @usercommunities = self.usercommunities.where("is_admin = ?  AND invitation = ? ",true, Uc_enum::JOINED )
-        if @usercommunities.size > 1 && self.is_admin?(user)
+        if @usercommunities.size > 1 
           return true
         else
           return false
         end
+    else
+      return true
+    end
   end  
 
 

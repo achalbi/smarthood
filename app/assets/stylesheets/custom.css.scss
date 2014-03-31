@@ -634,6 +634,14 @@ a.disabled {
   padding: 5px !important;
 }
 
+.padding2{
+  padding: 2px !important;
+}
+
+.padding1{
+  padding: 2px !important;
+}
+
 
 /* css for timepicker */
 .ui-timepicker-div .ui-widget-header { margin-bottom: 8px; }
@@ -754,10 +762,6 @@ div#spinner
     overflow: auto;
 }
 
-.fancybox-wrap{
-  top:60px!important;
-  buttom:auto;
-}
 
 html{
   height: 100%;
@@ -785,7 +789,7 @@ body {
     width: 16px;
     height: 16px;
     padding: 4px;
-    background: white url(https://github.com/openxe/django-ace/diff_blob/1993c731626a44139b97d2d9fca8f4f4023f107a/django_ace/static/django_ace/img/expand.png?raw=true) center center no-repeat;
+    background: white url(/assets/expander.jpg) center center no-repeat;
     z-index: 99999;   
     cursor: pointer;
 }
@@ -935,4 +939,17 @@ border-bottom: 1px solid #ccc;
  */
 .checkboxFive input[type=checkbox]:checked + label:after {
   opacity: 1;
+}
+
+.fancybox-title-over-wrap {
+    width: 98%;
+    padding: 0;
+}
+
+.fancybox-title-over-wrap > div {
+   // padding: 10px;
+}
+
+.free-wall {
+    margin: 5px;
 }

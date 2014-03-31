@@ -30,3 +30,43 @@ $(function() {
   }
 });
 /* ]]> */
+
+$(document).ready(function(){
+            $("a.fancybox-album").fancybox({
+            padding    : 0,
+            autoCenter :true,
+            afterShow: function() { 
+                $('<div class="expander"></div>').appendTo(this.inner).click(function() {
+                    $(document).toggleFullScreen();
+                    $.fancybox.play( true );
+                });
+                    $(".header").hide();
+
+                $(".fancybox-title").wrapInner('<div />').show();
+                
+                $(".fancybox-wrap").hover(function() {
+                    $(".fancybox-title").show();
+                }, function() {
+                    $(".fancybox-title").hide();
+                });
+            },
+            afterClose: function() {
+             $(document).toggleFullScreen();
+                $(document).fullScreen(false);
+                $(".header").show();
+                $.fancybox.play( false );
+            },
+             helpers : {
+                  title: {
+                      type: 'over'
+                  }
+              },
+            'transitionIn'  : 'elastic',
+            'transitionOut' : 'elastic',
+            'speedIn'   : 600, 
+            'speedOut'    : 200, 
+            'overlayShow' : false
+          });
+
+  
+});
