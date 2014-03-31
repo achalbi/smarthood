@@ -28,7 +28,7 @@
           <div style="margin-right:120px;"  >
                <div id="album_indiv" style=" margin-bottom:0px;">
                   <ul class="breadcrumb" style="width:535px;height:22px;">
-                    <li><a href="#" class="marginLeft10 marginRight10" style="line-height:21px;">Albums</a><span class="divider" style="line-height:21px;" >></span> </li>
+                    <li><a href="#" class="marginLeft10 marginRight10" style="line-height:21px;" id="album_bc">Albums</a><span class="divider" style="line-height:21px;" >></span> </li>
                     <li><a href="#" class="marginLeft5" style="line-height:21px;"  ><%= @album.title %></a></li>
                     <span style="margin-right:5px;float:right;"><li><%= link_to "Share", '#', id: "share",  class: "uibutton icon add" %></li>
                       <% unless @album.downloadlink.blank? %>
@@ -102,32 +102,6 @@
   </div>
 <% end %>
 <script type="text/javascript">
-        $(document).ready(function(){
-
-           $("#share").click(function(){
-              $('#modal').modal('show');
-            });
-
-           $("#sharelink").click(function(){
-              $('#modal').modal('hide');
-              $("#shareAlb").click();
-
-            });
-
-           $("#clsX").click(function(){
-             $('#modal').modal('hide');
-            });
-
-          });
-/*          $("a.fancybox-album").fancybox({
-            padding    : 0,
-            'transitionIn'  : 'elastic',
-            'transitionOut' : 'elastic',
-            'speedIn'   : 600, 
-            'speedOut'    : 200, 
-            'overlayShow' : false
-          });*/
-
 
          $('.tokenfields').on('beforeCreateToken', function (e) {
             var token = e.token.value.split('|')
@@ -150,5 +124,37 @@
           }).on('preventDuplicateToken', function (e) {
             alert('Duplicate detected! Token value is: ' + e.token.value)
           }).tokenfield();
+
+        $(document).ready(function(){
+
+           $("#share").click(function(){
+              $('#modal').modal('show');
+            });
+
+
+           $("#sharelink").click(function(){
+              $('#modal').modal('hide');
+              $("#shareAlb").click();
+
+            });
+
+           $("#clsX").click(function(){
+             $('#modal').modal('hide');
+            });
+
+            $("#album_bc").click(function(){
+              $('#photos_community_li').click();
+            });
+          });
+        
+/*          $("a.fancybox-album").fancybox({
+            padding    : 0,
+            'transitionIn'  : 'elastic',
+            'transitionOut' : 'elastic',
+            'speedIn'   : 600, 
+            'speedOut'    : 200, 
+            'overlayShow' : false
+          });*/
+
 
       </script>
