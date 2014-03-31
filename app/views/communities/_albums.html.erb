@@ -63,7 +63,12 @@
             </div>
           </div>
         </span>
-        <br><br>
+          <div class="center_block clearfix pull-left ">
+            <%= f.label  "Album downloadable: " %>
+            <div class="input">
+              <%= check_box_tag :downloadable %>
+            </div>
+          </div>
         <div class="center_block clearfix pull-left clear">
          <div class="input">    
            <%= fields_for :photos, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
