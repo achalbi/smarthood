@@ -10,15 +10,14 @@
             <div class="modal-body">
                       <div class="bs-example bs-email">
                         <div class="form-group">
-                          <input type="text" class="form-control tokenfields" style="width:480px;" id="tokenfield-m1" name="email" placeholder="Type email and hit tab/enter" />
+                          <input type="text" class="form-control tokenfields" style="width:480px;" id="tokenfield-m1" name="email" placeholder="Type email and hit tab/enter" data-validation="required" data-validation-error-msg="Please type email and hit tab/enter to add"  />
                         </div>
                 </div>
                 <%= hidden_field_tag 'type', 'album' %>  
                 <%= hidden_field_tag "id", "#{@album.id}" %>
             </div>
             <div class="modal-footer" >
-              <%= link_to "Share", '#', id: "sharelink",  class: "btn primary pull-right " , style:"margin-left:10px"%>
-              <%= submit_tag "Share", id: "shareAlb", class: "btn primary", style: "float:right;display:none;"  %> 
+              <%= f.submit "Share", id: "shareAlb", class: "btn primary", style: "float:right;"  %> 
             </div>
           </div>
         </div>
@@ -131,13 +130,6 @@
               $('#modal').modal('show');
             });
 
-
-           $("#sharelink").click(function(){
-              $('#modal').modal('hide');
-              $("#shareAlb").click();
-
-            });
-
            $("#clsX").click(function(){
              $('#modal').modal('hide');
             });
@@ -159,6 +151,14 @@
             'speedOut'    : 200, 
             'overlayShow' : false
           });*/
+
+    $(document).ready(function(){
+      $.validate({
+        onSuccess : function() {
+          $('#modal').modal('hide');
+        },
+      });
+  });
 
 
       </script>
