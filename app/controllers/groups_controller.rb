@@ -180,10 +180,38 @@ def create_album
         @group.albums << @album
         @group.save
         @albums = @group.albums
-        @album_old = @album
-        getNotifiableUsers(Objecttypeenum::ALBUM, @album, nil, nil, Uc_enum::CREATED)
-        @album = Album.new
-          flash[:success] = "Album created"
+        @pic_arr = []
+        @album.photos.each do |photo|
+          @pic_arr << File.basename( photo.pic_url, ".*" )
+        end
+        @str = @album.title+"_"+@album.id.to_s
+        @str = @str.downcase.tr(" ", "_")
+            Cloudinary::Uploader.add_tag(@str, @pic_arr)
+            if params[:downloadable]
+                  @cld = Cloudinary::Uploader.multi(@str, :format => 'zip')
+                  @album.downloadlink = @cld["url"]
+                  @album.save
+            end
+      if @album.privacy == Privacyenum::PUBLIC
+        @post = Post.new
+        @post.content = "<span class='timestamp' style='font-size:15px;'>added " + view_context.pluralize(@album.photos.count, "photo") + " to the album </span><strong><a href='/albums/" + @album.id.to_s + "' style='font-size:15px;word-wrap:break-word;' data-remote='true' > " + @album.title + " </a>.</strong>"
+        @post.user_id = current_user.id
+        @post.postable = @album
+        @post.save
+        @post.communities << active_community
+        @post.groups << @group 
+        @album.photos.each do |photo|
+          @post.photos << photo
+        end
+      end
+        body_text = "The Album '" + @album.title + "' was created by "+ current_user.name
+        href = "/albums/"+ @album.id.to_s
+
+        #getNotifiableUsers(Objecttypeenum::ALBUM, @album, @album.albumable_type, @album.albumable_id, Uc_enum::CREATED)
+    
+        flash[:success] = "Album: " + @album.title + " created!"
+      @album_old = @album
+      @album = Album.new
       @share = Share.new
       respond_to do |format|
          format.html {  }

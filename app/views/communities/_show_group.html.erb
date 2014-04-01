@@ -53,7 +53,7 @@
               <ul class="tabs  ">
                 <li class="active" id="members_grp_tab"><%= link_to "Members","/communities/#{community.id}/group_members?grp_id=#{@group.id}", remote: true %></li>
                 <li id="post_grp_tab"><%= link_to "Posts","/communities/#{community.id}/group_posts?grp_id=#{@group.id}", remote: true %></li>
-                <li id="photos_grp_tab"><%= link_to "Photos","/communities/#{community.id}/group_photos?grp_id=#{@group.id}", remote: true %></li>
+                <li id="photos_grp_tab" class="photos_tab"><%= link_to "Photos","/communities/#{community.id}/group_photos?grp_id=#{@group.id}", remote: true %></li>
               </ul>
           </div>
         <div id="show_group_div">

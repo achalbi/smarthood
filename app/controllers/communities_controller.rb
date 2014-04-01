@@ -706,6 +706,9 @@ def search_app_user
     @albums = @community.albums
     @selected_community = @community
     @selected_community.req_pending_cnt = User.where(['id IN (?)' , @community.requested_uc.collect(&:user_id)]).count
+    @group_ids = current_user.user_groups.where("invitation = ? AND community_id = ?", Uc_enum::JOINED, @selected_community).collect(&:group_id)
+    @albums << Album.where("albumable_id IN (?) AND albumable_type = ?", @group_ids, Objecttypeenum::GROUP)      
+    @albums = @albums.sort_by(&:created_at).reverse
   end
 
  def members_com
@@ -782,6 +785,11 @@ def search_app_user
           @post.photos << photo
         end
       end
+
+    @group_ids = current_user.user_groups.where("invitation = ? AND community_id = ?", Uc_enum::JOINED, @community).collect(&:group_id)
+    @albums << Album.where("albumable_id IN (?) AND albumable_type = ?", @group_ids, Objecttypeenum::GROUP)      
+    @albums = @albums.sort_by(&:created_at).reverse
+
         body_text = "The Album '" + @album.title + "' was created by "+ current_user.name
         href = "/albums/"+ @album.id.to_s
 

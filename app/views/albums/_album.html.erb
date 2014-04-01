@@ -28,8 +28,8 @@
           <div style="margin-right:120px;"  >
                <div id="album_indiv" style=" margin-bottom:0px;">
                   <ul class="breadcrumb" style="width:535px;height:22px;">
-                    <li><a href="#" class="marginLeft10 marginRight10" style="line-height:21px;" id="album_bc">Albums</a><span class="divider" style="line-height:21px;" >></span> </li>
-                    <li><a href="#" class="marginLeft5" style="line-height:21px;"  ><%= @album.title %></a></li>
+                    <!-- <li><a href="#" class="marginLeft10 marginRight10" style="line-height:21px;" id="album_bc">Albums</a><span class="divider" style="line-height:21px;" >></span> </li>
+                    <li><a href="#" class="marginLeft5" style="line-height:21px;"  ><%= @album.title %></a></li> -->
                     <span style="margin-right:5px;float:right;"><li><%= link_to "Share", '#', id: "share",  class: "uibutton icon add" %></li>
                       <% unless @album.downloadlink.blank? %>
                         <li><%= link_to "Download", @album.downloadlink , id: "download",  class: "uibutton" %></li>
@@ -142,12 +142,16 @@
              $('#modal').modal('hide');
             });
 
-            $("#album_bc").click(function(){
-              $('#photos_community_li').click();
-            });
+
+
           });
-        
-/*          $("a.fancybox-album").fancybox({
+
+/* 
+             $('.album_bc').on('click', function(){
+                $(this).closest('.photos_tab').click();
+            });
+
+         $("a.fancybox-album").fancybox({
             padding    : 0,
             'transitionIn'  : 'elastic',
             'transitionOut' : 'elastic',
