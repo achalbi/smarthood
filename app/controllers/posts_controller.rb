@@ -164,10 +164,17 @@ class PostsController < ApplicationController
   @selected_comm = []
   @selected_comm << active_community
   @post = Post.new
-  @communities = Community.where('id IN (?) ', current_user.joined_uc.collect(&:community_id))
-  @cu_ids = @communities.collect(&:id)
-  @communityposts = Communitypost.where('community_id IN (?)', @cu_ids)
-  @posts = @communityposts.paginate(page: params[:page], :per_page => 4).collect{|a| a.post}.uniq
+   @cu_ids = current_user.joined_uc.collect(&:community_id)
+      @communities = Community.where('id IN (?) ', @cu_ids)
+      @post_ids = []
+      @communitypost_ids = Communitypost.where('community_id IN (?)', @cu_ids).collect(&:post_id)
+      @post_ids = @communitypost_ids
+      @group_ids = current_user.user_groups.where("invitation = ?", Uc_enum::JOINED).collect(&:group_id)
+      unless @group_ids.blank?
+        @grouppost_ids = Grouppost.where('group_id IN (?)', @group_ids).collect(&:post_id)
+        @post_ids = @post_ids + @group_ids
+      end
+      @posts = Post.where('id IN (?)', @post_ids).paginate(page: params[:page], :per_page => 4)
   @post_type = 'communities'
 end
 

@@ -812,6 +812,7 @@ def search_app_user
   end
 
   def group_posts
+     @community = Community.find(params[:id])
      @group = Group.find(params[:grp_id])
      @post = Post.new
      @posts = @group.posts.paginate(page: params[:page], :per_page => 4)
@@ -831,7 +832,7 @@ def search_app_user
     @group = Group.find(params[:grp_id])
     @album = Album.new
     @albums = @group.albums
-    #@community = Community.find(params[:id])
+    @community = Community.find(params[:id])
   end
 
   def destroy

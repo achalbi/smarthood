@@ -1,5 +1,5 @@
 <div class="center loading_page active_hide" ><img src="/assets/loading.gif"></div>
-<div id="image" style="display:block" class="span13">
+<div id="image" style="display:block;width:585px;">
   <%= form_for(@post, remote: true,  :html => {:multipart => true}) do |f| %>
   <div id="textarea_div" style="border: 1px solid #d4dae8;overflow: hidden;background-color:#f2f2f2;">
     <%= render 'shared/error_messages', object: f.object %>
@@ -9,7 +9,7 @@
 
     <% end %>
     <div class=" pull-left">
-      <%= f.text_area :content, placeholder: "Compose new post...", :rows=>6, class: "span10", 'data-validation' => "required", 'data-validation-error-msg' => "Post can't be blank" %>
+      <%= f.text_area :content, placeholder: "Compose new post...", 'data-validation' => "required", 'data-validation-error-msg' => "Post can't be blank",style: "width: 440px; height: 94px;" %>
       <canvas id="imageCanvas1" style = "border: 1px solid #ddd; padding:2px; align:center;cursor:pointer; background-color:#ffffff;" width="132px" height="88px">Add pictures</canvas>
     </div> 
     <%= link_to  "Select communities","#", id: "community_post_select", class: "uibutton pull-left" %>
@@ -58,7 +58,7 @@
       <h3>Select communities</h3>
     </div>
     <span style="font-size:11px;line-height: 3;margin-right:10px;" class="pull-right">(Check to select communities for the post)</span>
-    <div class="modal-body" style="max-height:400px;width:535px;padding-top:0;">
+    <div class="modal-body" style="max-height:400px;width:525px;padding-top:0;">
       <div class="row">
         <div class=" ui-front">
           <section id="cus_sec" style="">

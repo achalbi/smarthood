@@ -153,7 +153,7 @@ def search_app_user
     @group = Group.find(params[:id])
     @group_users = @group.user_groups.where('invitation = ?',Uc_enum::JOINED).collect(&:user_id).uniq
   end
-  @users = User.where("id IN (?)", @community.usercommunities.collect(&:user_id).uniq-@group_users)
+  @users = User.where("id IN (?)", @community.usercommunities.where('invitation = ?',Uc_enum::JOINED).collect(&:user_id).uniq - @group_users)
   @users = @users.where("LOWER(users.name) like LOWER(?) AND users.id != ?", "%#{params[:q]}%", current_user.id)
   @users_pp = []
   @users.each do |user|

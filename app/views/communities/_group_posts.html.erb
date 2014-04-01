@@ -1,8 +1,10 @@
 <div id="posts_groups">  
 	<ul class="users" id="posts_groups_ul" >
 		<div id="posts" style="overflow:auto;">
-      <% if @group.is_joined?(current_user, @group) %>
+      <% if community.is_active?(current_user, community) %>
+        <% if @group.is_joined?(current_user, @group) %>
 			   <%= render :partial => 'posts/group_post', :locals => {:post => @post, :group => @group} %>
+        <% end %>
       <% end %>
 			<br>
 			<div id="div_post_<%= @group.id.to_s %>" class="resources">
