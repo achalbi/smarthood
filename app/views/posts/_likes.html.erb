@@ -7,7 +7,7 @@
 
           <% end %>
         <% end %>
-
+        <span style="font-size:13px;">
         <% if @Ulikes %>
             <%= link_to "Unlike", userUnlike_posts_path(post_id: post.id), remote:true %><span class="timestamp" >&nbsp; - &nbsp;</span><a class="disabled" id="share_<%= post.id %>">Share</a><br> 
             <div>You <% if post.userlikes.count>1 %> and <abbr id="<%= post.id %>_hover"  title="<% post.userlikes.each do |likes| %><div><%= likes.user.name %></div><% end %>"><a class="disabled"  id="show_like_<%= post.id %>" title="" title=""><%= post.userlikes.count-1 %> <%= "other".pluralize(post.userlikes.count) %></a></abbr> <% end %> like this</div>
@@ -22,6 +22,7 @@
               <% end %>
             <% end %>
         <% end %>
+        </span>
 
   <div id="modal_like_<%= post.id %>" style="display:none" class="modal_like">
           <div id="modal-from-dom" class="modal hide fade in" style="display: block;width:500px;">

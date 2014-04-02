@@ -1,28 +1,50 @@
 
-<div style="background-color:#f5f5f5;" class="comments thumbnail img_zoom">
+<div style="background-color:#f5f5f5;" class="comments img_zoom">
+<% if post.comments.count > 3 %>
+<a class="pull-right" id="cmnts_<%= post.id %>" style="cursor:pointer;margin-right:5px;font-size:13px;" >View more comments</a><br>
+<% end %>
 <% post.comments.reverse_each do |comment| %>
 <% unless comment.id.nil? %>
   
-<ol style="padding:5px;margin:0;" class="comments_ol_<%= post.id %>">
-<a href="/users/<%=comment.user.id %>/" data-remote="true" style="cursor:pointer;border:0px;padding:0px;" class="pop_up" rel="popover" data-content='<%= gravatar_for comment.user, size: 100 %>' data-original-title="<%= comment.user.name %>" ><%= gravatar_for comment.user, size: 30 %></a>
-     <span class="content"><%= comment.content %></span>
+<ol style="padding:5px;margin:0;" class="comments_ol_<%= post.id %>" id="comments_ol_<%= comment.id %>">
+<a href="/users/<%=comment.user.id %>/" data-remote="true" style="cursor:pointer;border:0px;padding:0px;" class="pop_up" rel="popover" data-content='<%= gravatar_for comment.user, size: 100 %>' data-original-title="<%= comment.user.name %>" ><%= gravatar_for comment.user, size: 40 %></a>
+    <% if current_user?(comment.user) %>
+    <div class="pull-right active_hide" style="padding:5px 0 0 5px;margin:1px 0 0 0;" id="comments_del_<%= comment.id %>">
+             <strong style="font-size:11px;margin-right:3px;"> <%= link_to "×", comment, method: :delete, remote: true, style: "color:#99A7C3 !important;",
+                                               data: { confirm: "You sure?" },
+                                               title: "delete the comment" %></strong>
+    </div>
+    <% end %>
+    <address style="margin-top:2px;margin-bottom:0;">
+      <span>
+     <strong style="font-size:13px; float: left; line-height: 1;margin-right: 8px;"> <%= link_to post.user.name, post.user, remote: true %></strong>
+      </span>
+     <span class="content" style="font-size:13px;line-height: 1;"> <%= comment.content %></span>
      <span class="timestamp">
-      Posted <%= time_ago_in_words(comment.created_at) %> ago.
+      <%= time_ago_in_words(comment.created_at) %> ago.
     </span>
-     <% if current_user?(comment.user) %>
-        <%= link_to "delete", comment, method: :delete, remote: true, data: { confirm: "You sure?" },title: comment.content %>
-     <% end %>  
-     <br><br>
+    </address>
 </ol>
+<script type="text/javascript">
+$( "#comments_ol_<%= comment.id %>" ).hover(
+  function() {
+    $("#comments_del_<%= comment.id %>").show();
+  }, function() {
+    $("#comments_del_<%= comment.id %>").hide();
+  }
+);
+$("#comments_del_<%= comment.id %>").click(function(){
+  $( "#comments_ol_<%= comment.id %>" ).hide();
+});
+</script>
+
 <% end %>
-<% end %>
-<% if post.comments.count > 3 %>
-<a class="pull-right" id="cmnts_<%= post.id %>" style="cursor:pointer;margin-right:5px;" >Show more...</a><br>
 <% end %>
 <ol style="padding:5px;margin:0;height:30px;overflow:hidden;">
-<%= gravatar_for(current_user, size: 30) %>
-<%= form_for [post.comments.build], remote: true, html: {style: "margin-bottom: 0px;"}  do |f| %>
-    <%= f.text_field :content, :placeholder=>"Comment...", style: 'width:430px;', :title => "Comment"  %>
+<%= gravatar_for(current_user, size: 38) %>
+<%= form_for [post.comments.build], remote: true, html: {style: "margin-bottom: 0px;", id: "comment_#{post.id}"}  do |f| %>
+    <%= f.text_field :content, :placeholder=>"Comment...", style: 'width:465px;', :title => "Comment"  %>
+    <div class="center loading_page_<%= post.id %> pull-right active_hide" style="padding:0 5px;margin:0 8px;"><img src="/assets/loading.gif"></div>
     <%= f.hidden_field :post_id %>
     <div class="active_hide pull-left">
       <%= f.submit "Post", class: "btn primary" %>
@@ -35,6 +57,9 @@
 <script type="text/javascript">
 $(document).ready(function(){
   $('.gravatar').addClass('thumbnail');
+  $("#comment_<%= post.id %>").submit(function(){
+    $(".loading_page_<%= post.id %>").show();
+  });
 });
 $(".comments_ol_<%= post.id %>").hide();
 $(".comments_ol_<%= post.id %>:lt(3)").show();

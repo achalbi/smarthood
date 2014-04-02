@@ -10,7 +10,7 @@ class CommentsController < ApplicationController
     @comment.user = current_user
     @comment.save
     getNotifiableUsers(Objecttypeenum::COMMENT, @comment, Objecttypeenum::POST, @post, Uc_enum::CREATED)
-    flash[:success] = "Comments created!"
+    #flash[:success] = "Comments created!"
     respond_to do |format|
          format.html { redirect_to root_path }
          format.js { render  :locals => { :post => @post } }
@@ -21,7 +21,7 @@ class CommentsController < ApplicationController
     @comment = Comment.find(params[:id])
     @post = Post.find(@comment.post_id)
      Comment.find(params[:id]).destroy
-    flash[:success] = "Comments destroyed!"
+    #flash[:success] = "Comments destroyed!"
     respond_to do |format|
          format.html { redirect_to root_path }
          format.js { render  :locals => { :post => @post } }

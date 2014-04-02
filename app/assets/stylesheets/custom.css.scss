@@ -552,6 +552,12 @@ a.disabled {
   
 }
 
+.anchor{
+  cursor: pointer;
+  color: #3b5998;
+  &:hover {text-decoration: underline }
+}
+
 .bgClrChg:hover{
    background-color:#e0e0e0!important;
 }

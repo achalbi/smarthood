@@ -38,7 +38,7 @@
       <td style="padding:0px;border:0px;" class="post_grid">
         <div class="container_pics" >
             <li style="border-top: 0px;">
-            <div  class="img_zoom center  " style="margin-left:7px;margin-right:7px;display :block;width:550px;height:355">
+            <div  class="img_zoom center  " style="margin-left:7px;margin-right:7px;display :block;width:565px;height:355">
               <% i = 0 %>
          <% post.photos.each do |photo| %>
             <div  >
@@ -85,8 +85,9 @@
         </div>
         
         <div style="background-color:#f0f0f0;padding:5px;margin:5px 0px 4px 0px;" class="clear-float">
-          <span class="timestamp hfive" style="margin-left:5px;">Posted to <%="community".pluralize(post.communities.count) %>
+          <span class="timestamp" style="margin-left:5px;font-size:13px;">Posted to <%="community".pluralize(post.communities.count) %>
                   </span>
+        <span class="pull-right more anchor" id="comm_more_<%= post.id %>" style="font-size:13px;">Show more details</span>
         <ul class="users">
         <% unless post.communities.count == 1 && post.communities[0].id == active_community.id %>
         <% end %>
@@ -95,19 +96,23 @@
                  <!--  <strong style="font-size:14px;" > -->
                     <span  class="center_block">
                   <% post.communities.each do |cu| %>
-                  <!--
                   <% j+=1 %>
-                  &nbsp;<%= link_to cu.name, cu, remote:true %><%= "," if post.communities.count != j %> 
-                  -->
+                  <div  class="showless pull-left com_show_less<%= post.id %>">
+                  <strong>
+                  <%= link_to cu.name, cu, remote:true, style: "font-size:12px;line-height:2;margin-left:10px; word-wrap:break-word;pull-left"  %><%= "," if post.communities.count != j %> 
+                  </strong>
+                  </div>
+                  <div  class="showmore active_hide com_show_more<%= post.id %> pull-left">
                   <li style="margin-left:5px;position:relative;width:180px;" class="pull-left">
                     <%= link_to cl_image_tag(cu.photo.pic_url(:smallest), class:"image_al_c1 thumbnail pull-left ", id:"#{cu.photo.id}"), "#" %>
                     <div style="margin-left:65px;margin-top:5px;">
                        <address>
-                         <strong><%= link_to cu.name.capitalize, "#", style: "font-size:13px;word-wrap:break-word;" %></strong><br>
+                         <strong><%= link_to cu.name, "#", style: "font-size:13px;word-wrap:break-word;" %></strong><br>
                           <span style="word-wrap:break-word;"><%= cu.description.length > 17 ? cu.description.slice(0..17) + "..." : cu.description %></span><br>
                        </address>  
                     </div>
                    </li>  
+                  </div>
                   <% end %>
                   </span>
                  <!--  </strong> -->
@@ -121,20 +126,27 @@
         <ul class="users">
         <% unless post.groups[0].nil? %>
                 <% i=0 %>
+                  <span class="timestamp " style="margin:0 0 0 5px;font-size:13px;"> Posted to <%="Group".pluralize(post.groups.count) %><br>
+                </span>
                 <span  class="center_block">
-                  <li class="timestamp hfive" style="margin:0 0 0 5px;position:relative;width:550px;padding:0px;"> Posted to <%="Group".pluralize(post.groups.count) %>
-                </li>
                 <% post.groups.each do |group| %>
                 <% i+=1 %>
+                  <div  class="showless pull-left com_show_less<%= post.id %>">
+                  <strong>
+                  <%= link_to group.name, group, remote:true, style: "font-size:12px;line-height:2;margin-left:10px; word-wrap:break-word;pull-left"  %><%= "," if post.groups.count != i %> 
+                  </strong>
+                  </div>
+                  <div  class="showmore active_hide com_show_more<%= post.id %> pull-left">
                     <li style="margin-left:5px;position:relative;width:180px;" class="pull-left">
                     <%= link_to cl_image_tag(group.photo.pic_url(:smallest), class:"image_al_c1 thumbnail pull-left ", id:"#{group.photo.id}"), "#" %>
                     <div style="margin-left:65px;margin-top:5px;">
                        <address>
-                         <strong><%= link_to group.name.capitalize, "#", style: "font-size:13px;word-wrap:break-word;" %></strong><br>
+                         <strong><%= link_to group.name, "#", style: "font-size:13px;word-wrap:break-word;" %></strong><br>
                           <span style="word-wrap:break-word;"><%= group.description.length > 17 ? group.description.slice(0..17) + "..." : group.description %></span><br>
                        </address>  
                     </div>
                    </li>  
+                  </div>
 <!-- 
                 &nbsp;<%= link_to group.name, group, remote:true %><%= "," if post.groups.count != i %> -->
                 <% end %>
@@ -219,5 +231,19 @@
 <% end %>
 
     <script type="text/javascript">
-
+          $(function(){
+              $('#comm_more_<%= post.id %>').click(function(){
+                if ( $(this).hasClass('more') ){
+                      $(this).removeClass('more');
+                      $(this).html('Show less details');
+                      $(".com_show_less<%= post.id %>").hide();
+                      $(".com_show_more<%= post.id %>").show();
+                } else{
+                      $(this).addClass('more');
+                      $(this).html('Show more details');
+                      $(".com_show_less<%= post.id %>").show();
+                      $(".com_show_more<%= post.id %>").hide();
+                }
+              });
+          });
     </script>
