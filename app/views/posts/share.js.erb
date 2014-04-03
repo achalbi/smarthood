@@ -1,3 +1,7 @@
 $(".share_post").button('reset');
 $('.modal_share').modal('hide');
-$('#root_home').click();
+$('.loading_page').hide();
+if($('#posts_community_li').length == 0){
+	$('#root_home').click();
+};
+$('#posts_community_li').click();

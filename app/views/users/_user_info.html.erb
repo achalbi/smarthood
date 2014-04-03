@@ -2,23 +2,25 @@
   <% if current_user == @user %>
  <%= link_to "edit", '#', id: "edit_user",  class: " pull-right uibutton icon edit",:title => "Edit" %><br>
  <% end %>
-      <p><h6>Personal details:</h6></p>
- <p><h4>Name : <small><%= @user.user_info.first_name %></small> <small><%= @user.user_info.middle_name %></small> <small><%= @user.user_info.last_name %></small> </h4></p>
-      <p><h4>e-mail : <%= @user.email  %></h4></p>
-      <!-- <p><h4>Current city : <%= @user.user_info.current_city  %></h4></p>
-      <p><h4>Home town : <%= @user.user_info.home_town  %></h4></p> -->
-      <p><h4>Birthday : <%= @user.user_info.dob.strftime("%d/%m/%Y") unless @user.user_info.dob.nil? %></h4></p>
-      <p><h4>Gender : <%= @user.user_info.gender  %></h4></p>
-      <p><h4>Mobile : <%= @user.user_info.mobile  %></h4></p>
-      <p><h4>Relationship status : <%= @user.user_info.relationship_status  %></h4></p>
-      <p><h6>Address:</h6></p>
-      <p><h4>Door no. : <%= @user.address.doorno  %></h4></p>
-      <p><h4>Street : <%= @user.address.street  %></h4></p>
-      <p><h4>City : <%= @user.address.city  %></h4></p>
-      <p><h4>Country : <%= @user.address.country  %></h4></p>
-      <p><h4>Postal code : <%= @user.address.postalcode  %></h4></p>
-      <!-- <p><h4>work : <%= @user.user_info.work  %></h4></p>
-      <p><h4>Education : <%= @user.user_info.education  %></h4></p> -->
+      <h6 style="line-height:2">Personal details:</h6>
+      <address>
+          <span><strong>Name : </strong><small><%= @user.user_info.first_name %></small> <small><%= @user.user_info.middle_name %></small> <small><%= @user.user_info.last_name %></small> </span><br>
+          <span><strong>e-mail : </strong><%= @user.email  %></span><br>
+          <!-- <span><strong>Current city : </strong><%= @user.user_info.current_city  %></span><br>
+          <span><strong>Home town : </strong><%= @user.user_info.home_town  %></span><br> -->
+          <span><strong>Birthday : </strong><%= @user.user_info.dob.strftime("%d/%m/%Y") unless @user.user_info.dob.nil? %></span><br>
+          <span><strong>Gender : </strong><%= @user.user_info.gender  %></span><br>
+          <span><strong>Mobile : </strong><%= @user.user_info.mobile  %></span><br>
+          <span><strong>Relationship status : </strong><%= @user.user_info.relationship_status  %></span><br>
+          <h6 style="line-height:2;margin-top:20px;">Address:</h6>
+          <span><strong>Door no. : </strong><%= @user.address.doorno  %></span><br>
+          <span><strong>Street : </strong><%= @user.address.street  %></span><br>
+          <span><strong>City : </strong><%= @user.address.city  %></span><br>
+          <span><strong>Country : </strong><%= @user.address.country  %></span><br>
+          <span><strong>Postal code : </strong><%= @user.address.postalcode  %></span><br>
+          <!-- <span><strong>work : </strong><%= @user.user_info.work  %></span><br>
+          <span><strong>Education : </strong><%= @user.user_info.education  %></span><br> -->
+      </address>
 </div>
 
 

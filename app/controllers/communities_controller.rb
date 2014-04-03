@@ -57,6 +57,7 @@ class CommunitiesController < ApplicationController
   	@community = @selected_community
     @my_groups_ids = current_user.user_groups.where("community_id = ? AND invitation = ? ", @community.id, Uc_enum::JOINED ).collect(&:group_id).uniq
     @groups = Group.where('id IN (?)', @my_groups_ids)
+    @group = nil
   end
 
 
@@ -658,6 +659,8 @@ def search_app_user
     @community = Community.find(params[:id])
     @selected_comm << @community
     @post = Post.new
+    @groups = nil
+    @group = nil
      @group_ids = current_user.user_groups.where("community_id = ?", params[:id]).collect(&:group_id)
         @post_ids = []
         unless @group_ids.blank?

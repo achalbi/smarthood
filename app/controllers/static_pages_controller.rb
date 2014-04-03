@@ -1,9 +1,10 @@
 class StaticPagesController < ApplicationController
  def home
     if signed_in?
-      @comm_id = current_user.usercommunities.where("is_admin=? OR invitation != ?", true, Uc_enum::JOINED ).collect(&:community_id)
-      @comm_id << active_community.id
-      @joined_communities = Community.where(['id IN (?) and id NOT IN (?)', current_user.joined_uc.collect(&:community_id), @comm_id]) 
+      #@comm_id = current_user.usercommunities.where("is_admin=? OR invitation != ?", true, Uc_enum::JOINED ).collect(&:community_id)
+      #@comm_id << active_community.id
+      #@joined_communities = Community.where(['id IN (?) and id NOT IN (?)', current_user.joined_uc.collect(&:community_id), @comm_id]) 
+      @joined_communities = Community.where(['id IN (?)', current_user.joined_uc.collect(&:community_id)]) 
       @selected_comm = []
       @selected_comm << active_community
 

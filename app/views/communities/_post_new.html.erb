@@ -107,6 +107,7 @@
 $(document).ready(function(){
   $.validate({
 //    validateOnBlur : false,
+    form : '#new_post',
     onSuccess : function() {
       $('.loading_page').show();
       $('#community_post_submit').attr('data-loading-text', 'Posting...');

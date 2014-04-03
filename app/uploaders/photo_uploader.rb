@@ -91,7 +91,7 @@ class PhotoUploader < CarrierWave::Uploader::Base
      process :resize_to_fit => [500, 500]
    end
    version :large_mid do
-     cloudinary_transformation :width => 565, :height => 350, :crop => :fill, :gravity => :faces
+     cloudinary_transformation :width => 545, :height => 350, :crop => :fill, :gravity => :faces
    end
    version :large do
      process :resize_to_fit => [650, 650]
@@ -111,7 +111,7 @@ class PhotoUploader < CarrierWave::Uploader::Base
    end
 
    version :photogrid_one do
-     cloudinary_transformation :width => 565, :height => 350, :crop => :fill, :gravity => :faces
+     cloudinary_transformation :width => 555, :height => 350, :crop => :fill, :gravity => :faces
    end
 
    version :photogrid_two do

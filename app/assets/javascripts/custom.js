@@ -36,11 +36,11 @@ $(document).ready(function(){
             padding    : 0,
             autoCenter :true,
             afterShow: function() { 
+                    $(".header").hide();
                 $('<div class="expander"></div>').appendTo(this.inner).click(function() {
                     $(document).toggleFullScreen();
                     $.fancybox.play( true );
                 });
-                    $(".header").hide();
 
                 $(".fancybox-title").wrapInner('<div />').show();
                 

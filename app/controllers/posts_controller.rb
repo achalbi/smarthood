@@ -158,9 +158,10 @@ class PostsController < ApplicationController
  end
 
  def cus_post_paginate
-  @comm_id = current_user.usercommunities.where("is_admin=? OR invitation != ?", true, Uc_enum::JOINED ).collect(&:community_id)
-  @comm_id << active_community.id
-  @joined_communities = Community.where(['id IN (?) and id NOT IN (?)', current_user.joined_uc.collect(&:community_id), @comm_id]) 
+ # @comm_id = current_user.usercommunities.where("is_admin=? OR invitation != ?", true, Uc_enum::JOINED ).collect(&:community_id)
+ # @comm_id << active_community.id
+ # @joined_communities = Community.where(['id IN (?) and id NOT IN (?)', current_user.joined_uc.collect(&:community_id), @comm_id]) 
+  @joined_communities = Community.where(['id IN (?)', current_user.joined_uc.collect(&:community_id)]) 
   @selected_comm = []
   @selected_comm << active_community
   @post = Post.new
@@ -194,22 +195,25 @@ end
 
 def share
   @post = Post.find(params[:post][:id])
-  @newPost = Post.new
-  @newPost.attributes = @post.attributes.except("id", "created_at", "updated_at")
-  @newPost.content = params[:post][:content]
-  @newPost.user_id = current_user.id
-  @newPost.save
-  @post_cus = Community.where('id IN (?)',params[:community_id])
-  @post_cus.each do |cu|
-    @newPost.communities << cu
+  unless params[:community_id].blank?
+      @post_cus = Community.where('id IN (?)',params[:community_id])
+      @post_cus.each do |cu|
+        unless @post.communities.exists?(cu)
+          @post.communities << cu
+        end
+      end
   end
-  unless @post.photos.blank?
-   @photo = Photo.new
-   @photo.remote_pic_url = @post.photos[0].pic_url
-   @photo.post_id = @newPost.id
-   @photo.save
- end
- getNotifiableUsers(Objecttypeenum::POST, @post, Objecttypeenum::COMUNITY, @post.communities, Uc_enum::SHARED)
+  unless params[:group_id].blank?
+      @post_grp = Group.where('id IN (?)',params[:group_id])
+      @post_grp.each do |grp|
+        unless  @post.groups.exists?(grp)
+          @post.groups << grp
+        end
+      end
+  end
+  @post.save
+  @post.touch
+ #getNotifiableUsers(Objecttypeenum::POST, @post, Objecttypeenum::COMUNITY, @post.communities, Uc_enum::SHARED)
 end
 
 private

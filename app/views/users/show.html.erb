@@ -1,18 +1,17 @@
 <% provide(:title, @user.name) %>
 <div class="row">
-  <aside class="span6">
+  <aside class="span7">
     <section>
       <h1>
-        <%= gravatar_for @user, size: 100 %>
-        <%= @user.name %><br>
+        <%= gravatar_for @user, size: 220 %>
       </h1>
     </section>
-    <section>
+<!--     <section>
       <%= render 'shared/stats' %>
     </section>
   <section>
      <%= render 'follow_form' if signed_in? %>
-  </section>
+  </section> -->
   </aside>
 <div id="aboutDiv">  
      <%= render 'user_info'  %>
@@ -20,7 +19,7 @@
 <script type="text/javascript">
 $(document).ready(function(){
 
-  $('.gravatar').addClass('thumbnail');
+//  $('.gravatar').addClass('thumbnail');
 
     /*for (var i = 1; i < 99999; i++){
          window.clearInterval(i);

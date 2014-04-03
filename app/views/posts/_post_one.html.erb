@@ -176,7 +176,7 @@
             </div>
             <div class="modal-body" style="max-height:430px;">
               <div class="row">
-              <div class="span6 ui-front">
+              <div class="span12 ui-front">
                    <%= render 'shared/error_messages', object: f.object %>
                     <%= f.hidden_field :id %>
                     <div class="center_block clearfix">
@@ -194,30 +194,62 @@
                   </div>
 
                   <% unless @joined_communities.nil? %>
-                  <aside class="" >
-                    <section>
-                    <ul class="inputs-list">
+                    <ul class="users">
                        
                         <div id="comm_list">
                           <li>
                             <span  class="center_block"><h5 class="timestamp">Select <%= "Community".pluralize(@joined_communities.count+1) %>:</h5>
-                            <label>
+<!--                             <label>
                           <%= check_box_tag( "community_id[]", active_community.id, @selected_comm.include?(active_community)) %>
                               <span><%= active_community.name %></span>
-                            </label>
+                            </label> -->
                           </li>
                           <% @joined_communities.each do |cu| %>
-                            <li>
-                              <label>
-                                <%= check_box_tag("community_id[]", cu.id, @selected_comm.include?(cu)) %>
-                                <span><%= cu.name %></span>
-                              </label>
+                             <li style="margin-left:15px;" class="tr-hover select_unselect_comm_<%= post.id %> c-pointer">
+                              <p style="display:none;"><%= cu.id %></p>
+                              <div class="checkboxFive pull-right marginRight15" style="margin-top:12px;">
+                                  <%= check_box_tag("community_id[]", cu.id, nil) %>
+                                <label for="checkboxFiveInput<%= cu.id %>"></label>
+                              </div>
+                              <div  class="img_zoom" style="float:left;margin-left:15px;" >
+                                <%= link_to cl_image_tag(cu.photo.pic_url(:smallest), class:"image_al_c1 thumbnail pull-left ", id:"#{cu.photo.id}"), "#" %>
+                              </div>
+                                              <address style="margin-left:82px;margin-top:5px;">
+                                                <strong> <%= link_to cu.name, "#", style: "font-size:13px;" %></strong> <br>
+                                                 <%= cu.description %><br>
+                                              </address> 
                             </li>
                           <% end %>
                         </div>
                   </ul>
-                    </section>
-                  </aside>
+                <% end %>
+
+
+                  <% unless @groups.nil? %>
+                    <ul class="users">
+                       
+                        <div id="comm_list">
+                          <li>
+                            <span  class="center_block"><h5 class="timestamp">Select <%= "Group".pluralize(@groups.count+1) %>:</h5>
+                          </li>
+                          <% @groups.each do |group| %>
+                             <li style="margin-left:15px;" class="tr-hover select_unselect_group_<%= post.id %> c-pointer">
+                    <p style="display:none;"><%= group.id %></p>
+                    <div class="checkboxFive pull-right marginRight15" style="margin-top:12px;">
+                        <%= check_box_tag 'group_id[]', group.id ,nil, id: "checkboxFiveInput#{group.id}" %>
+                      <label for="checkboxFiveInput<%= group.id %>"></label>
+                    </div>
+                    <div  class="img_zoom" style="float:left;margin-left:15px;" >
+                      <%= link_to cl_image_tag(group.photo.pic_url(:smallest), class:"image_al_c1 thumbnail pull-left ", id:"#{group.photo.id}"), "#" %>
+                    </div>
+                                    <address style="margin-left:82px;margin-top:5px;">
+                                      <strong> <%= link_to group.name.capitalize, "#", style: "font-size:13px;" %></strong> <br>
+                                       <%= group.description %><br>
+                                    </address> 
+                  </li>
+                          <% end %>
+                        </div>
+                  </ul>
                 <% end %>
                    
               </div>    
@@ -245,5 +277,34 @@
                       $(".com_show_more<%= post.id %>").hide();
                 }
               });
+
+
+              $(".select_unselect_group_<%= post.id %>").click( function() {
+                if($(this).find(':checkbox').is(':checked')){
+                  $(this).find(':checkbox').prop("checked",false);
+                }else{
+                  $(this).find(':checkbox').prop("checked",true);
+                }
+              });
+
+              $(".select_unselect_comm_<%= post.id %>").click( function() {
+                if($(this).find(':checkbox').is(':checked')){
+                  $(this).find(':checkbox').prop("checked",false);
+                }else{
+                  $(this).find(':checkbox').prop("checked",true);
+                }
+              });
           });
+
+     $(document).ready(function(){
+        $.validate({
+          form : '#edit_post_<%= post.id %>',
+          onSuccess : function() {
+            $('.loading_page').show();
+            $('.share_post').attr('data-loading-text', 'Sharing...');
+            $('.share_post').button('loading');
+          },
+        });
+        });
+
     </script>
