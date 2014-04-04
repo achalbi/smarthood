@@ -13,6 +13,7 @@
         <% end %>
     </h4></a></li><%= link_to "", members_com_community_path(@community) , id: "members_community", remote: true %>
     <li id="groups_community_li"><a ><h4>Groups</h4></a></li><%= link_to "", groups_com_community_path(@community) , id: "groups_community", remote: true %>
+    <li id="events_community_li"><a ><h4>Events</h4></a></li><%= link_to "", groups_com_community_path(@community) , id: "events_community", remote: true %>
 
 <% unless @community.is_active?(current_user, @community) %>
 		<%= render 'setactive', :@community => @community %>
@@ -34,6 +35,7 @@ $('#posts_community_li').click(function(){
   $('#photos_community_li').removeClass('active');
   $('#members_community_li').removeClass('active');
   $('#groups_community_li').removeClass('active');
+  $('#events_community_li').removeClass('active');
   $(this).next('a').click();
   currentPage<%= @community.id.to_s %> = 1;
   $('.loading_page').show();
@@ -44,6 +46,7 @@ $('#about_community_li').click(function(){
   $('#photos_community_li').removeClass('active');
   $('#members_community_li').removeClass('active');
   $('#groups_community_li').removeClass('active');
+  $('#events_community_li').removeClass('active');
   $(this).next('a').click();
   $('.loading_page').show();
 });
@@ -53,6 +56,7 @@ $('#photos_community_li').click(function(){
   $('#photos_community_li').addClass('active');
   $('#members_community_li').removeClass('active');
   $('#groups_community_li').removeClass('active');
+  $('#events_community_li').removeClass('active');
   $(this).next('a').click();
   $('.loading_page').show();
 });
@@ -63,6 +67,7 @@ $('#members_community_li').click(function(){
   $('#photos_community_li').removeClass('active');
   $('#members_community_li').addClass('active');
   $('#groups_community_li').removeClass('active');
+  $('#events_community_li').removeClass('active');
   $(this).next('a').click();
   $('.loading_page').show();
 });
@@ -73,8 +78,21 @@ $('#groups_community_li').click(function(){
   $('#photos_community_li').removeClass('active');
   $('#members_community_li').removeClass('active');
   $('#groups_community_li').addClass('active');
+  $('#events_community_li').removeClass('active');
   $(this).next('a').click();
   $('.loading_page').show();
 });
+
+$('#events_community_li').click(function(){
+  $('#posts_community_li').removeClass('active');
+  $('#about_community_li').removeClass('active');
+  $('#photos_community_li').removeClass('active');
+  $('#members_community_li').removeClass('active');
+  $('#groups_community_li').removeClass('active');
+  $('#events_community_li').addClass('active');
+  $(this).next('a').click();
+  $('.loading_page').show();
+});
+
 });
 </script>

@@ -358,6 +358,16 @@ end
 
 def show
   @community = Community.find(params[:id])
+  # set active - start
+  if @community.is_joined?(current_user, @community)
+      @usercommunityActive = Usercommunity.where(['status=? and user_id=?','active',current_user.id]).first
+      @usercommunityActive.status=""
+      @usercommunityActive.save
+      @usercommunitySel = Usercommunity.where(['community_id=? and user_id=?',params[:id],current_user.id]).first
+      @usercommunitySel.status="active"
+      @usercommunitySel.save 
+  end 
+  # set active - end
   @selected_community = @community
   @user = current_user
   @users = @community.users

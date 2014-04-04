@@ -21,7 +21,7 @@ $(document).ready(function(){
       <span style="clear:both"></span>
       <%= link_to "Create Community", '#', id: "ComUnity",  class: " pull-right uibutton icon add" %><br><br>
       <div id="comUnity_div">    
-        <% unless @selected_community.nil? %>
+      <!--   <% unless @selected_community.nil? %>
         <li class="sidetabs sidetabs_selected show_loading" style="list-style-type: none;padding:5px; margin:5px;">
           <h6><a>Active community</a>
             <span id="act_req_count"  class="pull-right">
@@ -30,15 +30,15 @@ $(document).ready(function(){
           </h6>
         </li>
         <%= link_to "", active_com_communities_path, id: "active_comUnity", remote: true %>
-      <!-- <li class="sidetabs notActive" style="list-style-type: none;padding:5px; margin:5px;">
+      <li class="sidetabs notActive" style="list-style-type: none;padding:5px; margin:5px;">
           <h6><a>Moderated</a>
           <% unless (@requested_users_all.nil? || @requested_users_all == 0)%>
             <span class="pull-right label important" style="margin:5px;"><%= if @requested_users_all > 0 then @requested_users_all end %></span>
           <% end %>
         </h6>
         </li>
-        <%= link_to "", moderated_com_communities_path , id: "moderated_comUnity", remote: true %>-->
-        <% end %>
+        <%= link_to "", moderated_com_communities_path , id: "moderated_comUnity", remote: true %>
+        <% end %>-->
         <li class="sidetabs notActive show_loading" style="list-style-type: none;padding:5px; margin:5px;">
           <h6><a>My communities</a>
           <span id="mem_req_count"  class="pull-right">
@@ -181,10 +181,10 @@ $(".sidetabs").click(function(){
   $(".sidetabs").removeClass('sidetabs_selected');
   $(this).addClass('sidetabs_selected');
   if($(this).hasClass('notActive')){
-    $('#cu_pic').hide('slow');
+    $('#cu_pic').hide();
 //    $('.tabs').hide();
   }else{
-    $('#cu_pic').show('slow');
+    $('#cu_pic').show();
 //    $('.tabs').show();
   }
   $(this).next('a').click();
