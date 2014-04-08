@@ -7,6 +7,10 @@ class ActivitiesController < ApplicationController
     def create
     @et = Event.find(params[:activity][:event_id])
     @activity = @et.activities.build(params[:activity])
+        @ad = Activitydetail.new
+        @ad.is_admin=true
+        @ad.user = current_user
+        @activity.activitydetails << @ad
     if @activity.privacy==Privacyenum::PUBLIC
     else
       @act_user = @activity.user_ids

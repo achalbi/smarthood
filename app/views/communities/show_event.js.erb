@@ -1,0 +1,4 @@
+$(".busy").button('reset');
+$('#modal_create_event').modal('hide');
+$('.loading_page').hide();
+$("#community_tabs").html("<%= escape_javascript(render partial: 'communities/show_event', locals: { event: @event, inv_users: @inv_users, ad_users: @ad_users, community: @community} ) %>");

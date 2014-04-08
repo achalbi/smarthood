@@ -1,0 +1,229 @@
+<table class="span6">
+        <thead>
+          <tr class="tr-hover">
+            <th >
+             <%="Moderator".pluralize(ad_users.count) %>
+                <% if @group.is_admin?(current_user) %>
+                 <%= link_to "edit", '#', id: "moderator",  class: "uibutton icon edit pull-right button_toggle" %>
+                <% end %>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+            <% ad_users.each do |user|%>
+          <tr class="tr-hover">
+            <td>
+            <div  class="img_zoom" style="float:left;" >
+              <%= gravatar_for user, size: 52 %>
+            </div>
+                <address>
+                  <strong> <%= link_to user.name, user %></strong><br>
+                  <a mailto="<%= user.email %>"><%= user.email %></a>
+                </address>
+              <p>
+                <% if @group.is_admin?(current_user) && user.id != current_user.id %>
+                              <%= link_to "Remove", "/groups/#{@group.id}/unjoin_grp?user_id=#{user.id}&comm_id=#{community.id}", class: "uibutton pull-right button_toggle", remote: true, data: { confirm: "You want to remove the user from the group ?" } %>
+                <% end %>
+              </p>               
+            </td>
+          </tr>
+          <% end %>
+            
+        </tbody>
+      </table>
+
+      <table class="span6">
+        <thead>
+          <tr class="tr-hover">
+            <th >
+              <%="Member".pluralize(inv_users.count) %>
+              <% if @group.is_admin?(current_user) %>
+                <%= link_to "add", '#', id: "invite",  class: "uibutton icon add pull-right button_toggle" %>
+              <% end %> 
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if inv_users.count > 0 %>
+            <% inv_users.each do |user|%>
+              <tr class="tr-hover" >
+                <td >
+                <div  class="img_zoom" style="float:left;" >
+                  <%= gravatar_for user, size: 52 %>
+                </div>
+                    <address>
+                      <strong> <%= link_to user.name, user %></strong><br>
+                      <a mailto="<%= user.email %>"><%= user.email %></a>
+                    </address>
+                  <p>
+                    <% if @group.is_admin?(current_user) && user.id != current_user.id %>
+                                  <%= link_to "Remove", "/groups/#{@group.id}/unjoin_grp?user_id=#{user.id}&comm_id=#{community.id}", class: "uibutton pull-right button_toggle remove_user", remote: true %>
+                    <% end %>
+                  </p>               
+                </td>
+              </tr>
+            <% end %>
+          <% else %>
+          <tr>
+            <td>
+              <address>No Members in the group</address>
+            </td>
+          </tr>
+          <% end %>
+            
+        </tbody>
+      </table>
+
+
+
+<%= form_for( @group, url: add_moderators_group_path(@group), method: :get, remote: true) do |f| %>
+<div id="modal_add_mod" style="display:none;" >
+  <div id="modal-from-dom__add_mod" class="modal hide fade in" style="display: block;">
+    <div class="modal-header">
+      <a href="#" id="close_add_mod" class="close">×</a>
+      <h3>Set moderators</h3>
+    </div>
+    <span style="font-size:11px;line-height: 3;margin-right:10px;" class="pull-right">(Check to set member as a Moderator)</span>
+    <div class="modal-body" style="max-height:350px;width:535px;">
+      <div class="row">
+        <div class=" ui-front">         
+         <%= render 'shared/error_messages', object: f.object %>
+         <aside class="">
+          <section>
+            <!-- <h2 style="margin-left:65px;padding:3px;">Moderators</h2> -->
+            <ul class="users" style="overflow:auto;">
+              <% @ucs.each do |uc| %>
+              <% user = User.find(uc.user_id) %>
+                 <li style="margin-left:15px;" class="tr-hover">
+                    <div class="checkboxFive pull-right marginRight15" style="margin-top:5px;">
+                        <%= check_box_tag 'user_ids[]', user.id, uc.is_admin?, id: "checkboxFiveInput#{uc.id}" %>
+                      <label for="checkboxFiveInput<%= uc.id %>"></label>
+                    </div>
+                    <div  class="img_zoom" style="float:left;margin-left:15px;" >
+                      <%= gravatar_for user, size: 52 %>
+                    </div>
+                      <%= link_to user.name, user %>
+                      <p><%= user.email %></p>
+                  <div style="margin-right:10px;" class="pull-right">
+                    <%= hidden_field_tag 'user_all_ids[]', user.id %>
+                  </div>
+                </li>
+              <% end %>
+                    <%= hidden_field_tag 'comm_id', community.id %>
+            </ul>     
+          </section>
+        </aside>
+      </div>
+    </div>   
+  </div>
+  <div class="modal-footer" >
+    <%= f.submit "Update", class: "btn primary pull-right", id: "submit_add_mod" %>  
+  </div>
+</div>
+</div>
+<% end %>
+
+
+
+<%= form_for( @group, url: invite_app_user_group_path(@group), method: :get, remote: true) do |f| %>
+<div id="modal_invite" style="display:none;" >
+  <div id="modal-from-dom2" class="modal hide fade in" style="display: block;width:700px;">
+    <div class="modal-header">
+      <a href="#" id="close_invite" class="close">×</a>
+      <h3>Add community members to the group</h3>
+    </div>
+    <div class="modal-body" style="max-height:550px;">
+      <div class="row">
+        <div class="span14 ui-front">
+          <div class="center_block clearfix"><br>
+            <%= f.label "Search community members:" %>
+            <div class="input ui-front">
+              <%= f.text_field :user_tokens, id: "search_user" %>
+            </div>
+          </div>
+            <%= hidden_field_tag 'comm_id', community.id %>
+        </div>
+      </div>   
+    </div>
+    <div class="modal-footer" >
+      <%= f.submit "Add", class: "btn primary pull-right", id: "invite_submit" %>  
+    </div>
+  </div>
+
+</div>
+<% end %>
+
+
+      <script type="text/javascript">
+
+$(function(){
+  $('.button_toggle').hide();
+
+$('.tr-hover').hover(function() {
+    $(this).find('.button_toggle').show();
+}, function() {
+    $(this).find('.button_toggle').hide();
+});
+
+  $('.remove_user').click(function(){
+     var answer = confirm('You want to remove this user from the group ?');
+    if (answer){
+      $(this).closest('tr').hide();
+      }
+   });
+});
+
+
+
+$("#invite").on( "click", function() {
+ $('#modal_invite').modal({
+      //keyboard: true,
+      backdrop: "static",
+    });
+});
+
+$("#close_invite").click(function(){
+  $('#modal_invite').modal('hide');
+});
+
+$("#invite_submit").click(function(){
+  $(this).attr('data-loading-text', 'Adding...');
+  $(this).button('loading');
+  $('.loading_page').hide();
+});
+
+$("#moderator").on( "click", function() {
+ $('#modal_add_mod').modal({
+      //keyboard: true,
+      backdrop: "static",
+    });
+});
+
+$("#close_add_mod").click(function(){
+  $('#modal_add_mod').modal('hide');
+});
+
+$("#submit_add_mod").click(function(){
+  $(this).attr('data-loading-text', 'Updating...');
+  $(this).button('loading');
+  $('.loading_page').hide();
+});
+
+$(function() {
+  $("#search_user").tokenInput("/groups/<%= @group.id %>/search_app_user?comm_id=<%= community.id %>", {
+    crossDomain: false,
+    theme: "facebook",
+    resultsFormatter: function(item){ return "<li>" + "<img src='" + item.profile_pic + "' title='" + item.name + "' height='30px' width='30px' />" + "<div style='display: inline-block; padding-left: 10px;'><div class='full_name'>" + item.name + " " + ""+ "</div></div></li>" },
+    tokenFormatter: function(item) { return  "<li>" + "<img src='" + item.profile_pic + "' title='" + item.name + "' height='30px' width='30px' />" + "<div style='display: inline-block; padding-left: 10px;'><div class='full_name'>" + item.name +"</div></div></li>" },
+    preventDuplicates: true ,
+    zindex: 11001,
+    hintText: "Type in a user name",
+  });
+
+  $('.button_toggle').hide();
+  $(".modal-backdrop").remove();
+
+
+});
+
+      </script>

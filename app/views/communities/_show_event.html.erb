@@ -1,0 +1,391 @@
+  <ul class="tabs">
+    <%= render 'communities/links' %>
+  </ul>
+<div class="row">
+        <div class="marginLeft15 ui-front">
+          <ul id="group_list" class="users">
+          <li style="padding-left:15px;position:relative;border-bottom:0px;" class="tr-hover tr-hover-btn" >
+              <% if @event.is_admin?(current_user) %>
+                  <%= link_to "edit", '#', id: "edit_event",  class: " pull-right uibutton icon edit button_toggle ",:title => "Edit" %>
+               <% end %>
+
+               <span class="pull-right "> &nbsp;</span>
+               <% if @event.is_admin?(current_user) %>
+                  <%= link_to "delete", @event, method: :delete, remote: true,
+                                           data: { confirm: "You sure?" },
+                                           class: "pull-right uibutton button_toggle",
+                                           title: @event.title %>
+               <% end %>
+                <% unless event.photo.nil? %>
+                <div class="pull-left">
+                <%= link_to cl_image_tag(event.photo.pic_url(:cover_pic_smallest), class:"image_al_c1 thumbnail ", id:"#{event.photo.id}"), "#" %>
+
+                </div>
+                <% end %>
+
+                <div style="margin-left:95px;margin-top:5px;">
+                  <address>
+                    <strong> <%= link_to event.title, "#", style: "font-size:13px;" %></strong> <br>
+                    <strong>Description : &nbsp;</strong> <%= event.description %><br>
+                    <strong>Time : &nbsp;</strong><%= event.time_str(event) %><br>
+                    <strong>Location : &nbsp;</strong><%= event.address %><br>
+                    <strong>Privacy : &nbsp;</strong><%= privacy_str(event) %><br>
+                  </address> 
+                </div>
+                
+              </li>
+          </ul>
+          <ul id="activity_show" class="users">
+
+          </ul>
+
+            <table class="bordered-table zebra-striped">
+                  <thead>
+                    <tr>
+                      <th><span style="line-height:2">Event</span>
+                      </th>
+                      <th style="width:70px;" class="center">Status
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                      <tr class="c-pointer tr-select-main">
+                            <td><span style="font-size:13px;"><%= event.title %></span></td>
+                           <td class="event_status center"><span class="label success">active</span></td>
+                       </tr>
+                      <%= link_to(event, remote: true) do %>
+                      <% end %>
+                  </tbody>
+                  <thead>
+                    <tr>
+                      <th><span style="line-height:2">Sub-events</span>
+                        <a class="uibutton pull-right icon add " style="margin-right:2px;" id="add_activity" > add sub-events </a>
+                      </th>
+                      <th style="width:70px;" class="center">
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% if event.activities.count > 1 %>
+                      <% event.activities.each do |activity| %>  
+                        <% unless activity.is_admin %>
+                          <tr class="c-pointer tr-select">
+                                <td>
+                                  <p style="display:none;"><%= activity.id %></p>
+                                  <span style="font-size:13px;"><%= activity.title %></span>
+                                </td>
+                               <td class="event_status center">
+                               </td>
+                           </tr>
+                          <%= link_to "", "communities/#{community.id}/get_activity?activity_id=#{activity.id}", id: "act_#{activity.id}", remote: true %>
+                        <% end %>
+                      <% end %>
+                    <% else %>
+                      <tr class="">
+                          <td colspan="2" class="center">No sub-events created.</td>
+                      </tr>
+                    <% end %>
+
+
+                  </tbody>
+                </table>
+           <div class="center loading_sub active_hide" ><img src="/assets/loading-sub.gif"></div>
+          <br>
+          <div>
+              <ul class="tabs  ">
+                <li class="active" id="members_event_tab"><%= link_to "Members","/communities/#{community.id}/event_members?event_id=#{@event.id}", remote: true %></li>
+                <li id="post_event_tab"><%= link_to "Posts","/communities/#{community.id}/event_posts?event_id=#{@event.id}", remote: true %></li>
+                <li id="photos_event_tab" class="photos_tab"><%= link_to "Photos","/communities/#{community.id}/event_photos?event_id=#{@event.id}", remote: true %></li>
+              </ul>
+          </div>
+        <div id="show_event_div">
+
+        </div>
+      </div>
+</div>
+
+<%= form_for( @event, url: create_event_communities_path, remote: true, :html => {:multipart => true, id: 'create_event_form'}) do |f| %>
+<div id="modal_create_event" style="display:none;" >
+          <div id="modal-from-dom" class="modal hide fade in" style="display: block;width:700px;">
+            <div class="modal-header">
+              <a href="#" id="closeX_edit_event" class="close">×</a>
+              <h3>Create Event</h3>
+            </div>
+            <div class="modal-body" style="max-height:450px;">
+            <div class="row">
+              <div class="span14 ui-front">
+            
+               <%= render 'shared/error_messages', object: f.object %>
+               <div class="center_block clearfix">
+                  <%= f.label :title %>
+                  <div class="input">
+                    <%= f.text_field :title, :placeholder=>"Title", 'data-validation' => "length",
+     'data-validation-length' =>"3-25", 'data-validation-error-msg' => "The Event name has to be a value between 3-25 characters" %></div>
+                </div>
+
+                <div class="center_block clearfix">
+                  <%= label_tag :starts_at %>
+                  <div class="input">
+                  <%= f.text_field :starts_at, :placeholder => "Time" %>&nbsp;&nbsp;&nbsp;
+                <a id="end_date_add_link" class="uibutton icon add">End Date</a>
+                </div>
+                </div>
+                <div class="center_block clearfix" id="end_date">
+                  <%= label_tag :ends_at %>
+                  <div class="input">
+                    <%= f.text_field :ends_at %>&nbsp;&nbsp;&nbsp;
+                   <a id="end_date_remove_link" class="uibutton icon prev">Remove</a>
+                  </div>
+                </div> 
+
+                <div class="center_block clearfix">
+                  <%= f.label :location %>
+                  <div class="input ">
+                  <%= f.text_field :address, :placeholder => :location, :size => 43, class: 'events_with_autocomplete inherit_width', 'data-autocompleteUrl' => search_address_events_path , 'data-validation' => "length",
+     'data-validation-length' =>"3-250", 'data-validation-error-msg' => "The group name has to be a value between 3-250 characters" %>&nbsp;&nbsp;&nbsp;
+                
+                  <%= link_to "View map", '#', id: "view_map_link",  class: "uibutton icon prev" %>
+                </div>
+                <div class="input" id="view_map">
+                
+                </div>
+                </div>
+                <div class="center_block clearfix">
+                  <%= f.label :description %>
+                  <div class="input">
+                  <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title=>"Description", rows: 3, cols: 75, 'data-validation' => "length",
+     'data-validation-length' =>"3-25", 'data-validation-error-msg' => "The group name has to be a value between 3-25 characters"  %> 
+                </div>
+                </div>
+                <div class="center_block clearfix">
+                  <%= label_tag :privacy %>
+                  <div class="input">
+                    <%= f.select :privacy, options_for_select([["Public", Privacyenum::PUBLIC], ["Members", Privacyenum::MEMBERS], ["Private", Privacyenum::PRIVATE]]) %>
+                  </div>
+                </div> <br>
+
+          <div class="center_block clearfix">
+            <%= label_tag "Change picture:" %>
+            <%= f.fields_for :photo, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
+              <%= photo_form.file_field :pic, id: "pic2",style: "width:0px; height:0px; padding:0px;  left:0px;" %>  
+            <% end %>
+            <div class="input"> 
+              <% unless @event.photo.nil? %>
+              <%= cl_image_tag(@event.photo.pic_url(:small), class:" thumbnail albumLink", id:"event_edit_pic", style: "cursor:pointer;") %>   
+              <% end %>
+              <canvas id="imageCanvas2" style = "border: 1px solid #ddd; padding:5px; align:center; width:200px;display:none;cursor:pointer" >select new image</canvas>
+            </div>
+          </div>  
+
+        </div>   
+      </div>
+      </div>
+            <div class="modal-footer" >
+              <%= f.submit "Update", class: "btn primary pull-right", id: "update_event" %>  
+            </div>
+          </div> 
+        </div>
+  <% end %>
+
+
+
+<%= form_for( @event, url: add_event_moderators_community_path(community), method: :get, remote: true) do |f| %>
+<div id="modal_add_mod" style="display:none;" >
+  <div id="modal-from-dom__add_mod" class="modal hide fade in" style="display: block;">
+    <div class="modal-header">
+      <a href="#" id="close_add_mod" class="close">×</a>
+      <h3>Set moderators</h3>
+    </div>
+    <span style="font-size:11px;line-height: 3;margin-right:10px;" class="pull-right">(Check to set member as a Moderator)</span>
+    <div class="modal-body" style="max-height:350px;width:535px;">
+      <div class="row">
+        <div class=" ui-front">         
+         <%= render 'shared/error_messages', object: f.object %>
+         <aside class="">
+          <section>
+            <!-- <h2 style="margin-left:65px;padding:3px;">Moderators</h2> -->
+            <ul class="users" style="overflow:auto;">
+              <% @eds.each do |uc| %>
+              <% user = User.find(uc.user_id) %>
+                 <li style="margin-left:15px;" class="tr-hover">
+                    <div class="checkboxFive pull-right marginRight15" style="margin-top:5px;">
+                        <%= check_box_tag 'user_ids[]', user.id, uc.is_admin?, id: "checkboxFiveInput#{uc.id}" %>
+                      <label for="checkboxFiveInput<%= uc.id %>"></label>
+                    </div>
+                    <div  class="img_zoom" style="float:left;margin-left:15px;" >
+                      <%= gravatar_for user, size: 52 %>
+                    </div>
+                      <%= link_to user.name, user %>
+                      <p><%= user.email %></p>
+                  <div style="margin-right:10px;" class="pull-right">
+                    <%= hidden_field_tag 'user_all_ids[]', user.id %>
+                  </div>
+                </li>
+              <% end %>
+                    <%= hidden_field_tag 'comm_id', community.id %>
+            </ul>     
+          </section>
+        </aside>
+      </div>
+    </div>   
+  </div>
+  <div class="modal-footer" >
+    <%= f.submit "Update", class: "btn primary pull-right", id: "submit_add_mod" %>  
+  </div>
+</div>
+</div>
+<% end %>
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+    $('.button_toggle').hide();
+    $('#modal_edit_event').modal('hide');
+
+  $('#posts_community_li').removeClass('active');
+  $('#about_community_li').removeClass('active');
+  $('#photos_community_li').removeClass('active');
+  $('#members_community_li').removeClass('active');
+  $('#groups_community_li').removeClass('active');
+  $('#events_community_li').addClass('active');
+
+});
+
+ $('.tr-hover').hover(function() {
+       $(this).find('.button_toggle').show();
+       }, function() {
+         $(this).find('.button_toggle').hide();
+    });
+
+ $('.tr-select-main').click(function(){
+    $('#activity_show').html('');
+     $('.event_status').html('');
+    $(this).find('.event_status').html('<span class="label success">active</span>');
+ });
+ $('.tr-select').click(function(){
+    $('.event_status').html('');
+    $(this).find('.event_status').html('<span class="label success">active</span>');
+    var id = $(this).find('p').html();
+    $("#act_"+id).click();
+ });
+
+
+$(document).ready(function(){
+  $.validate({
+    onSuccess : function() {
+      $('#update_event').attr('data-loading-text', 'Updating...');
+      $('#update_event').button('loading');
+    },
+  });
+  $('.loading_page').hide();
+});
+
+
+$("#add_mod_event").click(function(){
+      $('#modal_add_mod').modal({
+        backdrop: "static"
+      });
+    });
+    $("#close_add_mod").click(function(){
+          $('#modal_add_mod').modal('hide');
+        });
+
+
+
+$("#edit_event").click(function(){
+      $('#modal_edit_event').modal({
+        backdrop: "static"
+      });
+    });
+    $("#closeX_edit_event").click(function(){
+          $('#modal_edit_event').modal('hide');
+        });
+
+    $("#update_event").click(function(){
+      $('.loading_page').show();
+        });
+
+    $("#event_edit_pic").click(function(){
+      $('#pic2').click();
+    });
+
+var imageLoader = document.getElementById('pic2');
+imageLoader.addEventListener('change', handleImage, false);
+$("#imageCanvas2").click(function(){
+  $("#pic2").click();
+});
+var canvas = document.getElementById('imageCanvas2');
+var ctx = canvas.getContext('2d');
+ctx.font="30px Arial";
+ctx.fillText("Change picture",10,50);
+
+function handleImage(e){
+  var canvas = document.getElementById('imageCanvas2');
+  var ctx = canvas.getContext('2d');
+  var iCnt=0;
+  var files = e.target.files;
+  canvas.width = 180;
+  canvas.height = 155*(Math.ceil(files.length/4));
+     if(files.length<1){
+      $('#pic2').val('');
+      $('#event_edit_pic').show();
+      $('#imageCanvas2').hide();
+      return;
+    }
+  for( var i = 0, len = files.length; i < len; i++) 
+  {
+          $('#event_edit_pic').hide();
+          $('#imageCanvas2').show();
+    if(files[i])
+    {
+      var reader = new FileReader();
+      reader.onload = function(event){
+        var img = new Image();
+
+        img.onload = function(){
+          var ratioPx = 150;
+          var sWidth =ratioPx;
+          var ratio = img.width/sWidth;
+          var sHeight = img.height/ratio;   
+          if(sHeight>ratioPx){
+           sHeight =ratioPx;
+           ratio = img.height/sHeight;
+           sWidth = img.width/ratio;  
+         }
+         ctx.drawImage(img, 155*(iCnt%4),155*(Math.floor(iCnt/4)),sWidth,sHeight);
+                  //ctx.drawImage(img,0,0,sWidth,sHeight);
+                  iCnt++;
+                }
+                img.src = event.target.result;
+              }
+              reader.readAsDataURL(e.target.files[i]);     
+            }
+          }
+        }
+
+
+
+$('#members_event_tab').click(function(){
+  $('#members_event_tab').addClass('active');
+  $('#post_event_tab').removeClass('active');
+  $('#photos_event_tab').removeClass('active');
+  $('.loading_page').show();
+});
+
+$('#post_event_tab').click(function(){
+  $('#post_event_tab').addClass('active');
+  $('#members_event_tab').removeClass('active');
+  $('#photos_event_tab').removeClass('active');
+  currentPage<%= @event.id.to_s %> = 1;
+  $('.loading_page').show();
+});
+
+$('#photos_event_tab').click(function(){
+  $('#photos_event_tab').addClass('active');
+  $('#members_event_tab').removeClass('active');
+  $('#post_event_tab').removeClass('active');
+  $('.loading_page').show();
+});
+
+
+</script>

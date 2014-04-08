@@ -1,4 +1,12 @@
-<li style="padding-left:15px;cursor:pointer;position:relative;" class="tr-hover event" >
+<br>
+<% if event.starts_at.to_date == Time.zone.now.to_date %>
+<strong style="padding-left:15px;color:#5E5E5E"  >Today</strong>
+<% elsif event.starts_at.to_date == Time.zone.now.to_date - 1.day %>
+<strong style="padding-left:15px;color:#5E5E5E" class="timestamp" >Yesterday</strong>
+<% else %>
+<strong style="padding-left:15px;color:#5E5E5E" class="timestamp" ><%= event.starts_at.strftime("%A, %B %d, %Y") %></strong>
+<% end %>
+<li style="padding-left:15px;margin-top:5px;cursor:pointer;position:relative;" class="tr-hover event" >
   <% unless event.photo.nil? %>
   <%= link_to cl_image_tag(event.photo.pic_url(:cover_pic_smallest), class:"image_al_c1 thumbnail pull-left ", id:"#{event.photo.id}"), "#" %>
 
@@ -13,11 +21,13 @@
               </address>  
             </div>
 </li>
-<%= link_to "", event, remote: true %>
+
+<%= link_to "", "/communities/#{community.id}/show_event?event_id=#{event.id}", remote: true %>
 <script type="text/javascript">
 $(document).ready(function(){
   $("li.event").click(function(){
     $(this).next('a').click();
+    $('.loading_page').show();
   });
 });
 </script>

@@ -1,0 +1,38 @@
+          <li style="padding-left:15px;position:relative;border-bottom:0px;" class="tr-hover tr-hover-btn" >
+              <% if @activity.admin?(current_user) %>
+                  <%= link_to "edit", '#', id: "edit_activity",  class: " pull-right uibutton icon edit button_toggle ",:title => "Edit" %>
+               <% end %>
+
+               <span class="pull-right "> &nbsp;</span>
+               <% if @activity.admin?(current_user) %>
+                  <%= link_to "delete", @activity, method: :delete, remote: true,
+                                           data: { confirm: "You sure?" },
+                                           class: "pull-right uibutton button_toggle",
+                                           title: @activity.title %>
+               <% end %>
+                <div class="pull-left">
+                  <strong style="font-size:13px;line-height:2;">Sub-event</strong>
+                </div>
+                <div style="margin-left:95px;margin-top:5px;">
+                  <address>
+                    <strong> <%= link_to @activity.title, "#", style: "font-size:13px;" %></strong> <br>
+                    <strong>Description : &nbsp;</strong> <%= @activity.description %><br>
+                    <strong>Time : &nbsp;</strong><%= @activity.time_str(@activity) %><br>
+                    <strong>Location : &nbsp;</strong><%= @activity.address %><br>
+                    <strong>Privacy : &nbsp;</strong><%= privacy_str(@activity) %><br>
+                  </address> 
+                </div>
+                
+              </li>
+
+              <script type="text/javascript">
+                  $(function(){
+                    $('.button_toggle').hide();
+                  });
+
+                 $('.tr-hover').hover(function() {
+                       $(this).find('.button_toggle').show();
+                       }, function() {
+                         $(this).find('.button_toggle').hide();
+                    });
+              </script>

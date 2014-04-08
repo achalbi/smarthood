@@ -1,8 +1,6 @@
-
-
+<%= form_for( event, remote: true, :html => {:multipart => true}) do |f| %>
 <div id="modal" style="display:none;" >
           <div id="modal-from-dom" class="modal hide fade in" style="display: block;width:700px;">
-            <%= form_for( event, remote: true, :html => {:multipart => true}) do |f| %>
             <div class="modal-header">
               <a href="#" id="closeX" class="close">×</a>
               <span style="font-size:20px;line-height: 2;">Create Event</span>
@@ -104,7 +102,6 @@
             <div class="modal-footer" >
               <%= f.submit "Create Event", class: "btn primary pull-right", id: "crtEvent" %>  
             </div>
-            <% end %>
           </div>
-          
         </div>
+<% end %>

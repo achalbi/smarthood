@@ -761,6 +761,127 @@ def search_app_user
     @inv_groups = Group.where('id IN (?)', @group_ids)
  end
 
+  def events_com
+    flash.clear
+    @community = Community.find(params[:id])
+    @event = Event.new
+      @event.starts_at = Time.zone.now.beginning_of_day
+      @event.ends_at = Time.zone.now.end_of_day
+      @event.address = @community.address
+      @events = Event.where("starts_at > ? AND community_id = ?",Time.zone.now.beginning_of_day- 1.second, @community).order("starts_at DESC")
+      @events = @events.paginate(page: params[:page], :per_page => 5)
+      #ip_loc = Geocoder.search(remote_ip)[0]
+
+     # @event.address = ip_loc.address
+     # @event.latitude = ip_loc.latitude
+     # @event.longitude = ip_loc.longitude
+     # result = request.location
+      respond_to do |format|
+        format.html {session['events_scope'] = 'all'}# index.html.erb
+        format.json { render :json => @events }
+        format.js 
+      end
+ end
+
+ def up_events
+      @community = Community.find(params[:id])
+      @events = Event.where("starts_at > ? AND community_id = ?",Time.zone.now.beginning_of_day - 1.second, @community).order("starts_at DESC")
+      @events = @events.paginate(page: params[:page], :per_page => 5)
+  
+ end
+
+ def prev_events
+      @community = Community.find(params[:id])
+      @events = Event.where("starts_at < ? AND community_id = ?",Time.zone.now.beginning_of_day, @community).order("starts_at DESC")
+      @events = @events.paginate(page: params[:page], :per_page => 5)
+ end
+
+ def get_activity
+      @community = Community.find(params[:id])
+      @activity = Activity.find(params[:activity_id])
+ end
+
+ def create_event
+       @event = current_user.events.build(params[:event])
+      if @event.starts_at.nil?
+        @event.starts_at = Time.zone.now.beginning_of_day
+      end
+      if @event.ends_at.nil?
+        @event.ends_at = Time.zone.now.end_of_day
+      end
+      @event.community_id = active_community.id
+      @event.save!  
+      @activity = Activity.new
+      @activity.event_id = @event.id
+      @activity.title=@event.title
+      @activity.description = "Main Event"
+      @activity.is_admin = true
+      @activity.save
+      @event.activities << @activity
+
+      if @event.photo.nil?
+        @photo = Photo.new
+        @photo.remote_pic_url = "http://res.cloudinary.com/rashi/image/upload/v1378556932/events_medium_m4h4ww.jpg"
+        @photo.save
+        @event.photo = @photo 
+      end
+
+      if @event.privacy == Privacyenum::PUBLIC
+        @post = Post.new
+        @post.content = "<span class='timestamp' style='font-size:15px;'> added event </span><strong><a href='/events/" + @event.id.to_s + "' style='font-size:15px;word-wrap:break-word;' data-remote='true' > " + @event.title + " </a>.</strong>"
+        @post.user_id = current_user.id
+        @post.postable = @event
+        @post.save
+        @post.communities << active_community 
+        @post.photos << @event.photo
+      end
+
+      respond_to do |format|
+        if @event.save
+          @event.eventdetails.create(user_id: current_user.id, is_admin: true)
+          getNotifiableUsers(Objecttypeenum::EVENT, @event, nil, nil, Uc_enum::CREATED)
+        #  format.html { redirect_to @event, format: 'js', :success => 'Event was successfully created.' }
+          format.json { render :json => @event, :status => :created, :location => @event }
+          format.js { redirect_to(:action => :show_event, :format => :js, :event_id => @event.id, id: active_community.id)} #redirect_to @event, format: :js, :success => 'Event was successfully created.' }
+        else
+          format.html { render :action => "index" }
+          format.json { render :json => @event.errors, :status => :unprocessable_entity }
+        end
+      end
+ end
+
+  def show_event
+    @community = Community.find(params[:id])
+    @event = Event.find(params[:event_id])
+    @eds = @event.eventdetails
+
+
+  end
+
+  def event_posts
+     @event = Event.find(params[:event_id])
+     @community = Community.find(params[:id])
+     @post = Post.new
+     @posts = @event.posts.paginate(page: params[:page], :per_page => 4)
+  end
+
+
+  def event_members
+    @event = Event.find(params[:event_id])
+    @community = Community.find(params[:id])
+    @inv_users = User.where(['id IN (?)', @group.user_groups.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED,false).collect(&:user_id)])
+    @ad_users = User.where(['id IN (?)', @group.user_groups.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED,true).collect(&:user_id)])
+    @is_admin = @ad_users.include? current_user
+    @eds = @event.eventdetails
+  end
+
+  def event_photos
+    @group = Group.find(params[:event_id])
+    @album = Album.new
+    @albums = @event.albums
+    @community = Community.find(params[:id])
+  end
+
  def create_album
      @community = Community.find(params[:id])
      @album = current_user.albums.build(params[:album])
@@ -815,6 +936,7 @@ def search_app_user
          format.js {  }
       end
   end
+
 
   def invites_requests
     @group_ids = current_user.invited_groups.collect(&:group_id)

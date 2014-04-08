@@ -1,0 +1,11 @@
+                <% if @events.count > 0 %>
+                       <ul class='users' id='group_list' style='margin-left:0px;'>
+                      <div id="events_page" class="events_paginate">
+                        <% @events.each do |event| %>
+                          <%= render :partial => 'communities/event', :locals => {:event => event, community: community} %> 
+                        <% end %>
+                        </div>
+                      </ul>
+                 <% else %>
+                    <p class="marginLeft15">No events to display</p>
+                <% end %>

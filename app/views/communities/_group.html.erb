@@ -1,4 +1,4 @@
-  <li style="padding-left:15px;cursor:pointer;position:relative;" class="tr-hover group" >
+<li style="padding-left:15px;cursor:pointer;position:relative;" class="tr-hover group" >
   <% unless group.photo.nil? %>
   <%= link_to cl_image_tag(group.photo.pic_url(:cover_pic_smallest), class:"image_al_c1 thumbnail pull-left ", id:"#{group.photo.id}"), "#" %>
 
