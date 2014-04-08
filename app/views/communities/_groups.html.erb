@@ -160,7 +160,10 @@ $(document).ready(function(){
 
   $(document).ready(function(){
     $("#create_group").click(function(){
-      $('#modal_create_group').modal('show');
+      $('#modal_create_group').modal({
+      //keyboard: true,
+      backdrop: "static",
+    });
     });
     $("#closeX").click(function(){
           $('#modal_create_group').modal('hide');

@@ -9,7 +9,7 @@
   <% end %>
 <ul class="tabs span13" id="group_link">
   <li class="active" id="up_events_li"><a href="#">Upcoming events</a></li><%= link_to "", up_events_community_path(@community) , remote: true %>
-  <li id="prev_event_li"><a href="#">Previous events</a></li><%= link_to "", prev_events_community_path(@community) , remote: true %>
+  <li id="prev_event_li"><a href="#">Past events</a></li><%= link_to "", prev_events_community_path(@community) , remote: true %>
 </ul>
       <div class="row" >
         <div class="span13 ui-front" id="comm_groups_list">
@@ -36,7 +36,7 @@
                   <%= f.label :title %>
                   <div class="input">
                     <%= f.text_field :title, :placeholder=>"Title", 'data-validation' => "length",
-     'data-validation-length' =>"3-25", 'data-validation-error-msg' => "The Event name has to be a value between 3-25 characters" %></div>
+     'data-validation-length' =>"3-25", 'data-validation-error-msg' => "The event name has to be a value between 3-25 characters" %></div>
                 </div>
 
                 <div class="center_block clearfix">
@@ -58,7 +58,7 @@
                   <%= f.label :location %>
                   <div class="input ">
                   <%= f.text_field :address, :placeholder => :location, :size => 43, class: 'events_with_autocomplete inherit_width', 'data-autocompleteUrl' => search_address_events_path , 'data-validation' => "length",
-     'data-validation-length' =>"3-250", 'data-validation-error-msg' => "The group name has to be a value between 3-250 characters" %>&nbsp;&nbsp;&nbsp;
+     'data-validation-length' =>"3-250", 'data-validation-error-msg' => "The event address has to be a value between 3-250 characters" %>&nbsp;&nbsp;&nbsp;
                 
                   <%= link_to "View map", '#', id: "view_map_link",  class: "uibutton icon prev" %>
                 </div>
@@ -70,7 +70,7 @@
                   <%= f.label :description %>
                   <div class="input">
                   <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title=>"Description", rows: 3, cols: 75, 'data-validation' => "length",
-     'data-validation-length' =>"3-25", 'data-validation-error-msg' => "The group name has to be a value between 3-25 characters"  %> 
+     'data-validation-length' =>"3-250", 'data-validation-error-msg' => "The event description has to be a value between 3-250 characters"  %> 
                 </div>
                 </div>
                 <div class="center_block clearfix">
@@ -92,7 +92,7 @@
       </div>
       </div>
             <div class="modal-footer" >
-              <%= f.submit "Create Event", class: "btn primary pull-right", id: "create_event" %>  
+              <%= f.submit "Create Event", class: "btn primary pull-right", id: "create_event_submit" %>  
             </div>
           </div> 
         </div>
@@ -107,8 +107,8 @@
 $(document).ready(function(){
   $.validate({
     onSuccess : function() {
-      $('#create_event').attr('data-loading-text', 'Creating...');
-      $('#create_event').button('loading');
+      $('#create_event_submit').attr('data-loading-text', 'Creating...');
+      $('#create_event_submit').button('loading');
     },
   });
   $('.loading_page').hide();
@@ -162,7 +162,10 @@ $('#prev_event_li').click(function(){
   $(document).ready(function(){
 //  $('.gravatar').addClass('thumbnail');  
     $("#create_event").click(function(){
-      $('#modal_create_event').modal('show');
+      $('#modal_create_event').modal({
+      //keyboard: true,
+      backdrop: "static",
+    });
     });
     $("#closeX").click(function(){
           $('#modal_create_event').modal('hide');

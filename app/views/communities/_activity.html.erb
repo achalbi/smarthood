@@ -5,10 +5,11 @@
 
                <span class="pull-right "> &nbsp;</span>
                <% if @activity.admin?(current_user) %>
-                  <%= link_to "delete", @activity, method: :delete, remote: true,
+
+                  <%= link_to "delete", "communities/#{community.id}/delete_activity?activity_id=#{@activity.id}", method: :delete, remote: true,
                                            data: { confirm: "You sure?" },
                                            class: "pull-right uibutton button_toggle",
-                                           title: @activity.title %>
+                                           title: "Delete this activity" %>
                <% end %>
                 <div class="pull-left">
                   <strong style="font-size:13px;line-height:2;">Sub-event</strong>
@@ -25,7 +26,94 @@
                 
               </li>
 
+
+<%= form_for( @activity, url: update_activity_community_path(community), remote: true,  :html => {id: "update_activity_form"}) do |f| %>
+  <div id="modal_update_activity" style="display:none" >
+          <div id="modal-from-dom" class="modal hide fade in" style="display: block;width:700px;">
+            <div class="modal-header">
+              <a href="#" id="closeX_update_activity" class="close">×</a>
+              <h3>Edit Sub-event</h3>
+            </div>
+            <div class="modal-body" style="max-height:550px;">
+              <div class="row">
+          <div class="span14 ui-front">
+            <%= f.hidden_field :event_id %>
+            <%= f.hidden_field :id %>
+               <%= render 'shared/error_messages', object: f.object %>
+                <div class="center_block clearfix">
+                  <%= f.label :title %>
+                  <div class="input">
+                    <%= f.text_field :title, :placeholder=>"Title", 'data-validation' => "length",
+     'data-validation-length' =>"3-25", 'data-validation-error-msg' => "The event name has to be a value between 3-25 characters" %></div>
+                </div>
+
+                <div class="center_block clearfix">
+                  <%= label_tag :starts_at %>
+                  <div class="input">
+                  <%= f.text_field :starts_at, :placeholder => "Time" %>&nbsp;&nbsp;&nbsp;
+                <a id="end_date_add_link" class="uibutton icon add">End Date</a>
+                </div>
+                </div>
+                <div class="center_block clearfix" id="end_date">
+                  <%= label_tag :ends_at %>
+                  <div class="input">
+                    <%= f.text_field :ends_at %>&nbsp;&nbsp;&nbsp;
+                   <a id="end_date_remove_link" class="uibutton icon prev">Remove</a>
+                  </div>
+                </div> 
+
+                <div class="center_block clearfix">
+                  <%= f.label :location %>
+                  <div class="input ">
+                  <%= f.text_field :address, :placeholder => :location, :size => 43, class: 'events_with_autocomplete inherit_width', 'data-autocompleteUrl' => search_address_events_path , 'data-validation' => "length",
+     'data-validation-length' =>"3-250", 'data-validation-error-msg' => "The event address has to be a value between 3-250 characters" %>&nbsp;&nbsp;&nbsp;
+                
+                  <%= link_to "View map", '#', id: "view_map_link",  class: "uibutton icon prev" %>
+                </div>
+                <div class="input" id="view_map">
+                
+                </div>
+                </div>
+                <div class="center_block clearfix">
+                  <%= f.label :description %>
+                  <div class="input">
+                  <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title=>"Description", rows: 3, cols: 75, 'data-validation' => "length",
+     'data-validation-length' =>"3-250", 'data-validation-error-msg' => "The event description has to be a value between 3-250 characters"  %> 
+                </div>
+                </div>
+                <div class="center_block clearfix">
+                  <%= label_tag :privacy %>
+                  <div class="input">
+                    <%= f.select :privacy, options_for_select([["Public", Privacyenum::PUBLIC], ["Private", Privacyenum::PRIVATE]], f.object.privacy), {}, id: "activity_privacy_edit" %>
+                  </div>
+                </div>
+          </div>
+        </div>   
+           </div>
+            <div class="modal-footer" >
+              <%= f.submit "Update", class: "btn primary pull-right", id: "update_activity" %>  
+            </div>
+          </div>
+          
+        </div>
+<% end %>
+
+
+
               <script type="text/javascript">
+
+              $(document).ready(function(){
+                $.validate({
+                  form : '#update_activity_form',
+                  onSuccess : function() {
+                    $('#update_activity').attr('data-loading-text', 'Updating...');
+                    $('#update_activity').button('loading');
+                  },
+                });
+                $('.loading_page').hide();
+              });
+
+
                   $(function(){
                     $('.button_toggle').hide();
                   });
@@ -35,4 +123,124 @@
                        }, function() {
                          $(this).find('.button_toggle').hide();
                     });
+
+
+                  $("#edit_activity").click(function(){
+                    $('#modal_update_activity').modal({
+                      //keyboard: true,
+                      backdrop: "static",
+                    });
+                  });
+                  $("#closeX_update_activity").click(function(){
+                        $('#modal_update_activity').modal('hide');
+                      });
+
+
+
+    $(document).ready(function(){
+
+    $('#end_date').hide();
+
+    $('#view_map_link').hide();
+
+    $(function() {
+      return $('.events_with_autocomplete').autocomplete({
+        minLength: 2,
+        source: function(request, response) {
+          return $.ajax({
+            url: $('.events_with_autocomplete').data('autocompleteurl'),
+            dataType: "json",
+            data: {starts_at: "", ends_at: "",
+              address: request.term, event: "<%= @event.to_json %>"
+            },
+            success: function(data) {
+              return response(data);
+            }
+          });
+        }
+      });
+    });
+
+
+
+    
+});
+
+
+
+var startDateTextBox = $("#activity_starts_at");
+var endDateTextBox = $("#activity_ends_at");
+
+      startDateTextBox.datetimepicker({ 
+        onClose: function(dateText, inst) {
+          if (endDateTextBox.val() != '') {
+            var testStartDate = startDateTextBox.datetimepicker('getDate');
+            var testEndDate = endDateTextBox.datetimepicker('getDate');
+            if (testStartDate > testEndDate)
+              endDateTextBox.datetimepicker('setDate', testStartDate);
+          }
+          else {
+            endDateTextBox.val(dateText);
+          }
+        },
+        onSelect: function (selectedDateTime){
+          endDateTextBox.datetimepicker('option', 'minDate', startDateTextBox.datetimepicker('getDate') );
+        },
+        dateFormat: "dd/mm/yy"
+      });
+      endDateTextBox.datetimepicker({ 
+        onClose: function(dateText, inst) {
+          if (startDateTextBox.val() != '') {
+            var testStartDate = startDateTextBox.datetimepicker('getDate');
+            var testEndDate = endDateTextBox.datetimepicker('getDate');
+            if (testStartDate > testEndDate)
+              startDateTextBox.datetimepicker('setDate', testEndDate);
+          }
+          else {
+            startDateTextBox.val(dateText);
+          }
+        },
+        onSelect: function (selectedDateTime){
+          startDateTextBox.datetimepicker('option', 'maxDate', endDateTextBox.datetimepicker('getDate') );
+        },
+        dateFormat: "dd/mm/yy"
+      });
+
+
+
+$('#activity_address').keydown(function(){
+    $('#view_map_link').hide();
+    $('#view_map').hide();
+});
+
+$('#view_map_link').click(function(){
+    var address = "/events/get_geo_coordinates?address="+$('#activity_address').val();
+    // $.get(address,"script");
+     $.ajax({
+      type: "GET",
+      url: address,
+      dataType: "script"
+    }); 
+});
+
+$('a.ui-corner-all').on("click", function(){
+  if($('#activity_address').val()!=""){
+    $('#view_map_link').show();
+  }else{
+    $('#view_map_link').hide();
+  }
+});
+
+
+$('#end_date_add_link').click(function(){
+  $('#end_date').show();
+  $('#end_date_add_link').hide();
+});
+$('#end_date_remove_link').click(function(){
+  $('#end_date').hide();
+  $('#end_date_add_link').show();
+});
+
+
+
               </script>

@@ -143,7 +143,7 @@
                 <div class="center_block clearfix">
                   <%= f.label :location %>
                   <div class="input ">
-                  <%= f.text_field :address, :placeholder => :location, :size => 43, class: 'events_with_autocomplete inherit_width',:value => @event.address , 'data-autocompleteUrl' => search_address_events_path %>&nbsp;&nbsp;&nbsp;
+                  <%= f.text_field :address, :placeholder => :location, :size => 43, class: 'events_with_autocomplete inherit_width' , 'data-autocompleteUrl' => search_address_events_path %>&nbsp;&nbsp;&nbsp;
                 
                   <%= link_to "View map", '#', id: "view_map_link",  class: "uibutton icon prev" %>
                 </div>

@@ -1,0 +1,4 @@
+$(".busy").button('reset');
+$('#modal_update_activity').modal('hide');
+$("#activity_show").html("<%= escape_javascript(render :partial => 'communities/activity', :locals => {:activty => @activity, community: @community} ) %>");
+$("#event_table").html("<%= escape_javascript(render :partial => 'communities/event_table', :locals => {:event => @event, community: @community, activity: @activity} ) %>");

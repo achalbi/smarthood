@@ -87,7 +87,10 @@ EMS::Application.routes.draw do
 
   resources :communities do
     member do
-      get :setactive, :sendrequest, :join_cu, :acceptrequest, :declinerequest, :search_app_user, :invite_app_user, :invite_fb_friends, :invite_by_email, :unjoin_cu, :add_moderators, :about_com, :posts_com, :photos_com, :members_com, :groups_com, :events_com, :show_group, :group_posts, :group_members, :group_photos, :remove_user_cu, :up_events, :prev_events, :show_event, :event_posts, :event_members, :event_photos, :add_event_moderators, :get_activity
+      get :setactive, :sendrequest, :join_cu, :acceptrequest, :declinerequest, :search_app_user, :invite_app_user, :invite_fb_friends, :invite_by_email, :unjoin_cu, :add_moderators, :about_com, :posts_com, :photos_com, :members_com, :groups_com, :events_com, :show_group, :group_posts, :group_members, :group_photos, :remove_user_cu, :up_events, :prev_events, :show_event, :event_posts, :event_members, :event_photos, :add_event_moderators, :get_activity, :delete_event
+      put :update_activity, :update_event 
+      post :create_activity
+      delete :delete_activity
     end
     collection do
       get :active_com , :joined_com, :public_com, :private_com, :moderated_com, :search_address, :get_geo_coordinates, :invites_requests, :community_post_paginate, :my_com, :other_com

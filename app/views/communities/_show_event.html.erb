@@ -11,10 +11,10 @@
 
                <span class="pull-right "> &nbsp;</span>
                <% if @event.is_admin?(current_user) %>
-                  <%= link_to "delete", @event, method: :delete, remote: true,
+                  <%= link_to "delete",  "communities/#{community.id}/delete_event?event_id=#{@event.id}", method: :get, remote: true,
                                            data: { confirm: "You sure?" },
                                            class: "pull-right uibutton button_toggle",
-                                           title: @event.title %>
+                                           title: "Delete this event" %>
                <% end %>
                 <% unless event.photo.nil? %>
                 <div class="pull-left">
@@ -38,57 +38,10 @@
           <ul id="activity_show" class="users">
 
           </ul>
+          <div id="event_table">
+              <%= render partial: "communities/event_table", locals: { event: event, community: community, activity: nil } %>
+          </div>
 
-            <table class="bordered-table zebra-striped">
-                  <thead>
-                    <tr>
-                      <th><span style="line-height:2">Event</span>
-                      </th>
-                      <th style="width:70px;" class="center">Status
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                      <tr class="c-pointer tr-select-main">
-                            <td><span style="font-size:13px;"><%= event.title %></span></td>
-                           <td class="event_status center"><span class="label success">active</span></td>
-                       </tr>
-                      <%= link_to(event, remote: true) do %>
-                      <% end %>
-                  </tbody>
-                  <thead>
-                    <tr>
-                      <th><span style="line-height:2">Sub-events</span>
-                        <a class="uibutton pull-right icon add " style="margin-right:2px;" id="add_activity" > add sub-events </a>
-                      </th>
-                      <th style="width:70px;" class="center">
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <% if event.activities.count > 1 %>
-                      <% event.activities.each do |activity| %>  
-                        <% unless activity.is_admin %>
-                          <tr class="c-pointer tr-select">
-                                <td>
-                                  <p style="display:none;"><%= activity.id %></p>
-                                  <span style="font-size:13px;"><%= activity.title %></span>
-                                </td>
-                               <td class="event_status center">
-                               </td>
-                           </tr>
-                          <%= link_to "", "communities/#{community.id}/get_activity?activity_id=#{activity.id}", id: "act_#{activity.id}", remote: true %>
-                        <% end %>
-                      <% end %>
-                    <% else %>
-                      <tr class="">
-                          <td colspan="2" class="center">No sub-events created.</td>
-                      </tr>
-                    <% end %>
-
-
-                  </tbody>
-                </table>
            <div class="center loading_sub active_hide" ><img src="/assets/loading-sub.gif"></div>
           <br>
           <div>
@@ -104,17 +57,17 @@
       </div>
 </div>
 
-<%= form_for( @event, url: create_event_communities_path, remote: true, :html => {:multipart => true, id: 'create_event_form'}) do |f| %>
-<div id="modal_create_event" style="display:none;" >
+<%= form_for( @event, url: update_event_community_path(community), remote: true, :html => {:multipart => true, id: 'update_event_form'}) do |f| %>
+<div id="modal_edit_event" style="display:none;" >
           <div id="modal-from-dom" class="modal hide fade in" style="display: block;width:700px;">
             <div class="modal-header">
               <a href="#" id="closeX_edit_event" class="close">×</a>
-              <h3>Create Event</h3>
+              <h3>Update Event</h3>
             </div>
             <div class="modal-body" style="max-height:450px;">
             <div class="row">
               <div class="span14 ui-front">
-            
+              <%= hidden_field_tag :event_id, event.id %>
                <%= render 'shared/error_messages', object: f.object %>
                <div class="center_block clearfix">
                   <%= f.label :title %>
@@ -127,14 +80,14 @@
                   <%= label_tag :starts_at %>
                   <div class="input">
                   <%= f.text_field :starts_at, :placeholder => "Time" %>&nbsp;&nbsp;&nbsp;
-                <a id="end_date_add_link" class="uibutton icon add">End Date</a>
+                <a id="end_date_add_link_event" class="uibutton icon add">End Date</a>
                 </div>
                 </div>
-                <div class="center_block clearfix" id="end_date">
+                <div class="center_block clearfix" id="end_date_event">
                   <%= label_tag :ends_at %>
                   <div class="input">
                     <%= f.text_field :ends_at %>&nbsp;&nbsp;&nbsp;
-                   <a id="end_date_remove_link" class="uibutton icon prev">Remove</a>
+                   <a id="end_date_remove_link_event" class="uibutton icon prev">Remove</a>
                   </div>
                 </div> 
 
@@ -142,9 +95,9 @@
                   <%= f.label :location %>
                   <div class="input ">
                   <%= f.text_field :address, :placeholder => :location, :size => 43, class: 'events_with_autocomplete inherit_width', 'data-autocompleteUrl' => search_address_events_path , 'data-validation' => "length",
-     'data-validation-length' =>"3-250", 'data-validation-error-msg' => "The group name has to be a value between 3-250 characters" %>&nbsp;&nbsp;&nbsp;
+     'data-validation-length' =>"3-250", 'data-validation-error-msg' => "The event address has to be a value between 3-250 characters" %>&nbsp;&nbsp;&nbsp;
                 
-                  <%= link_to "View map", '#', id: "view_map_link",  class: "uibutton icon prev" %>
+                  <%= link_to "View map", '#', id: "view_map_link_event",  class: "uibutton icon prev" %>
                 </div>
                 <div class="input" id="view_map">
                 
@@ -154,7 +107,7 @@
                   <%= f.label :description %>
                   <div class="input">
                   <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title=>"Description", rows: 3, cols: 75, 'data-validation' => "length",
-     'data-validation-length' =>"3-25", 'data-validation-error-msg' => "The group name has to be a value between 3-25 characters"  %> 
+     'data-validation-length' =>"3-250", 'data-validation-error-msg' => "The event description has to be a value between 3-250 characters"  %> 
                 </div>
                 </div>
                 <div class="center_block clearfix">
@@ -249,7 +202,21 @@ $(document).ready(function(){
   $('#groups_community_li').removeClass('active');
   $('#events_community_li').addClass('active');
 
+  $('#end_date_event').hide();
+
+  $('#view_map_link_event').hide();
+
 });
+
+                  $('#end_date_add_link_event').click(function(){
+                    $('#end_date_event').show();
+                    $('#end_date_add_link_event').hide();
+                  });
+                  $('#end_date_remove_link_event').click(function(){
+                    $('#end_date_event').hide();
+                    $('#end_date_add_link_event').show();
+                  });
+
 
  $('.tr-hover').hover(function() {
        $(this).find('.button_toggle').show();
@@ -271,7 +238,10 @@ $(document).ready(function(){
 
 
 $(document).ready(function(){
+  $('#modal_create_activity').modal('hide');
+   $('.modal-backdrop').remove();
   $.validate({
+    form : "#update_event_form",
     onSuccess : function() {
       $('#update_event').attr('data-loading-text', 'Updating...');
       $('#update_event').button('loading');
@@ -387,5 +357,52 @@ $('#photos_event_tab').click(function(){
   $('.loading_page').show();
 });
 
+
+$(document).ready(function() {
+
+  for (var i = 1; i < 99999; i++){
+     window.clearInterval(i);
+  }
+
+
+      var startDateTextBox = $("#event_starts_at");
+      var endDateTextBox = $("#event_ends_at");
+
+      startDateTextBox.datetimepicker({ 
+        onClose: function(dateText, inst) {
+          if (endDateTextBox.val() != '') {
+            var testStartDate = startDateTextBox.datetimepicker('getDate');
+            var testEndDate = endDateTextBox.datetimepicker('getDate');
+            if (testStartDate > testEndDate)
+              endDateTextBox.datetimepicker('setDate', testStartDate);
+          }
+          else {
+            endDateTextBox.val(dateText);
+          }
+        },
+        onSelect: function (selectedDateTime){
+          endDateTextBox.datetimepicker('option', 'minDate', startDateTextBox.datetimepicker('getDate') );
+        },
+        dateFormat: "dd/mm/yy"
+      });
+      endDateTextBox.datetimepicker({ 
+        onClose: function(dateText, inst) {
+          if (startDateTextBox.val() != '') {
+            var testStartDate = startDateTextBox.datetimepicker('getDate');
+            var testEndDate = endDateTextBox.datetimepicker('getDate');
+            if (testStartDate > testEndDate)
+              startDateTextBox.datetimepicker('setDate', testEndDate);
+          }
+          else {
+            startDateTextBox.val(dateText);
+          }
+        },
+        onSelect: function (selectedDateTime){
+          startDateTextBox.datetimepicker('option', 'maxDate', endDateTextBox.datetimepicker('getDate') );
+        },
+        dateFormat: "dd/mm/yy"
+      });
+
+    });
 
 </script>

@@ -1,0 +1,179 @@
+            <table class="bordered-table zebra-striped">
+                  <thead>
+                    <tr>
+                      <th><span style="line-height:2">Event</span>
+                      </th>
+                      <th style="width:70px;" class="center">Status
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                      <tr class="c-pointer tr-select-main">
+                            <td><span style="font-size:13px;"><%= event.title %></span></td>
+                           <td class="event_status center"><span class="label success">active</span></td>
+                       </tr>
+                      <%= link_to(event, remote: true) do %>
+                      <% end %>
+                  </tbody>
+                  <thead>
+                    <tr>
+                      <th><span style="line-height:2">Sub-events</span>
+                        <a class=" pull-right c-pointer" style="margin-right:2px;line-height:2;" id="add_activity" >+ add sub-events </a>
+                      </th>
+                      <th style="width:70px;" class="center">
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% if event.activities.count > 1 %>
+                      <% event.activities.each do |activity| %>  
+                        <% unless activity.is_admin %>
+                          <tr class="c-pointer tr-select">
+                                <td>
+                                  <p style="display:none;"><%= activity.id %></p>
+                                  <span style="font-size:13px;"><%= activity.title %></span>
+                                </td>
+                               <td class="event_status center" id="activity_status_<%= activity.id %>">
+                               </td>
+                           </tr>
+                          <%= link_to "", "communities/#{community.id}/get_activity?activity_id=#{activity.id}", id: "act_#{activity.id}", remote: true %>
+                        <% end %>
+                      <% end %>
+                    <% else %>
+                      <tr class="">
+                          <td colspan="2" class="center">No sub-events created.</td>
+                      </tr>
+                    <% end %>
+
+
+                  </tbody>
+                </table>
+
+
+<%= form_for( Activity.new, url: create_activity_community_path(community), remote: true,  :html => {id: "create_activity_form"}) do |f| %>
+  <div id="modal_create_activity" style="display:none" >
+          <div id="modal-from-dom" class="modal hide fade in" style="display: block;width:700px;">
+            <div class="modal-header">
+              <a href="#" id="closeX_create_activity" class="close">×</a>
+              <h3>Create Sub-event</h3>
+            </div>
+            <div class="modal-body" style="max-height:550px;">
+              <div class="row">
+          <div class="span14 ui-front">
+            <%= f.hidden_field :event_id, value: event.id %>
+               <%= render 'shared/error_messages', object: f.object %>
+                <div class="center_block clearfix">
+                  <%= f.label :title %>
+                  <div class="input">
+                    <%= f.text_field :title, :placeholder=>"Title", 'data-validation' => "length",
+     'data-validation-length' =>"3-25", 'data-validation-error-msg' => "The Event name has to be a value between 3-25 characters" %></div>
+                </div>
+
+                <div class="center_block clearfix">
+                  <%= label_tag :starts_at %>
+                  <div class="input">
+                  <%= f.text_field :starts_at, :placeholder => "Time", value: event.starts_at  %>&nbsp;&nbsp;&nbsp;
+                <a id="end_date_add_link" class="uibutton icon add">End Date</a>
+                </div>
+                </div>
+                <div class="center_block clearfix" id="end_date">
+                  <%= label_tag :ends_at %>
+                  <div class="input">
+                    <%= f.text_field :ends_at,  value: event.ends_at  %>&nbsp;&nbsp;&nbsp;
+                   <a id="end_date_remove_link" class="uibutton icon prev">Remove</a>
+                  </div>
+                </div> 
+
+                <div class="center_block clearfix">
+                  <%= f.label :location %>
+                  <div class="input ">
+                  <%= f.text_field :address, :placeholder => :location, :size => 43, class: 'events_with_autocomplete inherit_width', 'data-autocompleteUrl' => search_address_events_path , 'data-validation' => "length",
+     'data-validation-length' =>"3-250", 'data-validation-error-msg' => "The event address has to be a value between 3-250 characters", value: event.address %>&nbsp;&nbsp;&nbsp;
+                
+                  <%= link_to "View map", '#', id: "view_map_link",  class: "uibutton icon prev" %>
+                </div>
+                <div class="input" id="view_map">
+                
+                </div>
+                </div>
+                <div class="center_block clearfix">
+                  <%= f.label :description %>
+                  <div class="input">
+                  <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title=>"Description", rows: 3, cols: 75, 'data-validation' => "length",
+     'data-validation-length' =>"3-250", 'data-validation-error-msg' => "The event description has to be a value between 3-250 characters"  %> 
+                </div>
+                </div>
+                <div class="center_block clearfix">
+                  <%= label_tag :privacy %>
+                  <div class="input">
+                    <%= f.select :privacy, options_for_select([["Public", Privacyenum::PUBLIC], ["Private", Privacyenum::PRIVATE]]), {}, id: "activity_privacy_create" %>
+                  </div>
+                </div>
+          </div>
+        </div>   
+           </div>
+            <div class="modal-footer" >
+              <%= f.submit "Create", class: "btn primary pull-right", id: "create_activity" %>  
+            </div>
+          </div>
+          
+        </div>
+<% end %>
+
+
+<script type="text/javascript">
+                $(function(){
+                  if( <%= !activity.nil? %> ){
+                      $('.event_status').html('');
+                      $('#activity_status_<%=  !activity.nil? ? activity.id : 0 %>').html('<span class="label success">active</span>');
+                  }
+                  $('#end_date').hide();
+
+                  $('#view_map_link').hide();
+                  
+                });
+                
+                 $('.tr-select-main').click(function(){
+                    $('#activity_show').html('');
+                     $('.event_status').html('');
+                    $(this).find('.event_status').html('<span class="label success">active</span>');
+                 });
+                 $('.tr-select').click(function(){
+                    $('.event_status').html('');
+                    $(this).find('.event_status').html('<span class="label success">active</span>');
+                    var id = $(this).find('p').html();
+                    $("#act_"+id).click();
+                 });
+
+                $(document).ready(function(){
+                $.validate({
+                  form : '#create_activity_form',
+                  onSuccess : function() {
+                    $('#create_activity').attr('data-loading-text', 'Creating...');
+                    $('#create_activity').button('loading');
+                  },
+                });
+                $('.loading_page').hide();
+              });
+
+
+                  $("#add_activity").click(function(){
+                    $('#modal_create_activity').modal({
+                      //keyboard: true,
+                      backdrop: "static",
+                    });
+                  });
+                  $("#closeX_create_activity").click(function(){
+                        $('#modal_create_activity').modal('hide');
+                      });
+
+                  $('#end_date_add_link').click(function(){
+                    $('#end_date').show();
+                    $('#end_date_add_link').hide();
+                  });
+                  $('#end_date_remove_link').click(function(){
+                    $('#end_date').hide();
+                    $('#end_date_add_link').show();
+                  });
+
+</script>

@@ -858,6 +858,65 @@ def search_app_user
 
   end
 
+  def update_event
+    @community = Community.find(params[:id])
+    @event = Event.find(params[:event_id])
+    @eds = @event.eventdetails
+    @event.update_attributes(params[:event])
+    render :action => :show_event
+    
+  end
+
+  def delete_event
+    @community = Community.find(params[:id])
+    @event = Event.find(params[:event_id])
+    @event.destroy
+    redirect_to :action => "events_com"
+  end
+
+  def create_activity
+    @event = Event.find(params[:activity][:event_id])
+    @activity = @event.activities.build(params[:activity])
+    @activity.save
+        @ad = Activitydetail.new
+        @ad.is_admin=true
+        @ad.user = current_user
+        @activity.activitydetails << @ad
+      if @activity.privacy == Privacyenum::PUBLIC
+        @post = Post.new
+        @post.content = "<span class='timestamp' style='font-size:15px;'> added an activity </span><strong><a href='/activities/" + @activity.id.to_s + "' style='font-size:15px;word-wrap:break-word;' data-remote='true' > " + @activity.title + " </a></strong><span class='timestamp' style='font-size:15px;'> to the event </span><strong><a href='/events/" + @event.id.to_s + "' style='font-size:15px;word-wrap:break-word;' data-remote='true' > " + @event.title + " </a>.</strong>"
+        @post.user_id = current_user.id
+        @post.postable = @activity
+        @post.save
+        @post.communities << active_community 
+        @post.photos << @event.photo
+      end
+    getNotifiableUsers(Objecttypeenum::ACTIVITY, @activity, nil, nil, Uc_enum::CREATED)
+    @activities = @event.activities
+    @community = Community.find(params[:id])
+    @eds = @event.eventdetails
+    render :action => :show_event
+  end
+
+
+  def update_activity
+    @community = Community.find(params[:id])
+    @event = Event.find(params[:activity][:event_id])
+    @activity = Activity.find(params[:activity][:id])
+    @activity.update_attributes(params[:activity])
+    
+  end
+
+  def delete_activity
+    @activity = Activity.find(params[:activity_id])
+    @activity.destroy
+    @event = Event.find(@activity.event_id)
+    @community = Community.find(params[:id])
+    @eds = @event.eventdetails
+     render :action => :show_event
+  end
+
+
   def event_posts
      @event = Event.find(params[:event_id])
      @community = Community.find(params[:id])
