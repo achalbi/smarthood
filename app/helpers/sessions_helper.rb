@@ -99,12 +99,13 @@ module SessionsHelper
   def create_user_to_invite(uid,email)
     @user = User.new
     if !uid.nil?
-      @user = User.find_or_create_by_fb_uid(uid)
-      if @user.name.nil?
-        @user.fb_uid = uid
-        @user.authentications.build(:provider => 'facebook', :uid => uid)
+      @user = User.find_by_fb_uid(uid)
+      if @user.blank?
+        @user = User.create(fb_uid: uid)
         #@user.valid = false
         @user.save(validate: false)
+        @authentication = @user.authentications.build(:provider => 'facebook', :uid => uid)
+        @authentication.save
       end
     elsif !email.nil?
      @user = User.find_by_email(email)

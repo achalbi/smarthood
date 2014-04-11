@@ -612,7 +612,7 @@ def search_app_user
  def invite_fb_friends
     @fb_uids = params[:ids].split(",")
     @fb_uids.each do |uid|
-      @user = create_user_to_invite(uid,nil)
+      @user = create_user_to_invite(uid[0],nil)
       @usercommunity = Usercommunity.where('community_id=? and user_id=?',params[:id],@user.id)[0]
       if @usercommunity.blank?
        @usercommunity = Usercommunity.new 
@@ -930,7 +930,7 @@ def search_app_user
     @ed_user = @event.eventdetails.collect(&:user_id)
     @fb_uids = params[:ids].split(",")
     @fb_uids.each do |uid|
-      @user = create_user_to_invite(uid,nil)
+      @user = create_user_to_invite(uid[0],nil)
       if @ed_user.include?(@user.id)
         next
       end
