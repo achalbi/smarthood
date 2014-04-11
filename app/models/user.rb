@@ -75,6 +75,8 @@ class User < OmniAuth::Identity::Models::ActiveRecord
   validates :password, presence: true, length: { minimum: 6 }, :on => :create
   validates :password_confirmation, presence: true, :on => :create
 
+  #validates_uniqueness_of :email, :case_sensitive => false, conditions: -> { where(valid: true) }
+
 def send_password_reset
   generate_token(:password_reset_token)
   self.password_reset_sent_at = Time.zone.now

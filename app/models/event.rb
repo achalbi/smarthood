@@ -1,5 +1,5 @@
 class Event < ActiveRecord::Base
-  attr_accessible :all_day, :description, :location, :title, :privacy, :starts_at, :ends_at, :user_id, :address, :latitude, :longitude,:photo_id, :photo_attributes, :user_tokens, :eventdetails_attributes, :group_tokens
+  attr_accessible :all_day, :description, :location, :title, :privacy, :starts_at, :ends_at, :user_id, :address, :latitude, :longitude,:photo_id, :photo_attributes, :user_tokens, :eventdetails_attributes, :group_tokens, :GuestsCanInvite
 
   geocoded_by :address   # can also be an IP address
   after_validation :geocode, :if => :address_changed?          # auto-fetch coordinates

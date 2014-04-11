@@ -36,6 +36,7 @@ class AuthenticationController < ApplicationController
         user.user_info.gender = user_session['gender']
         user.user_info.dob = user_session['birthday']
         user.name = user.user_info.first_name + ' '.to_s + user.user_info.last_name
+        #user.valid = true
         user.save!
       end
 
@@ -88,6 +89,7 @@ class AuthenticationController < ApplicationController
       #user.email_confirmation = user_session['email']
       user.user_info.gender = user_session['gender']
       user.user_info.dob = user_session['birthday']
+      #user.valid = true
       user.save!
       #flash[:notice] = "Signed up successfully."
       #sign_in_and_redirect(:user, user)

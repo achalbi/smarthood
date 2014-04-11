@@ -29,7 +29,7 @@
             </div>
             <div class="modal-body" style="max-height:450px;">
             <div class="row">
-              <div class="span14 ui-front">
+              <div class="span15 ui-front">
             
                <%= render 'shared/error_messages', object: f.object %>
                <div class="center_block clearfix">
@@ -79,20 +79,39 @@
                     <%= f.select :privacy, options_for_select([["Public", Privacyenum::PUBLIC], ["Members", Privacyenum::MEMBERS], ["Private", Privacyenum::PRIVATE]]) %>
                   </div>
                 </div> <br>
+                <div class="center_block clearfix ">
+                    <label>Guests can invite</label>
+                  <div class="input">
+                    <div class="checkboxFive pull-right marginRight15" >
+                  <%= f.check_box 'GuestsCanInvite', id: "Guests_can_invite_other_guests" %>
+                    <label for="Guests_can_invite_other_guests" </label>
+                  </div>
+                  </div>
+                </div> <br>
+                  <div class="center_block clearfix ">
+                    <label >Invite everyone from this community</label>
+                  <div class="input">
+                    <div class="checkboxFive pull-right marginRight15" style="margin-top:6px;">
+                  <%= check_box_tag 'invite_everyone', 1, id: "invite_everyone" %>
+                    <label for="invite_everyone" </label>
+                  </div>
+                  </div>
+                </div> <br>
                 <div class="center_block clearfix">
                 <%= label_tag "Add picture:" %>
-                <%= f.fields_for :photo, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
-                  <%= photo_form.file_field :pic, id: "pic",style: "width:0px; height:0px;  padding:0px;  left:0px;" %>  
-                <% end %>
+                
                 <div class="input">    
                 <canvas id="imageCanvas" style = "border: 1px solid #ddd; padding:5px; align:center;cursor:pointer" >select new image</canvas>
                 </div>
+                <%= f.fields_for :photo, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
+                  <%= photo_form.file_field :pic, id: "pic",style: "width:0px; height:0px;  padding:0px;  left:0px;" %>  
+                <% end %>
               </div>
         </div>   
       </div>
       </div>
             <div class="modal-footer" >
-              <%= f.submit "Create Event", class: "btn primary pull-right", id: "create_event_submit" %>  
+              <%= f.submit "Create", class: "btn primary pull-right", id: "create_event_submit" %>  
             </div>
           </div> 
         </div>

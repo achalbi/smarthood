@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140324125445) do
+ActiveRecord::Schema.define(:version => 20140410134425) do
 
   create_table "activities", :force => true do |t|
     t.string   "title"
@@ -298,18 +298,19 @@ ActiveRecord::Schema.define(:version => 20140324125445) do
     t.string   "title"
     t.text     "description"
     t.string   "location"
-    t.integer  "privacy",      :limit => 255
+    t.integer  "privacy",         :limit => 255
     t.integer  "creator"
     t.datetime "starts_at"
     t.datetime "ends_at"
     t.boolean  "all_day"
-    t.datetime "created_at",                  :null => false
-    t.datetime "updated_at",                  :null => false
+    t.datetime "created_at",                     :null => false
+    t.datetime "updated_at",                     :null => false
     t.integer  "community_id"
     t.string   "address"
     t.float    "latitude"
     t.float    "longitude"
     t.integer  "photo_id"
+    t.boolean  "GuestsCanInvite"
   end
 
   add_index "events", ["creator", "created_at", "starts_at", "ends_at"], :name => "inx_evnts"

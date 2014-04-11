@@ -1,0 +1,232 @@
+ <ul class="users">
+  <li class="tr-hover" >
+  <span style="font-size:13px;line-height: 2;margin-left:15px;"><strong>Send invitation to </strong></span>
+    <% if session["fb_access_token"].present? %>
+       <a class=" uibutton pull-right" style="margin-right:5px;" id="invite_fb"> Facebook Friends</a>
+    <% end %>
+         <a class="uibutton pull-right" style="margin-right:5px;" id="invite_cu" >Smarthood users</a>
+     <a class="uibutton pull-right" style="margin-right:2px;" id="invite_email" > Email </a>
+  </li>
+ </ul>
+
+
+<%= form_for( event, url: invite_event_guests_by_user_community_path(community), method: :get, remote: true) do |f| %>
+<div id="modal_invite" style="display:none;" >
+  <div id="modal-from-dom2" class="modal hide fade in" style="display: block;">
+    <div class="modal-header">
+      <a href="#" id="close_invite" class="close">×</a>
+      <span style="font-size:15px;line-height: 2;"><strong>Invite Smarthood users</strong></span>
+    </div>
+    	<%= f.hidden_field :id %>
+    <div class="modal-body" style="max-height:550px;">
+      <div class="row">
+        <div class=" ui-front">
+        <ul class="users marginLeft20">
+        	<li class="tr-hover">
+        	<div class="center_block clearfix  marginLeft50">
+                    <div class="checkboxFive pull-left marginRight15" style="margin-top:6px;">
+                  <%= check_box_tag 'invite_everyone' %>
+                    <label for="invite_everyone"> </label>
+                  </div>
+                    <label style="width:220px;line-height:2;">Invite everyone from this community</label>
+                </div> <br>
+        	</li>
+        	<li class="tr-hover">
+	          <label style="width:220px;line-height:2;margin-left:50px;">Invite guests from other communities</label>
+	          <div class="center_block clearfix marginLeft50"><br>
+	              <%= f.text_field :user_tokens, id: "search_user", 'data-validation' => "required", 'data-validation-error-msg' => "Please add users to invite" %>
+	          </div>
+        	</li>
+        </ul>
+        </div>
+      </div>   
+    </div>
+    <div class="modal-footer" >
+      <%= f.submit "Invite", class: "btn primary pull-right busy", id: "invite_submit" %>  
+    </div>
+  </div>
+
+</div>
+<% end %>
+
+
+
+
+<%= form_for( event, url: invite_event_guests_by_email_community_path(community), method: :get, remote: true) do |f| %>
+<div id="modal_invite_email" style="display:none;" >
+  <div id="modal-from-dom2" class="modal hide fade in" style="display: block;">
+    <div class="modal-header">
+      <a href="#" id="close_invite_email" class="close">×</a>
+      <h3>Invite by email</h3>
+    </div>
+    <%= f.hidden_field :id %>
+    <div class="modal-body" style="max-height:550px;">
+      <div class="row">
+        <div class="span10 ui-front">
+          <div class="center_block clearfix"><br>
+              <div class="bs-example bs-email">
+                        <div class="form-group">
+                          <input type="text" class="form-control tokenfields" style="width:480px;" id="tokenfield-m1" name="community[user_tokens]" placeholder="Type email and hit tab/enter" data-validation="required" data-validation-error-msg="Please type email and hit tab/enter to add" />
+                        </div>
+                </div>
+          </div>
+        </div>
+      </div>   
+    </div>
+    <div class="modal-footer" >
+      <%= f.submit "Invite", class: "btn primary pull-right busy", id: "invite_email_submit" %>  
+    </div>
+  </div>
+
+</div>
+<% end %>
+
+<script type="text/javascript">
+$(document).ready(function(){
+  $.validate({
+    onSuccess : function() {
+      $('.loading_page').show();
+      $("#invite_email_submit").attr('data-loading-text', 'Inviting...');
+      $("#invite_email_submit").button('loading');
+      $("#invite_submit").attr('data-loading-text', 'Inviting...');
+      $("#invite_submit").button('loading');
+
+    },
+  });
+  });
+
+/*
+$("#invite_fb").on( "click", function() {
+  FB.ui(
+  {
+    method: 'feed',
+    name: '<%= event.title %>',
+    link: 'http://www.smarthood.in/events/40',
+    picture: '<%= event.photo.pic_url %>',
+    caption: '- Event -',
+    description: 'Events have been posted for facebook.'
+  },
+  function(response) {
+    if (response && response.post_id) {
+      alert('Post was published.');
+    } else {
+      alert('Post was not published.');
+    }
+  }
+);
+
+});*/
+
+/*$("#invite_fb").on( "click", function() {
+  FB.ui({method: 'apprequests',
+    message: '<%=current_user.name%> has invited you for the event <%= event.title %>'
+  }, requestCallback);    
+});
+
+
+function requestCallback(response)
+{
+  if(response!=null){
+ // console.log("resp: "+response.to);
+  for (var i in response.to) {
+        FB.ui({
+          method: 'send',
+          to: response.to[i],
+          //link: 'http://www.smarthood.in/events/<%= event.id %>',
+          link: 'http://www.smarthood.in/events/40',
+        });
+  }
+
+  $.get( '<%= invite_fb_friends_to_event_community_path(community) %>', { ids: response.to, event_id: <%= event.id %> } );
+  }
+}*/
+
+$("#invite_fb").on( "click", function() {
+  FB.ui({method: 'apprequests',
+    message: '<%=current_user.name%> has invited you for the event <%= event.title %>'
+  }, requestCallback);    
+});
+
+
+function requestCallback(response)
+{
+  if(response!=null){
+ // console.log("resp: "+response.to);
+  for (var i in response.to) {
+        FB.ui({
+          method: 'send',
+          to: response.to[i],
+          link: 'http://www.smarthood.in/events/<%= event.id %>',
+        });
+  }
+
+  $.get( '<%= invite_fb_friends_to_event_community_path(community) %>', { ids: response.to, event_id: <%= event.id %> } );
+  }
+}
+
+
+
+$("#invite_cu").on( "click", function() {
+ $('#modal_invite').modal({
+      //keyboard: true,
+      backdrop: "static",
+    });
+});
+
+$("#close_invite").click(function(){
+  $('#modal_invite').modal('hide');
+});
+
+$("#invite_submit").click(function(){
+ //     $(this).attr('data-loading-text', 'Inviting...');
+ //     $(this).button('loading');
+});
+
+$("#invite_email").on( "click", function() {
+ $('#modal_invite_email').modal({
+      //keyboard: true,
+      backdrop: "static",
+    });
+});
+
+$("#close_invite_email").click(function(){
+  $('#modal_invite_email').modal('hide');
+});
+
+
+$(function() {
+  $("#search_user").tokenInput("/communities/<%= community.id %>/search_app_user", {
+    crossDomain: false,
+    theme: "facebook",
+    resultsFormatter: function(item){ return "<li>" + "<img src='" + item.profile_pic + "' title='" + item.name + "' height='30px' width='30px' />" + "<div style='display: inline-block; padding-left: 10px;'><div class='full_name'>" + item.name + " " + ""+ "</div><div class='full_name'>" + item.email + " " + ""+ "</div></div></li>" },
+    tokenFormatter: function(item) { return  "<li>" + "<img src='" + item.profile_pic + "' title='" + item.name + "' height='30px' width='30px' />" + "<div style='display: inline-block; padding-left: 10px;'><div class='full_name'>" + item.name +"</div><div class='full_name'>" + item.email + " " + ""+ "</div></div></li>" },
+    preventDuplicates: true ,
+    zindex: 11001,
+    hintText: "Type in a user name",
+  });
+});
+
+
+         $('.tokenfields').on('beforeCreateToken', function (e) {
+            var token = e.token.value.split('|')
+            e.token.value = token[1] || token[0]
+            e.token.label = token[1] ? token[0] + ' (' + token[1] + ')' : token[0]
+          }).on('afterCreateToken', function (e) {
+            // Über-simplistic e-mail validation
+            var re = /\S+@\S+\.\S+/
+            var valid = re.test(e.token.value)
+            if (!valid) {
+              $(e.relatedTarget).addClass('invalid')
+            }
+          }).on('beforeEditToken', function (e) {
+            if (e.token.label !== e.token.value) {
+              var label = e.token.label.split(' (')
+              e.token.value = label[0] + '|' + e.token.value
+            }
+          }).on('removeToken', function (e) {
+           // alert('Token removed! Token value was: ' + e.token.value)
+          }).on('preventDuplicateToken', function (e) {
+            alert('Duplicate detected! Token value is: ' + e.token.value)
+          }).tokenfield();
+
+</script>

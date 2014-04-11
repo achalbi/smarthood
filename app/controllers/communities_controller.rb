@@ -819,6 +819,17 @@ def search_app_user
       @activity.save
       @event.activities << @activity
 
+      unless params[:invite_everyone].nil?
+        @ed_user = active_community.usercommunities.where("invitation = ?", Uc_enum::JOINED ).collect(&:user_id)
+          @ed_user.each do |user_id|
+            @user_ed = Eventdetail.new
+            @user_ed.is_admin=false
+            @user_ed.user = User.find(user_id)
+            @user_ed.status = "invited"
+            @event.eventdetails << @user_ed
+          end
+      end
+
       if @event.photo.nil?
         @photo = Photo.new
         @photo.remote_pic_url = "http://res.cloudinary.com/rashi/image/upload/v1378556932/events_medium_m4h4ww.jpg"
@@ -838,7 +849,7 @@ def search_app_user
 
       respond_to do |format|
         if @event.save
-          @event.eventdetails.create(user_id: current_user.id, is_admin: true)
+          @event.eventdetails.create(user_id: current_user.id, is_admin: true, status: "yes")
           getNotifiableUsers(Objecttypeenum::EVENT, @event, nil, nil, Uc_enum::CREATED)
         #  format.html { redirect_to @event, format: 'js', :success => 'Event was successfully created.' }
           format.json { render :json => @event, :status => :created, :location => @event }
@@ -872,6 +883,60 @@ def search_app_user
     @event = Event.find(params[:event_id])
     @event.destroy
     redirect_to :action => "events_com"
+  end
+
+  def invite_event_guests_by_user
+    @community = Community.find(params[:id])
+    @event = Event.find(params[:event][:id])
+    @ed_user = @event.eventdetails.collect(&:user_id)
+      unless params[:invite_everyone].nil?
+        @com_user = active_community.usercommunities.where("invitation = ?", Uc_enum::JOINED ).collect(&:user_id)
+        @ed_user_add = @com_user - @ed_user
+        @ed_user = @ed_user + @ed_user_add
+          @ed_user_add.each do |user_id|
+            @event.eventdetails.create(user_id: user_id, is_admin: false, status: "invited")
+          end
+      end
+    @user_ids = params[:event][:user_tokens].split(",").map { |x| x.to_i }
+    unless @ed_user.nil?
+      @user_ids = @user_ids - @ed_user 
+    end
+    @user_ids.each do |id|
+      @event.eventdetails.create(user_id: id, is_admin: false, status: "invited")
+      #getNotifiableUsers(Objecttypeenum::EVENT, @event, Objecttypeenum::USER, id, Uc_enum::INVITED)
+    end 
+  end
+
+  def invite_event_guests_by_email
+   @community = Community.find(params[:id])
+   @event = Event.find(params[:event][:id])
+   @ed_user = @event.eventdetails.collect(&:user_id)
+   @email_ids = params[:event][:user_tokens].split(",")
+    @email_ids.each do |eid|
+      @user = create_user_to_invite(nil,eid)
+      if @user.id == current_user.id
+        next
+      end
+      if @ed_user.include?(@user.id)
+        next
+      end
+       @event.eventdetails.create(user_id: @user.id, is_admin: false, status: "invited")
+    end
+  end
+
+  def invite_fb_friends_to_event
+    @community = Community.find(params[:id])
+    @event = Event.find(params[:event_id])
+    @ed_user = @event.eventdetails.collect(&:user_id)
+    @fb_uids = params[:ids].split(",")
+    @fb_uids.each do |uid|
+      @user = create_user_to_invite(uid,nil)
+      if @ed_user.include?(@user.id)
+        next
+      end
+      @event.eventdetails.create(user_id: @user.id, is_admin: false, status: "invited")
+   end
+
   end
 
   def create_activity

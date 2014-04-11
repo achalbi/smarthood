@@ -103,16 +103,19 @@ module SessionsHelper
       if @user.name.nil?
         @user.fb_uid = uid
         @user.authentications.build(:provider => 'facebook', :uid => uid)
+        #@user.valid = false
         @user.save(validate: false)
       end
     elsif !email.nil?
-     @user = User.find_or_create_by_email(email)
-      if @user.name.nil?
-        @user.save(validate: false)
+     @user = User.find_by_email(email)
+      if @user.blank?
+        @user = User.create(email: email)
          begin
           @user.send_token_for_user_to_join
          rescue
          end
+        #@user.valid = false
+        @user.save(validate: false)
         @authentication = Authentication.find_or_create_by_uid(@user.id)
         @authentication.provider = 'identity'
         @authentication.user_id = @user.id
