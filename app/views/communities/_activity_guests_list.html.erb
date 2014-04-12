@@ -1,0 +1,290 @@
+<table class="pull-left" style="width:230px;">
+        <thead>
+          <tr class="tr-hover">
+            <th >
+             <%="Moderator".pluralize(ad_users.count) %>
+                <% if activity.admin?(current_user.id) %>
+                 <%= link_to "edit", '#', id: "moderator",  class: "uibutton icon edit pull-right button_toggle" %>
+                <% end %>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+            <% ad_users.each do |ad|%>
+          <tr class="tr-hover">
+            <td>
+            <div  class="img_zoom" style="float:left;" >
+              <%= gravatar_for ad.user, size: 52 %>
+            </div>
+                <address>
+                  <strong> <a href="#"><%= ad.user.name %></a></strong><br>
+                  <a mailto="<%= ad.user.email %>"><%= ad.user.email %></a>
+                </address>             
+            </td>
+          </tr>
+          <% end %>
+            
+        </tbody>
+      </table>
+
+      <table class="marginLeft15 pull-left" style="width:320px;">
+        <thead>
+          <tr class="tr-hover">
+            <th >
+              <%="Guest".pluralize(inv_users.count) %>
+               <% if activity.admin?(current_user.id) %>
+                 <%= link_to "add", '#', id: "guests",  class: "uibutton icon edit pull-right button_toggle" %>
+               <% end %>
+
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if inv_users.count > 0 %>
+            <% inv_users.each do |ad|%>
+              <tr class="tr-hover" >
+                <td >
+                <div  class="img_zoom" style="float:left;" >
+                  <%= gravatar_for ad.user, size: 52 %>
+                </div>
+                <% if activity.admin?(current_user) && ad.user.id != current_user.id %>
+                   <%= link_to "Remove", "/communities/#{community.id}/unjoin_activity?user_id=#{ad.user.id}&activity_id=#{activity.id}&event_id=#{event.id}", class: "uibutton pull-right button_toggle remove_act", remote: true,  data: { confirm: "You want to remove the guest from the sub-event ?" } %>
+                <% end %>
+                    <address>
+                      <strong> <a href="#"><%= ad.user.name %></a></strong><br>
+                      <a mailto="<%= ad.user.email %>"><%= ad.user.email %></a>
+                    </address>
+                </td>
+              </tr>
+            <% end %>
+          <% else %>
+          <tr>
+            <td>
+              <address>No guests in the sub-event</address>
+            </td>
+          </tr>
+          <% end %>
+            
+        </tbody>
+      </table>
+
+<%= form_for( activity, url: add_activity_moderators_community_path(community), method: :get, remote: true) do |f| %>
+<div id="modal_add_mod" style="display:none;" >
+  <div id="modal-from-dom__add_mod" class="modal hide fade in" style="display: block;">
+    <div class="modal-header">
+      <a href="#" id="close_add_mod" class="close">×</a>
+      <span style="font-size:15px;line-height: 2;"><strong>Set moderators</strong></span>
+    </div>
+    <% if @ads.count > 1 %>
+      <span style="font-size:11px;line-height: 3;margin-right:10px;" class="pull-right">(Check to set member as a Moderator)</span>
+    <% end %>
+    <div class="modal-body" style="max-height:350px;width:530px;">
+      <div class="row">
+        <div class=" ui-front">  
+        <%= f.hidden_field :id %>
+        <%= hidden_field_tag :event_id, event.id %>
+         <%= render 'shared/error_messages', object: f.object %>
+         <aside class="">
+          <section>
+            <!-- <h2 style="margin-left:65px;padding:3px;">Moderators</h2> -->
+            <ul class="users" style="overflow:auto;">
+              <% if @ads.count > 1 %>
+                  <% @ads.each do |uc| %>
+                  <% user = User.find(uc.user_id) %>
+                  <% if user == current_user  %>
+                    <% next %>
+                  <% end %>
+                      <li style="margin-left:15px;" class="tr-hover">
+                        <div class="checkboxFive pull-right marginRight15" style="margin-top:5px;">
+                            <%= check_box_tag 'user_ids[]', user.id, uc.is_admin?, id: "checkboxFiveInput#{uc.id}" %>
+                          <label for="checkboxFiveInput<%= uc.id %>"></label>
+                        </div>
+                        <div  class="img_zoom" style="float:left;margin-left:15px;" >
+                          <%= gravatar_for user, size: 52 %>
+                        </div>
+                          <strong><a href="#"><%= user.name %></a></strong>
+                          <p><%= user.email %></p>
+                      <div style="margin-right:10px;" class="pull-right">
+                        <%= hidden_field_tag 'user_all_ids[]', user.id %>
+                      </div>
+                      </li>
+                  <% end %>
+              <% else %>
+                <address class="center">No guests to set as moderator</address>
+              <% end %>
+
+            </ul>     
+          </section>
+        </aside>
+      </div>
+    </div>   
+  </div>
+  <% if @ads.count > 1 %>
+  <div class="modal-footer" >
+    <%= f.submit "Update", class: "btn primary pull-right busy", id: "submit_add_mod" %>  
+  </div>
+  <% end %>
+</div>
+</div>
+<% end %>
+
+
+
+
+<%= form_for( activity, url: add_activity_guests_community_path(community), method: :get, remote: true) do |f| %>
+<div id="modal_add_mem" style="display:none;" >
+  <div id="modal-from-dom__add_mod" class="modal hide fade in" style="display: block;">
+    <div class="modal-header">
+      <a href="#" id="close_add_mem" class="close">×</a>
+      <span style="font-size:15px;line-height: 2;"><strong>Set moderators</strong></span>
+    </div>
+    <div class="modal-body" style="max-height:350px;width:530px;">
+      <div class="row">
+        <div class=" ui-front">  
+        <%= f.hidden_field :id %>       
+        <%= hidden_field_tag :event_id, event.id %>
+         <%= render 'shared/error_messages', object: f.object %>
+         <ul class="users marginLeft20">
+          <li class="tr-hover">
+          <div class="center_block clearfix  marginLeft50">
+                    <div class="checkboxFive pull-left marginRight15" style="margin-top:6px;">
+                  <%= check_box_tag 'invite_everyone' %>
+                    <label for="invite_everyone"> </label>
+                  </div>
+                    <label style="width:220px;line-height:2;">Add everyone from the event</label>
+                </div> <br>
+          </li>
+          <li class="tr-hover">
+            <label style="width:250px;line-height:2;margin-left:50px;">Invite guests by name from the event</label>
+            <div class="center_block clearfix marginLeft50"><br>
+                <%= f.text_field :user_tokens, id: "search_event_guests" %>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>   
+  </div>
+  <div class="modal-footer" >
+    <%= f.submit "Update", class: "btn primary pull-right busy", id: "submit_add_mem" %>  
+  </div>
+</div>
+</div>
+<% end %>
+
+
+
+<script type="text/javascript">
+
+$(function() {
+  $("#search_event_guests").tokenInput("/communities/<%= community.id %>/search_event_guests?event_id=<%= event.id %>", {
+    crossDomain: false,
+    theme: "facebook",
+    resultsFormatter: function(item){ return "<li>" + "<img src='" + item.profile_pic + "' title='" + item.name + "' height='30px' width='30px' />" + "<div style='display: inline-block; padding-left: 10px;'><div class='full_name'>" + item.name + " " + ""+ "</div><div class='full_name'>" + item.email + " " + ""+ "</div></div></li>" },
+    tokenFormatter: function(item) { return  "<li>" + "<img src='" + item.profile_pic + "' title='" + item.name + "' height='30px' width='30px' />" + "<div style='display: inline-block; padding-left: 10px;'><div class='full_name'>" + item.name +"</div><div class='full_name'>" + item.email + " " + ""+ "</div></div></li>" },
+    preventDuplicates: true ,
+    zindex: 11001,
+    hintText: "Type in a user name",
+  });
+});
+
+
+$('.remove_act').click(function(){
+  $('.loading_page').show();
+});
+
+
+  $('#all_li').click(function(){
+      $(".all").show();
+      $('#all_li').removeClass('active');
+      $('#all_li').addClass('active');
+      $('#yes_li').removeClass('active');
+      $('#no_li').removeClass('active');
+      $('#maybe_li').removeClass('active');
+  });
+
+    $('#yes_li').click(function(){
+      $(".invited").hide();
+      $(".no").hide();
+      $(".maybe").hide();
+      $(".yes").show();
+      $('#yes_li').removeClass('active');
+      $('#yes_li').addClass('active');
+      $('#all_li').removeClass('active');
+      $('#no_li').removeClass('active');
+      $('#maybe_li').removeClass('active');
+  });
+
+   $('#no_li').click(function(){
+      $(".invited").hide();
+      $(".maybe").hide();
+      $(".yes").hide();
+      $(".no").show();
+      $('#no_li').removeClass('active');
+      $('#no_li').addClass('active');
+      $('#all_li').removeClass('active');
+      $('#yes_li').removeClass('active');
+      $('#maybe_li').removeClass('active');
+  });
+
+   $('#maybe_li').click(function(){
+      $(".invited").hide();
+      $(".no").hide();
+      $(".yes").hide();
+      $(".maybe").show();
+      $('#maybe_li').removeClass('active');
+      $('#maybe_li').addClass('active');
+      $('#all_li').removeClass('active');
+      $('#no_li').removeClass('active');
+      $('#yes_li').removeClass('active');
+  });
+
+
+$("#moderator").on( "click", function() {
+ $('#modal_add_mod').modal({
+      //keyboard: true,
+      backdrop: "static",
+    });
+// $('body').css('overflow','hidden');
+// $('body').css('position','fixed');
+});
+
+$("#close_add_mod").click(function(){
+  $('#modal_add_mod').modal('hide');
+});
+
+$("#submit_add_mod").click(function(){
+  $(this).attr('data-loading-text', 'Updating...');
+  $(this).button('loading');
+});
+
+
+$("#guests").on( "click", function() {
+ $('#modal_add_mem').modal({
+      //keyboard: true,
+      backdrop: "static",
+    });
+// $('body').css('overflow','hidden');
+// $('body').css('position','fixed');
+});
+
+$("#close_add_mem").click(function(){
+  $('#modal_add_mem').modal('hide');
+});
+
+$("#submit_add_mem").click(function(){
+  $(this).attr('data-loading-text', 'Updating...');
+  $(this).button('loading');
+});
+
+$(function(){
+  $('.button_toggle').hide();
+
+   $('.tr-hover').hover(function() {
+       $(this).find('.button_toggle').show();
+       }, function() {
+         $(this).find('.button_toggle').hide();
+    });
+
+});
+
+      </script>

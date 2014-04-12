@@ -1,3 +1,4 @@
+        <% if event.activities.count > 1 %>
             <table class="bordered-table zebra-striped">
                   <thead>
                     <tr>
@@ -12,8 +13,7 @@
                             <td><span style="font-size:13px;"><%= event.title %></span></td>
                            <td class="event_status center"><span class="label success">active</span></td>
                        </tr>
-                      <%= link_to(event, remote: true) do %>
-                      <% end %>
+                      <%= link_to "", "/communities/#{community.id}/show_event?event_id=#{event.id}", id: "event_show_link", remote: true %>
                   </tbody>
                   <thead>
                     <tr>
@@ -36,7 +36,7 @@
                                <td class="event_status center" id="activity_status_<%= activity.id %>">
                                </td>
                            </tr>
-                          <%= link_to "", "communities/#{community.id}/get_activity?activity_id=#{activity.id}", id: "act_#{activity.id}", remote: true %>
+                          <%= link_to "", "/communities/#{community.id}/get_activity?activity_id=#{activity.id}&event_id=#{event.id}", id: "act_#{activity.id}", remote: true %>
                         <% end %>
                       <% end %>
                     <% else %>
@@ -48,6 +48,7 @@
 
                   </tbody>
                 </table>
+              <% end %>
 
 
 <%= form_for( Activity.new, url: create_activity_community_path(community), remote: true,  :html => {id: "create_activity_form"}) do |f| %>
@@ -134,11 +135,14 @@
                 });
                 
                  $('.tr-select-main').click(function(){
+                    $("#event_show_link").click();
+                    $('.loading_page').show();
                     $('#activity_show').html('');
-                     $('.event_status').html('');
+                    $('.event_status').html('');
                     $(this).find('.event_status').html('<span class="label success">active</span>');
                  });
                  $('.tr-select').click(function(){
+                    $('.loading_page').show();
                     $('.event_status').html('');
                     $(this).find('.event_status').html('<span class="label success">active</span>');
                     var id = $(this).find('p').html();

@@ -796,10 +796,6 @@ def search_app_user
       @events = @events.paginate(page: params[:page], :per_page => 5)
  end
 
- def get_activity
-      @community = Community.find(params[:id])
-      @activity = Activity.find(params[:activity_id])
- end
 
  def create_event
        @event = current_user.events.build(params[:event])
@@ -865,6 +861,18 @@ def search_app_user
     @community = Community.find(params[:id])
     @event = Event.find(params[:event_id])
     @eds = @event.eventdetails
+    @ad_users = @event.eventdetails.where(" is_admin=?", true)
+    @inv_users = @event.eventdetails.where(" is_admin=?", false)
+=begin
+    @ad_users = []
+    @event.eventdetails.where(" is_admin=?", true).find_each do |ed|
+      @ad_users << ed.user
+    end
+    @inv_users = []
+    @event.eventdetails.where(" is_admin=?", false).find_each do |ed|
+      @inv_users << ed.user
+    end
+=end
 
 
   end
@@ -888,7 +896,10 @@ def search_app_user
   def invite_event_guests_by_user
     @community = Community.find(params[:id])
     @event = Event.find(params[:event][:id])
-    @ed_user = @event.eventdetails.collect(&:user_id)
+    @eds = @event.eventdetails
+    @ed_user = @eds.collect(&:user_id)
+    @ad_users = @event.eventdetails.where(" is_admin=?", true)
+    @inv_users = @event.eventdetails.where(" is_admin=?", false)
       unless params[:invite_everyone].nil?
         @com_user = active_community.usercommunities.where("invitation = ?", Uc_enum::JOINED ).collect(&:user_id)
         @ed_user_add = @com_user - @ed_user
@@ -900,7 +911,17 @@ def search_app_user
     @user_ids = params[:event][:user_tokens].split(",").map { |x| x.to_i }
     unless @ed_user.nil?
       @user_ids = @user_ids - @ed_user 
+      @ed_user = @user_ids + @ed_user 
     end
+    @ed_groups = params[:event][:group_tokens].split(",").map { |x| x.to_i }
+      @ed_groups.each do |group_id|
+        @grp = Group.find(group_id)
+        @ed_users  =  @grp.users.collect(&:id) - @ed_user
+        @ed_users.each do |user_id|
+          @event.eventdetails.create(user_id: user_id, group_id: @grp.id, is_admin: false, status: "invited")
+          #getNotifiableUsers(Objecttypeenum::EVENT, @event, Objecttypeenum::USER, id, Uc_enum::INVITED)
+        end
+      end
     @user_ids.each do |id|
       @event.eventdetails.create(user_id: id, is_admin: false, status: "invited")
       #getNotifiableUsers(Objecttypeenum::EVENT, @event, Objecttypeenum::USER, id, Uc_enum::INVITED)
@@ -910,7 +931,10 @@ def search_app_user
   def invite_event_guests_by_email
    @community = Community.find(params[:id])
    @event = Event.find(params[:event][:id])
-   @ed_user = @event.eventdetails.collect(&:user_id)
+    @eds = @event.eventdetails
+    @ed_user = @eds.collect(&:user_id)
+    @ad_users = @event.eventdetails.where(" is_admin=?", true)
+    @inv_users = @event.eventdetails.where(" is_admin=?", false)
    @email_ids = params[:event][:user_tokens].split(",")
     @email_ids.each do |eid|
       @user = create_user_to_invite(nil,eid)
@@ -927,7 +951,10 @@ def search_app_user
   def invite_fb_friends_to_event
     @community = Community.find(params[:id])
     @event = Event.find(params[:event_id])
-    @ed_user = @event.eventdetails.collect(&:user_id)
+     @eds = @event.eventdetails
+    @ed_user = @eds.collect(&:user_id)
+    @ad_users = @event.eventdetails.where(" is_admin=?", true)
+    @inv_users = @event.eventdetails.where(" is_admin=?", false)
     @fb_uids = params[:ids].split(",")
     @fb_uids.each do |uid|
       @user = create_user_to_invite(uid[0],nil)
@@ -935,9 +962,32 @@ def search_app_user
         next
       end
       @event.eventdetails.create(user_id: @user.id, is_admin: false, status: "invited")
-   end
-
+    end
   end
+
+ def add_event_moderators
+    @event = Event.find(params[:event][:id])
+    @event.eventdetails.where("user_id IN (?)", params[:user_all_ids]).update_all(is_admin: false)
+    @event.eventdetails.where("user_id IN (?)", params[:user_ids]).update_all(is_admin: true)
+    @users = User.where("id IN (?)", params[:user_ids])
+    @community = Community.find(params[:id])
+    @eds = @event.eventdetails
+    @ad_users = @event.eventdetails.where(" is_admin=?", true)
+    @inv_users = @event.eventdetails.where(" is_admin=?", false)
+      @users.each do |usr|
+      #  getNotifiableUsers(Objecttypeenum::COMUNITY, @community, Objecttypeenum::USER, usr, Uc_enum::ADD_MODERATOR)
+      end
+ end
+
+ def get_activity
+    @community = Community.find(params[:id])
+    @activity = Activity.find(params[:activity_id])
+    @event = Event.find(params[:event_id])
+    @eds = @event.eventdetails
+    @ads = @activity.activitydetails
+    @ad_users = @activity.activitydetails.where(" is_admin=?", true)
+    @inv_users = @activity.activitydetails.where(" is_admin=?", false)
+ end
 
   def create_activity
     @event = Event.find(params[:activity][:event_id])
@@ -960,6 +1010,9 @@ def search_app_user
     @activities = @event.activities
     @community = Community.find(params[:id])
     @eds = @event.eventdetails
+    @ads = @activity.activitydetails
+    @ad_users = @activity.activitydetails.where(" is_admin=?", true)
+    @inv_users = @activity.activitydetails.where(" is_admin=?", false)
     render :action => :show_event
   end
 
@@ -978,7 +1031,78 @@ def search_app_user
     @event = Event.find(@activity.event_id)
     @community = Community.find(params[:id])
     @eds = @event.eventdetails
+    @ad_users = @event.eventdetails.where(" is_admin=?", true)
+    @inv_users = @event.eventdetails.where(" is_admin=?", false)
+
      render :action => :show_event
+  end
+
+  def add_activity_guests
+    @activity = Activity.find(params[:activity][:id])
+    @event = Event.find(params[:event_id])
+    @ed_user = @event.eventdetails.pluck(:user_id)
+    @ad_user = @activity.activitydetails.pluck(:user_id)
+    unless params[:invite_everyone].nil?
+        @ed_user = @ed_user - @ad_user
+          @ed_user.each do |user_id|
+            @ad = Activitydetail.new
+            @ad.is_admin = false
+            @ad.user_id = user_id
+            @activity.activitydetails << @ad
+          end
+      else
+          @user_ids = params[:activity][:user_tokens].split(",").map { |x| x.to_i }
+          unless @ed_user.nil?
+            @user_ids = @user_ids - @ad_user 
+            @user_ids.each do |user_id|
+              @ad = Activitydetail.new
+              @ad.is_admin = false
+              @ad.user_id = user_id
+              @activity.activitydetails << @ad
+            end
+          end
+      end
+    @community = Community.find(params[:id])
+    @eds = @event.eventdetails
+    @ads = @activity.activitydetails
+    @ad_users = @activity.activitydetails.where(" is_admin=?", true)
+    @inv_users = @activity.activitydetails.where(" is_admin=?", false)
+  end
+
+  def unjoin_activity
+    @activity = Activity.find(params[:activity_id])
+    @activity.activitydetails.find_by_user_id(params[:user_id]).destroy
+    respond_to do |format|
+      format.all { redirect_to :action => "get_activity", :event_id => params[:event_id], id: params[:id], :activity_id => params[:activity_id] }
+   end
+  end
+
+  def add_activity_moderators
+    @event = Event.find(params[:event_id])
+    @activity = Activity.find(params[:activity][:id])
+    @activity.activitydetails.where("user_id IN (?)", params[:user_all_ids]).update_all(is_admin: false)
+    @activity.activitydetails.where("user_id IN (?)", params[:user_ids]).update_all(is_admin: true)
+    @community = Community.find(params[:id])
+    @eds = @event.eventdetails
+    @ads = @activity.activitydetails
+    @ad_users = @activity.activitydetails.where(" is_admin=?", true)
+    @inv_users = @activity.activitydetails.where(" is_admin=?", false)
+
+  end
+
+  def search_event_guests
+    @event = Event.find(params[:event_id])
+    @user_ids  = @event.eventdetails.pluck(:user_id)
+      @users = User.where("LOWER(name) like LOWER(?) AND id != ? AND id IN (?)", "%#{params[:q]}%", current_user.id, @user_ids )
+        @users_pp = []
+        @users.each do |user|
+          user[:profile_pic] =  gravatar_for_url(user, size: 40)
+          @users_pp << user
+        end
+      respond_to do |format|
+        format.html
+        format.json { render :json => @users_pp.map(&:attributes) }
+      end
   end
 
 

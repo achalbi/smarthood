@@ -1,1 +1,11 @@
-<%= render partial: "communities/invite_event_guests", locals: { event: event, community: community, activity: nil } %>
+<% if @ads.nil? %>
+  <%= render partial: "communities/invite_event_guests", locals: { event: event, community: community, activity: nil } %>
+  <div id="event_guests_list">
+  <%= render partial: "communities/event_guests_list", locals: { event: event, community: community, activity: nil, ad_users: ad_users, inv_users: inv_users } %>
+  </div>
+<% else %>
+  <div id="event_guests_list">
+  <%= render partial: "communities/activity_guests_list", locals: { event: event, community: community, activity: @activity, ad_users: ad_users, inv_users: inv_users } %>
+  </div>
+
+<% end %>

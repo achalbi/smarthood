@@ -102,9 +102,11 @@ module SessionsHelper
       @user = User.find_by_fb_uid(uid)
       if @user.blank?
         @user = User.create(fb_uid: uid)
+        graph = Koala::Facebook::GraphAPI.new(session["fb_access_token"]) # Note that i'm using session here
+        @user.name = graph.get_object(uid)["name"]
         #@user.valid = false
         @user.save(validate: false)
-        @authentication = @user.authentications.build(:provider => 'facebook', :uid => uid)
+        @authentication = @user.authentications.build(:provider => 'facebook', :uid => uid, username: graph.get_object(uid)["username"] )
         @authentication.save
       end
     elsif !email.nil?

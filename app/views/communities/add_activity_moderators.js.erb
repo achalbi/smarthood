@@ -1,0 +1,2 @@
+$('#modal_add_mod').modal('hide');
+$("#show_event_div").html("<%= escape_javascript( render partial: 'communities/event_members', locals: { event: @event, community: @community, activity: @activity, ad_users: @ad_users, inv_users: @inv_users, eds: @eds, ads: @ads } ) %>")

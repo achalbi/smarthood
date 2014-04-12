@@ -11,11 +11,13 @@
 
                <span class="pull-right "> &nbsp;</span>
                <% if @event.is_admin?(current_user) %>
-                  <%= link_to "delete",  "communities/#{community.id}/delete_event?event_id=#{@event.id}", method: :get, remote: true,
+                  <%= link_to "delete",  "/communities/#{community.id}/delete_event?event_id=#{@event.id}", method: :get, remote: true,
                                            data: { confirm: "You sure?" },
                                            class: "pull-right uibutton button_toggle",
                                            title: "Delete this event" %>
                <% end %>
+               <span class="pull-right "> &nbsp;</span>
+               <%= link_to "add sub-events", '#', id: "add_activity",  class: " pull-right uibutton icon add button_toggle ",:title => "add" %>
                 <% unless event.photo.nil? %>
                 <div class="pull-left">
                 <%= link_to cl_image_tag(event.photo.pic_url(:cover_pic_smallest), class:"image_al_c1 thumbnail ", id:"#{event.photo.id}"), "#" %>
@@ -52,7 +54,7 @@
               </ul>
           </div>
         <div id="show_event_div">
-            <%= render partial: "communities/event_members", locals: { event: event, community: community, activity: nil } %>
+            <%= render partial: "communities/event_members", locals: { event: event, community: community, activity: activity, ad_users: @ad_users, inv_users: @inv_users } %>
         </div>
       </div>
 </div>
@@ -141,55 +143,6 @@
   <% end %>
 
 
-
-<%= form_for( @event, url: add_event_moderators_community_path(community), method: :get, remote: true) do |f| %>
-<div id="modal_add_mod" style="display:none;" >
-  <div id="modal-from-dom__add_mod" class="modal hide fade in" style="display: block;">
-    <div class="modal-header">
-      <a href="#" id="close_add_mod" class="close">×</a>
-      <h3>Set moderators</h3>
-    </div>
-    <span style="font-size:11px;line-height: 3;margin-right:10px;" class="pull-right">(Check to set member as a Moderator)</span>
-    <div class="modal-body" style="max-height:350px;width:535px;">
-      <div class="row">
-        <div class=" ui-front">         
-         <%= render 'shared/error_messages', object: f.object %>
-         <aside class="">
-          <section>
-            <!-- <h2 style="margin-left:65px;padding:3px;">Moderators</h2> -->
-            <ul class="users" style="overflow:auto;">
-              <% @eds.each do |uc| %>
-              <% user = User.find(uc.user_id) %>
-                 <li style="margin-left:15px;" class="tr-hover">
-                    <div class="checkboxFive pull-right marginRight15" style="margin-top:5px;">
-                        <%= check_box_tag 'user_ids[]', user.id, uc.is_admin?, id: "checkboxFiveInput#{uc.id}" %>
-                      <label for="checkboxFiveInput<%= uc.id %>"></label>
-                    </div>
-                    <div  class="img_zoom" style="float:left;margin-left:15px;" >
-                      <%= gravatar_for user, size: 52 %>
-                    </div>
-                      <%= link_to user.name, user %>
-                      <p><%= user.email %></p>
-                  <div style="margin-right:10px;" class="pull-right">
-                    <%= hidden_field_tag 'user_all_ids[]', user.id %>
-                  </div>
-                </li>
-              <% end %>
-                    <%= hidden_field_tag 'comm_id', community.id %>
-            </ul>     
-          </section>
-        </aside>
-      </div>
-    </div>   
-  </div>
-  <div class="modal-footer" >
-    <%= f.submit "Update", class: "btn primary pull-right", id: "submit_add_mod" %>  
-  </div>
-</div>
-</div>
-<% end %>
-
-
 <script type="text/javascript">
 $(document).ready(function(){
     $('.button_toggle').hide();
@@ -225,11 +178,14 @@ $(document).ready(function(){
     });
 
  $('.tr-select-main').click(function(){
+    $("#event_show_link").click();
+    $('.loading_page').show();
     $('#activity_show').html('');
-     $('.event_status').html('');
+    $('.event_status').html('');
     $(this).find('.event_status').html('<span class="label success">active</span>');
  });
  $('.tr-select').click(function(){
+    $('.loading_page').show();
     $('.event_status').html('');
     $(this).find('.event_status').html('<span class="label success">active</span>');
     var id = $(this).find('p').html();
@@ -251,14 +207,6 @@ $(document).ready(function(){
 });
 
 
-$("#add_mod_event").click(function(){
-      $('#modal_add_mod').modal({
-        backdrop: "static"
-      });
-    });
-    $("#close_add_mod").click(function(){
-          $('#modal_add_mod').modal('hide');
-        });
 
 
 

@@ -6,7 +6,7 @@
                <span class="pull-right "> &nbsp;</span>
                <% if @activity.admin?(current_user) %>
 
-                  <%= link_to "delete", "communities/#{community.id}/delete_activity?activity_id=#{@activity.id}", method: :delete, remote: true,
+                  <%= link_to "delete", "/communities/#{community.id}/delete_activity?activity_id=#{@activity.id}", method: :delete, remote: true,
                                            data: { confirm: "You sure?" },
                                            class: "pull-right uibutton button_toggle",
                                            title: "Delete this activity" %>

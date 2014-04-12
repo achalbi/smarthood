@@ -1,4 +1,4 @@
 $(".busy").button('reset');
-$('#modal_invite').modal('hide');
+$('#modal_add_mod').modal('hide');
 $('.loading_page').hide();
 $("#event_guests_list").html("<%= escape_javascript( render partial: 'communities/event_guests_list', locals: { event: @event, community: @community, activity: nil, ad_users: @ad_users, inv_users: @inv_users, eds: @eds } ) %>")
