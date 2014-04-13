@@ -2,11 +2,41 @@
   <ul class="tabs">
     <%= render 'communities/links' %>
   </ul>
-    <% unless (community.privacy == Privacyenum::PROTECTED && !current_user.is_cu_admin?(community)) %>
-      <% if community.is_active?(current_user, community) %>
-        <a class="uibutton pull-right " id="create_event" >Create event</a>
-      <% end %>
+   <ul class="users">
+    <li class="tr-hover" >
+  <% if @invited_events.count > 0 %>
+      <span style="font-size:13px;line-height: 2;margin-left:15px;"><strong>Invitation from events </strong></span>
   <% end %>
+          <% unless (community.privacy == Privacyenum::PROTECTED && !current_user.is_cu_admin?(community)) %>
+              <% if community.is_active?(current_user, community) %>
+                <a class="uibutton pull-right " id="create_event" >Create event</a>
+              <% end %>
+          <% end %>
+    </li>
+    <br>
+  <% @invited_events.each do |event| %>
+      <li style="padding-left:15px;margin-top:5px;cursor:pointer;position:relative;" class="tr-hover" >
+        <% unless event.photo.nil? %>
+        <%= link_to cl_image_tag(event.photo.pic_url(:cover_pic_smallest), class:"image_al_c1 thumbnail pull-left ", id:"#{event.photo.id}"), "#" %>
+
+        <% end %>
+                  <div style="margin-left:95px;margin-top:5px;">
+                    <%= link_to "May be", "/communities/#{community.id}/event_invitation?event_id=#{event.id}&status=maybe", class: "uibutton pull-right button_toggle event_inv", remote: true %>
+                    <span class="pull-right "> &nbsp;</span>
+                    <%= link_to "No", "/communities/#{community.id}/event_invitation?event_id=#{event.id}&status=no", class: "uibutton pull-right button_toggle event_inv marginRight5", remote: true %>
+                    <span class="pull-right "> &nbsp;</span>
+                    <%= link_to "Yes", "/communities/#{community.id}/event_invitation?event_id=#{event.id}&status=yes", class: "uibutton pull-right button_toggle event_inv ", remote: true %>
+                    <address>
+                      <strong> <%= link_to event.title, "#", style: "font-size:13px;" %></strong> <br>
+                      <strong>Description : &nbsp;</strong> <%= event.description %><br>
+                      <strong>Location : &nbsp;</strong><%= event.address %><br>
+                      <strong>Privacy : &nbsp;</strong><%= privacy_str(event) %><br>
+                        
+                    </address>  
+                  </div>
+      </li>
+  <% end %>
+ </ul>
 <ul class="tabs span13" id="group_link">
   <li class="active" id="up_events_li"><a href="#">Upcoming events</a></li><%= link_to "", up_events_community_path(@community) , remote: true %>
   <li id="prev_event_li"><a href="#">Past events</a></li><%= link_to "", prev_events_community_path(@community) , remote: true %>
@@ -122,6 +152,23 @@
 
 
 <script type="text/javascript">
+
+
+$(function(){
+  $('.button_toggle').hide();
+
+   $('.tr-hover').hover(function() {
+       $(this).find('.button_toggle').show();
+       }, function() {
+         $(this).find('.button_toggle').hide();
+    });
+
+});
+
+
+$('.event_inv').click(function(){
+  $(this).closest('li').hide();
+});
 
 $(document).ready(function(){
   $.validate({

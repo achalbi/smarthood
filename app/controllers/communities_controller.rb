@@ -770,6 +770,10 @@ def search_app_user
       @event.address = @community.address
       @events = Event.where("starts_at > ? AND community_id = ?",Time.zone.now.beginning_of_day- 1.second, @community).order("starts_at DESC")
       @events = @events.paginate(page: params[:page], :per_page => 5)
+      @invited_events = []
+      Eventdetail.where("user_id = ? AND status = ?", current_user.id, 'invited' ).find_each do |ed|
+        @invited_events << ed.event
+      end
       #ip_loc = Geocoder.search(remote_ip)[0]
 
      # @event.address = ip_loc.address
@@ -1088,6 +1092,16 @@ def search_app_user
     @ad_users = @activity.activitydetails.where(" is_admin=?", true)
     @inv_users = @activity.activitydetails.where(" is_admin=?", false)
 
+  end
+
+  def event_invitation
+    @event = Event.find(params[:event_id])
+    @ed_user = @event.eventdetails.find_by_user_id(current_user.id)
+    @ed_user.status = params[:status]
+    @ed_user.save
+    respond_to do |format|
+      format.all { render :nothing => true, :status => 200 }
+    end
   end
 
   def search_event_guests
