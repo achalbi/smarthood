@@ -39,12 +39,12 @@
  </ul>
 <ul class="tabs span13" id="group_link">
   <li class="active" id="up_events_li"><a href="#">Upcoming events</a></li><%= link_to "", up_events_community_path(@community) , remote: true %>
-  <li id="prev_event_li"><a href="#">Past events</a></li><%= link_to "", prev_events_community_path(@community) , remote: true %>
+  <li id="prev_events_li"><a href="#">Past events</a></li><%= link_to "", prev_events_community_path(@community) , remote: true %>
 </ul>
       <div class="row" >
         <div class="span13 ui-front" id="comm_groups_list">
-              <section id="events_list">
-                <%= render :partial => 'communities/events', :locals => {:events => events, community: community} %>
+              <section id="events_list" class="home_page_post">
+                <%= render :partial => 'communities/events', :locals => {:events => events, community: community} %>                  
               </section>
         </div>
       </div>
@@ -214,14 +214,14 @@ $(document).ready(function(){
 
 
 $('#up_events_li').click(function(){
-  $('#prev_event_li').removeClass('active');
+  $('#prev_events_li').removeClass('active');
   $('#up_events_li').addClass('active');
   $(this).next('a').click();
 });
 
-$('#prev_event_li').click(function(){
+$('#prev_events_li').click(function(){
   $('#up_events_li').removeClass('active');
-  $('#prev_event_li').addClass('active');
+  $('#prev_events_li').addClass('active');
   $(this).next('a').click();
 });
 
@@ -379,5 +379,122 @@ $(document).ready(function() {
 
     });
 </script>
+
+
+<script type="text/javascript">
+                    
+                        var currentPage = 1;
+                        var intervalID = -1000;
+                        var insideLoop_up ="false"; 
+                        var insideLoop_prev ="false"; 
+
+                        function checkScroll_up_evts() {
+                          if (nearBottomOfPage() && insideLoop_up!="true") {
+                              insideLoop_up="true";
+                              currentPage++;
+                              $('#loading_page').show();
+                          if($('.home_page_post').length == 0){
+                            clearInterval(intervalID);
+                            for (var i = 1; i < 99999; i++){
+                             window.clearInterval(i);
+                           }
+                           insideLoop_up = "false";
+                           return;
+                         }
+                         jQuery.ajax('/communities/<%= community.id %>/up_events_page?page=' + currentPage, {asynchronous:true, evalScripts:true, method:'get', success: function(data, textStatus, jqXHR) {
+                          $('.home_page_post').append($(data));
+                          $('#loading_page').hide();
+                          if(typeof jQuery(data) == 'undefined' ||jQuery(data).html() == null || $(data).find('.events_paginate').html()==null){
+                            clearInterval(intervalID);
+                            for (var i = 1; i < 99999; i++){
+                             window.clearInterval(i);
+                           }
+                           restartInterval();
+                         }
+                         insideLoop_up ="false"; 
+                       },});
+                       }
+                      }
+
+                      function checkScroll_prev_evts() {
+                          if (nearBottomOfPage() && insideLoop_prev!="true") {
+                              insideLoop_prev="true";
+                              currentPage++;
+                              $('#loading_page').show();
+                          if($('.home_page_post').length == 0){
+                            clearInterval(intervalID);
+                            for (var i = 1; i < 99999; i++){
+                             window.clearInterval(i);
+                           }
+                           insideLoop_prev = "false";
+                           return;
+                         }
+                         jQuery.ajax('/communities/<%= community.id %>/prev_events_page?page=' + currentPage, {asynchronous:true, evalScripts:true, method:'get', success: function(data, textStatus, jqXHR) {
+                          $('.home_page_post').append($(data));
+                          $('#loading_page').hide();
+                          if(typeof jQuery(data) == 'undefined' ||jQuery(data).html() == null || $(data).find('.events_paginate').html()==null){
+                            clearInterval(intervalID);
+                            for (var i = 1; i < 99999; i++){
+                             window.clearInterval(i);
+                           }
+                           restartInterval();
+                         }
+                         insideLoop_prev ="false"; 
+                       },});
+                       }
+                      }
+
+                      function nearBottomOfPage() {
+                        return scrollDistanceFromBottom() < 150;
+                      }
+
+                      function scrollDistanceFromBottom(argument) {
+                        return pageHeight() - (window.pageYOffset + self.innerHeight);
+                      }
+
+                      function pageHeight() {
+                        return Math.max(document.body.scrollHeight, document.body.offsetHeight);
+                      }
+
+                      $('document').ready(function(){
+                        intervalID = setInterval(checkScroll_up_evts, 500);
+                      });
+
+                      $("#up_events_li").click(function(){
+                         currentPage = 1;
+                         intervalID = -1000;
+                         insideLoop_up ="false"; 
+                        var j=0;
+
+                          for (var i = 1; i < 99999; i++){
+                             window.clearInterval(i);
+                             j=i;
+                          }
+
+                             if(j == 99998){
+                                intervalID = setInterval(checkScroll_up_evts, 500);
+                             }
+
+                      });
+
+                      $("#prev_events_li").click(function(){
+                         currentPage = 1;
+                         intervalID = -1000;
+                         insideLoop_prev ="false"; 
+                        var k=0;
+
+                          for (var i = 1; i < 99999; i++){
+                             window.clearInterval(i);
+                             k=i;
+                          }
+
+                        if(k == 99998){
+                            intervalID = setInterval(checkScroll_prev_evts, 500);
+                          }
+                      });
+
+
+
+                  </script>
 
 <% end %>

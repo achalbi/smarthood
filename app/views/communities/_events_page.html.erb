@@ -1,0 +1,7 @@
+<% @events.each do |event| %>
+                       <ul class='users' id='group_list' style='margin-left:0px;'>
+                      <div id="events_page" class="events_paginate">
+                          <%= render :partial => 'communities/event', :locals => {:event => event, community: community} %> 
+                        </div>
+                      </ul>
+<% end %>

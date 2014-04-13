@@ -768,12 +768,13 @@ def search_app_user
       @event.starts_at = Time.zone.now.beginning_of_day
       @event.ends_at = Time.zone.now.end_of_day
       @event.address = @community.address
-      @events = Event.where("starts_at > ? AND community_id = ?",Time.zone.now.beginning_of_day- 1.second, @community).order("starts_at DESC")
+      @events = Event.where("starts_at > ? AND community_id = ?",Time.zone.now.beginning_of_day- 1.second, @community).order("starts_at ASC")
       @events = @events.paginate(page: params[:page], :per_page => 5)
       @invited_events = []
       Eventdetail.where("user_id = ? AND status = ?", current_user.id, 'invited' ).find_each do |ed|
         @invited_events << ed.event
       end
+      @period = 'up'
       #ip_loc = Geocoder.search(remote_ip)[0]
 
      # @event.address = ip_loc.address
@@ -789,8 +790,9 @@ def search_app_user
 
  def up_events
       @community = Community.find(params[:id])
-      @events = Event.where("starts_at > ? AND community_id = ?",Time.zone.now.beginning_of_day - 1.second, @community).order("starts_at DESC")
+      @events = Event.where("starts_at > ? AND community_id = ?",Time.zone.now.beginning_of_day - 1.second, @community).order("starts_at ASC")
       @events = @events.paginate(page: params[:page], :per_page => 5)
+      @period = 'up'
   
  end
 
@@ -798,6 +800,22 @@ def search_app_user
       @community = Community.find(params[:id])
       @events = Event.where("starts_at < ? AND community_id = ?",Time.zone.now.beginning_of_day, @community).order("starts_at DESC")
       @events = @events.paginate(page: params[:page], :per_page => 5)
+      @period = 'past'
+ end
+
+ def up_events_page
+      @community = Community.find(params[:id])
+      @events = Event.where("starts_at > ? AND community_id = ?",Time.zone.now.beginning_of_day - 1.second, @community).order("starts_at ASC")
+      @events = @events.paginate(page: params[:page], :per_page => 5)
+      @period = 'up'
+  
+ end
+
+ def prev_events_page
+      @community = Community.find(params[:id])
+      @events = Event.where("starts_at < ? AND community_id = ?",Time.zone.now.beginning_of_day, @community).order("starts_at DESC")
+      @events = @events.paginate(page: params[:page], :per_page => 5)
+      @period = 'past'
  end
 
 
@@ -822,11 +840,11 @@ def search_app_user
       unless params[:invite_everyone].nil?
         @ed_user = active_community.usercommunities.where("invitation = ?", Uc_enum::JOINED ).collect(&:user_id)
           @ed_user.each do |user_id|
-            @user_ed = Eventdetail.new
-            @user_ed.is_admin=false
-            @user_ed.user = User.find(user_id)
-            @user_ed.status = "invited"
-            @event.eventdetails << @user_ed
+            if user_id == current_user.id
+                @event.eventdetails.create(user_id: current_user.id, is_admin: true, status: "yes")
+            else
+                @event.eventdetails.create(user_id: user_id, is_admin: false, status: "invited")
+            end
           end
       end
 
@@ -849,7 +867,6 @@ def search_app_user
 
       respond_to do |format|
         if @event.save
-          @event.eventdetails.create(user_id: current_user.id, is_admin: true, status: "yes")
           getNotifiableUsers(Objecttypeenum::EVENT, @event, nil, nil, Uc_enum::CREATED)
         #  format.html { redirect_to @event, format: 'js', :success => 'Event was successfully created.' }
           format.json { render :json => @event, :status => :created, :location => @event }
