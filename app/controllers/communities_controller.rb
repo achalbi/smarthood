@@ -1034,7 +1034,7 @@ def search_app_user
     @ads = @activity.activitydetails
     @ad_users = @activity.activitydetails.where(" is_admin=?", true)
     @inv_users = @activity.activitydetails.where(" is_admin=?", false)
-    render :action => :show_event
+    render :action => :get_activity
   end
 
 
@@ -1138,27 +1138,80 @@ def search_app_user
 
 
   def event_posts
-     @event = Event.find(params[:event_id])
-     @community = Community.find(params[:id])
-     @post = Post.new
-     @posts = @event.posts.paginate(page: params[:page], :per_page => 4)
+    if params[:activity_id].nil?
+      @event = Event.find(params[:event_id])
+      @community = Community.find(params[:id])
+      @activity = @event.activities.where(is_admin: true).first
+      @post = Post.new
+      @posts = @event.posts.paginate(:page => params[:page], :per_page => 4)
+    else
+      @event = Event.find(params[:event_id])
+      @activity = Activity.find(params[:activity_id])
+      @community = Community.find(params[:id])
+      @post = Post.new
+      @posts = @activity.posts.paginate(:page => params[:page], :per_page => 4)
+    end
   end
 
+  def event_posts_page
+      @event = Event.find(params[:event_id])
+      @activity = Activity.find(params[:activity_id])
+      @community = Community.find(params[:id])
+      @post = Post.new
+      if @activity.is_admin
+        @posts = @event.posts.paginate(:page => params[:page], :per_page => 4)
+      else
+        @posts = @activity.posts.paginate(:page => params[:page], :per_page => 4)
+      end 
+  end
+
+  def create_activity_post
+      @community = Community.find(params[:id])
+      @event = Event.find(params[:event_id])
+      @activity = Activity.find(params[:activity_id])
+      @post = @activity.posts.build(params[:post])
+      @post.user = current_user
+      @post.save
+      unless params[:photo].nil?
+        @post.photos << current_user.photos.build(params[:photo])
+        @post.save
+      end
+      @post.communities << active_community 
+      @activity.posts << @post
+      @post.activityposts[0].update_attributes(:event_id => @activity.event_id)
+      @activityposts = Activitypost.where("activity_id = ? ", @activity)
+      if @activity.is_admin
+        @posts = @event.posts.paginate(:page => params[:page], :per_page => 4)
+      else
+        @posts = @activity.posts.paginate(:page => params[:page], :per_page => 4)
+      end 
+      getNotifiableUsers(Objecttypeenum::POST, @post, Objecttypeenum::ACTIVITY, @activity, Uc_enum::CREATED)
+      @post_type = 'activity'
+      respond_to do |format|
+        format.html { redirect_to @activity, format: 'js' }
+         format.js {  }
+      end
+  end
 
   def event_members
-    @event = Event.find(params[:event_id])
-    @community = Community.find(params[:id])
-    @inv_users = User.where(['id IN (?)', @group.user_groups.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED,false).collect(&:user_id)])
-    @ad_users = User.where(['id IN (?)', @group.user_groups.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED,true).collect(&:user_id)])
-    @is_admin = @ad_users.include? current_user
-    @eds = @event.eventdetails
+    unless params[:activity_id].nil?
+      @event = Event.find(params[:event_id])
+      @activity = Activity.find(params[:activity_id])
+      @community = Community.find(params[:id])
+      @eds = @event.eventdetails
+      @ads = @activity.activitydetails
+      @ad_users = @activity.activitydetails.where(" is_admin=?", true)
+      @inv_users = @activity.activitydetails.where(" is_admin=?", false)
+    else
+      @event = Event.find(params[:event_id])
+      @community = Community.find(params[:id])
+      @eds = @event.eventdetails
+      @ad_users = @event.eventdetails.where(" is_admin=?", true)
+      @inv_users = @event.eventdetails.where(" is_admin=?", false)
+    end
   end
 
   def event_photos
-    @group = Group.find(params[:event_id])
-    @album = Album.new
-    @albums = @event.albums
-    @community = Community.find(params[:id])
   end
 
  def create_album

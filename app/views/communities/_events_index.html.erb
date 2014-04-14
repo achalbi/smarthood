@@ -3,16 +3,14 @@
     <%= render 'communities/links' %>
   </ul>
    <ul class="users">
-    <li class="tr-hover" >
   <% if @invited_events.count > 0 %>
       <span style="font-size:13px;line-height: 2;margin-left:15px;"><strong>Invitation from events </strong></span>
   <% end %>
           <% unless (community.privacy == Privacyenum::PROTECTED && !current_user.is_cu_admin?(community)) %>
               <% if community.is_active?(current_user, community) %>
-                <a class="uibutton pull-right " id="create_event" >Create event</a>
+                <a class="uibutton pull-right icon add " id="create_event" >Create event</a>
               <% end %>
           <% end %>
-    </li>
     <br>
   <% @invited_events.each do |event| %>
       <li style="padding-left:15px;margin-top:5px;cursor:pointer;position:relative;" class="tr-hover" >
@@ -37,6 +35,8 @@
       </li>
   <% end %>
  </ul>
+ <br>
+
 <ul class="tabs span13" id="group_link">
   <li class="active" id="up_events_li"><a href="#">Upcoming events</a></li><%= link_to "", up_events_community_path(@community) , remote: true %>
   <li id="prev_events_li"><a href="#">Past events</a></li><%= link_to "", prev_events_community_path(@community) , remote: true %>
@@ -177,7 +177,7 @@ $(document).ready(function(){
       $('#create_event_submit').button('loading');
     },
   });
-  $('.loading_page').hide();
+  $('.loading_sub').hide();
 });
 
 
@@ -392,7 +392,7 @@ $(document).ready(function() {
                           if (nearBottomOfPage() && insideLoop_up!="true") {
                               insideLoop_up="true";
                               currentPage++;
-                              $('#loading_page').show();
+                              $('.loading_sub').show();
                           if($('.home_page_post').length == 0){
                             clearInterval(intervalID);
                             for (var i = 1; i < 99999; i++){
@@ -403,7 +403,7 @@ $(document).ready(function() {
                          }
                          jQuery.ajax('/communities/<%= community.id %>/up_events_page?page=' + currentPage, {asynchronous:true, evalScripts:true, method:'get', success: function(data, textStatus, jqXHR) {
                           $('.home_page_post').append($(data));
-                          $('#loading_page').hide();
+                          $('.loading_sub').hide();
                           if(typeof jQuery(data) == 'undefined' ||jQuery(data).html() == null || $(data).find('.events_paginate').html()==null){
                             clearInterval(intervalID);
                             for (var i = 1; i < 99999; i++){
@@ -420,7 +420,7 @@ $(document).ready(function() {
                           if (nearBottomOfPage() && insideLoop_prev!="true") {
                               insideLoop_prev="true";
                               currentPage++;
-                              $('#loading_page').show();
+                              $('.loading_sub').show();
                           if($('.home_page_post').length == 0){
                             clearInterval(intervalID);
                             for (var i = 1; i < 99999; i++){
@@ -431,7 +431,7 @@ $(document).ready(function() {
                          }
                          jQuery.ajax('/communities/<%= community.id %>/prev_events_page?page=' + currentPage, {asynchronous:true, evalScripts:true, method:'get', success: function(data, textStatus, jqXHR) {
                           $('.home_page_post').append($(data));
-                          $('#loading_page').hide();
+                          $('.loading_sub').hide();
                           if(typeof jQuery(data) == 'undefined' ||jQuery(data).html() == null || $(data).find('.events_paginate').html()==null){
                             clearInterval(intervalID);
                             for (var i = 1; i < 99999; i++){

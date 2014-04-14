@@ -23,7 +23,7 @@ class PostsController < ApplicationController
       @post.communities << active_community 
       @activity.posts << @post
       @post.activityposts[0].update_attributes(:event_id => @activity.event_id)
-      @activityposts = Activitypost.wehere("activity_id = ? ", @activity)
+      @activityposts = Activitypost.where("activity_id = ? ", @activity)
       @posts = @activityposts.paginate(page: params[:page], :per_page => 4).collect{|a| a.post}.uniq 
       getNotifiableUsers(Objecttypeenum::POST, @post, Objecttypeenum::ACTIVITY, @activity, Uc_enum::CREATED)
       @post =Post.new

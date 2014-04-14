@@ -1,4 +1,4 @@
-        <% if event.activities.count > 1 %>
+<% if event.activities.count > 1 %>
             <table class="bordered-table zebra-striped">
                   <thead>
                     <tr>
@@ -18,7 +18,7 @@
                   <thead>
                     <tr>
                       <th><span style="line-height:2">Sub-events</span>
-                        <a class=" pull-right c-pointer" style="margin-right:2px;line-height:2;" id="add_activity" >+ add sub-events </a>
+                        <a class=" pull-right c-pointer add_activity" style="margin-right:2px;line-height:2;" id="add_activity" >+ add sub-events </a>
                       </th>
                       <th style="width:70px;" class="center">
                       </th>
@@ -74,14 +74,14 @@
                   <%= label_tag :starts_at %>
                   <div class="input">
                   <%= f.text_field :starts_at, :placeholder => "Time", value: event.starts_at  %>&nbsp;&nbsp;&nbsp;
-                <a id="end_date_add_link" class="uibutton icon add">End Date</a>
+                <a id="end_date_add_link_act" class="uibutton icon add">End Date</a>
                 </div>
                 </div>
-                <div class="center_block clearfix" id="end_date">
+                <div class="center_block clearfix" id="end_date_act">
                   <%= label_tag :ends_at %>
                   <div class="input">
                     <%= f.text_field :ends_at,  value: event.ends_at  %>&nbsp;&nbsp;&nbsp;
-                   <a id="end_date_remove_link" class="uibutton icon prev">Remove</a>
+                   <a id="end_date_remove_link_act" class="uibutton icon prev">Remove</a>
                   </div>
                 </div> 
 
@@ -91,9 +91,9 @@
                   <%= f.text_field :address, :placeholder => :location, :size => 43, class: 'events_with_autocomplete inherit_width', 'data-autocompleteUrl' => search_address_events_path , 'data-validation' => "length",
      'data-validation-length' =>"3-250", 'data-validation-error-msg' => "The event address has to be a value between 3-250 characters", value: event.address %>&nbsp;&nbsp;&nbsp;
                 
-                  <%= link_to "View map", '#', id: "view_map_link",  class: "uibutton icon prev" %>
+                  <%= link_to "View map", '#', id: "view_map_link_act",  class: "uibutton icon prev" %>
                 </div>
-                <div class="input" id="view_map">
+                <div class="input" id="view_map_act">
                 
                 </div>
                 </div>
@@ -128,9 +128,9 @@
                       $('.event_status').html('');
                       $('#activity_status_<%=  !activity.nil? ? activity.id : 0 %>').html('<span class="label success">active</span>');
                   }
-                  $('#end_date').hide();
+                  $('#end_date_act').hide();
 
-                  $('#view_map_link').hide();
+                  $('#view_map_link_act').hide();
                   
                 });
                 
@@ -161,7 +161,7 @@
               });
 
 
-                  $("#add_activity").click(function(){
+                  $(".add_activity").click(function(){
                     $('#modal_create_activity').modal({
                       //keyboard: true,
                       backdrop: "static",
@@ -171,13 +171,14 @@
                         $('#modal_create_activity').modal('hide');
                       });
 
-                  $('#end_date_add_link').click(function(){
-                    $('#end_date').show();
-                    $('#end_date_add_link').hide();
+                  $('#end_date_add_link_act').click(function(){
+                    $('#end_date_act').show();
+                    $('#end_date_add_link_act').hide();
                   });
-                  $('#end_date_remove_link').click(function(){
-                    $('#end_date').hide();
-                    $('#end_date_add_link').show();
+                  $('#end_date_remove_link_act').click(function(){
+                    $('#end_date_act').hide();
+                    $('#end_date_add_link_act').show();
                   });
+
 
 </script>

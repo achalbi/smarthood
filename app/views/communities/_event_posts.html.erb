@@ -1,0 +1,66 @@
+<ul class="users" id="posts_events_ul" >
+            <div id="posts" style="overflow:auto;">
+          		<%= render :partial => 'communities/activity_post', :locals => {:post => @post, :activity => @activity} %>
+            </div>
+            <br><br>
+              <div id="div_event_post" class="resources<%= @activity.id %>">
+                <%= render partial: 'posts/post', locals: {posts: @posts, activity: @activity}  %>
+              </div>
+              <p id="activity_id" class='active_hide'><%= @activity.id %></p>
+              <div class="center loading_sub active_hide" id="loading_page"  ><img src="/assets/loading-sub.gif"></div>
+			</ul>
+      <script type="text/javascript">
+
+
+            var currentPage_post = 1;
+            var intervalID_post = -1000;
+            var insideLoop_post ="false"; 
+
+            function checkScroll_post() {
+              if (nearBottomOfPage() && insideLoop_post!="true") {
+                insideLoop_post="true";
+                currentPage_post++;
+                $('#loading_page').show();
+        if($('#div_event_post').length == 0){
+          clearInterval(intervalID_post);
+          for (var i = 1; i < 99999; i++){
+           window.clearInterval(i);
+         }
+         insideLoop_post = "false";
+         return;
+       }
+       jQuery.ajax('/communities/<%= @community.id %>/event_posts_page?activity_id=<%= @activity.id.to_s %>&event_id=<%= @event.id.to_s %>&page=' + currentPage_post, {asynchronous:true, evalScripts:true, method:'get', success: function(data, textStatus, jqXHR) {
+        $('.resources<%= @activity.id.to_s %>').append($(data));
+        $('#loading_page').hide();
+        console.log($.trim(jQuery(data).html()));
+        if(typeof jQuery(data) == 'undefined' || jQuery(data).html() == null || $.trim(jQuery(data).html()) == "" ||  $.trim($("#posts_one_div").html()) == "" ){
+          clearInterval(intervalID_post);
+          for (var i = 1; i < 99999; i++){
+           window.clearInterval(i);
+         }
+         restartInterval();
+       }
+       insideLoop_post ="false"; 
+     },});
+     }
+    }
+
+    function nearBottomOfPage() {
+      return scrollDistanceFromBottom() < 150;
+    }
+
+    function scrollDistanceFromBottom(argument) {
+      return pageHeight() - (window.pageYOffset + self.innerHeight);
+    }
+
+    function pageHeight() {
+      return Math.max(document.body.scrollHeight, document.body.offsetHeight);
+    }
+
+    $('document').ready(function(){
+      intervalID_post = setInterval(checkScroll_post, 500);
+    });
+
+
+
+      </script>

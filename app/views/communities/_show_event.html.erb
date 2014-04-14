@@ -17,7 +17,7 @@
                                            title: "Delete this event" %>
                <% end %>
                <span class="pull-right "> &nbsp;</span>
-               <%= link_to "add sub-events", '#', id: "add_activity",  class: " pull-right uibutton icon add button_toggle ",:title => "add" %>
+               <%= link_to "add sub-events", '#', id: "add_activity",  class: " pull-right uibutton icon add button_toggle add_activity ",:title => "add" %>
                 <% unless event.photo.nil? %>
                 <div class="pull-left">
                 <%= link_to cl_image_tag(event.photo.pic_url(:cover_pic_smallest), class:"image_al_c1 thumbnail ", id:"#{event.photo.id}"), "#" %>
@@ -44,14 +44,9 @@
               <%= render partial: "communities/event_table", locals: { event: event, community: community, activity: nil } %>
           </div>
 
-           <div class="center loading_sub active_hide" ><img src="/assets/loading-sub.gif"></div>
           <br>
-          <div>
-              <ul class="tabs  ">
-                <li class="active" id="members_event_tab"><%= link_to "Members","/communities/#{community.id}/event_members?event_id=#{@event.id}", remote: true %></li>
-                <li id="post_event_tab"><%= link_to "Posts","/communities/#{community.id}/event_posts?event_id=#{@event.id}", remote: true %></li>
-                <li id="photos_event_tab" class="photos_tab"><%= link_to "Photos","/communities/#{community.id}/event_photos?event_id=#{@event.id}", remote: true %></li>
-              </ul>
+          <div id="event_links">
+            <%= render partial: "communities/event_links", locals: { event: event, community: community, activity: activity } %>
           </div>
         <div id="show_event_div">
             <%= render partial: "communities/event_members", locals: { event: event, community: community, activity: activity, ad_users: @ad_users, inv_users: @inv_users } %>
@@ -160,6 +155,18 @@ $(document).ready(function(){
   $('#view_map_link_event').hide();
 
 });
+
+                $(document).ready(function(){
+                $.validate({
+                  form : '#create_activity_form',
+                  onSuccess : function() {
+                    $('#create_activity').attr('data-loading-text', 'Creating...');
+                    $('#create_activity').button('loading');
+                  },
+                });
+                $('.loading_page').hide();
+              });
+
 
                   $('#end_date_add_link_event').click(function(){
                     $('#end_date_event').show();
@@ -283,27 +290,7 @@ function handleImage(e){
 
 
 
-$('#members_event_tab').click(function(){
-  $('#members_event_tab').addClass('active');
-  $('#post_event_tab').removeClass('active');
-  $('#photos_event_tab').removeClass('active');
-  $('.loading_page').show();
-});
 
-$('#post_event_tab').click(function(){
-  $('#post_event_tab').addClass('active');
-  $('#members_event_tab').removeClass('active');
-  $('#photos_event_tab').removeClass('active');
-  currentPage<%= @event.id.to_s %> = 1;
-  $('.loading_page').show();
-});
-
-$('#photos_event_tab').click(function(){
-  $('#photos_event_tab').addClass('active');
-  $('#members_event_tab').removeClass('active');
-  $('#post_event_tab').removeClass('active');
-  $('.loading_page').show();
-});
 
 
 $(document).ready(function() {

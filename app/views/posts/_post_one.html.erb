@@ -11,7 +11,7 @@
             <% end %><br>
           </div>
           <li style="border-bottom:0px;padding: 5px 5px 0 5px;">
-            <a href="/users/<%=post.user.id %>/" data-remote="true" style="cursor:pointer;border:0px;padding:0px;" class="pop_up" rel="popover" data-content='<%= gravatar_for post.user, size: 100 %>' data-original-title="<%= post.user.name %>" >
+            <a href="/users/<%= post.user.id %>/" data-remote="true" style="cursor:pointer;border:0px;padding:0px;" class="pop_up" rel="popover" data-content='<%= gravatar_for post.user, size: 100 %>' data-original-title="<%= post.user.name %>" >
                     <%= gravatar_for post.user, size: 50 %>
             </a>
                     <address style="margin-top:5px;">
@@ -38,7 +38,7 @@
       <td style="padding:0px;border:0px;" class="post_grid">
         <div class="container_pics" >
             <li style="border-top: 0px;">
-            <div  class="img_zoom center  " style="margin-left:7px;margin-right:7px;display :block;width:565px;height:355">
+            <div  class="img_zoom center  " style="margin-left:7px;margin-right:7px;display :block;width:555px;height:355">
               <% i = 0 %>
          <% post.photos.each do |photo| %>
             <div  >

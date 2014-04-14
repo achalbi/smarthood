@@ -1,0 +1,29 @@
+               <div class="center loading_sub active_hide" ><img src="/assets/loading-sub.gif"></div>
+              <ul class="tabs  ">
+                <li class="active" id="members_event_tab"><%= link_to "Members","/communities/#{community.id}/event_members?event_id=#{@event.id}", remote: true %></li>
+                <li id="post_event_tab"><%= link_to "Posts","/communities/#{community.id}/event_posts?event_id=#{@event.id}", remote: true %></li>
+                <li id="photos_event_tab" class="photos_tab"><%= link_to "Photos","/communities/#{community.id}/event_photos?event_id=#{@event.id}", remote: true %></li>
+              </ul>
+              <script type="text/javascript">
+              	$('#members_event_tab').click(function(){
+				  $('#members_event_tab').addClass('active');
+				  $('#post_event_tab').removeClass('active');
+				  $('#photos_event_tab').removeClass('active');
+				  $('.loading_sub').show();
+				});
+
+				$('#post_event_tab').click(function(){
+				  $('#post_event_tab').addClass('active');
+				  $('#members_event_tab').removeClass('active');
+				  $('#photos_event_tab').removeClass('active');
+				  currentPage<%= @event.id.to_s %> = 1;
+				  $('.loading_sub').show();
+				});
+
+				$('#photos_event_tab').click(function(){
+				  $('#photos_event_tab').addClass('active');
+				  $('#members_event_tab').removeClass('active');
+				  $('#post_event_tab').removeClass('active');
+				  $('.loading_sub').show();
+				});
+              </script>

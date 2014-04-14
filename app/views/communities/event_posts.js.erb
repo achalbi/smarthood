@@ -1,0 +1,2 @@
+$('.loading_sub').hide();
+$("#show_event_div").html("<%= escape_javascript( render partial: 'communities/event_posts', locals: { event: @event, community: @community, activity: @activity } ) %>");
