@@ -837,11 +837,13 @@ def search_app_user
       @activity.save
       @event.activities << @activity
 
+      @event.eventdetails.create(user_id: current_user.id, is_admin: true, status: "yes")
+      
       unless params[:invite_everyone].nil?
         @ed_user = active_community.usercommunities.where("invitation = ?", Uc_enum::JOINED ).collect(&:user_id)
           @ed_user.each do |user_id|
             if user_id == current_user.id
-                @event.eventdetails.create(user_id: current_user.id, is_admin: true, status: "yes")
+              next
             else
                 @event.eventdetails.create(user_id: user_id, is_admin: false, status: "invited")
             end
