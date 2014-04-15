@@ -89,7 +89,7 @@ EMS::Application.routes.draw do
     member do
       get :setactive, :sendrequest, :join_cu, :acceptrequest, :declinerequest, :search_app_user, :invite_app_user, :invite_fb_friends, :invite_by_email, :unjoin_cu, :add_moderators, :about_com, :posts_com, :photos_com, :members_com, :groups_com, :events_com, :show_group, :group_posts, :group_members, :group_photos, :remove_user_cu, :up_events, :prev_events, :show_event, :event_posts, :event_members, :event_photos, :add_event_moderators, :get_activity, :delete_event, :invite_event_guests_by_user, :invite_event_guests_by_email, :invite_fb_friends_to_event, :add_activity_moderators, :add_activity_guests, :search_event_guests, :unjoin_activity, :event_invitation, :up_events_page, :prev_events_page, :event_posts_page
       put :update_activity, :update_event 
-      post :create_activity, :create_activity_post
+      post :create_activity, :create_activity_post, :create_event_album
       delete :delete_activity
     end
     collection do

@@ -111,18 +111,18 @@ class PhotoUploader < CarrierWave::Uploader::Base
    end
 
    version :photogrid_one do
-     cloudinary_transformation :width => 555, :height => 350, :crop => :fill, :gravity => :faces
+     cloudinary_transformation :width => 545, :height => 350, :crop => :fill, :gravity => :faces
    end
 
    version :photogrid_two do
-     cloudinary_transformation :width => 276, :height => 175, :crop => :fill, :gravity => :faces
+     cloudinary_transformation :width => 271, :height => 175, :crop => :fill, :gravity => :faces
    end
    version :photogrid_three_one do
-     cloudinary_transformation :width => 340, :height => 350, :crop => :fill, :gravity => :faces
+     cloudinary_transformation :width => 335, :height => 350, :crop => :fill, :gravity => :faces
    end
 
    version :photogrid_three_two do
-     cloudinary_transformation :width => 215, :height => 173, :crop => :fill, :gravity => :faces
+     cloudinary_transformation :width => 210, :height => 173, :crop => :fill, :gravity => :faces
    end
 
 

@@ -1212,6 +1212,53 @@ def search_app_user
   end
 
   def event_photos
+     if params[:activity_id].nil?
+      @event = Event.find(params[:event_id])
+      @community = Community.find(params[:id])
+      @activity = @event.activities.where(is_admin: true).first
+      @activities = @event.activities
+    else
+      @event = Event.find(params[:event_id])
+      @activity = Activity.find(params[:activity_id])
+      @community = Community.find(params[:id])
+      @activities = @event.activities
+    end
+  end
+
+    def create_event_album
+      @event = Event.find(params[:event_id])
+      @activity = Activity.find(params[:activity_id])
+      @community = Community.find(params[:id])
+     @album = current_user.albums.build(params[:album])
+          # @album.user = current_user
+        @album.save
+        params[:photos][:pic].each do |pic|
+          @photo = Photo.new
+            @photo.pic = pic
+            @album.photos << @photo
+        end
+        @album.save
+        @activity.albums << @album
+        @activity.save
+        @albums = @activity.albums
+      if @album.privacy == Privacyenum::PUBLIC
+        @post = Post.new
+        @post.content = "<span class='timestamp' style='font-size:15px;'>added " + view_context.pluralize(@album.photos.count, "photo") + " to the album </span><strong><a href='/albums/" + @album.id.to_s + "' style='font-size:15px;word-wrap:break-word;' data-remote='true' > " + @album.title + " </a></strong>" + "<span class='timestamp' style='font-size:15px;'> under the event </span><strong><a href='/events/" + @event.id.to_s + "' style='font-size:15px;word-wrap:break-word;' data-remote='true' > " + @event.title + " </a>.</strong>"
+        @post.user_id = current_user.id
+        @post.postable = @album
+        @post.save
+        @post.communities << active_community 
+        @album.photos.each do |photo|
+          @post.photos << photo
+        end
+      end
+     #   getNotifiableUsers(Objecttypeenum::ALBUM, @album, nil, nil, Uc_enum::CREATED)
+        #  flash[:success] = "Album created"
+      @share = Share.new
+      respond_to do |format|
+         format.html {  }
+         format.js {  }
+      end
   end
 
  def create_album

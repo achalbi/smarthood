@@ -1,0 +1,28 @@
+<div id="photos_events">
+<div id="gallery">
+<% if activity.is_admin? %>
+    <% @activities.each do |activity| %>
+    <div class="gallery_event">
+    <% if activity.is_admin? %>
+    <span  style="font-size:13px;line-height: 2;margin-left:15px;color:#666666;"><strong>Event: <%= event.title %> </strong></span>
+    <div id="gallery_event">
+      <%= render partial: 'communities/event_albums', locals: {activity: activity, albums: activity.albums, album: Album.new, hide: "no" } %>
+    </div>
+    <% else %>
+    <% unless activity.albums[0].nil? %>
+    <div id="gallery_event" style="clear:both;">
+    <span style="font-size:13px;line-height: 3;margin-left:15px;color:#666666;clear:both;"><strong>Sub-event: <%= activity.title %> </strong></span>
+        <%= render partial: 'communities/event_albums', locals: {activity: activity, albums: activity.albums, album: Album.new, hide: "yes" } %>
+    </div>
+    <% end %>
+    <% end %>
+    </div>
+   <% end %>
+<% else %>
+    <span style="font-size:13px;line-height: 2;margin-left:15px;color:#666666;"><strong>Sub-event: <%= activity.title %> </strong></span>
+    <div id="gallery_event">
+        <%= render partial: 'communities/event_albums', locals: {activity: activity, albums: activity.albums, album: Album.new, hide: "no" } %>
+    </div>
+<% end %>
+</div>
+</div>
