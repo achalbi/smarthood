@@ -160,8 +160,8 @@ $(document).ready(function(){
                 $.validate({
                   form : '#create_activity_form',
                   onSuccess : function() {
-                    $('#create_activity').attr('data-loading-text', 'Creating...');
-                    $('#create_activity').button('loading');
+                    $('#create_activity_act').attr('data-loading-text', 'Creating...');
+                    $('#create_activity_act').button('loading');
                   },
                 });
                 $('.loading_page').hide();
@@ -340,4 +340,21 @@ $(document).ready(function() {
 
     });
 
+    $(function() {
+      return $('.events_with_autocomplete').autocomplete({
+        minLength: 2,
+        source: function(request, response) {
+          return $.ajax({
+            url: $('.events_with_autocomplete').data('autocompleteurl'),
+            dataType: "json",
+            data: {starts_at: "", ends_at: "",
+              address: request.term, event: "<%= @event.to_json %>"
+            },
+            success: function(data) {
+              return response(data);
+            }
+          });
+        }
+      });
+    });
 </script>

@@ -1,6 +1,8 @@
 <ul class="users" id="posts_events_ul" >
             <div id="posts" style="overflow:auto;">
-          		<%= render :partial => 'communities/activity_post', :locals => {:post => @post, :activity => @activity} %>
+              <% if event.responded?(current_user) %>
+          		  <%= render :partial => 'communities/activity_post', :locals => {:post => @post, :activity => @activity} %>
+              <% end %>
             </div>
             <br><br>
               <div id="div_event_post" class="resources<%= @activity.id %>">

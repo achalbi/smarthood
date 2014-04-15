@@ -1,5 +1,4 @@
 <div id="photos_events">
-<div id="gallery">
 <% if activity.is_admin? %>
     <% @activities.each do |activity| %>
     <div class="gallery_event">
@@ -24,5 +23,4 @@
         <%= render partial: 'communities/event_albums', locals: {activity: activity, albums: activity.albums, album: Album.new, hide: "no" } %>
     </div>
 <% end %>
-</div>
 </div>

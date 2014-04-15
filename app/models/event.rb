@@ -72,6 +72,10 @@ class Event < ActiveRecord::Base
     self.eventdetails.where("user_id = ? AND is_admin=?", user, true).exists?
   end
 
+  def responded?(user)
+    self.eventdetails.where("user_id = ? AND status!=?", user, "invited").exists?
+  end
+
   def time_str(event)
     if self.starts_at.to_date == self.ends_at.to_date
       if self.starts_at.strftime("%I:%M%p") == "12:00AM"
