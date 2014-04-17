@@ -115,17 +115,19 @@ class EventsController < ApplicationController
         session['events_scope'] = params[:events_scope] 
       end
       @event = Event.new
-      @event.starts_at = Time.zone.now
-      @event.ends_at = Time.zone.now
+      @event.starts_at = Time.zone.now.beginning_of_day
+      @event.ends_at = Time.zone.now.end_of_day
       @events = active_community_events
       @events = @events.between(params['start'], params['end']) if (params['start'] && params['end'])
-      @upcoming_events = @events.where("starts_at > ?",Time.current.tomorrow.to_date).order("id DESC")
-      @past_events = @events.where("starts_at < ? and ends_at < ?",Time.current.to_date,Time.current.to_date).order("id DESC")
-      @today_events = @events.where("starts_at BETWEEN ? AND ?",Time.current.to_date,Time.current.tomorrow.to_date).order("id DESC")
+      #@upcoming_events = @events.where("starts_at > ?",Time.current.tomorrow.to_date).order("id DESC")
+      @upcoming_events = @events.where("starts_at > ?",Time.zone.now.beginning_of_day- 1.second).order("starts_at ASC").paginate(page: params[:page], :per_page => 5)
+      @past_events = @events.where("starts_at < ? ",Time.zone.now.beginning_of_day).order("starts_at DESC").paginate(page: params[:page], :per_page => 5)
+      #@past_events = @events.where("starts_at < ? and ends_at < ?",Time.current.to_date,Time.current.to_date).order("id DESC")
+      #@today_events = @events.where("starts_at BETWEEN ? AND ?",Time.current.to_date,Time.current.tomorrow.to_date).order("id DESC")
       @events = @events.paginate(page: params[:page], :per_page => 5)
-      @upcoming_events = @upcoming_events.paginate(:page => params[:page], :per_page => 5)
-      @today_events = @today_events.paginate(:page => params[:page], :per_page => 5)
-      @past_events = @past_events.paginate(:page => params[:page], :per_page => 5)
+      #@upcoming_events = @upcoming_events.paginate(:page => params[:page], :per_page => 5)
+      #@today_events = @today_events.paginate(:page => params[:page], :per_page => 5)
+      #@past_events = @past_events.paginate(:page => params[:page], :per_page => 5)
       #ip_loc = Geocoder.search(remote_ip)[0]
 
      # @event.address = ip_loc.address

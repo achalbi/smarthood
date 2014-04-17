@@ -838,7 +838,7 @@ def search_app_user
       @event.activities << @activity
 
       @event.eventdetails.create(user_id: current_user.id, is_admin: true, status: "yes")
-      
+
       unless params[:invite_everyone].nil?
         @ed_user = active_community.usercommunities.where("invitation = ?", Uc_enum::JOINED ).collect(&:user_id)
           @ed_user.each do |user_id|
@@ -905,6 +905,8 @@ def search_app_user
     @event = Event.find(params[:event_id])
     @eds = @event.eventdetails
     @event.update_attributes(params[:event])
+    @ad_users = @event.eventdetails.where(" is_admin=?", true)
+    @inv_users = @event.eventdetails.where(" is_admin=?", false)
     render :action => :show_event
     
   end

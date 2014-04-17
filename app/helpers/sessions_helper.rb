@@ -62,6 +62,9 @@ module SessionsHelper
   end
 
   def active_community
+    unless signed_in?
+      return Community.find_by_name('Smarthood')
+    end
     if Usercommunity.where(['status=? and user_id=?','active',current_user.id])[0].nil?
        @usercommunity = Usercommunity.new 
        @usercommunity.community_id = Community.where(name: 'Smarthood')[0].id

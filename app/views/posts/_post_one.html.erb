@@ -154,14 +154,18 @@
         <br>
         <% end %>
         </ul>
+        <% if signed_in? %>
         <div id="<%= post.id %>_userlike" style="border-top:1px solid #ddd;padding:5px 0 0 5px;margin:5px 0 0 0;">
               <%= render :partial => "posts/likes", :locals => { :post => post} %>
         </div>
+        <% end %>
 
         </div>
+        <% if signed_in? %>
           <div id="postId_<%= post.id %>" class="comments">
               <%= render :partial => "comments/comment", :locals => { :comment => @comment, :post => post} %>
           </div>
+        <% end %>
 
       </td>
       </tr>

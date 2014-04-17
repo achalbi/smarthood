@@ -1,21 +1,24 @@
 <% provide(:title, 'Events') %>
-<%= link_to "List view", '#', id: "list_view",  class: "btn primary pull-right marginRight15" %>
+<div class="container container-fluid pull-left" style="padding:0;">
+<%= link_to "List view", '#', id: "list_view",  class: "uibutton pull-left marginRight15" %>
+<%= link_to "Calendar view", '#', id: "fullCalendar_view",  class: "uibutton pull-left marginRight15 " %>
   <%= link_to "Create Event", '#', id: "create_event",  class: " pull-left uibutton icon add" %>
 <span class="pull-right marginRight15">
-<%= link_to "Calendar view", '#', id: "fullCalendar_view",  class: "uibutton primary pull-right " %>
+<%= select_tag :events_scope, options_for_select([["All Events", "all"], ["Active Community events", "active"], ["Events I created", "my"]], session['events_scope']), :onchange => "$.get('#{events_path}', {'events_scope':this.value}, null, 'script' );", class: "large pull-right"  %>
 </span>
-<span class="pull-right marginRight15">
-<%= select_tag :events_scope, options_for_select([["All joined CU events", "all"], ["Active CU events", "active"], ["My events", "my"]], session['events_scope']), :onchange => "$.get('#{events_path}', {'events_scope':this.value}, null, 'script' );", class: "large pull-right"  %>
-</span>
-<br>	
+<aside class="span6 pull-right" style="width:300px;">
+  <section  class="span6">
+  </section>
+</aside>
+<br>  
 <br>
 <br>
 <div id="event_list">
 
 <ul class="tabs">
-  <li class="active" id="today_events_li"><a ><h4>Events Today</h4></a></li>
-  <li id="upcoming_events_li"><a ><h4>Upcoming Events</h4></a></li>
-  <li id="past_events_li"><a ><h4>Previous Events</h4></a></li>
+  <!-- <li class="active" id="today_events_li"><a ><h4>Events Today</h4></a></li> -->
+  <li class="active" id="upcoming_events_li"><a ><h4>Upcoming Events</h4></a></li>
+  <li id="past_events_li"><a ><h4>Past Events</h4></a></li>
 </ul>
 
 <div id="upcoming_events">  
@@ -26,7 +29,7 @@
       <%= render :partial => 'events/event', :locals => {:event => upcoming_event} %>
     <% end %>
       </div>  
-      <div id="loading_upcoming_events_paginate" class="center" ><img src="http://res.cloudinary.com/rashi/image/upload/v1377924529/loading7_gvb06y.gif"></div>
+      <!-- <div id="loading_upcoming_events_paginate" class="center" ><img src="http://res.cloudinary.com/rashi/image/upload/v1377924529/loading7_gvb06y.gif"></div> -->
   <% end %>  
 </ul>
 
@@ -41,11 +44,14 @@
     <% end %>
 
   </div>  
-    <div id="loading_past_events_paginate" class="center" ><img src="http://res.cloudinary.com/rashi/image/upload/v1377924529/loading7_gvb06y.gif"></div>
+    <!-- <div id="loading_past_events_paginate" class="center" ><img src="http://res.cloudinary.com/rashi/image/upload/v1377924529/loading7_gvb06y.gif"></div> -->
   <% end %>
 </ul>
 <br>
 </div>
+      <div class="center loading_page active_hide" ><img src="/assets/loading.gif"></div>
+
+<!-- 
 <div id="today_events">
 <ul class="users" id="today_events_ul ">
   <% unless @today_events.blank? %>
@@ -59,13 +65,12 @@
 </ul>
 <br>
 </div>
+ -->
 </div>
 
-</div>
 <div id='calendar_upper' class="marginRight15">
-<h3 id="h3Cal">Calendar view</h3><br>
-	<div id='calendar_events'></div></div>
-
+  <div id='calendar_events'><br></div>
+</div>
 
 
 <%= form_for( @event, remote: true, :html => {:multipart => true}) do |f| %>
@@ -175,7 +180,9 @@
           </div> 
         </div>
   <% end %>
+</div>
 
+</div>
 <script type="text/javascript">
 
 $('#prev-1').click(function(){
@@ -280,7 +287,7 @@ $('#end_date_remove_link').click(function(){
 });
 
 $(document).ready(function() {
-
+$('#past_events').hide();
 for (var i = 1; i < 99999; i++){
    window.clearInterval(i);
 }
@@ -552,9 +559,9 @@ function checkScroll_evt_idx(paginate) {
      }
      console.log("ID--"+intervalID);
   //console.log("endless request "+ currentPage+" " + paginate);
-  $('#loading_'+paginate).show();
+  $('.loading_page').show();
     jQuery.ajax('/events/'+paginate+'?page=' + currentPage, {asynchronous:true, evalScripts:true, method:'get', success: function(data, textStatus, jqXHR) {
-    $('#loading_'+paginate).hide();
+    $('.loading_page').hide();
     
     if(data==null || data == ''){
       clearInterval(intervalID_U);
@@ -595,7 +602,7 @@ function callCheckScroll(){
 }
  
 $('document').ready(function(){
- intervalID_T = setInterval(checkScroll_evt_idx, 250, today_event);
+ intervalID_T = setInterval(checkScroll_evt_idx, 250, upcoming_event);
   //console.log("DT--"+intervalID_T);
 });
 

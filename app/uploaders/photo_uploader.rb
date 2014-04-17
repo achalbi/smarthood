@@ -93,6 +93,9 @@ class PhotoUploader < CarrierWave::Uploader::Base
    version :large_mid do
      cloudinary_transformation :width => 545, :height => 350, :crop => :fill, :gravity => :faces
    end
+   version :largest do
+     cloudinary_transformation :width => 940, :height => 300, :crop => :fill, :gravity => 'faces:center'
+   end   
    version :large do
      process :resize_to_fit => [650, 650]
    end

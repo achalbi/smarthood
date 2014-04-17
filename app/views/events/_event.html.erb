@@ -1,4 +1,6 @@
-<li style="padding-left:15px;cursor:pointer;position:relative;" class="tr-hover event" >
+<br>
+<strong style="padding-left:15px;color:#5E5E5E"  ><%= event.time_str(event) %></strong>
+<li style="padding-left:15px;margin-top:5px;cursor:pointer;position:relative;" class="tr-hover event" >
   <% unless event.photo.nil? %>
   <%= link_to cl_image_tag(event.photo.pic_url(:cover_pic_smallest), class:"image_al_c1 thumbnail pull-left ", id:"#{event.photo.id}"), "#" %>
 

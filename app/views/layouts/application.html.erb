@@ -38,8 +38,8 @@
             <% end %>
             <li><%= link_to "Communities", communities_path %><span style="display:none"><%= link_to "", communities_path, id: 'home_comunity' %></span></li>
            <% if is_community_active? %>
-            <li><%= link_to "Users", users_path %></li>
-            <!--<li><%= link_to "Create Events", new_event_path %></li>-->
+            <!--<li><%= link_to "Users", users_path %></li>
+            <li><%= link_to "Create Events", new_event_path %></li>-->
             <li><%= link_to "Events", events_path %></li>
             <li><%= link_to "Photos", photos_path %></li>
             <!--<li><%= link_to "Groups", groups_path, id: "home_group" %></li>-->
@@ -73,9 +73,9 @@
         <div data-role="page" class="pages" id="home">
           
           
-          <div data-role="content" id="ctn">
+          <div data-role="content" id="ctn" class="container container-fluid">
             <div id="content">
-              <div id="mainHome">
+              <div id="mainHome" >
                   <%= yield %>
               </div>
             </div>

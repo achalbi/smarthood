@@ -1,24 +1,38 @@
 <% provide(:title, @event.title) %>
 <% provide(:page_image, @event.photo.pic_url) %>
-
-<div class="row">
-  <aside class="span6">
-    <section>
+<% unless signed_in? %>
+    <br> 
+    <br> 
+    <br> 
+    <br> 
+    <br> 
+<% end %>
+<div class="container container-fluid">
       <div  class="img_zoom" >
              <h4 class="pull-left" style="margin-left:10px;font-size:18px;">
-              <div id="albumLink">
+<!--               <div id="albumLink">
               <%= link_to @event.title, @event, class:"albumLink", remote: true %>
-              </div>
+              </div> -->
             </h4>
             <% unless @event.photo.nil? %>
-           <%= link_to cl_image_tag(@event.photo.pic_url(:thumb_medium), class:"roundCorner albumLink", id:"#{@event.photo.id}") , @event, class:"albumLink roundCorner", remote: true %>
+           <%= link_to cl_image_tag(@event.photo.pic_url(:largest), class:"albumLink pull-left padding1",rel: "#{@event.id}", id:"#{@event.photo.id}") , @event.photo.pic_url, class: "fancybox-album",rel: "#{@event.id}" , title: "#{@event.title}"    %>
             <% end %>
         </div>
+  <aside class="span6">
+    <section>
 
 
     </section>
     <section id="activity_span" style="background-color:#e5e5e5;padding:10px;" class="well">
-      <h2 id="act_h"><span  class="pull-left" style="margin-left:10px;font-size:19px;">Activities</span> <%= link_to "add", '#', id: "create_activity",  class: " pull-right uibutton icon add",:title => "Add Activity" %></h2>
+      <h2 id="act_h"><span  class="pull-left" style="margin-left:10px;font-size:13px;"><strong>Event</strong></span></h2>
+      <span style="clear:both"></span>
+      <div id="event_link">    
+          <li class="sidetabs sidetabs_selected" style="list-style-type: none;padding:5px; margin:5px;">
+                <h6><%= link_to  @event.title, @event, id: "act_#{@event.id}", remote: true %></h6>
+          </li>
+          <%= link_to "", @event, remote: true %>
+      </div>
+      <h2 id="act_h"><span  class="pull-left" style="margin-left:10px;font-size:13px;line-height:2;"><strong>Sub-event</strong></span> <%= link_to "create Sub-event", '#', id: "create_activity",  class: " pull-right uibutton icon add",:title => "Add Activity" %></h2>
       <span style="clear:both"></span>
       <div id="event_activities">    
           <%= render @activities %>
@@ -26,24 +40,25 @@
     </section>
       
    </aside>
-   <aside id="right" style="float: right;width:220px;margin-right:10px;">
+<!--    <aside id="right" style="float: right;width:220px;margin-right:10px;">
     <div id="event_stats">
       <%= render partial: 'shared/event_stats', locals: {ad_users: @ad_users, inv_users: @inv_users, ad_groups: @ad_groups, inv_groups: @inv_groups} %>
     </div>
-    </aside>
-<div id="event_list" class="span13">
-	<ul class="tabs">
-	  <li class="active" id="posts_events_li"><a href="#"><h4>Posts</h4></a></li>
-	  <li id="activity_events_li"><a ><h4>About</h4></a></li>
-	  <li id="photos_events_li"><a ><h4>Photos</h4></a></li>
-	</ul>
+    </aside> -->
+<div id="event_list" class="span13" style="margin-top:10px;">
+  <ul class="tabs">
+    <li class="active" id="posts_events_li"><a href="#"><h4>Posts</h4></a></li>
+    <li id="activity_events_li"><a ><h4>About</h4></a></li>
+    <li id="photos_events_li"><a ><h4>Photos</h4></a></li>
+  </ul>
 
-	   <div id="posts_events">  
+     <div id="posts_events">  
       <ul class="users" id="posts_events_ul" >
             <div id="posts" style="overflow:auto;">
-              	
-        		<%= render :partial => 'posts/activity_post', :locals => {:post => @post}, :activity => @activity %>
-        		<br><br>
+            <% if signed_in? %>
+              <%= render :partial => 'posts/activity_post', :locals => {:post => @post}, :activity => @activity %>
+              <br><br>
+            <% end %>
               <div id="div_post" class="resources<%= @activity.id %>">
                 <%= render partial: 'posts/post', locals: {posts: @posts, activity: @activity}  %>
               </div>
@@ -276,10 +291,17 @@
           
         </div>
             <% end %>
-
+</div>
 
 
 <script type="text/javascript">
+
+$(".sidetabs").click(function(){
+  $(".sidetabs").removeClass('sidetabs_selected');
+  $(this).addClass('sidetabs_selected');
+  $(this).next('a').click();
+});
+
 $('#posts_events_li').click(function(){
   $('#posts_events_li').addClass('active');
   $('#activity_events_li').removeClass('active');
@@ -606,13 +628,13 @@ $('#end_date_remove_link2').click(function(){
 
 $(document).ready(function() {
 
-    $('#create_activity').hide();
+/*    $('#create_activity').hide();
    
     $('#activity_span').hover(function(){
       $('#create_activity').toggle();
       },function(){
       $('#create_activity').toggle();
-    });
+    });*/
 
   $('#page2-2').hide();
 
