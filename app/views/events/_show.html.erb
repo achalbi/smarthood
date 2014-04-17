@@ -32,7 +32,7 @@
           </li>
           <%= link_to "", @event, remote: true %>
       </div>
-      <h2 id="act_h"><span  class="pull-left" style="margin-left:10px;font-size:13px;line-height:2;"><strong>Sub-event</strong></span> <%= link_to "create Sub-event", '#', id: "create_activity",  class: " pull-right uibutton icon add",:title => "Add Activity" %></h2>
+      <h2 id="act_h"><span  class="pull-left" style="margin-left:10px;font-size:13px;line-height:2;"><strong>Sub-event</strong></span> <%= link_to "add Sub-event", '#', id: "create_activity",  class: " pull-right uibutton icon add",:title => "Add Activity" %></h2>
       <span style="clear:both"></span>
       <div id="event_activities">    
           <%= render @activities %>
