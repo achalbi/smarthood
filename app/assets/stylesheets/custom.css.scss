@@ -860,6 +860,67 @@ border-bottom: 1px solid #ccc;
    padding: 3px; 
 }
 
+.text_overlay_cover_pic { 
+   position: absolute; 
+   bottom: 0; 
+   left: 0; 
+   width: 350px; 
+}
+
+.text_overlay_cover_pic address strong.text_overlay_title{ 
+   font: bold 18px/35px Helvetica, Sans-Serif; 
+   letter-spacing: 0px;  
+}
+
+.text_overlay_cover_pic address { 
+   color: white; 
+   float: left;
+   margin:5px 5px 25px 3px;
+   font: normal 13px/24px Helvetica, Sans-Serif; 
+   letter-spacing: 0px;  
+   background: rgb(0, 0, 0); /* fallback color */
+   background: rgba(0, 0, 0, 0.7);
+   padding: 5px 10px; 
+}
+
+.text_overlay_cover_pic address strong{ 
+   float: left;
+}
+
+.text_overlay_cover_pic address p{ 
+   width: 330px; 
+   float: left;
+   word-break:normal;
+   margin: 0;
+}
+
+.text_overlay_cover_pic address p{ 
+   float: left;
+   word-break:normal;
+   margin: 0;
+   line-height:1.4;
+}
+.text_overlay_cover_pic address p > span{ 
+   float: left;
+   word-break:normal;
+   margin: 0;
+   line-height:1.9;
+}
+
+.text_overlay_cover_pic address p strong{ 
+   font: bold 13px/24px Helvetica, Sans-Serif;
+   line-height:1.4;
+}
+
+
+
+.text_overlay_cover_pic address div{ 
+   display:block;
+}
+
+
+
+
 .image_overlay { 
    position: relative; 
    width: 100%; /* for IE 6 */

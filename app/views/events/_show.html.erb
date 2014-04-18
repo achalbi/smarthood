@@ -8,15 +8,31 @@
     <br> 
 <% end %>
 <div class="container container-fluid">
-      <div  class="img_zoom" >
+      <div  class="image_overlay" >
+<!--  
              <h4 class="pull-left" style="margin-left:10px;font-size:18px;">
-<!--               <div id="albumLink">
+             <div id="albumLink">
               <%= link_to @event.title, @event, class:"albumLink", remote: true %>
-              </div> -->
+              </div>
             </h4>
+               -->
             <% unless @event.photo.nil? %>
-           <%= link_to cl_image_tag(@event.photo.pic_url(:largest), class:"albumLink pull-left padding1",rel: "#{@event.id}", id:"#{@event.photo.id}") , @event.photo.pic_url, class: "fancybox-album",rel: "#{@event.id}" , title: "#{@event.title}"    %>
+           <%= link_to cl_image_tag(@event.photo.pic_url(:largest), class:"padding1",rel: "#{@event.id}", id:"#{@event.photo.id}") , @event.photo.pic_url, class: "fancybox-album", rel: "#{@event.id}" , title: "#{@event.title}"    %>
             <% end %>
+            <h2 class="text_overlay_cover_pic">
+                  <address>
+                    <strong class="text_overlay_title"><%= @event.title %></strong> <br><br>
+                    <p><strong>Description : &nbsp;</strong><span><%= @event.description %> </span></p><br>
+                    <p><strong>Privacy : &nbsp;</strong><span> <%= privacy_str(@event) %></span></p><br>
+                    <p><strong>Time : &nbsp;</strong><span><%= @event.time_str(@event) %></span> </p><br>
+                     <p><strong>Location : &nbsp;</strong><span>
+                       <%= @event.address %>
+                     </span>
+                     </p>
+                    <br>
+                  </address> 
+
+            </h2>
         </div>
   <aside class="span6">
     <section>
@@ -32,7 +48,7 @@
           </li>
           <%= link_to "", @event, remote: true %>
       </div>
-      <h2 id="act_h"><span  class="pull-left" style="margin-left:10px;font-size:13px;line-height:2;"><strong>Sub-event</strong></span> <%= link_to "add Sub-event", '#', id: "create_activity",  class: " pull-right uibutton icon add",:title => "Add Activity" %></h2>
+      <h2 id="act_h"><span  class="pull-left" style="margin-left:10px;font-size:13px;line-height:2;"><strong>Sub-event</strong></span> <%= link_to "add", '#', id: "create_activity",  class: " pull-right uibutton icon add",:title => "Add Activity" %></h2>
       <span style="clear:both"></span>
       <div id="event_activities">    
           <%= render @activities %>
