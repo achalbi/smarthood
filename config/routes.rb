@@ -131,10 +131,11 @@ EMS::Application.routes.draw do
 
   resources :events do
     collection  do
-      get :inviteuser, :eventeditors, :search_address, :get_geo_coordinates, :upcoming_events_paginate, :today_events_paginate, :past_events_paginate, :search_user_group, :search_auto_user, :search_auto_group, :post_paginate 
+      get :inviteuser, :eventeditors, :search_address, :get_geo_coordinates, :upcoming_events_paginate, :today_events_paginate, :past_events_paginate, :search_user_group, :search_auto_user, :search_auto_group, :post_paginate
     end
     member do
-      get :search_selected_user, :search_selected_group
+      get :search_selected_user, :search_selected_group, :event_posts, :event_members, :event_photos, :add_event_moderators, :get_activity, :delete_event, :invite_event_guests_by_user, :invite_event_guests_by_email, :invite_fb_friends_to_event, :add_activity_moderators, :add_activity_guests, :search_event_guests, :unjoin_activity, :event_invitation, :up_events_page, :prev_events_page, :event_posts_page 
+      post :create_activity_post, :create_event_album 
     end
     resources :activities  
   end

@@ -1,0 +1,7 @@
+$(".busy").button('reset');
+$("#posts").html("<%= escape_javascript(render( :partial => 'events/activity_post', :locals => { :activity => @activity, event: @event} )) %>");
+$("#div_event_post").html("<%= escape_javascript(render( partial: 'posts/post', locals: {posts: @posts, activity: @activity} )) %>");
+    $('document').ready(function(){
+    	currentPage_post = 1;
+      intervalID_post = setInterval(checkScroll_post, 500);
+    });

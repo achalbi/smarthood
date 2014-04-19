@@ -61,6 +61,11 @@ class ActivitiesController < ApplicationController
   def show
     @activity = Activity.find(params[:id]) 
     @event = Event.find(@activity.event_id)
+    @eds = @event.eventdetails
+    @ads = @activity.activitydetails
+    @ad_users = @activity.activitydetails.where(" is_admin=?", true)
+    @inv_users = @activity.activitydetails.where(" is_admin=?", false)
+=begin
     @post = Post.new
     @posts = @activity.posts.order("id DESC").all
        @ad_eds 
@@ -72,7 +77,7 @@ class ActivitiesController < ApplicationController
      # @ad_eds = @activity.activitydetails.where(is_admin: true )
       @non_ad_eds = @activity.activitydetails #.where(is_admin: false)   
     end
-    @groups = @non_ad_eds.pluck(:group_id)
+    @group_ids = @non_ad_eds.pluck(:group_id)
     @users = @non_ad_eds.pluck(:user_id)
      @urs = User.where(['id IN (?)', @users])
      @users1 = @urs.where("name like ?", "%#{params[:q]}%")
@@ -81,7 +86,7 @@ class ActivitiesController < ApplicationController
         user[:profile_pic] =  gravatar_for_url(user, size: 40)
         @users_pp << user
       end
-      @grps = Group.where(['id IN (?)', @groups])
+      @grps = Group.where(['id IN (?)', @group_ids])
       @groups1 = @grps.where("name like ?", "%#{params[:q]}%")
     @groups_pp = []
       @groups1.each do |group|
@@ -90,7 +95,7 @@ class ActivitiesController < ApplicationController
       end
     @ad_users=[]
     @ad_groups=[]
-    @inv_groups = Group.where(['id IN (?)', @groups])
+    @inv_groups = Group.where(['id IN (?)', @group_ids])
     @inv_users = User.where(['id IN (?)', @users])
     @album = Album.new
     @albums = @activity.albums
@@ -99,6 +104,8 @@ class ActivitiesController < ApplicationController
     unless @activity.is_admin
       @event = @activity
     end
+=end
+
   end
 
 

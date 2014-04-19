@@ -1,0 +1,210 @@
+<table class="pull-left" style="width:230px;">
+        <thead>
+          <tr class="tr-hover">
+            <th >
+             <%="Moderator".pluralize(ad_users.count) %>
+                <% if event.is_admin?(current_user.id) %>
+                 <%= link_to "edit", '#', id: "moderator",  class: "uibutton icon edit pull-right button_toggle" %>
+                <% end %>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+            <% ad_users.each do |ed|%>
+          <tr class="tr-hover">
+            <td>
+            <div  class="img_zoom" style="float:left;" >
+              <%= gravatar_for ed.user, size: 52 %>
+            </div>
+                <address>
+                  <strong> <a href="#"><%= ed.user.name %></a></strong><br>
+                  <a mailto="<%= ed.user.email %>"><%= ed.user.email %></a>
+                </address>             
+            </td>
+          </tr>
+          <% end %>
+            
+        </tbody>
+      </table>
+
+      <table class="marginLeft15 pull-left" style="width:320px;">
+        <thead>
+          <tr class="tr-hover">
+            <th >
+              <%="Guest".pluralize(inv_users.count) %>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="padding:5px 0 0 0;">
+                <ul class="pills guests center_block">
+                  <li class="active" id="all_li"><a class="c-pointer" >Invited - <%= inv_users.count %></a></li>
+                  <li id="yes_li"><a class="c-pointer">Yes - <%= inv_users.where(status: "yes").count %></a></li>
+                  <li id="no_li"><a class="c-pointer">No - <%= inv_users.where(status: "no").count %></a></li>
+                  <li id="maybe_li"><a class="c-pointer">May be - <%= inv_users.where(status: "maybe").count %></a></li>
+                </ul>
+            </td>
+          </tr>
+          <% if inv_users.count > 0 %>
+            <% inv_users.each do |ed|%>
+              <tr class="tr-hover all <%= ed.status %>" >
+                <td >
+                <div  class="img_zoom" style="float:left;" >
+                  <%= gravatar_for ed.user, size: 52 %>
+                </div>
+                      <% if ed.status == "invited" %>
+                          <span class="label pull-right ">Not Responded</span>
+                      <% elsif ed.status == "yes" %>
+                          <span class="label success pull-right ">Yes</span>
+                      <% elsif ed.status == "no" %>
+                          <span class="label important pull-right ">No</span>
+                      <% elsif ed.status == "maybe" %>
+                          <span class="label warning pull-right ">May be</span>
+                      <% else %>
+                      <% end %>
+                    <address>
+                      <strong> <a href="#"><%= ed.user.name %></a></strong><br>
+                      <a mailto="<%= ed.user.email %>"><%= ed.user.email %></a>
+                    </address>
+                </td>
+              </tr>
+            <% end %>
+          <% else %>
+          <tr>
+            <td>
+              <address>No guests in the event</address>
+            </td>
+          </tr>
+          <% end %>
+            
+        </tbody>
+      </table>
+
+<%= form_for( event, url: add_event_moderators_event_path(event), method: :get, remote: true) do |f| %>
+<div id="modal_add_mod" style="display:none;" >
+  <div id="modal-from-dom__add_mod" class="modal hide fade in" style="display: block;">
+    <div class="modal-header">
+      <a href="#" id="close_add_mod" class="close">×</a>
+      <span style="font-size:15px;line-height: 2;"><strong>Set moderators</strong></span>
+    </div>
+      <span style="font-size:11px;line-height: 3;margin-right:10px;" class="pull-right">(Check to set member as a Moderator)</span>
+    <div class="modal-body" style="max-height:350px;width:530px;">
+      <div class="row">
+        <div class=" ui-front">  
+        <%= f.hidden_field :id %>       
+         <%= render 'shared/error_messages', object: f.object %>
+         <aside class="">
+          <section>
+            <!-- <h2 style="margin-left:65px;padding:3px;">Moderators</h2> -->
+            <ul class="users" style="overflow:auto;">
+              <% @eds.each do |uc| %>
+              <% user = User.find(uc.user_id) %>
+              <% if user == current_user  %>
+                <% next %>
+              <% end %>
+                  <li style="margin-left:15px;" class="tr-hover">
+                    <div class="checkboxFive pull-right marginRight15" style="margin-top:5px;">
+                        <%= check_box_tag 'user_ids[]', user.id, uc.is_admin?, id: "checkboxFiveInput#{uc.id}" %>
+                      <label for="checkboxFiveInput<%= uc.id %>"></label>
+                    </div>
+                    <div  class="img_zoom" style="float:left;margin-left:15px;" >
+                      <%= gravatar_for user, size: 52 %>
+                    </div>
+                      <strong> <a href="#"><%= user.name %></a></strong>
+                      <p><%= user.email %></p>
+                  <div style="margin-right:10px;" class="pull-right">
+                    <%= hidden_field_tag 'user_all_ids[]', user.id %>
+                  </div>
+                  </li>
+              <% end %>
+            </ul>     
+          </section>
+        </aside>
+      </div>
+    </div>   
+  </div>
+  <div class="modal-footer" >
+    <%= f.submit "Update", class: "btn primary pull-right busy", id: "submit_add_mod" %>  
+  </div>
+</div>
+</div>
+<% end %>
+
+<script type="text/javascript">
+  $('#all_li').click(function(){
+      $(".all").show();
+      $('#all_li').removeClass('active');
+      $('#all_li').addClass('active');
+      $('#yes_li').removeClass('active');
+      $('#no_li').removeClass('active');
+      $('#maybe_li').removeClass('active');
+  });
+
+    $('#yes_li').click(function(){
+      $(".invited").hide();
+      $(".no").hide();
+      $(".maybe").hide();
+      $(".yes").show();
+      $('#yes_li').removeClass('active');
+      $('#yes_li').addClass('active');
+      $('#all_li').removeClass('active');
+      $('#no_li').removeClass('active');
+      $('#maybe_li').removeClass('active');
+  });
+
+   $('#no_li').click(function(){
+      $(".invited").hide();
+      $(".maybe").hide();
+      $(".yes").hide();
+      $(".no").show();
+      $('#no_li').removeClass('active');
+      $('#no_li').addClass('active');
+      $('#all_li').removeClass('active');
+      $('#yes_li').removeClass('active');
+      $('#maybe_li').removeClass('active');
+  });
+
+   $('#maybe_li').click(function(){
+      $(".invited").hide();
+      $(".no").hide();
+      $(".yes").hide();
+      $(".maybe").show();
+      $('#maybe_li').removeClass('active');
+      $('#maybe_li').addClass('active');
+      $('#all_li').removeClass('active');
+      $('#no_li').removeClass('active');
+      $('#yes_li').removeClass('active');
+  });
+
+
+$("#moderator").on( "click", function() {
+ $('#modal_add_mod').modal({
+      //keyboard: true,
+      backdrop: "static",
+    });
+// $('body').css('overflow','hidden');
+// $('body').css('position','fixed');
+});
+
+$("#close_add_mod").click(function(){
+  $('#modal_add_mod').modal('hide');
+});
+
+$("#submit_add_mod").click(function(){
+  $(this).attr('data-loading-text', 'Updating...');
+  $(this).button('loading');
+});
+
+$(function(){
+  $('.button_toggle').hide();
+
+   $('.tr-hover').hover(function() {
+       $(this).find('.button_toggle').show();
+       }, function() {
+         $(this).find('.button_toggle').hide();
+    });
+
+});
+
+      </script>

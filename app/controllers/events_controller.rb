@@ -229,9 +229,18 @@ class EventsController < ApplicationController
       end 
     end
 
-    def show
+  def show
     @event = Event.find(params[:id])
-    @album = Album.new
+    @eds = @event.eventdetails
+    @ad_users = @event.eventdetails.where(" is_admin=?", true)
+    @inv_users = @event.eventdetails.where(" is_admin=?", false)
+    @post = Post.new
+    @posts = @event.posts.paginate(:page => params[:page], :per_page => 4)
+    @activities = @event.activities
+    @activity = @event.activities.where(is_admin: true).first
+
+=begin
+
     @ad_eds = @event.eventdetails.where(is_admin: true )
     @non_ad_eds = @event.eventdetails.where(is_admin: false)
     @groups = @non_ad_eds.pluck(:group_id)
@@ -242,8 +251,6 @@ class EventsController < ApplicationController
     @ad_groups = Group.where(['id IN (?)', @admin_groups])
     @inv_users = User.where(['id IN (?)', @users])
     @ad_users = User.where(['id IN (?)', @admin_users])
-    @activities = @event.activities
-    @activity = @event.activities.where(is_admin: true).first
     @albums = @activity.albums
     @share = Share.new
     @ur_ids = @event.eventdetails.pluck(:user_id)
@@ -280,7 +287,9 @@ class EventsController < ApplicationController
       end
        @event.save
     end
-    @is_event = true        
+    @is_event = true       
+=end
+ 
     respond_to do |format|
       format.html # show.html.erb
       format.json { render :json => @event }
@@ -466,6 +475,270 @@ class EventsController < ApplicationController
       @event.latitude = gc.latitude
       @event.longitude = gc.longitude
   end
+
+
+  def event_posts
+      @event = Event.find(params[:id])
+      @activity = Activity.find(params[:activity_id])
+      @post = Post.new
+      if @activity.is_admin
+        @posts = @event.posts.paginate(:page => params[:page], :per_page => 4)
+      else
+        @posts = @activity.posts.paginate(:page => params[:page], :per_page => 4)
+      end
+  end
+
+  def event_posts_page
+      @event = Event.find(params[:id])
+      @activity = Activity.find(params[:activity_id])
+      @post = Post.new
+      if @activity.is_admin
+        @posts = @event.posts.paginate(:page => params[:page], :per_page => 4)
+      else
+        @posts = @activity.posts.paginate(:page => params[:page], :per_page => 4)
+      end 
+  end
+
+  def create_activity_post
+      @event = Event.find(params[:id])
+      @activity = Activity.find(params[:activity_id])
+      @post = @activity.posts.build(params[:post])
+      @post.user = current_user
+      @post.save
+      unless params[:photo].nil?
+        @post.photos << current_user.photos.build(params[:photo])
+        @post.save
+      end
+      @post.communities << active_community 
+      @activity.posts << @post
+      @post.activityposts[0].update_attributes(:event_id => @activity.event_id)
+      @activityposts = Activitypost.where("activity_id = ? ", @activity)
+      if @activity.is_admin
+        @posts = @event.posts.paginate(:page => params[:page], :per_page => 4)
+      else
+        @posts = @activity.posts.paginate(:page => params[:page], :per_page => 4)
+      end 
+      getNotifiableUsers(Objecttypeenum::POST, @post, Objecttypeenum::ACTIVITY, @activity, Uc_enum::CREATED)
+      @post_type = 'activity'
+      respond_to do |format|
+        format.html { redirect_to @activity, format: 'js' }
+         format.js {  }
+      end
+  end
+
+  def event_members
+      @activity = Activity.find(params[:activity_id])
+    if @activity.is_admin?
+      @event = Event.find(params[:id])
+      @eds = @event.eventdetails
+      @ad_users = @event.eventdetails.where(" is_admin=?", true)
+      @inv_users = @event.eventdetails.where(" is_admin=?", false)
+    else
+      @event = Event.find(params[:id])
+      @eds = @event.eventdetails
+      @ads = @activity.activitydetails
+      @ad_users = @activity.activitydetails.where(" is_admin=?", true)
+      @inv_users = @activity.activitydetails.where(" is_admin=?", false)
+    end
+  end
+
+  def event_photos
+      @activity = Activity.find(params[:activity_id])
+      @event = Event.find(params[:id])
+      @activities = @event.activities
+  end
+
+ def add_event_moderators
+    @event = Event.find(params[:event][:id])
+    @event.eventdetails.where("user_id IN (?)", params[:user_all_ids]).update_all(is_admin: false)
+    @event.eventdetails.where("user_id IN (?)", params[:user_ids]).update_all(is_admin: true)
+    @users = User.where("id IN (?)", params[:user_ids])
+    @community = Community.find(params[:id])
+    @eds = @event.eventdetails
+    @ad_users = @event.eventdetails.where(" is_admin=?", true)
+    @inv_users = @event.eventdetails.where(" is_admin=?", false)
+      @users.each do |usr|
+      #  getNotifiableUsers(Objecttypeenum::COMUNITY, @community, Objecttypeenum::USER, usr, Uc_enum::ADD_MODERATOR)
+      end
+ end
+
+ def add_activity_guests
+    @activity = Activity.find(params[:activity][:id])
+    @event = Event.find(params[:event_id])
+    @ed_user = @event.eventdetails.pluck(:user_id)
+    @ad_user = @activity.activitydetails.pluck(:user_id)
+    unless params[:invite_everyone].nil?
+        @ed_user = @ed_user - @ad_user
+          @ed_user.each do |user_id|
+            @ad = Activitydetail.new
+            @ad.is_admin = false
+            @ad.user_id = user_id
+            @activity.activitydetails << @ad
+          end
+      else
+          @user_ids = params[:activity][:user_tokens].split(",").map { |x| x.to_i }
+          unless @ed_user.nil?
+            @user_ids = @user_ids - @ad_user 
+            @user_ids.each do |user_id|
+              @ad = Activitydetail.new
+              @ad.is_admin = false
+              @ad.user_id = user_id
+              @activity.activitydetails << @ad
+            end
+          end
+      end
+    @community = Community.find(params[:id])
+    @eds = @event.eventdetails
+    @ads = @activity.activitydetails
+    @ad_users = @activity.activitydetails.where(" is_admin=?", true)
+    @inv_users = @activity.activitydetails.where(" is_admin=?", false)
+  end
+
+  def unjoin_activity
+    @activity = Activity.find(params[:activity_id])
+    @activity.activitydetails.find_by_user_id(params[:user_id]).destroy
+    respond_to do |format|
+      format.all { redirect_to :action => "get_activity", :event_id => params[:event_id], id: params[:id], :activity_id => params[:activity_id] }
+   end
+  end
+
+  def add_activity_moderators
+    @event = Event.find(params[:id])
+    @activity = Activity.find(params[:activity][:id])
+    @activity.activitydetails.where("user_id IN (?)", params[:user_all_ids]).update_all(is_admin: false)
+    @activity.activitydetails.where("user_id IN (?)", params[:user_ids]).update_all(is_admin: true)
+    @community = Community.find(params[:id])
+    @eds = @event.eventdetails
+    @ads = @activity.activitydetails
+    @ad_users = @activity.activitydetails.where(" is_admin=?", true)
+    @inv_users = @activity.activitydetails.where(" is_admin=?", false)
+
+  end
+
+
+  def invite_event_guests_by_user
+    @community = Community.find(params[:id])
+    @event = Event.find(params[:event][:id])
+    @eds = @event.eventdetails
+    @ed_user = @eds.collect(&:user_id)
+    @ad_users = @event.eventdetails.where(" is_admin=?", true)
+    @inv_users = @event.eventdetails.where(" is_admin=?", false)
+      unless params[:invite_everyone].nil?
+        @com_user = active_community.usercommunities.where("invitation = ?", Uc_enum::JOINED ).collect(&:user_id)
+        @ed_user_add = @com_user - @ed_user
+        @ed_user = @ed_user + @ed_user_add
+          @ed_user_add.each do |user_id|
+            @event.eventdetails.create(user_id: user_id, is_admin: false, status: "invited")
+          end
+      end
+    @user_ids = params[:event][:user_tokens].split(",").map { |x| x.to_i }
+    unless @ed_user.nil?
+      @user_ids = @user_ids - @ed_user 
+      @ed_user = @user_ids + @ed_user 
+    end
+    @ed_groups = params[:event][:group_tokens].split(",").map { |x| x.to_i }
+      @ed_groups.each do |group_id|
+        @grp = Group.find(group_id)
+        @ed_users  =  @grp.users.collect(&:id) - @ed_user
+        @ed_users.each do |user_id|
+          @event.eventdetails.create(user_id: user_id, group_id: @grp.id, is_admin: false, status: "invited")
+          #getNotifiableUsers(Objecttypeenum::EVENT, @event, Objecttypeenum::USER, id, Uc_enum::INVITED)
+        end
+      end
+    @user_ids.each do |id|
+      @event.eventdetails.create(user_id: id, is_admin: false, status: "invited")
+      #getNotifiableUsers(Objecttypeenum::EVENT, @event, Objecttypeenum::USER, id, Uc_enum::INVITED)
+    end 
+  end
+
+  def invite_event_guests_by_email
+   @community = Community.find(params[:id])
+   @event = Event.find(params[:event][:id])
+    @eds = @event.eventdetails
+    @ed_user = @eds.collect(&:user_id)
+    @ad_users = @event.eventdetails.where(" is_admin=?", true)
+    @inv_users = @event.eventdetails.where(" is_admin=?", false)
+   @email_ids = params[:event][:user_tokens].split(",")
+    @email_ids.each do |eid|
+      @user = create_user_to_invite(nil,eid)
+      if @user.id == current_user.id
+        next
+      end
+      if @ed_user.include?(@user.id)
+        next
+      end
+       @event.eventdetails.create(user_id: @user.id, is_admin: false, status: "invited")
+    end
+  end
+
+  def invite_fb_friends_to_event
+    @community = Community.find(params[:id])
+    @event = Event.find(params[:event_id])
+     @eds = @event.eventdetails
+    @ed_user = @eds.collect(&:user_id)
+    @ad_users = @event.eventdetails.where(" is_admin=?", true)
+    @inv_users = @event.eventdetails.where(" is_admin=?", false)
+    @fb_uids = params[:ids].split(",")
+    @fb_uids.each do |uid|
+      @user = create_user_to_invite(uid[0],nil)
+      if @ed_user.include?(@user.id)
+        next
+      end
+      @event.eventdetails.create(user_id: @user.id, is_admin: false, status: "invited")
+    end
+  end
+
+  def search_event_guests
+    @event = Event.find(params[:id])
+    @user_ids  = @event.eventdetails.pluck(:user_id)
+      @users = User.where("LOWER(name) like LOWER(?) AND id != ? AND id IN (?)", "%#{params[:q]}%", current_user.id, @user_ids )
+        @users_pp = []
+        @users.each do |user|
+          user[:profile_pic] =  gravatar_for_url(user, size: 40)
+          @users_pp << user
+        end
+      respond_to do |format|
+        format.html
+        format.json { render :json => @users_pp.map(&:attributes) }
+      end
+  end
+
+    def create_event_album
+      @event = Event.find(params[:id])
+      @activity = Activity.find(params[:activity_id])
+     @album = current_user.albums.build(params[:album])
+          # @album.user = current_user
+        @album.save
+        params[:photos][:pic].each do |pic|
+          @photo = Photo.new
+            @photo.pic = pic
+            @album.photos << @photo
+        end
+        @album.save
+        @activity.albums << @album
+        @activity.save
+        @albums = @activity.albums
+      if @album.privacy == Privacyenum::PUBLIC
+        @post = Post.new
+        @post.content = "<span class='timestamp' style='font-size:15px;'>added " + view_context.pluralize(@album.photos.count, "photo") + " to the album </span><strong><a href='/albums/" + @album.id.to_s + "' style='font-size:15px;word-wrap:break-word;' data-remote='true' > " + @album.title + " </a></strong>" + "<span class='timestamp' style='font-size:15px;'> under the event </span><strong><a href='/events/" + @event.id.to_s + "' style='font-size:15px;word-wrap:break-word;' data-remote='true' > " + @event.title + " </a>.</strong>"
+        @post.user_id = current_user.id
+        @post.postable = @album
+        @post.save
+        @post.communities << active_community 
+        @album.photos.each do |photo|
+          @post.photos << photo
+        end
+      end
+     #   getNotifiableUsers(Objecttypeenum::ALBUM, @album, nil, nil, Uc_enum::CREATED)
+        #  flash[:success] = "Album created"
+      @share = Share.new
+      respond_to do |format|
+         format.html {  }
+         format.js {  }
+      end
+  end
+
+
 
   private
   def sort_column(sort)

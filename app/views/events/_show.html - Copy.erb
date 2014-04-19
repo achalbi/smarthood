@@ -45,18 +45,60 @@
     </section>
       
    </aside>
+<!--    <aside id="right" style="float: right;width:220px;margin-right:10px;">
+    <div id="event_stats">
+      <%= render partial: 'shared/event_stats', locals: {ad_users: @ad_users, inv_users: @inv_users, ad_groups: @ad_groups, inv_groups: @inv_groups} %>
+    </div>
+    </aside> -->
 <div class="center loading_page active_hide" ><img src="/assets/loading.gif"></div>
 
-<div class="span13" style="margin-top:10px;">
-<div id="event_list">
-  <%= render partial: "events/event_links", locals: { event: @event, activity: @activity } %>
-</div>
+<div id="event_list" class="span13" style="margin-top:10px;">
+  <%= render partial: "events/event_links", locals: { event: @event } %>
+  <br>
+  <ul class="tabs">
+    <li class="active" id="posts_events_li"><a href="#"><h4>Posts</h4></a></li>
+    <li id="activity_events_li"><a ><h4>About</h4></a></li>
+    <li id="photos_events_li"><a ><h4>Photos</h4></a></li>
+  </ul>
 
-        <div id="show_event_div">
-            <%= render partial: "events/event_members", locals: { event: @event, activity: @activity, ad_users: @ad_users, inv_users: @inv_users } %>
-        </div>
-</div>
 
+     <div id="posts_events">  
+      <ul class="users" id="posts_events_ul" >
+            <div id="posts" style="overflow:auto;">
+            <% if signed_in? %>
+              <%= render :partial => 'posts/activity_post', :locals => {:post => @post}, :activity => @activity %>
+              <br><br>
+            <% end %>
+              <div id="div_post" class="resources<%= @activity.id %>">
+                <%= render partial: 'posts/post', locals: {posts: @posts, activity: @activity}  %>
+              </div>
+              <p id="activity_id" class='active_hide'><%= @activity.id %></p>
+               <div id="loading_page" class="center" ><img src="http://res.cloudinary.com/rashi/image/upload/v1377924529/loading7_gvb06y.gif"></div>
+            </div>
+			</ul>
+		<br>
+	</div>
+	<div id="activity_events">  
+   <%= render partial: 'events/about', locals: {ad_users: @ad_users, inv_users: @inv_users, ad_groups: @ad_groups, inv_groups: @inv_groups, event: @event} %>
+	</div>
+	<div id="photos_events">  	
+    <% @activities.each do |activity| %>
+    <div id="gallery"></div>
+    <div class="gallery2">
+    <% if activity.is_admin? %>
+      <h4>Event's:</h4>
+      <%= render partial: 'events/albums', locals: {activity: activity, albums: activity.albums, album: @album} %>
+    <% else %>
+    <% unless activity.albums[0].nil? %>
+     <h4>Activity: <%= activity.title %></h4>
+        <%= render partial: 'events/albums', locals: {activity: activity, albums: activity.albums, album: @album} %>
+    <% end %>
+    <% end %>
+    </div>
+   <% end %>
+  </div>
+
+</div>
 
 <div id="crt_act">
   <%= form_for( [@event.activities.build], remote: true) do |f| %>
@@ -123,13 +165,13 @@
                  <div class="center_block clearfix"><br>
                   <%= f.label "Invite by User name:" %>
                   <div class="input ui-front">
-                     <%= f.text_field :user_tokens, id: "search_user" %>
+                     <%= f.text_field :user_tokens, id: "search_user","data-pre" => @users_pp.map(&:attributes).to_json %>
                   </div>
                 </div>
                 <div class="center_block clearfix">
                   <%= f.label "Invite by Group Name:" %>
                   <div class="input ui-front">
-                     <%= f.text_field :group_tokens, id: "search_group" %>
+                     <%= f.text_field :group_tokens, id: "search_group","data-pre" => @groups_pp.map(&:attributes).to_json %>
                   </div>
                 </div>
               </div>   
@@ -209,13 +251,13 @@
                  <div class="center_block clearfix"><br>
                   <%= f.label "Invite by User name:" %>
                   <div class="input ui-front">
-                     <%= f.text_field :user_tokens, id: "search_user_evt" %>
+                     <%= f.text_field :user_tokens, id: "search_user_evt","data-pre" => @users_pp.map(&:attributes).to_json %>
                   </div>
                 </div>
                 <div class="center_block clearfix">
                   <%= f.label "Invite by Group Name:" %>
                   <div class="input ui-front">
-                     <%= f.text_field :group_tokens, id: "search_group_evt" %>
+                     <%= f.text_field :group_tokens, id: "search_group_evt","data-pre" => @groups_pp.map(&:attributes).to_json %>
                   </div>
                 </div>
                 

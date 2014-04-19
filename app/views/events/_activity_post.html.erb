@@ -1,0 +1,97 @@
+  <div id="image" style="display:block">
+    <div id="textarea_div" style="resize: both;border: 1px solid #d4dae8;overflow: hidden;background-color:#f2f2f2;">
+<%= form_for(Post.new, url: create_activity_post_event_path(event) , remote: true,  :html => {:multipart => true, id: "activity_new_post"}) do |f| %>
+    <%= render 'shared/error_messages', object: f.object %>
+                <%= fields_for :photo, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
+                 
+                <%= photo_form.file_field :pic, id: "pic1",style: "width:0px; height:0px; padding:0px;  left:0px;display:none;" %>  
+
+                <% end %>
+                 <div class=" pull-left">
+                    <%= f.text_area :content, placeholder: "Compose new post...", :rows=>6, class: "span10", 'data-validation' => "required", 'data-validation-error-msg' => "Post can't be blank"  %>
+                 <canvas id="imageCanvas1" style = "border: 1px solid #ddd; padding:2px; align:center;cursor:pointer; background-color:#ffffff;" width="132px" height="88px">Add pictures</canvas>
+                </div> 
+ <%= f.submit "Post", id: "activity_post_submit", class: "btn primary pull-right" %>
+  <%= hidden_field_tag :type, "activity" %>  
+  <%= hidden_field_tag :activity_id, activity.id %>
+  <%= hidden_field_tag :event_id, event.id %>
+<% end %>
+      </div>
+</div>
+
+
+<script type="text/javascript">
+
+$(document).ready(function(){
+  $('.loading_sub').hide();
+  $.validate({
+//    validateOnBlur : false,
+    form : '#activity_new_post',
+    onSuccess : function() {
+      $('.loading_sub').show();
+      $('#activity_post_submit').attr('data-loading-text', 'Posting...');
+      $('#activity_post_submit').button('loading');
+    },
+  });
+  });
+
+  var imageLoader = document.getElementById('pic1');
+  imageLoader.addEventListener('change', handleImage, false);
+  $("#imageCanvas1").click(function(){
+    $("#pic1").click();
+  });
+  var canvas = document.getElementById('imageCanvas1');
+  var ctx = canvas.getContext('2d');
+  ctx.font="8pt tahoma ";
+  ctx.fillStyle = 'grey';
+  ctx.fillText("Add picture",35,46);
+
+  function handleImage(e){
+    var canvas = document.getElementById('imageCanvas1');
+    var ctx = canvas.getContext('2d');
+    var iCnt=0;
+    var files = e.target.files;
+    if(files.length<1){
+      $('#pic1').val('');
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.clearRect(0, 0, 132, 88);
+      ctx.font="8pt tahoma ";
+      ctx.fillStyle = 'grey';
+      ctx.fillText("Add picture",35,46);
+      return;
+    }
+    canvas.width = 132;
+    canvas.height = 88*(Math.ceil(files.length/1));
+    for( var i = 0, len = files.length; i < len; i++) 
+    {
+      if(files[i])
+      {
+        var reader = new FileReader();
+        reader.onload = function(event){
+          var img = new Image();
+
+          img.onload = function(){
+            var ratioPx = 150;
+            var sWidth =ratioPx;
+            var ratio = img.width/sWidth;
+            var sHeight = img.height/ratio;   
+            if(sHeight>ratioPx){
+             sHeight =ratioPx;
+             ratio = img.height/sHeight;
+             sWidth = img.width/ratio;  
+           }
+           ctx.drawImage(img, 155*(iCnt%4),155*(Math.floor(iCnt/4)),sWidth,sHeight);
+                  //ctx.drawImage(img,0,0,sWidth,sHeight);
+                  iCnt++;
+                }
+                img.src = event.target.result;
+              }
+              reader.readAsDataURL(e.target.files[i]);     
+            }
+          }
+        }
+
+
+
+
+</script>

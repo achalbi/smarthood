@@ -1,20 +1,23 @@
-          <div id="gallery"  >
             <div id="evt_album">
                           
               <% unless albums.nil? %>
-                    <div id="gallery1" class="span12 pull-left">
-                       <ul id="grid" >    
-                       <li>
-                        <div id="upload_pics"  style = "border:2px dashed #ddd; width:85px; height:85px; padding:10px;  left:40px; text-align:middle; z-index: 1;  cursor:pointer;  float:left; margin-bottom:25px;display:none;
-                        " class="bgClrChg">  <h5> Create Album </h5>
-                        </div>
-                       </li>               
+                    <div id="gallery1" class=" pull-left">
+                       <ul id="grid" style="margin:0px" >
+                       <% if @event.responded?(current_user) %>
+                         <% unless hide =="yes" %>
+                          <li style="background-color:#ffffff!important;margin-left:0px;">
+                            <div id="upload_pics_event_<%= activity.id.to_s %>"  style = "border:2px dashed #ddd; width:110px; height:110px; padding:10px;  left:40px; text-align:middle; z-index: 1;  cursor:pointer;  float:left; margin-bottom:3px;" class="bgClrChg">  <h5 class="center" style="margin:38px 0 0 0 "> Create Album </h5>
+                            </div>
+                         </li>
+                        <% end %> 
+                      <% end %> 
+                       
                        <% albums.each do |album| %>
                        <% unless album.photos[0].nil? %>
-                        <li>
+                        <li style="margin:0 0 10px 5px;">
                         <div  class="img_zoom" >
-                         <%= link_to cl_image_tag(album.photos[0].pic_url(:smaller), class:"image_al_c thumbnail") , album, class:"albumLink", remote: true %>
-                           <h5 style="float:right;"><%= link_to album.title, album, class:"albumLink", remote: true %></h5>
+                          <%= link_to cl_image_tag(album.photos[0].pic_url(:small_mid), class:"image_al_c thumbnail") , album, class:"albumLink", remote: true %>
+                           <span style="font-size:13px;" class="center"><%= link_to album.title.length > 17 ? album.title.slice(0..17) + "..." : album.title , album, class:"albumLink", remote: true, title: "#{album.title}" %></span>
                       </div>
                       </li>
                     <% end %> 
@@ -26,112 +29,172 @@
           </div>
       <ul class="users" id="photos_events_ul" >
       </ul>
-      <div id="modal5" style="display:none" >
-          <div id="modal-from-dom5" class="modal hide fade in" style="display: block;width:700px;">
-      <%= form_for(album, url: create_album_activities_path, remote: true, :html => {:multipart => true}) do  |f| %> 
-            <div class="modal-header">
-              <a href="#" id="close5X" class="close">×</a>
-              <h3>Create album</h3>
-            </div>
-            <div class="modal-body" style="max-height:450px;">
-              <div class="row">
-              <div class="span14 ui-front "  >
-            
-             <%= render 'shared/error_messages', object: f.object %>
-                <div class="center_block clearfix pull-left">
-                  <%= f.label :title %>
-                  <div class="input">
-                    <%= f.text_field :title, :placeholder=>"Title" %>
-                  </div>
-                </div>
 
-              <div class="center_block clearfix pull-left">
-                  <%= f.label :description %>
-                  <div class="input">
-                  <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title=>"Description", rows: 3, cols: 75  %> 
-                </div>
-                </div>
-              <span class="overrideClass">
-              <div class="center_block clearfix pull-left">
-              <%= f.label "privacy:" %>
-              <div class="input">
-                <%= f.select :privacy, options_for_select([["Public", Privacyenum::PUBLIC], ["Private", Privacyenum::PRIVATE]]) %>
-                </div>
-              </div>
-              </span>
-            <br><br>
-              <div class="center_block clearfix pull-left clear">
-               <div class="ui-front">    
-               <%= fields_for :photos, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
-                 
-              <%= photo_form.file_field :pic, id: "pic5_#{activity.id.to_s}", :multiple => true, style: "width:1px; height:1px; padding:0px;  left:0px;" %>  
-              <% end %>
-              <%= hidden_field_tag :type, "event" %>
-              <%= hidden_field_tag :id, activity.id %>
-                  <canvas id="imageCanvas5<%= activity.id.to_s %>" style = "border: 1px solid #ddd; padding:5px; align:center" >select photos</canvas>
-                </div>
-              </div>
-             </div>
-            </div>
-            </div>
-            <div class="modal-footer" >
-              <%= f.submit "Create Album", class: "btn primary pull-right", id: "crtAlb" %> 
-            </div>
-        <% end %>
+
+<%= form_for(Album.new, url: create_event_album_event_path(event), remote: true, :html => {:multipart => true}) do  |f| %> 
+<div id="modal_com_<%= activity.id.to_s %>" class="modal_com" style="display:none" >
+  <div id="modal-from-dom_com" class="modal hide fade in" style="display: block;width:700px;">
+    <div class="modal-header">
+      <a href="#" id="closeX_com_<%= activity.id.to_s %>" class="close">×</a>
+      <h3>Create album</h3>
+    </div>
+    <div class="modal-body" style="max-height:450px;">
+      <div class="row">
+        <div class="span14 ui-front "  >
+
+         <%= render 'shared/error_messages', object: f.object %>
+         <div class="center_block clearfix pull-left">
+          <%= f.label :title %>
+          <div class="input">
+            <%= f.text_field :title, :placeholder=>"Title", 'data-validation' => "length",
+     'data-validation-length' =>"3-25", 'data-validation-error-msg' => "The Album title has to be a value between 3-25 characters" %>
           </div>
-          
+        </div>
+
+        <div class="center_block clearfix pull-left">
+          <%= f.label :description %>
+          <div class="input">
+            <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title=>"Description", rows: 3, cols: 75, 'data-validation' => "length ",
+     'data-validation-length' =>"3-250", 'data-validation-error-msg' => "The community description has to be an alphanumeric value between 3-250 characters"   %> 
+          </div>
+        </div>
+        <span class="overrideClass">
+          <div class="center_block clearfix pull-left">
+            <%= f.label "privacy:" %>
+            <div class="input">
+              <%= f.select :privacy, options_for_select([["Public", Privacyenum::PUBLIC], ["Private", Privacyenum::PRIVATE]]) %>
+            </div>
+          </div>
+        </span>
+          <div class="center_block clearfix pull-left ">
+            <%= f.label  "Album downloadable: " %>
+            <div class="input">
+              <%= check_box_tag :downloadable %>
+            </div>
+          </div>
+        <div class="center_block clearfix pull-left clear">
+         <div class="input">    
+           <%= fields_for :photos, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
+
+           <%= photo_form.file_field :pic, id: "pic_com_#{activity.id.to_s}", :multiple => true, style: "width:0px; height:0px; padding:0px;  left:0px;", 'data-validation' => "required", 'data-validation-error-msg' => "Please select atleast 1 photo" %>  
+           <% end %>
+            <%= hidden_field_tag :type, "event" %>
+            <%= hidden_field_tag :activity_id, activity.id %>
+            <canvas id="imageCanvas_com_<%= activity.id %>" style = "border: 1px solid #ddd; padding:5px; align:center;cursor:pointer;" >click to add photos</canvas>
+         </div>
+       </div>
+     </div>
+   </div>
+ </div>
+ <div class="modal-footer" >
+  <%= f.submit "Create Album", class: "btn primary pull-right busy", id: "crtAlb_com_#{activity.id.to_s }" %> 
+  <%= f.submit "", :class => 'active_hide reset_form', :type => 'reset' %> 
+
+</div>
+</div>
+</div>
+<% end %>
 
 
-        <script type="text/javascript">
-          $("#upload_pics").click(function(){
-            $('#modal5').modal('show');
-          });
-          $("#close5X").click(function(){
-                $('#modal5').modal('hide');
-              });
-
-          $("#crtAlb").click(function(){
-                $('#modal5').modal('hide');
-              });
 
 
-          var imageLoader = document.getElementById('pic5_'+<%= activity.id.to_s %>);
-            imageLoader.addEventListener('change', handleImage, false);
-            $("#imageCanvas5"+<%= activity.id.to_s %>).click(function(){
-                $("#pic5_"+<%= activity.id.to_s %>).click();
-            });
-                
-            var canvas = document.getElementById('imageCanvas5'+<%= activity.id.to_s %>);
-            var ctx = canvas.getContext('2d');
-            ctx.font="30px Arial";
-            ctx.fillText("Select photos",10,50);
 
-          function handleImage(e){
-            var canvas = document.getElementById('imageCanvas5'+<%= activity.id.to_s %>);
-            var ctx = canvas.getContext('2d');
-            var iCnt=0;
-            var files = e.target.files;
-            canvas.width = 600;
-            canvas.height = 155*(Math.ceil(files.length/4));
-            for( var i = 0, len = files.length; i < len; i++) 
-                  {
-                  if(files[i])
-                    {
-                      var reader = new FileReader();
-                      reader.onload = function(event){
-                        var img = new Image();
+<script type="text/javascript">
+$("#upload_pics_event_<%= activity.id.to_s %>").click(function(){
+    $('#modal_com_<%= activity.id.to_s %>').modal({
+    //  keyboard: true,
+      backdrop: "static",
+    });
+ // $('#modal_com').modal('show');
+});
 
-                        img.onload = function(){
-                          var ratioPx = 150;
-                          var sWidth =ratioPx;
-                          var ratio = img.width/sWidth;
-                          var sHeight = img.height/ratio;   
-                            if(sHeight>ratioPx){
-                               sHeight =ratioPx;
-                               ratio = img.height/sHeight;
-                               sWidth = img.width/ratio;  
-                            }
-                          ctx.drawImage(img, 155*(iCnt%4),155*(Math.floor(iCnt/4)),sWidth,sHeight);
+$("#closeX_com_<%= activity.id.to_s %>").click(function(){
+  $('#modal_com_<%= activity.id.to_s %>').modal('hide');
+  $('.reset_form').click();
+
+
+  $('#pic_com_<%= activity.id.to_s %>').val('');
+  var canvas = document.getElementById('imageCanvas_com_<%= activity.id.to_s %>');
+  var ctx = canvas.getContext('2d');
+  canvas.width = 300;
+  canvas.height = 155;
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.font="15px Arial";
+      ctx.fillText("Click here to add photos (Max: 50 files)",25,75);
+
+});
+
+
+$(document).ready(function(){
+  $.validate({
+    onSuccess : function() {
+      $('#crtAlb_com_<%= activity.id.to_s %>').attr('data-loading-text', 'Creating...');
+      $('#crtAlb_com_<%= activity.id.to_s %>').button('loading');
+     // return false; // Will stop the submission of the form
+    },
+  });
+});
+
+
+var imageLoader = document.getElementById('pic_com_<%= activity.id.to_s %>');
+imageLoader.addEventListener('change', handleImage, false);
+$("#imageCanvas_com_<%= activity.id.to_s %>").click(function(){
+  $("#pic_com_<%= activity.id.to_s %>").click();
+});
+
+var canvas = document.getElementById('imageCanvas_com_<%= activity.id.to_s %>');
+var ctx = canvas.getContext('2d');
+  ctx.font="15px Arial";
+  ctx.fillText("Click here to add photos (Max: 50 files)",25,75);
+
+function handleImage(e){
+  var canvas = document.getElementById('imageCanvas_com_<%= activity.id.to_s %>');
+  var ctx = canvas.getContext('2d');
+  var iCnt=0;
+  var files = e.target.files;
+   if(files.length>50){
+      alert("Maximum of 50 files can be selected");
+      $('#pic_com_<%= activity.id.to_s %>').val('');
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      canvas.width = 300;
+      canvas.height = 155;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.font="15px Arial";
+      ctx.fillText("Click here to add photos (Max: 50 files)",25,75);
+      return;
+    }
+   if(files.length<1){
+    $('#pic_com_<%= activity.id.to_s %>').val('');
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      canvas.width = 300;
+      canvas.height = 155;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.font="15px Arial";
+      ctx.fillText("Click here to add photos (Max: 50 files)",25,75);
+      return;
+    }
+  canvas.width = 453;
+  canvas.height = 155*(Math.ceil(files.length/3));
+  for( var i = 0, len = files.length; i < len; i++) 
+  {
+    if(files[i])
+    {
+      var reader = new FileReader();
+      reader.onload = function(event){
+        var img = new Image();
+
+        img.onload = function(){
+          var ratioPx = 150;
+          var sWidth =ratioPx;
+          var ratio = img.width/sWidth;
+          var sHeight = img.height/ratio;   
+          if(sHeight>ratioPx){
+           sHeight =ratioPx;
+           ratio = img.height/sHeight;
+           sWidth = img.width/ratio;  
+         }
+         ctx.drawImage(img, 155*(iCnt%3),155*(Math.floor(iCnt/3)),sWidth,sHeight);
                           //ctx.drawImage(img,0,0,sWidth,sHeight);
                           iCnt++;
                         }
@@ -140,9 +203,8 @@
                       reader.readAsDataURL(e.target.files[i]);     
                     }
                   }
-          }
+                }
 
 
         </script>
-        </div>
-        </div>  
+</div>  

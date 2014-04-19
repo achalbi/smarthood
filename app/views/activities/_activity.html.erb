@@ -14,6 +14,7 @@ $(".sidetabs").click(function(){
   $(".sidetabs").removeClass('sidetabs_selected');
   $(this).addClass('sidetabs_selected');
   $(this).next('a').click();
+  $('.loading_page').show();
 });
 
 

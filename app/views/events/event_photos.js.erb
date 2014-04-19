@@ -1,0 +1,2 @@
+$('.loading_sub').hide();
+$("#show_event_div").html("<%= escape_javascript( render partial: 'events/event_photos', locals: { event: @event, activity: @activity } ) %>");
