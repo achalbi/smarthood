@@ -1116,12 +1116,18 @@ def search_app_user
   end
 
   def event_invitation
+    @community = Community.find(params[:id])
     @event = Event.find(params[:event_id])
-    @ed_user = @event.eventdetails.find_by_user_id(current_user.id)
+    @eds = @event.eventdetails
+    @ed_user = @eds.find_by_user_id(current_user.id)
     @ed_user.status = params[:status]
     @ed_user.save
     respond_to do |format|
-      format.all { render :nothing => true, :status => 200 }
+      if params[:status] == 'yes' || params[:status] == 'maybe'
+        format.all { redirect_to(:action => :show_event, :format => :js, :event_id => @event.id, id: active_community.id) }
+      else
+        format.all { redirect_to :action => "events_com" }
+      end
     end
   end
 

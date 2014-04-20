@@ -1,0 +1,130 @@
+ <%= form_for( Activity.new, url: create_activity_community_path(community), remote: true,  :html => {id: "create_activity_form"}) do |f| %>
+  <div id="modal_create_activity" style="display:none" >
+          <div id="modal-from-dom" class="modal hide fade in" style="display: block;width:700px;">
+            <div class="modal-header">
+              <a href="#" id="closeX_create_activity" class="close">×</a>
+              <h3>Create Sub-event</h3>
+            </div>
+            <div class="modal-body" style="max-height:550px;">
+              <div class="row">
+          <div class="span14 ui-front">
+            <%= f.hidden_field :event_id, value: event.id %>
+               <%= render 'shared/error_messages', object: f.object %>
+                <div class="center_block clearfix">
+                  <%= f.label :title %>
+                  <div class="input">
+                    <%= f.text_field :title, :placeholder=>"Title", 'data-validation' => "length",
+     'data-validation-length' =>"3-25", 'data-validation-error-msg' => "The Event name has to be a value between 3-25 characters" %></div>
+                </div>
+
+                <div class="center_block clearfix">
+                  <%= label_tag :starts_at %>
+                  <div class="input">
+                  <%= f.text_field :starts_at, :placeholder => "Time", value: event.starts_at  %>&nbsp;&nbsp;&nbsp;
+                <a id="end_date_add_link_act" class="uibutton icon add">End Date</a>
+                </div>
+                </div>
+                <div class="center_block clearfix" id="end_date_act">
+                  <%= label_tag :ends_at %>
+                  <div class="input">
+                    <%= f.text_field :ends_at,  value: event.ends_at  %>&nbsp;&nbsp;&nbsp;
+                   <a id="end_date_remove_link_act" class="uibutton icon prev">Remove</a>
+                  </div>
+                </div> 
+
+                <div class="center_block clearfix">
+                  <%= f.label :location %>
+                  <div class="input ">
+                  <%= f.text_field :address, :placeholder => :location, :size => 43, class: 'events_with_autocomplete inherit_width', 'data-autocompleteUrl' => search_address_events_path , 'data-validation' => "length",
+     'data-validation-length' =>"3-250", 'data-validation-error-msg' => "The event address has to be a value between 3-250 characters", value: event.address %>&nbsp;&nbsp;&nbsp;
+                
+                  <%= link_to "View map", '#', id: "view_map_link_act",  class: "uibutton icon prev" %>
+                </div>
+                <div class="input" id="view_map_act">
+                
+                </div>
+                </div>
+                <div class="center_block clearfix">
+                  <%= f.label :description %>
+                  <div class="input">
+                  <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title=>"Description", rows: 3, cols: 75, 'data-validation' => "length",
+     'data-validation-length' =>"3-250", 'data-validation-error-msg' => "The event description has to be a value between 3-250 characters"  %> 
+                </div>
+                </div>
+                <div class="center_block clearfix">
+                  <%= label_tag :privacy %>
+                  <div class="input">
+                    <%= f.select :privacy, options_for_select([["Public", Privacyenum::PUBLIC], ["Private", Privacyenum::PRIVATE]]), {}, id: "activity_privacy_create" %>
+                  </div>
+                </div>
+          </div>
+        </div>   
+           </div>
+            <div class="modal-footer" >
+              <%= f.submit "Create", class: "btn primary pull-right", id: "create_activity_act" %>  
+            </div>
+          </div>
+          
+        </div>
+<% end %>
+<script type="text/javascript">
+
+                $(function(){
+                  
+                  $('#end_date_act').hide();
+
+                  $('#view_map_link_act').hide();
+                  
+                });
+
+ $(document).ready(function(){
+                $.validate({
+                  form : '#create_activity_form',
+                  onSuccess : function() {
+                    $('#create_activity_act').attr('data-loading-text', 'Creating...');
+                    $('#create_activity_act').button('loading');
+                  },
+                });
+                $('.loading_page').hide();
+              });
+
+
+                  $(".add_activity").click(function(){
+                    $('#modal_create_activity').modal({
+                      //keyboard: true,
+                      backdrop: "static",
+                    });
+                  });
+                  $("#closeX_create_activity").click(function(){
+                        $('#modal_create_activity').modal('hide');
+                      });
+
+                  $('#end_date_add_link_act').click(function(){
+                    $('#end_date_act').show();
+                    $('#end_date_add_link_act').hide();
+                  });
+                  $('#end_date_remove_link_act').click(function(){
+                    $('#end_date_act').hide();
+                    $('#end_date_add_link_act').show();
+                  });
+
+    $(function() {
+      return $('.events_with_autocomplete').autocomplete({
+        minLength: 2,
+        source: function(request, response) {
+          return $.ajax({
+            url: $('.events_with_autocomplete').data('autocompleteurl'),
+            dataType: "json",
+            data: {starts_at: "", ends_at: "",
+              address: request.term, event: "<%= @event.to_json %>"
+            },
+            success: function(data) {
+              return response(data);
+            }
+          });
+        }
+      });
+    });
+
+
+</script>

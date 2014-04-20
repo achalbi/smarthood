@@ -1,5 +1,6 @@
 $('#modal_create_activity').modal('hide');
-$("#activity_show").html("<%= escape_javascript(render :partial => 'communities/activity', :locals => {:activty => @activity, community: @community} ) %>");
+$("#edit_del_btn").html("<%= escape_javascript(render :partial => 'communities/activity', :locals => {:activty => @activity, community: @community} ) %>");
+$("#text_overlay_cu_cover_pic").html("<%= escape_javascript( render partial: 'communities/event_text_overlay', locals: {obj: @activity} ) %>");
 $("#show_event_div").html("<%= escape_javascript( render partial: 'communities/event_members', locals: { event: @event, community: @community, activity: nil, ad_users: @ad_users, inv_users: @inv_users, eds: @eds, ads: @ads } ) %>");
 $("#event_links").html("<%= escape_javascript( render partial: 'communities/activity_links', locals: { event: @event, community: @community, activity: @activity} ) %>");
-$("#event_table").html("<%= escape_javascript(render :partial => 'communities/event_table', :locals => {:event => @event, community: @community, activity: @activity} ) %>");
+$("#create_activity_div").html("<%= escape_javascript( render partial: 'communities/create_activity_cu', locals: {community: @community, event: @event} ) %>");

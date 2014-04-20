@@ -1,6 +1,12 @@
-          <li style="padding-left:15px;position:relative;border-bottom:0px;" class="tr-hover tr-hover-btn" >
+          <% if @event.activities.count > 1 %>
+              <div id="drop_menu_div" class="marginLeft10 pull-left button_toggle_pic">
+                  <%= render partial: "communities/event_drop_menu", locals: {event: @event, community: community} %>
+              </div>
+          <% end %>
+          <li style="padding:0px;position:relative;border-bottom:0px;" class="tr-hover1" >
+            <% if @event.responded?(current_user.id) %>
               <% if @activity.admin?(current_user) %>
-                  <%= link_to "edit", '#', id: "edit_activity",  class: " pull-right uibutton icon edit button_toggle ",:title => "Edit" %>
+               <button class=" pull-right uibutton icon edit button_toggle_pic" id="edit_activity">edit</button>
                <% end %>
 
                <span class="pull-right "> &nbsp;</span>
@@ -8,10 +14,29 @@
 
                   <%= link_to "delete", "/communities/#{community.id}/delete_activity?activity_id=#{@activity.id}", method: :delete, remote: true,
                                            data: { confirm: "You sure?" },
-                                           class: "pull-right uibutton button_toggle",
+                                           class: "pull-right uibutton button_toggle_pic",
                                            title: "Delete this activity" %>
                <% end %>
-                <div class="pull-left">
+
+               <span class="pull-right "> &nbsp;</span>
+               <button class=" pull-right uibutton icon add button_toggle_pic add_activity ">add sub-events</button>
+            <% else %>
+                <div class="text_overlay_cu_cover_pic button_toggle" style="margin-left:4px; margin-bottom:160px;height:60px;padding:0;margin-top:0;">
+                    <span class="pull-right "> &nbsp;</span>
+                  <address style="width:535px !important;"><p  style="width:100% !important;"><strong style="line-height:1.8">Attend this event</strong>
+                    <span class="pull-right "> &nbsp;</span>
+                    <%= link_to "May be", "/communities/#{community.id}/event_invitation?event_id=#{@event.id}&status=maybe", class: "uibutton pull-right button_toggle_pic event_inv", remote: true %>
+                    <span class="pull-right "> &nbsp;</span>
+                    <%= link_to "No", "/communities/#{community.id}/event_invitation?event_id=#{@event.id}&status=no", class: "uibutton pull-right button_toggle_pic event_inv marginRight5", remote: true %>
+                    <span class="pull-right "> &nbsp;</span>
+                    <%= link_to "Yes", "/communities/#{community.id}/event_invitation?event_id=#{@event.id}&status=yes", class: "uibutton pull-right button_toggle_pic event_inv ", remote: true %>
+                  </p></address>
+                </div>
+            <% end %>
+<!--   
+               <%= link_to "add sub-events", '#', id: "add_activity",  class: " pull-right uibutton icon add button_toggle_pic add_activity ",:title => "add" %>
+
+              <div class="pull-left">
                   <strong style="font-size:13px;line-height:2;">Sub-event</strong>
                 </div>
                 <div style="margin-left:95px;margin-top:5px;">
@@ -22,7 +47,8 @@
                     <strong>Location : &nbsp;</strong><%= @activity.address %><br>
                     <strong>Privacy : &nbsp;</strong><%= privacy_str(@activity) %><br>
                   </address> 
-                </div>
+                </div> 
+              -->
                 
               </li>
 
@@ -111,19 +137,22 @@
                   },
                 });
                 $('.loading_page').hide();
+
+                 $('#end_date_act').hide();
+
+                 $('#view_map_link_act').hide();
               });
 
 
-                  $(function(){
-                    $('.button_toggle').hide();
-                  });
-
-                 $('.tr-hover').hover(function() {
-                       $(this).find('.button_toggle').show();
+                 $('.tr-hover-btn').hover(function() {
+                       $(this).find('.button_toggle_pic').show();
                        }, function() {
-                         $(this).find('.button_toggle').hide();
+                         $(this).find('.button_toggle_pic').hide();
                     });
 
+                 $('.button_toggle_pic').click(function(){
+                    $('.loading_page').show();
+                 });
 
                   $("#edit_activity").click(function(){
                     $('#modal_update_activity').modal({
@@ -135,10 +164,21 @@
                         $('#modal_update_activity').modal('hide');
                       });
 
+                 $('.tr-select-main').click(function(){
+                    $("#event_show_link").click();
+                    $('.loading_page').show();
+                 });
+                 $('.tr-select').click(function(){
+                    var id = $(this).find('p').html();
+                    $("#act_"+id).click();
+                    $('.loading_page').show();
+                 });
+
+
 
 
     $(document).ready(function(){
-
+      $('.button_toggle').show();
     $('#end_date').hide();
 
     $('#view_map_link').hide();
@@ -240,6 +280,29 @@ $('#end_date_remove_link').click(function(){
   $('#end_date').hide();
   $('#end_date_add_link').show();
 });
+
+   $(document).ready(function(){
+                $.validate({
+                  form : '#create_activity_form',
+                  onSuccess : function() {
+                    $('#create_activity_act').attr('data-loading-text', 'Creating...');
+                    $('#create_activity_act').button('loading');
+                  },
+                });
+                $('.loading_page').hide();
+              });
+
+
+                  $(".add_activity").click(function(){
+                    $('#modal_create_activity').modal({
+                      //keyboard: true,
+                      backdrop: "static",
+                    });
+                  });
+
+                  $("#closeX_create_activity").click(function(){
+                        $('#modal_create_activity').modal('hide');
+                      });
 
 
 

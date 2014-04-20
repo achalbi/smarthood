@@ -3,29 +3,65 @@
   </ul>
 <div class="row">
         <div class="marginLeft15 ui-front">
+
+          <div style="display:block;height:250px;">
           <ul id="group_list" class="users">
-          <li style="padding-left:15px;position:relative;border-bottom:0px;" class="tr-hover tr-hover-btn" >
-              <% if @event.is_admin?(current_user) %>
-                  <%= link_to "edit", '#', id: "edit_event",  class: " pull-right uibutton icon edit button_toggle ",:title => "Edit" %>
-               <% end %>
-
-               <span class="pull-right "> &nbsp;</span>
-               <% if @event.is_admin?(current_user) %>
-                  <%= link_to "delete",  "/communities/#{community.id}/delete_event?event_id=#{@event.id}", method: :get, remote: true,
-                                           data: { confirm: "You sure?" },
-                                           class: "pull-right uibutton button_toggle",
-                                           title: "Delete this event" %>
-               <% end %>
-               <span class="pull-right "> &nbsp;</span>
-               <%= link_to "add sub-events", '#', id: "add_activity",  class: " pull-right uibutton icon add button_toggle add_activity ",:title => "add" %>
+          <li style="position:relative;border-bottom:0px;padding:0;overflow:visible" class="tr-hover1 tr-hover-btn" >
+              <div class="center">
                 <% unless event.photo.nil? %>
-                <div class="pull-left">
-                <%= link_to cl_image_tag(event.photo.pic_url(:cover_pic_smallest), class:"image_al_c1 thumbnail ", id:"#{event.photo.id}"), "#" %>
+                  <%= link_to cl_image_tag(event.photo.pic_url(:cu_large_mid), class:"padding1",rel: "#{event.id}", id:"#{event.photo.id}") , event.photo.pic_url, class: "fancybox-album", rel: "#{event.id}" , title: "#{event.title}"    %>
+                <% end %>
+              </div>
+            <div class="btn_overlay_cu_cover_pic">
+                <div id="edit_del_btn">
+                <% if event.activities.count > 1 %>
+                  <div id="drop_menu_div" class="marginLeft10 pull-left button_toggle_pic">
+                      <%= render partial: "communities/event_drop_menu", locals: {event: event, community: community} %>
+                  </div>
+                <% end %>
+                <% if event.responded?(current_user.id) %>
+                  <% if @event.is_admin?(current_user) %>
+                       <button class=" pull-right uibutton icon edit button_toggle_pic" id="edit_event">edit</button>
+                   <% end %>
 
+                   <span class="pull-right "> &nbsp;</span>
+                   <% if @event.is_admin?(current_user) %>
+                      <%= link_to "delete",  "/communities/#{community.id}/delete_event?event_id=#{@event.id}", method: :get, remote: true,
+                                               data: { confirm: "You sure?" },
+                                               class: "pull-right uibutton button_toggle_pic",
+                                               title: "Delete this event" %>
+                   <% end %>
+                  <span class="pull-right "> &nbsp;</span>
+                  <button class=" pull-right uibutton icon add button_toggle_pic add_activity " id="add_activity" >add sub-events</button>
+
+                <% else %>
+
+                <% end %>
+                </div>
+                <% unless event.photo.nil? %>
+                <div class="clear-float">
+<!--                   <%= link_to cl_image_tag(event.photo.pic_url(:cu_large_mid), class:"image_al_c1 thumbnail ", id:"#{event.photo.id}"), "#" %> -->
+                </div>
+              </div>
+              <% unless event.responded?(current_user.id) %>
+                <div class="text_overlay_cu_cover_pic button_toggle" style="margin-left:4px; margin-bottom:160px;height:60px;padding:0;margin-top:0;">
+                    <span class="pull-right "> &nbsp;</span>
+                  <address style="width:535px !important;"><p  style="width:100% !important;"><strong style="line-height:1.8">Attend this event</strong>
+                    <span class="pull-right "> &nbsp;</span>
+                    <%= link_to "May be", "/communities/#{community.id}/event_invitation?event_id=#{event.id}&status=maybe", class: "uibutton pull-right button_toggle_pic event_inv", remote: true %>
+                    <span class="pull-right "> &nbsp;</span>
+                    <%= link_to "No", "/communities/#{community.id}/event_invitation?event_id=#{event.id}&status=no", class: "uibutton pull-right button_toggle_pic event_inv marginRight5", remote: true %>
+                    <span class="pull-right "> &nbsp;</span>
+                    <%= link_to "Yes", "/communities/#{community.id}/event_invitation?event_id=#{event.id}&status=yes", class: "uibutton pull-right button_toggle_pic event_inv ", remote: true %>
+                  </p></address>
                 </div>
                 <% end %>
+                <h2 class="text_overlay_cu_cover_pic" id="text_overlay_cu_cover_pic" style="margin-left:4px;">
+                  <%= render partial: "communities/event_text_overlay", locals: {obj: event} %>
+                </h2>
+                <% end %>
 
-                <div style="margin-left:95px;margin-top:5px;">
+<!--                 <div style="margin-left:95px;margin-top:5px;">
                   <address>
                     <strong> <%= link_to event.title, "#", style: "font-size:13px;" %></strong> <br>
                     <strong>Description : &nbsp;</strong> <%= event.description %><br>
@@ -33,19 +69,20 @@
                     <strong>Location : &nbsp;</strong><%= event.address %><br>
                     <strong>Privacy : &nbsp;</strong><%= privacy_str(event) %><br>
                   </address> 
-                </div>
+                </div> -->
                 
               </li>
           </ul>
+          </div>
           <ul id="activity_show" class="users">
 
           </ul>
-          <div id="event_table">
+<!--           <div id="event_table">
               <%= render partial: "communities/event_table", locals: { event: event, community: community, activity: nil } %>
-          </div>
+          </div> -->
 
           <br>
-          <div id="event_links">
+          <div id="event_links" style="display:block;">
             <%= render partial: "communities/event_links", locals: { event: event, community: community, activity: activity } %>
           </div>
         <div id="show_event_div">
@@ -137,10 +174,16 @@
         </div>
   <% end %>
 
+                <div id="create_activity_div">
+                  <%= render partial: "communities/create_activity_cu", locals: {community: community, event: event} %>
+                </div>
+
+ 
+
 
 <script type="text/javascript">
 $(document).ready(function(){
-    $('.button_toggle').hide();
+   // $('.button_toggle').hide();
     $('#modal_edit_event').modal('hide');
 
   $('#posts_community_li').removeClass('active');
@@ -155,6 +198,22 @@ $(document).ready(function(){
   $('#view_map_link_event').hide();
 
 });
+
+                 $('.button_toggle_pic').click(function(){
+                    $('.loading_page').show();
+                 });
+
+                 $('.tr-select-main').click(function(){
+                    $("#event_show_link").click();
+                    $('.loading_page').show();
+                 });
+                 $('.tr-select').click(function(){
+                    var id = $(this).find('p').html();
+                    $("#act_"+id).click();
+                    $('.loading_page').show();
+                 });
+
+
 
                 $(document).ready(function(){
                 $.validate({
@@ -178,26 +237,16 @@ $(document).ready(function(){
                   });
 
 
- $('.tr-hover').hover(function() {
+ $('.tr-hover-btn').hover(function() {
        $(this).find('.button_toggle').show();
        }, function() {
          $(this).find('.button_toggle').hide();
     });
-
- $('.tr-select-main').click(function(){
-    $("#event_show_link").click();
-    $('.loading_page').show();
-    $('#activity_show').html('');
-    $('.event_status').html('');
-    $(this).find('.event_status').html('<span class="label success">active</span>');
- });
- $('.tr-select').click(function(){
-    $('.loading_page').show();
-    $('.event_status').html('');
-    $(this).find('.event_status').html('<span class="label success">active</span>');
-    var id = $(this).find('p').html();
-    $("#act_"+id).click();
- });
+     $('.tr-hover-btn').hover(function() {
+       $(this).find('.button_toggle_pic').show();
+       }, function() {
+         $(this).find('.button_toggle_pic').hide();
+    });
 
 
 $(document).ready(function(){
@@ -211,6 +260,10 @@ $(document).ready(function(){
     },
   });
   $('.loading_page').hide();
+
+   $('#end_date_act').hide();
+
+  $('#view_map_link_act').hide();
 });
 
 
@@ -357,4 +410,28 @@ $(document).ready(function() {
         }
       });
     });
+
+
+       $(document).ready(function(){
+                $.validate({
+                  form : '#create_activity_form',
+                  onSuccess : function() {
+                    $('#create_activity_act').attr('data-loading-text', 'Creating...');
+                    $('#create_activity_act').button('loading');
+                  },
+                });
+                $('.loading_page').hide();
+              });
+
+
+                  $(".add_activity").click(function(){
+                    $('#modal_create_activity').modal({
+                      //keyboard: true,
+                      backdrop: "static",
+                    });
+                  });
+                  $("#closeX_create_activity").click(function(){
+                        $('#modal_create_activity').modal('hide');
+                      });
+
 </script>

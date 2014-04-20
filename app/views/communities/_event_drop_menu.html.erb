@@ -1,0 +1,32 @@
+                <div class="drop-menu ">
+                  <span class="plus marginLeft10">+</span>   Choose Event / Sub-event
+                  <ul class="sub-menu">
+                    <li>
+                       <strong> Event</strong>
+                    </li>
+                    <li class="tr-hover tr-select-main">
+                      <strong class="a_link fontbold11">
+                        <%= event.title %>
+                      </strong>
+                    </li>
+                    <%= link_to "", "/communities/#{community.id}/show_event?event_id=#{event.id}", id: "event_show_link", remote: true %>
+                    <li>
+                        <strong> Sub-events </strong>
+                    </li>
+                    <% if event.activities.count > 1 %>
+                      <% event.activities.each do |activity| %>  
+                        <% unless activity.is_admin %>
+                            <li class="tr-hover tr-select">
+                              <p style="display:none;"><%= activity.id %></p>
+                              <strong class="a_link fontbold11" >
+                                  <%=  activity.title %>
+                              </strong>
+                            </li>
+                            <%= link_to "", "/communities/#{community.id}/get_activity?activity_id=#{activity.id}&event_id=#{event.id}", id: "act_#{activity.id}", remote: true %>
+                        <% end %>
+                      <% end %>
+                    <% else %>
+                      No sub-events created.
+                    <% end %>
+                  </ul>
+                </div>

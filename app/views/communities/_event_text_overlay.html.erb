@@ -1,0 +1,11 @@
+                  <address>
+                    <strong class="text_overlay_title"><%= obj.title %></strong> <br><br>
+                    <p><strong>Description : &nbsp;</strong><span><%= obj.description %> </span></p><br>
+                    <p><strong>Privacy : &nbsp;</strong><span> <%= privacy_str(obj) %></span></p><br>
+                    <p><strong>Time : &nbsp;</strong><span><%= obj.time_str(obj) %></span> </p><br>
+                     <p><strong>Location : &nbsp;</strong><span>
+                       <%= obj.address %>
+                     </span>
+                     </p>
+                    <br>
+                  </address> 

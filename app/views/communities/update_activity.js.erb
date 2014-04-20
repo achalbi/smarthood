@@ -1,4 +1,4 @@
 $(".busy").button('reset');
 $('#modal_update_activity').modal('hide');
-$("#activity_show").html("<%= escape_javascript(render :partial => 'communities/activity', :locals => {:activty => @activity, community: @community} ) %>");
-$("#event_table").html("<%= escape_javascript(render :partial => 'communities/event_table', :locals => {:event => @event, community: @community, activity: @activity} ) %>");
+$("#edit_del_btn").html("<%= escape_javascript(render :partial => 'communities/activity', :locals => {:activty => @activity, community: @community} ) %>");
+$("#text_overlay_cu_cover_pic").html("<%= escape_javascript( render partial: 'communities/event_text_overlay', locals: {obj: @activity} ) %>");
