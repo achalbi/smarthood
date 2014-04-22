@@ -18,7 +18,7 @@
       <span style="font-size:15px;line-height: 2;"><strong>Invite Smarthood users</strong></span>
     </div>
     	<%= f.hidden_field :id %>
-    <div class="modal-body" style="max-height:550px;">
+    <div class="modal-body" style="max-height:450px;">
       <div class="row">
         <div class=" ui-front">
         <ul class="users marginLeft20">
@@ -28,21 +28,47 @@
                   <%= check_box_tag 'invite_everyone' %>
                     <label for="invite_everyone"> </label>
                   </div>
-                    <label style="width:220px;line-height:2;">Invite everyone from all my communities</label>
+                    <label style="width:250px;line-height:2;">Invite guests from all my communities</label>
                 </div> <br>
-        	</li>
-        	<li class="tr-hover">
-	          <label style="width:295px;line-height:2;margin-left:50px;">Invite guests by group name from this communities</label>
+          </li>
+        	<li class="tr-hover select_comm_li">
+	          <label style="width:145px;line-height:2;margin-left:50px;">Invite guests by group</label>
 	          <div class="center_block clearfix marginLeft50"><br>
 	              <%= f.text_field :group_tokens, id: "search_group_evt1" %>
 	          </div>
         	</li>
-        	<li class="tr-hover">
-	          <label style="width:250px;line-height:2;margin-left:50px;">Invite guests by name from all communities</label>
+        	<li class="tr-hover select_comm_li">
+	          <label style="width:145px;line-height:2;margin-left:50px;">Invite guests by name</label>
 	          <div class="center_block clearfix marginLeft50"><br>
-	              <%= f.text_field :user_tokens, id: "search_user" %>
+	              <%= f.text_field :user_tokens, id: "search_user_evt1" %>
 	          </div>
         	</li>
+          <li class="select_comm_li" >
+            <label style="width:335px;line-height:2;margin-left:50px;">Invite guests from below selected communities 
+            <!--   &nbsp;&nbsp;&nbsp;<a class=" uibutton pull-right" style="margin-right:5px;" id="com_btn">Select</a>  -->
+            </label>
+                <ul class="users" style="display: block;clear:both;">
+            <div class="center_block clearfix marginLeft50"><br>
+                  <% current_user.joined_uc.collect(&:community).uniq.each do |cu| %>
+                      <li style="margin-left:40px;width:320px;padding:3px!important;" class="tr-hover select_unselect_event c-pointer">
+                        <p style="display:none;"><%= cu.id %></p>
+                          <%= link_to cl_image_tag(cu.photo.pic_url(:smallest_half), class:"image_al_c1 pull-left marginLeft10", id:"#{cu.photo.id}"), "#" %>
+                        <div class="checkboxFive pull-right marginRight15">
+                          <%= check_box_tag 'cu_ids[]', cu.id ,nil, id: "checkboxFiveInput#{cu.id}" %>
+                          <label for="checkboxFiveInput<%= cu.id %>"></label>
+                        </div>
+                        <address style="margin-left:15px;margin-top:5px;">
+                          <strong style="margin-left:15px;margin-top:10px;" > <%= link_to cu.name.capitalize, "#", style: "font-size:13px;" %></strong> <br>
+                        </address> 
+                        <!-- <div  class="img_zoom" style="float:left;margin-left:15px;" >
+                          <%= cu.description %><br>
+                        </div> 
+                      -->
+                      </li> 
+                    <% end %>
+            </div>
+                </ul>
+          </li>
         </ul>
         </div>
       </div>   
@@ -92,10 +118,11 @@ $(document).ready(function(){
   $.validate({
     onSuccess : function() {
       $('.loading_page').show();
-      $("#invite_email_submit").attr('data-loading-text', 'Inviting...');
-      $("#invite_email_submit").button('loading');
+    // $("#invite_email_submit").attr('data-loading-text', 'Inviting...');
+    // $("#invite_email_submit").button('loading');
       $("#invite_submit").attr('data-loading-text', 'Inviting...');
       $("#invite_submit").button('loading');
+      $('#modal_invite_email').modal('hide');
 
     },
   });
@@ -117,7 +144,7 @@ function requestCallback(response)
         FB.ui({
           method: 'send',
           to: response.to[i],
-          link: 'http://www.smarthood.in/events/40?i_id=<%= event.photo.id.to_s + File.basename( event.photo.pic_url, ".*" ) %>'
+          link: 'http://www.smarthood.in/events/<%= event.id %>?i_id=<%= event.photo.id.to_s + File.basename( event.photo.pic_url, ".*" ) %>'
         });
   }
 
@@ -144,19 +171,23 @@ $("#invite_submit").click(function(){
 });
 
 $("#invite_email").on( "click", function() {
- $('#modal_invite_email').modal({
+/* $('#modal_invite_email').modal({
       //keyboard: true,
       backdrop: "static",
-    });
+    });*/
+  $('#modal_invite_email').modal('show');
 });
 
 $("#close_invite_email").click(function(){
   $('#modal_invite_email').modal('hide');
 });
 
+$("#invite_email_submit").click(function(){
+});
+
 
 $(function() {
-  $("#search_user").tokenInput("/events/<%= event.id %>/search_app_user", {
+  $("#search_user_evt1").tokenInput("/events/search_auto_user", {
     crossDomain: false,
     theme: "facebook",
     resultsFormatter: function(item){ return "<li>" + "<img src='" + item.profile_pic + "' title='" + item.name + "' height='30px' width='30px' />" + "<div style='display: inline-block; padding-left: 10px;'><div class='full_name'>" + item.name + " " + ""+ "</div><div class='full_name'>" + item.email + " " + ""+ "</div></div></li>" },
@@ -204,5 +235,22 @@ $(function() {
           }).on('preventDuplicateToken', function (e) {
             alert('Duplicate detected! Token value is: ' + e.token.value)
           }).tokenfield();
+
+$(".select_unselect_event").click( function() {
+  var id = $(this).find('p').html();
+  if($(this).find(':checkbox').is(':checked')){
+    $(this).find(':checkbox').prop("checked",false);
+  }else{
+    $(this).find(':checkbox').prop("checked",true);
+  }
+});
+
+$("#invite_everyone").click( function() {
+  if($(this).closest(':checkbox').is(':checked')){
+      $('.select_comm_li').addClass('active_hide');
+  }else{
+      $('.select_comm_li').removeClass('active_hide');
+  }
+});
 
 </script>

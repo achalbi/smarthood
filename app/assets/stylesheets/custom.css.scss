@@ -941,7 +941,7 @@ border-bottom: 1px solid #ccc;
 .text_overlay_cu_cover_pic address { 
    color: white; 
    float: left;
-   margin:5px 5px 25px 3px;
+   margin:5px 5px 15px 3px;
    font: normal 10px/20px Helvetica, Sans-Serif; 
    letter-spacing: 0px;  
    background: rgb(0, 0, 0); /* fallback color */
@@ -1172,4 +1172,16 @@ border-bottom: 1px solid #ccc;
   -webkit-transform: rotate(45deg);
   -moz-transform: rotate(45deg);
   -o-transform: rotate(45deg);
+}
+
+.modal{
+  -webkit-border-radius: 3px !important;
+-moz-border-radius: 3px!important;
+border-radius: 3px!important;
+-webkit-box-shadow: 0 0 0px 0px rgba(82, 82, 82, 0.7)!important;
+-moz-box-shadow: 0 0 0px 0px rgba(82, 82, 82, 0.7)!important;
+box-shadow: 0 0 0px 0px rgba(82, 82, 82, 0.7)!important;
+/* -webkit-background-clip: padding-box; */
+-moz-background-clip: padding-box!important;
+/* background-clip: padding-box; */
 }

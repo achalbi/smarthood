@@ -155,7 +155,8 @@ class EventsController < ApplicationController
       end
 
       def search_auto_group
-        @groups = active_community_groups.where("name like ?", "%#{params[:q]}%")
+        @group_ids = current_user.user_groups.pluck(:group_id).uniq
+        @groups = Group.where("id in (?) AND name like ?", @group_ids, "%#{params[:q]}%")
         @groups_pp = []
         @groups.each do |group|
         group[:profile_pic] = group.photo.pic_url(:smaller)
@@ -441,6 +442,7 @@ class EventsController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to events_url }
+      format.js { redirect_to events_url }
       format.json { head :no_content }
     end
   end
@@ -617,48 +619,64 @@ class EventsController < ApplicationController
 
 
   def invite_event_guests_by_user
-    @community = Community.find(params[:id])
-    @event = Event.find(params[:event][:id])
+    @event = Event.find(params[:id])
     @eds = @event.eventdetails
-    @ed_user = @eds.collect(&:user_id)
+    @ed_user = @eds.pluck(:user_id)
     @ad_users = @event.eventdetails.where(" is_admin=?", true)
     @inv_users = @event.eventdetails.where(" is_admin=?", false)
       unless params[:invite_everyone].nil?
-        @com_user = active_community.usercommunities.where("invitation = ?", Uc_enum::JOINED ).collect(&:user_id)
+        @communities = Community.where("id IN (?)", current_user.joined_uc.pluck(:community_id).uniq)
+        @com_user = []
+        @communities.each do | community|
+            @com_user += community.usercommunities.where("invitation = ?", Uc_enum::JOINED ).pluck(:user_id)
+        end
         @ed_user_add = @com_user - @ed_user
         @ed_user = @ed_user + @ed_user_add
-          @ed_user_add.each do |user_id|
+          @ed_user_add.uniq.each do |user_id|
             @event.eventdetails.create(user_id: user_id, is_admin: false, status: "invited")
           end
-      end
-    @user_ids = params[:event][:user_tokens].split(",").map { |x| x.to_i }
-    unless @ed_user.nil?
-      @user_ids = @user_ids - @ed_user 
-      @ed_user = @user_ids + @ed_user 
-    end
-    @ed_groups = params[:event][:group_tokens].split(",").map { |x| x.to_i }
-      @ed_groups.each do |group_id|
-        @grp = Group.find(group_id)
-        @ed_users  =  @grp.users.collect(&:id) - @ed_user
-        @ed_users.each do |user_id|
-          @event.eventdetails.create(user_id: user_id, group_id: @grp.id, is_admin: false, status: "invited")
-          #getNotifiableUsers(Objecttypeenum::EVENT, @event, Objecttypeenum::USER, id, Uc_enum::INVITED)
+      else
+        unless params[:cu_ids].nil?
+          @communities = Community.where('id IN (?)',params[:cu_ids])
+          @com_user = []
+          @communities.each do | community|
+              @com_user += community.usercommunities.where("invitation = ?", Uc_enum::JOINED ).pluck(:user_id)
+          end
+          @ed_user_add = @com_user - @ed_user
+          @ed_user = @ed_user + @ed_user_add
+          @ed_user_add.uniq.each do |user_id|
+            @event.eventdetails.create(user_id: user_id, is_admin: false, status: "invited")
+          end
         end
+
+        @user_ids = params[:event][:user_tokens].split(",").map { |x| x.to_i }
+        unless @ed_user.nil?
+          @user_ids = @user_ids - @ed_user 
+          @ed_user = @user_ids + @ed_user 
+        end
+        @ed_groups = params[:event][:group_tokens].split(",").map { |x| x.to_i }
+          @ed_groups.each do |group_id|
+            @grp = Group.find(group_id)
+            @ed_users  =  @grp.users.collect(&:id) - @ed_user
+            @ed_users.each do |user_id|
+              @event.eventdetails.create(user_id: user_id, group_id: @grp.id, is_admin: false, status: "invited")
+              #getNotifiableUsers(Objecttypeenum::EVENT, @event, Objecttypeenum::USER, id, Uc_enum::INVITED)
+            end
+          end
+        @user_ids.each do |id|
+          @event.eventdetails.create(user_id: id, is_admin: false, status: "invited")
+          #getNotifiableUsers(Objecttypeenum::EVENT, @event, Objecttypeenum::USER, id, Uc_enum::INVITED)
+        end 
       end
-    @user_ids.each do |id|
-      @event.eventdetails.create(user_id: id, is_admin: false, status: "invited")
-      #getNotifiableUsers(Objecttypeenum::EVENT, @event, Objecttypeenum::USER, id, Uc_enum::INVITED)
-    end 
   end
 
   def invite_event_guests_by_email
-   @community = Community.find(params[:id])
-   @event = Event.find(params[:event][:id])
+    @event = Event.find(params[:id])
     @eds = @event.eventdetails
     @ed_user = @eds.collect(&:user_id)
     @ad_users = @event.eventdetails.where(" is_admin=?", true)
     @inv_users = @event.eventdetails.where(" is_admin=?", false)
-   @email_ids = params[:event][:user_tokens].split(",")
+    @email_ids = params[:event][:user_tokens].split(",")
     @email_ids.each do |eid|
       @user = create_user_to_invite(nil,eid)
       if @user.id == current_user.id

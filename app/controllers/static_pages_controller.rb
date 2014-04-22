@@ -9,7 +9,7 @@ class StaticPagesController < ApplicationController
       @selected_comm << active_community
 
       @post = Post.new
-      @cu_ids = current_user.joined_uc.collect(&:community_id)
+      @cu_ids = current_user.joined_uc.pluck(:community_id)
       @communities = Community.where('id IN (?) ', @cu_ids)
       @post_ids = []
       @communitypost_ids = Communitypost.where('community_id IN (?)', @cu_ids).collect(&:post_id)
@@ -36,6 +36,6 @@ class StaticPagesController < ApplicationController
 
   def about
   end
-
+ 
 end
   

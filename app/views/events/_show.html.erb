@@ -8,7 +8,7 @@
     <br> 
 <% end %>
 <div class="container container-fluid">
-      <div  class="image_overlay" >
+      <div  class="image_overlay tr-hover-btn" >
 <!--  
              <h4 class="pull-left" style="margin-left:10px;font-size:18px;">
              <div id="albumLink">
@@ -19,7 +19,23 @@
             <% unless @event.photo.nil? %>
            <%= link_to cl_image_tag(@event.photo.pic_url(:largest), class:"padding1",rel: "#{@event.id}", id:"#{@event.photo.id}") , @event.photo.pic_url, class: "fancybox-album", rel: "#{@event.id}" , title: "#{@event.title}"    %>
             <% end %>
-            <h2 class="text_overlay_cover_pic">
+            <div class="btn_overlay_cu_cover_pic">
+                <% if @event.responded?(current_user.id) %>
+                  <% if @event.is_admin?(current_user) %>
+                       <button class=" pull-right uibutton icon edit button_toggle_pic" id="edit_event">edit</button>
+                   <% end %>
+
+                   <span class="pull-right "> &nbsp;</span>
+                   <% if @event.is_admin?(current_user) %>
+                      <%= link_to "delete",  @event, method: :delete, remote: true,
+                                               data: { confirm: "You sure?" },
+                                               class: "pull-right uibutton button_toggle_pic",
+                                               title: "Delete this event" %>
+                   <% end %>
+                  <span class="pull-right "> &nbsp;</span>
+                <% end %>
+            </div>
+            <h2 class="text_overlay_cover_pic button_toggle_pic">
               <%= render partial: "events/text_overlay", locals: {obj: @event} %>
             </h2>
         </div>
@@ -66,7 +82,7 @@
               <a href="#" id="closeX" class="close">×</a>
               <h3>Create Activity</h3>
             </div>
-            <div class="modal-body" style="max-height:550px;">
+            <div class="modal-body" style="max-height:450px;">
               <div class="row">
           <div class="span14 ui-front">
             <%= f.hidden_field :event_id %>
@@ -155,102 +171,75 @@
               <a href="#" id="close2X" class="close">×</a>
               <span style="font-size:20px;line-height: 2;">Edit Event</span>
             </div>
-            <div class="modal-body" style="max-height:550px;">
-              <div class="row">
-          <div class="span14 ui-front">
-            
-               <%= render 'shared/error_messages', object: f.object %>
-          <div id="pages2">     
-            <div id="page2-1">
-              <%= link_to "Next page", '#', id: "next2-2",  class: "uibutton icon next pull-right" %>
-               <div class="center_block clearfix">
-                  <%= f.label :title %>
-                  <div class="input">
-                  <%= f.text_field :title, :placeholder=>"Title" %></div>
-                </div>
+            <div class="modal-body" style="max-height:450px;">
+               <div class="row">
+                  <div class="span14 ui-front">
+                   <%= render 'shared/error_messages', object: f.object %>
+                   <div class="center_block clearfix">
+                      <%= f.label :title %>
+                      <div class="input">
+                        <%= f.text_field :title, :placeholder=>"Title", 'data-validation' => "length",
+         'data-validation-length' =>"3-25", 'data-validation-error-msg' => "The Event name has to be a value between 3-25 characters" %></div>
+                    </div>
 
-                <div class="center_block clearfix">
-                  <%= label_tag :starts_at %>
-                  <div class="input">
-                  <%= f.text_field :starts_at, :placeholder => "Time" %>&nbsp;&nbsp;&nbsp;
-                <a id="end_date_add_link2" class="uibutton icon add">End Date</a>
-                </div>
-                </div>
-                <div class="center_block clearfix" id="end_date2">
-                  <%= label_tag :ends_at %>
-                  <div class="input">
-                    <%= f.text_field :ends_at %>&nbsp;&nbsp;&nbsp;
-                   <a id="end_date_remove_link2" class="uibutton icon prev">Remove</a>
-                  </div>
-                </div> 
+                    <div class="center_block clearfix">
+                      <%= label_tag :starts_at %>
+                      <div class="input">
+                      <%= f.text_field :starts_at, :placeholder => "Time" %>&nbsp;&nbsp;&nbsp;
+                    <a id="end_date_add_link_event" class="uibutton icon add">End Date</a>
+                    </div>
+                    </div>
+                    <div class="center_block clearfix" id="end_date_event">
+                      <%= label_tag :ends_at %>
+                      <div class="input">
+                        <%= f.text_field :ends_at %>&nbsp;&nbsp;&nbsp;
+                       <a id="end_date_remove_link_event" class="uibutton icon prev">Remove</a>
+                      </div>
+                    </div> 
 
-                <div class="center_block clearfix">
-                  <%= f.label :location %>
-                  <div class="input ">
-                  <%= f.text_field :address, :placeholder => :location, :size => 43, class: 'events_with_autocomplete inherit_width', 'data-autocompleteUrl' => search_address_events_path %>&nbsp;&nbsp;&nbsp;
-                
-                  <%= link_to "View map", '#', id: "view_map_link2",  class: "uibutton icon prev" %>
-                </div>
-                <div class="input" id="view_map2">
-                
-                </div>
-                </div>
-                <div class="center_block clearfix">
-                  <%= f.label :description %>
-                  <div class="input">
-                  <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title=>"Description", rows: 3, cols: 75  %> 
-                </div>
-                </div>
-              </div>  
-              <div id="page2-2">
-                <%= link_to "Previous page", '#', id: "prev2-1",  class: "uibutton icon prev pull-left" %>
-                <br><br>
-                <!--
-                 <div class="center_block clearfix"><br>
-                  <%= f.label "Invite by User name:" %>
-                  <div class="input ui-front">
-                     <%= f.text_field :user_tokens, id: "search_user_evt" %>
-                  </div>
-                </div>
-                <div class="center_block clearfix">
-                  <%= f.label "Invite by Group Name:" %>
-                  <div class="input ui-front">
-                     <%= f.text_field :group_tokens, id: "search_group_evt" %>
-                  </div>
-                </div>
-                
-                <div class="center_block clearfix">
-                   <%= label_tag :all_day %>
-                  <div class="input">
-                  <%= f.check_box :all_day %></div>
-                </div>-->
-                <div class="center_block clearfix">
-                  <%= label_tag :privacy %>
-                  <div class="input">
-                    <%= f.select :privacy, options_for_select([["Public", Privacyenum::PUBLIC], ["Members", Privacyenum::MEMBERS], ["Private", Privacyenum::PRIVATE]], f.object.privacy) %>
-                  </div>
-                </div> <br>
-                <div class="center_block clearfix">
+                    <div class="center_block clearfix">
+                      <%= f.label :location %>
+                      <div class="input ">
+                      <%= f.text_field :address, :placeholder => :location, :size => 43, class: 'events_with_autocomplete inherit_width', 'data-autocompleteUrl' => search_address_events_path , 'data-validation' => "length",
+         'data-validation-length' =>"3-250", 'data-validation-error-msg' => "The event address has to be a value between 3-250 characters" %>&nbsp;&nbsp;&nbsp;
+                    
+                      <%= link_to "View map", '#', id: "view_map_link_event",  class: "uibutton icon prev" %>
+                    </div>
+                    <div class="input" id="view_map">
+                    
+                    </div>
+                    </div>
+                    <div class="center_block clearfix">
+                      <%= f.label :description %>
+                      <div class="input">
+                      <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title=>"Description", rows: 3, cols: 75, 'data-validation' => "length",
+         'data-validation-length' =>"3-250", 'data-validation-error-msg' => "The event description has to be a value between 3-250 characters"  %> 
+                    </div>
+                    </div>
+                    <div class="center_block clearfix">
+                      <%= label_tag :privacy %>
+                      <div class="input">
+                        <%= f.select :privacy, options_for_select([["Public", Privacyenum::PUBLIC], ["Members", Privacyenum::MEMBERS], ["Private", Privacyenum::PRIVATE]]) %>
+                      </div>
+                    </div> <br>
+
+              <div class="center_block clearfix">
                 <%= label_tag "Change picture:" %>
                 <%= f.fields_for :photo, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
-                 
-                <%= photo_form.file_field :pic, id: "pic2",style: "width:1px; height:1px; padding:0px;  left:0px;" %>  
-
+                  <%= photo_form.file_field :pic, id: "pic2",style: "width:0px; height:0px; padding:0px;  left:0px;" %>  
                 <% end %>
                 <div class="input"> 
-                <% unless @event.photo.nil? %>
-                  <%= cl_image_tag(@event.photo.pic_url(:small), class:" thumbnail albumLink", id:"event_pic", style: "cursor:pointer;") %>   
-                <% end %>
-                <canvas id="imageCanvas2" style = "border: 1px solid #ddd; padding:5px; align:center; width:200px;display:none;cursor:pointer" >select new image</canvas>
+                  <% unless @event.photo.nil? %>
+                  <%= cl_image_tag(@event.photo.pic_url(:small), class:" thumbnail albumLink", id:"event_edit_pic", style: "cursor:pointer;") %>   
+                  <% end %>
+                  <canvas id="imageCanvas2" style = "border: 1px solid #ddd; padding:5px; align:center; width:200px;display:none;cursor:pointer" >select new image</canvas>
                 </div>
-              </div>
+              </div>  
 
-
-              </div>
-            </div>
-                         
+            </div>   
           </div>
-        </div>   
+
+
            </div>
             <div class="modal-footer" >
               <%= f.submit "Update", class: "btn primary pull-right", id: "updEvent" %>  
@@ -296,6 +285,11 @@ $('#photos_events_li').click(function(){
   $('#photos_events').show();
 });
 
+     $('.tr-hover-btn').hover(function() {
+       $(this).find('.button_toggle_pic').show();
+       }, function() {
+         $(this).find('.button_toggle_pic').hide();
+    });
 
 $(document).ready(function(){
   $("#upload_pics").show();
@@ -782,83 +776,4 @@ $('.pop_up').popover({
   });
 
 
-    $('#prev_crt').click(function(){
-        $( "#page_crt-1" ).animate({ width: '600px' }, 1000, function() {
-                    $(this).show();
-                 });
-        $( "#page_crt-2" ).animate({ width: '0px' }, 1000, function() {
-                    $(this).hide();
-                 });
-    });
-    $('#next_crt').click(function(){
-        $( "#page_crt-1" ).animate({ width: '0px' }, 1000, function() {
-                    $(this).hide();
-                 });
-        $( "#page_crt-2" ).animate({ width: '600px' }, 1000, function() {
-                    $(this).show();
-                 });
-    });
 </script>
-
-  <script type="text/javascript">
-          $("#upload_pics").click(function(){
-            $('#modal5').modal('show');
-          });
-          $("#close5X").click(function(){
-                $('#modal5').modal('hide');
-              });
-
-          $("#crtAlb").click(function(){
-                $('#modal5').modal('hide');
-              });
-
-
-          var imageLoader = document.getElementById('pic5');
-            imageLoader.addEventListener('change', handleImage, false);
-            $("#imageCanvas5").click(function(){
-                $("#pic5").click();
-            });
-                
-            var canvas = document.getElementById('imageCanvas5');
-            var ctx = canvas.getContext('2d');
-            ctx.font="30px Arial";
-            ctx.fillText("Select photos",10,50);
-
-          function handleImage(e){
-            var canvas = document.getElementById('imageCanvas5');
-            var ctx = canvas.getContext('2d');
-            var iCnt=0;
-            var files = e.target.files;
-            canvas.width = 600;
-            canvas.height = 155*(Math.ceil(files.length/4));
-            for( var i = 0, len = files.length; i < len; i++) 
-                  {
-                  if(files[i])
-                    {
-                      var reader = new FileReader();
-                      reader.onload = function(event){
-                        var img = new Image();
-
-                        img.onload = function(){
-                          var ratioPx = 150;
-                          var sWidth =ratioPx;
-                          var ratio = img.width/sWidth;
-                          var sHeight = img.height/ratio;   
-                            if(sHeight>ratioPx){
-                               sHeight =ratioPx;
-                               ratio = img.height/sHeight;
-                               sWidth = img.width/ratio;  
-                            }
-                          ctx.drawImage(img, 155*(iCnt%4),155*(Math.floor(iCnt/4)),sWidth,sHeight);
-                          //ctx.drawImage(img,0,0,sWidth,sHeight);
-                          iCnt++;
-                        }
-                        img.src = event.target.result;
-                      }
-                      reader.readAsDataURL(e.target.files[i]);     
-                    }
-                  }
-          }
-
-
-        </script>

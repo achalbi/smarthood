@@ -7,7 +7,7 @@
           <div style="display:block;height:250px;">
           <ul id="group_list" class="users">
           <li style="position:relative;border-bottom:0px;padding:0;overflow:visible" class="tr-hover1 tr-hover-btn" >
-              <div class="center">
+              <div class="center ">
                 <% unless event.photo.nil? %>
                   <%= link_to cl_image_tag(event.photo.pic_url(:cu_large_mid), class:"padding1",rel: "#{event.id}", id:"#{event.photo.id}") , event.photo.pic_url, class: "fancybox-album", rel: "#{event.id}" , title: "#{event.title}"    %>
                 <% end %>
@@ -44,7 +44,7 @@
                 </div>
               </div>
               <% unless event.responded?(current_user.id) %>
-                <div class="text_overlay_cu_cover_pic button_toggle" style="margin-left:4px; margin-bottom:160px;height:60px;padding:0;margin-top:0;">
+                <div class="text_overlay_cu_cover_pic button_toggle_pic" style="margin-left:4px; margin-bottom:160px;height:60px;padding:0;margin-top:0;">
                     <span class="pull-right "> &nbsp;</span>
                   <address style="width:535px !important;"><p  style="width:100% !important;"><strong style="line-height:1.8">Attend this event</strong>
                     <span class="pull-right "> &nbsp;</span>
@@ -56,7 +56,7 @@
                   </p></address>
                 </div>
                 <% end %>
-                <h2 class="text_overlay_cu_cover_pic" id="text_overlay_cu_cover_pic" style="margin-left:4px;">
+                <h2 class="text_overlay_cu_cover_pic button_toggle_pic" id="text_overlay_cu_cover_pic" style="margin-left:4px;">
                   <%= render partial: "communities/event_text_overlay", locals: {obj: event} %>
                 </h2>
                 <% end %>

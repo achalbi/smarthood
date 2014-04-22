@@ -922,11 +922,11 @@ def search_app_user
     @community = Community.find(params[:id])
     @event = Event.find(params[:event][:id])
     @eds = @event.eventdetails
-    @ed_user = @eds.collect(&:user_id)
+    @ed_user = @eds.pluck(:user_id)
     @ad_users = @event.eventdetails.where(" is_admin=?", true)
     @inv_users = @event.eventdetails.where(" is_admin=?", false)
       unless params[:invite_everyone].nil?
-        @com_user = active_community.usercommunities.where("invitation = ?", Uc_enum::JOINED ).collect(&:user_id)
+        @com_user = active_community.usercommunities.where("invitation = ?", Uc_enum::JOINED ).pluck(:user_id)
         @ed_user_add = @com_user - @ed_user
         @ed_user = @ed_user + @ed_user_add
           @ed_user_add.each do |user_id|
