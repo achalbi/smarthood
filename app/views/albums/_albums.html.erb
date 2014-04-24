@@ -1,4 +1,4 @@
-   <div id="camera_rolls" style="margin-left:250px;margin-bottom:0px;">
+   <div id="camera_rolls" style="margin-bottom:0px;">
     <ul class="breadcrumb" style="width:667px">
       <li><a href="#" class="marginLeft10">Albums</a> </li>
 
@@ -69,8 +69,8 @@
 
 <% unless @albums.nil? %>
 
-<div id="gallery1" class="span17" style="margin-left:25px;margin-bottom:0px;">
- <ul id="grid" >
+<div id="gallery1" style="margin:0px 0px 0px 10px;width:720px;">
+ <ul id="grid"  style="margin:0px;width:720px;">
 
    <% @albums.each do |album| %>
    <% unless album.photos[0].nil? %>
