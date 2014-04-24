@@ -31,7 +31,7 @@ class ActivitiesController < ApplicationController
     @activity.save
       if @activity.privacy == Privacyenum::PUBLIC
         @post = Post.new
-        @post.content = "New activity: '" + @activity.title << "' was created under the event: '" << @et.title << "'. " 
+        @post.content = "<span class='timestamp' style='font-size:15px;'> added an activity </span><strong><a href='/activities/" + @activity.id.to_s + "' style='font-size:15px;word-wrap:break-word;' data-remote='true' > " + @activity.title + " </a></strong><span class='timestamp' style='font-size:15px;'> to the event </span><strong><a href='/events/" + @et.id.to_s + "' style='font-size:15px;word-wrap:break-word;' data-remote='true' > " + @et.title + " </a>.</strong>"
         @post.user_id = current_user.id
         @post.postable = @activity
         @post.save
