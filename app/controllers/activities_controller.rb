@@ -51,7 +51,7 @@ class ActivitiesController < ApplicationController
     @activity = Activity.find(params[:id])
     @event = Event.find(@activity.event_id)
      Activity.find(params[:id]).destroy
-    flash[:success] = "Activity destroyed!"
+    #flash[:success] = "Activity destroyed!"
     respond_to do |format|
          format.html { redirect_to root_path }
          format.js { render  :locals => { :event => @event } }
@@ -63,6 +63,7 @@ class ActivitiesController < ApplicationController
     @event = Event.find(@activity.event_id)
     @eds = @event.eventdetails
     @ads = @activity.activitydetails
+    @urs = @eds.pluck(:user_id).uniq - @ads.pluck(:user_id).uniq
     @ad_users = @activity.activitydetails.where(" is_admin=?", true)
     @inv_users = @activity.activitydetails.where(" is_admin=?", false)
 =begin
@@ -138,6 +139,13 @@ class ActivitiesController < ApplicationController
       end
   end
   def update
+
+    @activity = Activity.find(params[:id])
+    @event = @activity.event
+    @activity.update_attributes(params[:activity])
+    @activities = @event.activities
+    
+=begin
     @event2 = Event.find(params[:activity][:event_id])
     @activity =Activity.find(params[:id])
     @activity.update_attributes(params[:activity])
@@ -190,7 +198,10 @@ class ActivitiesController < ApplicationController
     @activities = @event2.activities
     @is_event = false
     @album = Album.new
-    getNotifiableUsers(Objecttypeenum::ACTIVITY, @activity, nil, nil, Uc_enum::UPDATED)
+=end
+
+
+    #getNotifiableUsers(Objecttypeenum::ACTIVITY, @activity, nil, nil, Uc_enum::UPDATED)
   end
 
 end

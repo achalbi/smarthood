@@ -1,1 +1,4 @@
-$("#event_activities").html("<%= escape_javascript(render( @activities )) %>")
+$('.loading_page').hide();
+$('#modal_create_activity').modal('hide');
+$("#event_activities").html("<%= escape_javascript(render( @activities )) %>");
+$('#new_activity')[0].reset();

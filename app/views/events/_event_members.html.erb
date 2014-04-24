@@ -1,6 +1,8 @@
 <% if @ads.nil? %>
-<% if event.GuestsCanInvite  || event.is_admin?(current_user.id) %>
-  <%= render partial: "events/invite_event_guests", locals: { event: event, activity: nil } %>
+<% if event.responded?(current_user) %>
+	<% if event.GuestsCanInvite  || event.is_admin?(current_user.id) %>
+	  <%= render partial: "events/invite_event_guests", locals: { event: event, activity: nil } %>
+	<% end %>
 <% end %>
   <div id="event_guests_list">
   <%= render partial: "events/event_guests_list", locals: { event: event, activity: nil, ad_users: ad_users, inv_users: inv_users } %>

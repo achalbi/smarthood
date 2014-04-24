@@ -136,7 +136,7 @@
   <div id="modal-from-dom__add_mod" class="modal hide fade in" style="display: block;">
     <div class="modal-header">
       <a href="#" id="close_add_mem" class="close">×</a>
-      <span style="font-size:15px;line-height: 2;"><strong>Set moderators</strong></span>
+      <span style="font-size:15px;line-height: 2;"><strong>Add guests from the event</strong></span>
     </div>
     <div class="modal-body" style="max-height:350px;width:530px;">
       <div class="row">
@@ -154,10 +154,42 @@
                     <label style="width:220px;line-height:2;">Add everyone from the event</label>
                 </div> <br>
           </li>
-          <li class="tr-hover">
+          <li class="tr-hover search_event_guests_li">
             <label style="width:250px;line-height:2;margin-left:50px;">Invite guests by name from the event</label>
             <div class="center_block clearfix marginLeft50"><br>
                 <%= f.text_field :user_tokens, id: "search_event_guests" %>
+            </div>
+          </li>
+          <li class="search_event_guests_li">
+            <label style="width:280px;line-height:2;margin-left:50px;">Add guests from the event</label>
+            <div class="center_block clearfix marginLeft50"><br>
+            <ul class="users" style="overflow:auto;">
+              <% if @urs.count > 1 %>
+                  <% @urs.each do |uc| %>
+                  <% user = User.find(uc) %>
+                  <% if user == current_user  %>
+                    <% next %>
+                  <% end %>
+                      <li style="margin-left:15px;" class="tr-hover">
+                        <div class="checkboxFive pull-right marginRight15" style="margin-top:5px;">
+                            <%= check_box_tag 'user_ids[]', user.id, nil, id: "checkboxFiveInput#{uc}" %>
+                          <label for="checkboxFiveInput<%= uc %>"></label>
+                        </div>
+                        <div  class="img_zoom" style="float:left;margin-left:15px;" >
+                          <%= gravatar_for user, size: 52 %>
+                        </div>
+                          <strong><a href="#"><%= user.name %></a></strong>
+                          <p><%= user.email %></p>
+                      <div style="margin-right:10px;" class="pull-right">
+                        <%= hidden_field_tag 'user_all_ids[]', user.id %>
+                      </div>
+                      </li>
+                  <% end %>
+              <% else %>
+                <address class="center">No guests to set as moderator</address>
+              <% end %>
+
+            </ul>
             </div>
           </li>
         </ul>
@@ -174,6 +206,14 @@
 
 
 <script type="text/javascript">
+
+$("#invite_everyone").click( function() {
+  if($(this).closest(':checkbox').is(':checked')){
+      $('.search_event_guests_li').addClass('active_hide');
+  }else{
+      $('.search_event_guests_li').removeClass('active_hide');
+  }
+});
 
 $(function() {
   $("#search_event_guests").tokenInput("/communities/<%= community.id %>/search_event_guests?event_id=<%= event.id %>", {

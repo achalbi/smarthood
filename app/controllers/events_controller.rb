@@ -51,32 +51,18 @@ class EventsController < ApplicationController
       if @event.ends_at.nil?
         @event.ends_at = Time.zone.now
       end
+      #@event.community_id = active_community.id
       @event.save   
       @activity = Activity.new
       @activity.event_id = @event.id
-      @activity.title="Main"
-      @activity.description = "Event's main activity"
+      @activity.title=@event.title
+      @activity.description = "Main Event"
       @activity.is_admin = true
       @activity.save
       @event.activities << @activity
-      @ed_user = @event.user_ids
-      @ed_group = @event.group_ids
-      @ed_user.each do |user_id|
-        @user_ed = Eventdetail.new
-        @user_ed.is_admin=false
-        @user_ed.user = User.find(user_id)
-        @event.eventdetails << @user_ed
-      end
-      @ed_group.each do |group_id|
-        @grp = Group.find(group_id)
-        @grp.users.each do |user|
-          @group_ed = Eventdetail.new
-          @group_ed.is_admin = false
-          @group_ed.group = @grp
-          @group_ed.user = user
-          @event.eventdetails << @group_ed
-        end
-      end
+
+       @event.eventdetails.create(user_id: current_user.id, is_admin: true, status: "yes")
+
 
       if @event.photo.nil?
         @photo = Photo.new
@@ -87,7 +73,8 @@ class EventsController < ApplicationController
 
       if @event.privacy == Privacyenum::PUBLIC
         @post = Post.new
-        @post.content = "New event: '" + @event.title << "' was created under the community: '" << active_community.name << "'. " 
+        @post.content = "<span class='timestamp' style='font-size:15px;'> added event </span><strong><a href='/events/" + @event.id.to_s + "' style='font-size:15px;word-wrap:break-word;' data-remote='true' > " + @event.title + " </a>.</strong>"
+
         @post.user_id = current_user.id
         @post.postable = @event
         @post.save
@@ -95,10 +82,8 @@ class EventsController < ApplicationController
         @post.photos << @event.photo
       end
 
-      @event.community_id = active_community.id
       respond_to do |format|
         if @event.save
-          @event.eventdetails.create(user_id: current_user.id, is_admin: true)
           getNotifiableUsers(Objecttypeenum::EVENT, @event, nil, nil, Uc_enum::CREATED)
         #  format.html { redirect_to @event, format: 'js', :success => 'Event was successfully created.' }
           format.json { render :json => @event, :status => :created, :location => @event }
@@ -134,6 +119,12 @@ class EventsController < ApplicationController
      # @event.latitude = ip_loc.latitude
      # @event.longitude = ip_loc.longitude
      # result = request.location
+
+      @invited_events = []
+      Eventdetail.where("user_id = ? AND status = ?", current_user.id, 'invited' ).find_each do |ed|
+        @invited_events << ed.event
+      end
+
       respond_to do |format|
         format.html {session['events_scope'] = 'all'}# index.html.erb
         format.json { render :json => @events }
@@ -203,7 +194,7 @@ class EventsController < ApplicationController
 
     def upcoming_events_paginate
       @events = active_community_events
-      @upcoming_events = @events.where("starts_at > ?",Time.current.tomorrow.to_date).order("id DESC")
+      @upcoming_events =  @events.where("starts_at > ?",Time.zone.now.beginning_of_day- 1.second).order("starts_at ASC").paginate(page: params[:page], :per_page => 5)
       @events = @upcoming_events.paginate(:page => params[:page], :per_page => 5)
     end
 
@@ -215,7 +206,7 @@ class EventsController < ApplicationController
 
     def past_events_paginate
       @events = active_community_events
-      @past_events = @events.where("starts_at < ? and ends_at < ?",Time.current.to_date,Time.current.to_date).order("id DESC")
+      @past_events =  @events.where("starts_at < ? ",Time.zone.now.beginning_of_day).order("starts_at DESC").paginate(page: params[:page], :per_page => 5)
       @events = @past_events.paginate(:page => params[:page], :per_page => 5)
     end
 
@@ -235,11 +226,11 @@ class EventsController < ApplicationController
     @eds = @event.eventdetails
     @ad_users = @event.eventdetails.where(" is_admin=?", true)
     @inv_users = @event.eventdetails.where(" is_admin=?", false)
-    @post = Post.new
-    @posts = @event.posts.paginate(:page => params[:page], :per_page => 4)
+    #@post = Post.new
+    #@posts = @event.posts.paginate(:page => params[:page], :per_page => 4)
     @activities = @event.activities
     @activity = @event.activities.where(is_admin: true).first
-
+    
 =begin
 
     @ad_eds = @event.eventdetails.where(is_admin: true )
@@ -338,6 +329,11 @@ class EventsController < ApplicationController
   # PUT /events/1.json
   def update
     @event = Event.find(params[:id])
+    @eds = @event.eventdetails
+    @event.update_attributes(params[:event])
+    @ad_users = @event.eventdetails.where(" is_admin=?", true)
+    @inv_users = @event.eventdetails.where(" is_admin=?", false)
+=begin
     @event_temp = current_user.events.build(params[:event])
     unless params[:user_ids].nil?
       @users_ids = params[:user_ids]
@@ -419,13 +415,16 @@ class EventsController < ApplicationController
       @grps.each do |group|
      #   @mod_users |= group.users
       end
+=end
+
+
      @is_event = true
     respond_to do |format|
       if @event.update_attributes(params[:event])
         getNotifiableUsers(Objecttypeenum::EVENT, @event, nil, nil, Uc_enum::UPDATED)
         format.html { redirect_to @event, :notice => 'Event was successfully updated.' }
         format.json { head :no_content }
-        format.js {}
+        format.js { redirect_to(:action => :show, :format => :js, :id => @event.id)}
       else
         format.html { render :action => "edit" }
         format.json { render :json => @event.errors, :status => :unprocessable_entity }
@@ -445,6 +444,27 @@ class EventsController < ApplicationController
       format.js { redirect_to events_url }
       format.json { head :no_content }
     end
+  end
+
+  def update_event
+    @event = Event.find(params[:id])
+    @eds = @event.eventdetails
+    @event.update_attributes(params[:event])
+    @ad_users = @event.eventdetails.where(" is_admin=?", true)
+    @inv_users = @event.eventdetails.where(" is_admin=?", false)
+    redirect_to(:action => :show, :format => :js, :id => @event.id)
+    
+  end
+
+  def delete_activity
+    @activity = Activity.find(params[:activity_id])
+    @event = @activity.event
+    @activity.destroy
+    @eds = @event.eventdetails
+    @ad_users = @event.eventdetails.where(" is_admin=?", true)
+    @inv_users = @event.eventdetails.where(" is_admin=?", false)
+    @activities = @event.activities
+    render :action => :show 
   end
 
   def search_address
@@ -539,6 +559,7 @@ class EventsController < ApplicationController
       @event = Event.find(params[:id])
       @eds = @event.eventdetails
       @ads = @activity.activitydetails
+      @urs = @eds.pluck(:user_id).uniq - @ads.pluck(:user_id).uniq
       @ad_users = @activity.activitydetails.where(" is_admin=?", true)
       @inv_users = @activity.activitydetails.where(" is_admin=?", false)
     end
@@ -551,11 +572,10 @@ class EventsController < ApplicationController
   end
 
  def add_event_moderators
-    @event = Event.find(params[:event][:id])
+    @event = Event.find(params[:id])
     @event.eventdetails.where("user_id IN (?)", params[:user_all_ids]).update_all(is_admin: false)
     @event.eventdetails.where("user_id IN (?)", params[:user_ids]).update_all(is_admin: true)
     @users = User.where("id IN (?)", params[:user_ids])
-    @community = Community.find(params[:id])
     @eds = @event.eventdetails
     @ad_users = @event.eventdetails.where(" is_admin=?", true)
     @inv_users = @event.eventdetails.where(" is_admin=?", false)
@@ -566,9 +586,17 @@ class EventsController < ApplicationController
 
  def add_activity_guests
     @activity = Activity.find(params[:activity][:id])
-    @event = Event.find(params[:event_id])
-    @ed_user = @event.eventdetails.pluck(:user_id)
-    @ad_user = @activity.activitydetails.pluck(:user_id)
+    @event = Event.find(params[:id])
+    @ed_user = @event.eventdetails.pluck(:user_id).uniq
+    @ad_user = @activity.activitydetails.pluck(:user_id).uniq
+     @users_ids = params[:user_ids]
+        @users_ids.each do |usr_id|
+            @ad = Activitydetail.new
+            @ad.is_admin = false
+            @ad.user_id = usr_id
+            @activity.activitydetails << @ad
+            
+          end
     unless params[:invite_everyone].nil?
         @ed_user = @ed_user - @ad_user
           @ed_user.each do |user_id|
@@ -589,9 +617,9 @@ class EventsController < ApplicationController
             end
           end
       end
-    @community = Community.find(params[:id])
     @eds = @event.eventdetails
     @ads = @activity.activitydetails
+    @urs = @eds.pluck(:user_id).uniq - @ads.pluck(:user_id).uniq
     @ad_users = @activity.activitydetails.where(" is_admin=?", true)
     @inv_users = @activity.activitydetails.where(" is_admin=?", false)
   end
@@ -599,9 +627,14 @@ class EventsController < ApplicationController
   def unjoin_activity
     @activity = Activity.find(params[:activity_id])
     @activity.activitydetails.find_by_user_id(params[:user_id]).destroy
-    respond_to do |format|
-      format.all { redirect_to :action => "get_activity", :event_id => params[:event_id], id: params[:id], :activity_id => params[:activity_id] }
-   end
+    @event = Event.find(params[:id])
+    @eds = @event.eventdetails
+    @ads = @activity.activitydetails
+    @urs = @eds.pluck(:user_id).uniq - @ads.pluck(:user_id).uniq
+    @ad_users = @activity.activitydetails.where(" is_admin=?", true)
+    @inv_users = @activity.activitydetails.where(" is_admin=?", false)
+
+
   end
 
   def add_activity_moderators
@@ -609,9 +642,9 @@ class EventsController < ApplicationController
     @activity = Activity.find(params[:activity][:id])
     @activity.activitydetails.where("user_id IN (?)", params[:user_all_ids]).update_all(is_admin: false)
     @activity.activitydetails.where("user_id IN (?)", params[:user_ids]).update_all(is_admin: true)
-    @community = Community.find(params[:id])
     @eds = @event.eventdetails
     @ads = @activity.activitydetails
+    @urs = @eds.pluck(:user_id).uniq - @ads.pluck(:user_id).uniq
     @ad_users = @activity.activitydetails.where(" is_admin=?", true)
     @inv_users = @activity.activitydetails.where(" is_admin=?", false)
 
@@ -754,6 +787,21 @@ class EventsController < ApplicationController
          format.html {  }
          format.js {  }
       end
+  end
+
+  def event_invitation
+    @event = Event.find(params[:id])
+    @eds = @event.eventdetails
+    @ed_user = @eds.find_by_user_id(current_user.id)
+    @ed_user.status = params[:status]
+    @ed_user.save
+    respond_to do |format|
+      if params[:status] == 'yes' || params[:status] == 'maybe'
+        format.all { redirect_to(:action => :show, :id => @event.id) }
+      else
+        format.all { redirect_to :action => :index }
+      end
+    end
   end
 
 

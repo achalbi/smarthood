@@ -19,11 +19,13 @@
 
         <% end %>
                   <div style="margin-left:95px;margin-top:5px;">
+                    <!--
                     <%= link_to "May be", "/communities/#{community.id}/event_invitation?event_id=#{event.id}&status=maybe", class: "uibutton pull-right button_toggle event_inv", remote: true %>
                     <span class="pull-right "> &nbsp;</span>
                     <%= link_to "No", "/communities/#{community.id}/event_invitation?event_id=#{event.id}&status=no", class: "uibutton pull-right button_toggle event_inv marginRight5", remote: true %>
                     <span class="pull-right "> &nbsp;</span>
                     <%= link_to "Yes", "/communities/#{community.id}/event_invitation?event_id=#{event.id}&status=yes", class: "uibutton pull-right button_toggle event_inv ", remote: true %>
+                  -->
                     <address>
                       <strong> <%= link_to event.title, "#", style: "font-size:13px;" %></strong> <br>
                       <strong>Description : &nbsp;</strong> <%= event.description %><br>
@@ -33,7 +35,8 @@
                     </address>  
                   </div>
       </li>
-      <%= link_to "", "/communities/#{community.id}/show_event?event_id=#{event.id}", remote: true %>  <% end %>
+      <%= link_to "", "/communities/#{community.id}/show_event?event_id=#{event.id}", remote: true %>  
+    <% end %>
  </ul>
  <br>
 
@@ -106,7 +109,7 @@
                 <div class="center_block clearfix">
                   <%= label_tag :privacy %>
                   <div class="input">
-                    <%= f.select :privacy, options_for_select([["Public", Privacyenum::PUBLIC], ["Members", Privacyenum::MEMBERS], ["Private", Privacyenum::PRIVATE]]) %>
+                    <%= f.select :privacy, options_for_select([["Public", Privacyenum::PUBLIC], ["Private", Privacyenum::PRIVATE]]) %>
                   </div>
                 </div> <br>
                 <div class="center_block clearfix ">

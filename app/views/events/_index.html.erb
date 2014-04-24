@@ -1,5 +1,6 @@
 <% provide(:title, 'Events') %>
 <div class="container container-fluid pull-left" style="padding:0;">
+<div class="center loading_page active_hide" ><img src="/assets/loading.gif"></div>
 <%= link_to "List view", '#', id: "list_view",  class: "uibutton pull-left marginRight15" %>
 <%= link_to "Calendar view", '#', id: "fullCalendar_view",  class: "uibutton pull-left marginRight15 " %>
   <%= link_to "Create Event", '#', id: "create_event",  class: " pull-left uibutton icon add" %>
@@ -13,6 +14,40 @@
 <br>  
 <br>
 <br>
+ <ul class="users">
+  <% if @invited_events.count > 0 %>
+      <span style="font-size:13px;line-height: 2;margin-left:15px;"><strong>Invitation from events </strong></span>
+    <br>
+
+  <% @invited_events.each do |event| %>
+      <li style="padding-left:15px;margin-top:5px;cursor:pointer;position:relative;" class="tr-hover event" >
+        <% unless event.photo.nil? %>
+        <%= link_to cl_image_tag(event.photo.pic_url(:cover_pic_smallest), class:"image_al_c1 thumbnail pull-left ", id:"#{event.photo.id}"), "#" %>
+
+        <% end %>
+                  <div style="margin:5px 10px 0px 95px;">
+                    <!--
+                    <%= link_to "May be", "/events/#{event.id}/event_invitation?status=maybe", class: "uibutton pull-right button_toggle event_inv", remote: true %>
+                    <span class="pull-right "> &nbsp;</span>
+                    <%= link_to "No", "/events/#{event.id}/event_invitation?status=no", class: "uibutton pull-right button_toggle event_inv marginRight5", remote: true %>
+                    <span class="pull-right "> &nbsp;</span>
+                    <%= link_to "Yes", "/events/#{event.id}/event_invitation?status=yes", class: "uibutton pull-right button_toggle event_inv ", remote: true %>
+                  -->
+                    <address>
+                      <strong> <%= link_to event.title, "#", style: "font-size:13px;" %></strong> <br>
+                      <strong>Description : &nbsp;</strong> <%= event.description %><br>
+                      <strong>Location : &nbsp;</strong><%= event.address %><br>
+                      <strong>Privacy : &nbsp;</strong><%= privacy_str(event) %><br>
+                        
+                    </address>  
+                  </div>
+      </li>
+      <%= link_to "", event, remote: true %>  
+      
+    <% end %>
+    <br>
+  <% end %>
+ </ul>
 <div id="event_list">
 
 <ul class="tabs">
@@ -73,25 +108,23 @@
 </div>
 
 
-<%= form_for( @event, remote: true, :html => {:multipart => true}) do |f| %>
-<div id="modal" style="display:none;" >
+<%= form_for( @event, remote: true, :html => {:multipart => true, id: 'create_event_form'}) do |f| %>
+<div id="modal_create_event" style="display:none;" >
           <div id="modal-from-dom" class="modal hide fade in" style="display: block;width:700px;">
             <div class="modal-header">
               <a href="#" id="closeX" class="close">×</a>
-              <span style="font-size:20px;line-height: 2;">Create Event</span>
+              <h3>Create Event</h3>
             </div>
-            <div class="modal-body" style="max-height:550px;">
-              <div class="row">
-          <div class="span14 ui-front">
+            <div class="modal-body" style="max-height:450px;">
+            <div class="row">
+              <div class="span15 ui-front">
             
                <%= render 'shared/error_messages', object: f.object %>
-          <div id="pages">     
-            <div id="page-1">
-              <%= link_to "Next page", '#', id: "next-2",  class: "uibutton icon next pull-right" %>
                <div class="center_block clearfix">
                   <%= f.label :title %>
                   <div class="input">
-                  <%= f.text_field :title, :placeholder=>"Title" %></div>
+                    <%= f.text_field :title, :placeholder=>"Title", 'data-validation' => "length",
+     'data-validation-length' =>"3-25", 'data-validation-error-msg' => "The event name has to be a value between 3-25 characters" %></div>
                 </div>
 
                 <div class="center_block clearfix">
@@ -112,7 +145,8 @@
                 <div class="center_block clearfix">
                   <%= f.label :location %>
                   <div class="input ">
-                  <%= f.text_field :address, :placeholder => :location, :size => 43, class: 'events_with_autocomplete inherit_width', 'data-autocompleteUrl' => search_address_events_path %>&nbsp;&nbsp;&nbsp;
+                  <%= f.text_field :address, :placeholder => :location, :size => 43, class: 'events_with_autocomplete inherit_width', 'data-autocompleteUrl' => search_address_events_path , 'data-validation' => "length",
+     'data-validation-length' =>"3-250", 'data-validation-error-msg' => "The event address has to be a value between 3-250 characters" %>&nbsp;&nbsp;&nbsp;
                 
                   <%= link_to "View map", '#', id: "view_map_link",  class: "uibutton icon prev" %>
                 </div>
@@ -123,59 +157,40 @@
                 <div class="center_block clearfix">
                   <%= f.label :description %>
                   <div class="input">
-                  <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title=>"Description", rows: 3, cols: 75  %> 
+                  <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title=>"Description", rows: 3, cols: 75, 'data-validation' => "length",
+     'data-validation-length' =>"3-250", 'data-validation-error-msg' => "The event description has to be a value between 3-250 characters"  %> 
                 </div>
                 </div>
-              </div>  
-              <div id="page-2">
-                <%= link_to "Previous page", '#', id: "prev-1",  class: "uibutton icon prev pull-left" %>
-                <br>
-
-                 <div class="center_block clearfix"><br>
-                  <%= f.label "Invite by User name:" %>
-                  <div class="input ui-front">
-                     <%= f.text_field :user_tokens, id: "search_user" %>
-                  </div>
-                </div>
-                <div class="center_block clearfix">
-                  <%= f.label "Invite by Group Name:" %>
-                  <div class="input ui-front">
-                     <%= f.text_field :group_tokens, id: "search_group" %>
-                  </div>
-                </div>
-                <!--
-                <div class="center_block clearfix">
-                   <%= label_tag :all_day %>
-                  <div class="input">
-                  <%= f.check_box :all_day %></div>
-                </div>-->
                 <div class="center_block clearfix">
                   <%= label_tag :privacy %>
                   <div class="input">
-                    <%= f.select :privacy, options_for_select([["Public", Privacyenum::PUBLIC], ["Members", Privacyenum::MEMBERS], ["Private", Privacyenum::PRIVATE]]) %>
+                    <%= f.select :privacy, options_for_select([["Public", Privacyenum::PUBLIC], ["Private", Privacyenum::PRIVATE]]) %>
+                  </div>
+                </div> <br>
+                <div class="center_block clearfix ">
+                    <label>Guests can invite</label>
+                  <div class="input">
+                    <div class="checkboxFive pull-right marginRight15" >
+                  <%= f.check_box 'GuestsCanInvite', id: "Guests_can_invite_other_guests" %>
+                    <label for="Guests_can_invite_other_guests" </label>
+                  </div>
                   </div>
                 </div> <br>
                 <div class="center_block clearfix">
                 <%= label_tag "Add picture:" %>
-                <%= f.fields_for :photo, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
-                 
-                <%= photo_form.file_field :pic, id: "pic",style: "width:1px; height:1px; padding:0px;  left:0px;" %>  
-
-                <% end %>
+                
                 <div class="input">    
-                <canvas id="imageCanvas" style = "border: 1px solid #ddd; padding:5px; align:center; width:200px;" >select an image</canvas>
+                <canvas id="imageCanvas" style = "border: 1px solid #ddd; padding:5px; align:center;cursor:pointer" >select new image</canvas>
                 </div>
+                <%= f.fields_for :photo, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
+                  <%= photo_form.file_field :pic, id: "pic",style: "width:0px; height:0px;  padding:0px;  left:0px;" %>  
+                <% end %>
               </div>
-
-
-              </div>
-            </div>
-                         
-          </div>
         </div>   
-           </div>
+      </div>
+      </div>
             <div class="modal-footer" >
-              <%= f.submit "Create Event", class: "btn primary pull-right", id: "crtEvent" %>  
+              <%= f.submit "Create", class: "btn primary pull-right", id: "create_event_submit" %>  
             </div>
           </div> 
         </div>
@@ -185,23 +200,130 @@
 </div>
 <script type="text/javascript">
 
-$('#prev-1').click(function(){
-    $( "#page-1" ).animate({ width: '600px' }, 1000, function() {
-                $(this).show();
-             });
-    $( "#page-2" ).animate({ width: '0px' }, 1000, function() {
-                $(this).hide();
-             });
 
+var startDateTextBox = $("#event_starts_at");
+var endDateTextBox = $("#event_ends_at");
+
+startDateTextBox.datetimepicker({ 
+  onClose: function(dateText, inst) {
+    if (endDateTextBox.val() != '') {
+      var testStartDate = startDateTextBox.datetimepicker('getDate');
+      var testEndDate = endDateTextBox.datetimepicker('getDate');
+      if (testStartDate > testEndDate)
+        endDateTextBox.datetimepicker('setDate', testStartDate);
+    }
+    else {
+      endDateTextBox.val(dateText);
+    }
+  },
+  onSelect: function (selectedDateTime){
+    endDateTextBox.datetimepicker('option', 'minDate', startDateTextBox.datetimepicker('getDate') );
+  },
+  dateFormat: "dd/mm/yy"
 });
-$('#next-2').click(function(){
-    $( "#page-1" ).animate({ width: '0px' }, 1000, function() {
-                $(this).hide();
-             });
-    $( "#page-2" ).animate({ width: '600px' }, 1000, function() {
-                $(this).show();
-             });
+endDateTextBox.datetimepicker({ 
+  onClose: function(dateText, inst) {
+    if (startDateTextBox.val() != '') {
+      var testStartDate = startDateTextBox.datetimepicker('getDate');
+      var testEndDate = endDateTextBox.datetimepicker('getDate');
+      if (testStartDate > testEndDate)
+        startDateTextBox.datetimepicker('setDate', testEndDate);
+    }
+    else {
+      startDateTextBox.val(dateText);
+    }
+  },
+  onSelect: function (selectedDateTime){
+    startDateTextBox.datetimepicker('option', 'maxDate', endDateTextBox.datetimepicker('getDate') );
+  },
+  dateFormat: "dd/mm/yy"
 });
+
+
+
+
+$(document).ready(function(){
+  $.validate({
+    form : '#create_event_form',
+    onSuccess : function() {
+      $('#create_event_submit').attr('data-loading-text', 'Creating...');
+      $('#create_event_submit').button('loading');
+    },
+  });
+  $('.loading_sub').hide();
+});
+
+  $(document).ready(function(){
+//  $('.gravatar').addClass('thumbnail');  
+    $("#create_event").click(function(){
+      $('#modal_create_event').modal({
+      //keyboard: true,
+      backdrop: "static",
+    });
+    });
+    $("#closeX").click(function(){
+          $('#modal_create_event').modal('hide');
+        });
+
+    $('#end_date').hide();
+  });
+
+
+var imageLoader = document.getElementById('pic');
+imageLoader.addEventListener('change', handleImage, false);
+$("#imageCanvas").click(function(){
+  $("#pic").click();
+});
+var canvas = document.getElementById('imageCanvas');
+var ctx = canvas.getContext('2d');
+  ctx.font="15px Arial";
+  ctx.fillText("Click here to add a picture",25,75);
+
+function handleImage(e){
+  var canvas = document.getElementById('imageCanvas');
+  var ctx = canvas.getContext('2d');
+  var iCnt=0;
+  var files = e.target.files;
+   if(files.length<1){
+      $('#pic').val('');
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      canvas.width = 300;
+      canvas.height = 155;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.font="15px Arial";
+      ctx.fillText("Click here to add a picture",25,75);
+      return;
+    }
+  canvas.width = 200;
+  canvas.height = 155*(Math.ceil(files.length/4));
+  for( var i = 0, len = files.length; i < len; i++) 
+  {
+    if(files[i])
+    {
+      var reader = new FileReader();
+      reader.onload = function(event){
+        var img = new Image();
+
+        img.onload = function(){
+          var ratioPx = 195;
+          var sWidth =ratioPx;
+          var ratio = img.width/sWidth;
+          var sHeight = img.height/ratio;   
+          if(sHeight>ratioPx){
+           sHeight =ratioPx;
+           ratio = img.height/sHeight;
+           sWidth = img.width/ratio;  
+         }
+         ctx.drawImage(img, 155*(iCnt%4),155*(Math.floor(iCnt/4)),sWidth,sHeight);
+                  //ctx.drawImage(img,0,0,sWidth,sHeight);
+                  iCnt++;
+                }
+                img.src = event.target.result;
+              }
+              reader.readAsDataURL(e.target.files[i]);     
+            }
+          }
+        }
 
 $('#event_address').keydown(function(){
     $('#view_map_link').hide();
@@ -339,7 +461,7 @@ restartInterval();
   $('#today_events_li').click();
    $('#end_date').hide();
   
-  $("#create_event").click(function(){
+/*  $("#create_event").click(function(){
       $('#modal').modal('show');
     });
     $("#closeX").click(function(){
@@ -348,7 +470,7 @@ restartInterval();
 
     $("#crtEvent").click(function(){
           $('#modal').modal('hide');
-        });
+        });*/
 
 	$('#list_view').click(function(){
 		$('#event_list').show();
@@ -467,44 +589,6 @@ updateEvent = function(the_event) {
 
  }
 
-var startDateTextBox = $("#event_starts_at");
-var endDateTextBox = $("#event_ends_at");
-
-startDateTextBox.datetimepicker({ 
-  onClose: function(dateText, inst) {
-    if (endDateTextBox.val() != '') {
-      var testStartDate = startDateTextBox.datetimepicker('getDate');
-      var testEndDate = endDateTextBox.datetimepicker('getDate');
-      if (testStartDate > testEndDate)
-        endDateTextBox.datetimepicker('setDate', testStartDate);
-    }
-    else {
-      endDateTextBox.val(dateText);
-    }
-  },
-  onSelect: function (selectedDateTime){
-    endDateTextBox.datetimepicker('option', 'minDate', startDateTextBox.datetimepicker('getDate') );
-  },
-  dateFormat: "dd/mm/yy"
-});
-endDateTextBox.datetimepicker({ 
-  onClose: function(dateText, inst) {
-    if (startDateTextBox.val() != '') {
-      var testStartDate = startDateTextBox.datetimepicker('getDate');
-      var testEndDate = endDateTextBox.datetimepicker('getDate');
-      if (testStartDate > testEndDate)
-        startDateTextBox.datetimepicker('setDate', testEndDate);
-    }
-    else {
-      startDateTextBox.val(dateText);
-    }
-  },
-  onSelect: function (selectedDateTime){
-    startDateTextBox.datetimepicker('option', 'maxDate', endDateTextBox.datetimepicker('getDate') );
-  },
-  dateFormat: "dd/mm/yy"
-});
-
 
 var upcoming_events_currentPage = 2;
 var past_events_currentPage = 2;
@@ -607,52 +691,11 @@ $('document').ready(function(){
 });
 
 
-
-    var imageLoader = document.getElementById('pic');
-    imageLoader.addEventListener('change', handleImage, false);
-    $("#imageCanvas").click(function(){
-        $("#pic").click();
-    });
-        var canvas = document.getElementById('imageCanvas');
-    var ctx = canvas.getContext('2d');
-    ctx.font="30px Arial";
-    ctx.fillText("Add Event picture",10,50);
-
-  function handleImage(e){
-    var canvas = document.getElementById('imageCanvas');
-    var ctx = canvas.getContext('2d');
-    var iCnt=0;
-    var files = e.target.files;
-    canvas.width = 180;
-    canvas.height = 155*(Math.ceil(files.length/4));
-    for( var i = 0, len = files.length; i < len; i++) 
-          {
-          if(files[i])
-            {
-              var reader = new FileReader();
-              reader.onload = function(event){
-                var img = new Image();
-
-                img.onload = function(){
-                  var ratioPx = 150;
-                  var sWidth =ratioPx;
-                  var ratio = img.width/sWidth;
-                  var sHeight = img.height/ratio;   
-                    if(sHeight>ratioPx){
-                       sHeight =ratioPx;
-                       ratio = img.height/sHeight;
-                       sWidth = img.width/ratio;  
-                    }
-                  ctx.drawImage(img, 155*(iCnt%4),155*(Math.floor(iCnt/4)),sWidth,sHeight);
-                  //ctx.drawImage(img,0,0,sWidth,sHeight);
-                  iCnt++;
-                }
-                img.src = event.target.result;
-              }
-              reader.readAsDataURL(e.target.files[i]);     
-            }
-          }
-  }
-
+$(document).ready(function(){
+  $("li.event").click(function(){
+    $(this).next('a').click();
+    $('.loading_page').show();
+  });
+});
 
 </script>

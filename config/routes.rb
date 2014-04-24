@@ -24,7 +24,7 @@ EMS::Application.routes.draw do
   resources :user_groups
   #resources :posts
   resources :comments
-  #resources :events
+  resources :events, only: [ :destroy]
   resources :activities
   resources :authentication
 
@@ -136,6 +136,8 @@ EMS::Application.routes.draw do
     member do
       get :search_selected_user, :search_selected_group, :event_posts, :event_members, :event_photos, :add_event_moderators, :get_activity, :delete_event, :invite_event_guests_by_user, :invite_event_guests_by_email, :invite_fb_friends_to_event, :add_activity_moderators, :add_activity_guests, :search_event_guests, :unjoin_activity, :event_invitation, :up_events_page, :prev_events_page, :event_posts_page 
       post :create_activity_post, :create_event_album 
+      put :update_activity, :update_event
+      delete :delete_activity
     end
     resources :activities  
   end

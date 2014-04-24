@@ -3,9 +3,11 @@
           <tr class="tr-hover">
             <th >
              <%="Moderator".pluralize(ad_users.count) %>
+             <% if event.responded?(current_user) %>
                 <% if event.is_admin?(current_user.id) %>
                  <%= link_to "edit", '#', id: "moderator",  class: "uibutton icon edit pull-right button_toggle" %>
                 <% end %>
+              <% end %>
             </th>
           </tr>
         </thead>

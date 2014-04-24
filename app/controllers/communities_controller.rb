@@ -1010,6 +1010,7 @@ def search_app_user
     @event = Event.find(params[:event_id])
     @eds = @event.eventdetails
     @ads = @activity.activitydetails
+    @urs = @eds.pluck(:user_id).uniq - @ads.pluck(:user_id).uniq
     @ad_users = @activity.activitydetails.where(" is_admin=?", true)
     @inv_users = @activity.activitydetails.where(" is_admin=?", false)
  end
@@ -1067,6 +1068,14 @@ def search_app_user
     @event = Event.find(params[:event_id])
     @ed_user = @event.eventdetails.pluck(:user_id)
     @ad_user = @activity.activitydetails.pluck(:user_id)
+        @users_ids = params[:user_ids]
+        @users_ids.each do |usr_id|
+            @ad = Activitydetail.new
+            @ad.is_admin = false
+            @ad.user_id = usr_id
+            @activity.activitydetails << @ad
+            
+          end
     unless params[:invite_everyone].nil?
         @ed_user = @ed_user - @ad_user
           @ed_user.each do |user_id|
@@ -1090,6 +1099,7 @@ def search_app_user
     @community = Community.find(params[:id])
     @eds = @event.eventdetails
     @ads = @activity.activitydetails
+    @urs = @eds.pluck(:user_id).uniq - @ads.pluck(:user_id).uniq
     @ad_users = @activity.activitydetails.where(" is_admin=?", true)
     @inv_users = @activity.activitydetails.where(" is_admin=?", false)
   end
@@ -1110,6 +1120,7 @@ def search_app_user
     @community = Community.find(params[:id])
     @eds = @event.eventdetails
     @ads = @activity.activitydetails
+    @urs = @eds.pluck(:user_id).uniq - @ads.pluck(:user_id).uniq
     @ad_users = @activity.activitydetails.where(" is_admin=?", true)
     @inv_users = @activity.activitydetails.where(" is_admin=?", false)
 
@@ -1210,6 +1221,7 @@ def search_app_user
       @community = Community.find(params[:id])
       @eds = @event.eventdetails
       @ads = @activity.activitydetails
+      @urs = @eds.pluck(:user_id).uniq - @ads.pluck(:user_id).uniq
       @ad_users = @activity.activitydetails.where(" is_admin=?", true)
       @inv_users = @activity.activitydetails.where(" is_admin=?", false)
     else
