@@ -1,6 +1,6 @@
 
           <li style="padding:0px;position:relative;border-bottom:0px;" class="tr-hover1" >
-            <% if @event.responded?(current_user.id) %>
+            <% if @event.responded?(current_user) %>
               <% if @activity.admin?(current_user) %>
                <button class=" pull-right uibutton icon edit button_toggle_pic" id="edit_activity">edit</button>
                <% end %>

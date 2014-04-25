@@ -16,7 +16,7 @@
               </div>
             </h4>
                -->
-              <% unless @event.responded?(current_user.id) %>
+              <% unless @event.responded?(current_user) %>
                 <div class="text_overlay_cu_cover_pic button_toggle_pic" style=" margin-bottom:250px;height:60px;padding:0;margin-top:0;">
                     <span class="pull-right "> &nbsp;</span>
                   <address style="width:919px !important;"><p  style="width:100% !important;"><strong style="line-height:1.8">Attend this event</strong>
@@ -34,7 +34,7 @@
             <% end %>
             <div class="btn_overlay_cu_cover_pic">
               <div id="edit_del_btn">
-                <% if @event.responded?(current_user.id) %>
+                <% if @event.responded?(current_user) %>
                   <% if @event.is_admin?(current_user) %>
                        <button class=" pull-right uibutton icon edit button_toggle_pic" id="edit_event">edit</button>
                    <% end %>
