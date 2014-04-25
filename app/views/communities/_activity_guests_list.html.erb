@@ -3,7 +3,7 @@
           <tr class="tr-hover">
             <th >
              <%="Moderator".pluralize(ad_users.count) %>
-                <% if activity.admin?(current_user.id) %>
+                <% if activity.admin?(current_user) %>
                  <%= link_to "edit", '#', id: "moderator",  class: "uibutton icon edit pull-right button_toggle" %>
                 <% end %>
             </th>
@@ -32,7 +32,7 @@
           <tr class="tr-hover">
             <th >
               <%="Guest".pluralize(inv_users.count) %>
-               <% if activity.admin?(current_user.id) %>
+               <% if activity.admin?(current_user) %>
                  <%= link_to "add", '#', id: "guests",  class: "uibutton icon edit pull-right button_toggle" %>
                <% end %>
 
