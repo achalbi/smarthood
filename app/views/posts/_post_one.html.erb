@@ -85,8 +85,7 @@
         </div>
         
         <div style="background-color:#f0f0f0;padding:5px;margin:5px 0px 4px 0px;" class="clear-float">
-          <span class="timestamp" style="margin-left:5px;font-size:13px;">Posted to <%="community".pluralize(post.communities.count) %>
-                  </span>
+        <span class="timestamp" style="margin-left:5px;font-size:13px;">Posted to <%="community".pluralize(post.communities.count) %></span>
         <span class="pull-right more anchor" id="comm_more_<%= post.id %>" style="font-size:13px;">Show more details</span>
         <ul class="users">
         <% unless post.communities.count == 1 && post.communities[0].id == active_community.id %>
@@ -173,7 +172,7 @@
 
 <%= form_for( post, url: share_posts_path , remote: true, method: :post,  :html => {:multipart => true}) do |f| %>
   <div id="modal_share_<%= post.id %>" style="display:none" class="modal_share">
-          <div id="modal-from-dom" class="modal hide fade in" style="display: block;width:550px;">
+          <div id="modal-from-dom" class="modal hide fade in" style="display: block;width:555px;">
             <div class="modal-header">
               <a href="#"  class="close">×</a>
               <h3>Share</h3>
@@ -209,7 +208,7 @@
                             </label> -->
                           </li>
                           <% @joined_communities.each do |cu| %>
-                             <li style="margin-left:15px;" class="tr-hover select_unselect_comm_<%= post.id %> c-pointer">
+                             <li class="tr-hover select_unselect_comm_<%= post.id %> c-pointer">
                               <p style="display:none;"><%= cu.id %></p>
                               <div class="checkboxFive pull-right marginRight15" style="margin-top:12px;">
                                   <%= check_box_tag("community_id[]", cu.id, nil) %>

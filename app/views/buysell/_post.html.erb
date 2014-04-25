@@ -1,100 +1,32 @@
 <% @posts.each do |post| %>
 
-      <table id="table_<%= post.id %>">
+      <table id="table_<%= post.id %>" style="margin-bottom:0px;">
       <tr>
-        <td width="70px" style="padding:2px;">
-      <div class="pull-left paginate_do">
-        <section class="grid">
-          <li>
-            <a href="/users/<%=post.user.id %>/" data-remote="true" style="cursor:pointer;border:0px;padding:0px;" class="pop_up" rel="popover" data-content='<%= gravatar_for post.user, size: 100 %>' data-original-title="<%= post.user.name %>" >
-                    <%= gravatar_for post.user, size: 50 %>
-            </a>
-          </li>
-        </section>
-      </div>
-      </td>
-      <td style="padding:0px;" class="post_grid">
-        <div class="container_pics" >
-         <% post.photos.each do |photo| %>
-            <li style="border-top: 0px;">
-            <div  class="img_zoom" >
-            <a href="<%= photo.pic_url %>" rel="rettyPhoto[<%= post.id %>]" class="lightview" data-lightview-group="thumbnail-<%= post.id %>" data-lightview-group-options="controls: 'thumbnails'">
-            <%= cl_image_tag(photo.pic_url(:medium_large), class:"image_al_c")  %></a> 
+        <td style="padding:2px 0px 10px 0px;">
+          <div class="paginate_do">
+            <section class="users">
+              <div class="pull-right" style="padding:5px 0 0 5px;margin:1px 0 0 0;">
+                <% if current_user?(post.user) %>
+                 <strong style="font-size:15px;margin-right:3px;"> <%= link_to "×", post, method: :delete, remote: true, style: "color:#99A7C3 !important;",
+                                                   data: { confirm: "You sure?" },
+                                                   title: "delete the post" %></strong>
+                <% end %><br>
+              </div>
+              <li style="border-bottom:0px;padding: 5px 5px 0 5px;">
+                <a href="/users/<%= post.user.id %>/" data-remote="true" style="cursor:pointer;border:0px;padding:0px;" class="pop_up" rel="popover" data-content='<%= gravatar_for post.user, size: 100 %>' data-original-title="<%= post.user.name %>" >
+                        <%= gravatar_for post.user, size: 50 %>
+                </a>
+                        <address style="margin-top:5px;margin-bottom:5px;">
+                          <strong style="font-size:15px;letter-spacing:0.02em;"> <%= link_to post.user.name, post.user, remote: true %></strong>
+                           <span class="content1" style="font-size:15px;border:0px;padding: 5px 5px 0 5px;"><%= post.content.gsub(/\n/, '<br>').html_safe %></span>
+                           <br>
+                          <span class="timestamp" >
+                            <%= time_ago_in_words(post.created_at) %> ago.
+                          </span>
+                        </address>
+              </li>
+            </section>
           </div>
-          </li>
-          <% break %>
-        <% end %>
-        </div>
-        <div style="background-color:#f0f0f0;padding:5px;margin:4px 0px;">
-        
-        <p class="pull-right">
-          <span class="timestamp" >
-            Posted <%= time_ago_in_words(post.created_at) %> ago.
-          </span>
-        <% if current_user?(post.user) %>
-          <%= link_to "delete", "/buysell/#{post.id}/delete_item", method: :post, remote: true,
-                                           data: { confirm: "You sure?" },
-                                           title: post.content %>&nbsp;&nbsp;&nbsp;<a class="pull-right disabled uibutton edit_buysell_link" id="edit_buysell_<%= post.id%>">Edit</a>
-        <% end %>
-        </p><br>
-        <div>
-          <%= label_tag "Name: " , nil, class: " pull-left" %><span style="line-height: 2.3em;">&nbsp;&nbsp;<%= post.postable.name %><span><br>
-        </div>
-        <div class="more_details">
-          <%= label_tag "Description: ", nil, class: "pull-left" %><span style="line-height: 2.3em;">&nbsp;&nbsp;<%= post.postable.description %><span><br>
-        </div>
-        <div>
-          <%= label_tag "Type: ", nil, class: " pull-left" %><span style="line-height: 2.3em;">&nbsp;&nbsp;<%= post.postable.item_type %><span><br>
-        </div>
-        <div>
-          <%= label_tag "Category: ", nil, class: " pull-left" %><span style="line-height: 2.3em;">&nbsp;&nbsp;<%= post.postable.buysell_item_subcategory.buysell_item_category.name %><span><br>
-        </div>
-                <div>
-          <%= label_tag "Sub-category: ", nil, class: " pull-left" %><span style="line-height: 2.3em;">&nbsp;&nbsp;<%= post.postable.buysell_item_subcategory.name %><span><br>
-        </div>
-        <div>
-          <%= label_tag "Price: ", nil, class: " pull-left" %><span style="line-height: 2.3em;">&nbsp;&nbsp;<%= post.postable.price %><span><br>
-        </div>
-        <div>
-          <%= label_tag "Condition: ", nil, class: " pull-left" %><span style="line-height: 2.3em;">&nbsp;&nbsp;<%= post.postable.condition %><span><br>
-        </div>
-        <div class="more_details">
-          <%= label_tag "Notes: ", nil, class: " pull-left" %><span style="line-height: 2.3em;">&nbsp;&nbsp;<%= post.postable.notes %><span><br>
-        </div>
-        <div class="more_details">
-          <%= label_tag "Contact No: ", nil, class: " pull-left" %><span style="line-height: 2.3em;">&nbsp;&nbsp;<%= post.postable.contact_no %><span><br>
-        </div>
-                  <div class="center_block clearfix more_details ">
-                                <%= label_tag "Address:" %>
-                                <div  class="clearfix" style="margin-left:150px;margin-top:7px;">
-                                <p><%= post.postable.address.doorno  %></p>
-                                <p><%= post.postable.address.street  %></p>
-                                <p><%= post.postable.address.city  %></p>
-                                <p><%= post.postable.address.country  %> - <%= post.postable.address.postalcode  %></p>
-                                </div>
-                      </div>
-
-          <a class="pull-right more_details_link disabled">More details...</a><br>
-
-        <% unless post.communities.count == 1 && post.communities[0].id == active_community.id %>
-          <% unless post.communities[0].nil? %>
-                  <span  class="center_block"><br><h6>Posted under the <%="Community".pluralize(post.communities.count) %>:</h6>
-                  <ul class="groupsList">
-                  <% post.communities.each do |cu| %>
-                  <ol>
-                  <%= link_to cu.name, cu, remote:true %>
-                  </ol>
-                  <% end %>
-                  </ul>
-                </span>
-          <% end %>
-        <% end %>
-        </div>
-
-
-      </td>
-      </tr>
-      </table>
 
 <%= form_for( post.postable, url: "/buysell/update", remote: true,  :html => {:multipart => true, method: 'put'}) do |f| %>
   <div id="modal_edit_buysell_<%= post.id%>" style="display:none" class="modal_edit_buysell" >
@@ -214,8 +146,109 @@
 <% end %>
 
 
+          
+        <div class="container_pics center" >
+         <% post.photos.each do |photo| %>
+            <li style="border-top: 0px;padding: 0px 0px 10px 0px;">
+            <div  class="img_zoom" >
+            <a href="<%= photo.pic_url %>" rel="rettyPhoto[<%= post.id %>]" class="lightview1 fancybox-album" >
+            <%= cl_image_tag(photo.pic_url(:large_mid), class:"image_al_c")  %></a> 
+          </div>
+          </li>
+          <% break %>
+        <% end %>
+        </div>
+        <div style="background-color:#f0f0f0;">
+          <br>
+          <span class="  pull-left" style="margin-left:25px;font-size:11px;color:#666666;width:105px;text-align: right;line-height: 1.5;"><strong>Name: </strong></span>
+          <span style="margin-left:15px;font-size:11px;text-align: left;line-height: 1.5;" ><%= post.postable.name %></span><br>
+          <span class="  pull-left" style="margin-left:25px;font-size:11px;color:#666666;width:105px;text-align: right;line-height: 1.5;"><strong>Description: </strong></span>
+          <span style="margin-left:15px;font-size:11px;text-align: left;line-height: 1.5;" ><%= post.postable.description %></span><br>
+          <span class="  pull-left" style="margin-left:25px;font-size:11px;color:#666666;width:105px;text-align: right;line-height: 1.5;"><strong>Item: </strong></span>
+          <span style="margin-left:15px;font-size:11px;text-align: left;line-height: 1.5;" ><%= post.postable.item_type %></span><br>
+          <span class="  pull-left" style="margin-left:25px;font-size:11px;color:#666666;width:105px;text-align: right;line-height: 1.5;"><strong>Category: </strong></span>
+          <span style="margin-left:15px;font-size:11px;text-align: left;line-height: 1.5;" ><%= post.postable.buysell_item_subcategory.buysell_item_category.name %></span><br>
+          <span class="  pull-left" style="margin-left:25px;font-size:11px;color:#666666;width:105px;text-align: right;line-height: 1.5;"><strong>Sub-category: </strong></span>
+          <span style="margin-left:15px;font-size:11px;text-align: left;line-height: 1.5;" ><%= post.postable.buysell_item_subcategory.name %></span><br>
+          <span class="  pull-left" style="margin-left:25px;font-size:11px;color:#666666;width:105px;text-align: right;line-height: 1.5;"><strong>Price: </strong></span>
+          <span style="margin-left:15px;font-size:11px;text-align: left;line-height: 1.5;" ><%= post.postable.price %></span><br>
+          <span class="  pull-left" style="margin-left:25px;font-size:11px;color:#666666;width:105px;text-align: right;line-height: 1.5;"><strong>Condition: </strong></span>
+          <span style="margin-left:15px;font-size:11px;text-align: left;line-height: 1.5;" ><%= post.postable.condition %></span><br>
+          <span class="  pull-left" style="margin-left:25px;font-size:11px;color:#666666;width:105px;text-align: right;line-height: 1.5;"><strong>Notes: </strong></span>
+          <span style="margin-left:15px;font-size:11px;text-align: left;line-height: 1.5;" ><%= post.postable.notes %></span><br>
+          <span class="  pull-left" style="margin-left:25px;font-size:11px;color:#666666;width:105px;text-align: right;line-height: 1.5;"><strong>Contact No.: </strong></span>
+          <span style="margin-left:15px;font-size:11px;text-align: left;line-height: 1.5;" ><%= post.postable.contact_no %></span><br>
+          <span class="  pull-left" style="margin-left:25px;font-size:11px;color:#666666;width:105px;text-align: right;line-height: 1.5;margin-top:10px;"><strong>Address: </strong></span>
+                                <address style="margin-bottom:0px;">
+                                <div  class="clearfix" style="margin-left:130px;margin-top:10px;">
+                                <span style="margin-left:15px;font-size:11px;text-align: left;line-height: 1.5;" ><%= post.postable.address.doorno  %></span></br>
+                                <span style="margin-left:15px;font-size:11px;text-align: left;line-height: 1.5;" ><%= post.postable.address.street  %></span></br>
+                                <span style="margin-left:15px;font-size:11px;text-align: left;line-height: 1.5;" ><%= post.postable.address.city  %></span></br>
+                                <span style="margin-left:15px;font-size:11px;text-align: left;line-height: 1.5;" ><%= post.postable.address.country  %> - <%= post.postable.address.postalcode  %></span>
+                                </div>
+                                </address>
+     </div>
+        <div style="background-color:#f0f0f0;padding:5px;margin:0px;" class="clear-float">
+        <span class="timestamp" style="margin-left:5px;font-size:13px;">Posted to <%="community".pluralize(post.communities.count) %></span>
+        <span class="pull-right more anchor" id="comm_more_<%= post.id %>" style="font-size:13px;">Show more details</span>
+        <ul class="users">
+          <% unless post.communities[0].nil? %>
+                  <% j=0 %>
+                 <!--  <strong style="font-size:14px;" > -->
+                    <span  class="center_block">
+                  <% post.communities.each do |cu| %>
+                  <% j+=1 %>
+                  <div  class="showless pull-left com_show_less<%= post.id %>">
+                  <strong>
+                  <%= link_to cu.name, cu, remote:true, style: "font-size:12px;line-height:2;margin-left:10px; word-wrap:break-word;pull-left"  %><%= "," if post.communities.count != j %> 
+                  </strong>
+                  </div>
+                  <div  class="showmore active_hide com_show_more<%= post.id %> pull-left">
+                  <li style="margin-left:5px;position:relative;width:180px;" class="pull-left">
+                    <%= link_to cl_image_tag(cu.photo.pic_url(:smallest), class:"image_al_c1 thumbnail pull-left ", id:"#{cu.photo.id}"), "#" %>
+                    <div style="margin-left:65px;margin-top:5px;">
+                       <address>
+                         <strong><%= link_to cu.name, "#", style: "font-size:13px;word-wrap:break-word;" %></strong><br>
+                          <span style="word-wrap:break-word;"><%= cu.description.length > 17 ? cu.description.slice(0..17) + "..." : cu.description %></span><br>
+                       </address>  
+                    </div>
+                   </li>  
+                  </div>
+                  <% end %>
+                  </span>
+                 <!--  </strong> -->
+          <% end %>
+        </ul>
+      </div>
+      </td>
+      </tr>
+      </table>
+<script type="text/javascript">
+
+
+          $(function(){
+              $('#comm_more_<%= post.id %>').click(function(){
+                if ( $(this).hasClass('more') ){
+                      $(this).removeClass('more');
+                      $(this).html('Show less details');
+                      $(".com_show_less<%= post.id %>").hide();
+                      $(".com_show_more<%= post.id %>").show();
+                } else{
+                      $(this).addClass('more');
+                      $(this).html('Show more details');
+                      $(".com_show_less<%= post.id %>").show();
+                      $(".com_show_more<%= post.id %>").hide();
+                }
+              });
+          });
+
+
+</script>
+
  <% end %>
 <script type="text/javascript">
+
+
 $(document).ready(function(){
 //  $(".gravatar").addClass(" thumbnail");
   $("#content").addClass("photo_content");
@@ -234,7 +267,7 @@ $(".more_details_link").click(function(){
   $(this).hide();
 });
 
-$('.pop_up').popover({
+/*$('.pop_up').popover({
     html: true,
     trigger: 'manual',
     placement: 'left',
@@ -247,7 +280,7 @@ $('.pop_up').popover({
   },function(){
       $(this).popover('hide');        
   });
-
+*/
 $(".edit_buysell_link").click(function(){
       var id = this.id
       $('#modal_'+id).modal('show');
