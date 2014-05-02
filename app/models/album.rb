@@ -1,5 +1,5 @@
 class Album < ActiveRecord::Base
-  attr_accessible :cover_photo_id, :description, :privacy, :title, :type, :user_id, :photos, :downloadlink
+  attr_accessible :cover_photo_id, :description, :privacy, :title, :type, :user_id, :photos, :downloadlink, :downloadable
 
   belongs_to :albumable, :polymorphic => true
   belongs_to :user

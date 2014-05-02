@@ -17,6 +17,7 @@ class AlbumsController < ApplicationController
             @album.photos << @photo
         end
         @album.save
+=begin
         @pic_arr = []
         @album.photos.each do |photo|
           @pic_arr << File.basename( photo.pic_url, ".*" )
@@ -29,6 +30,8 @@ class AlbumsController < ApplicationController
                   @album.downloadlink = @cld["url"]
                   @album.save
             end
+=end
+
       if @album.privacy == Privacyenum::PUBLIC
         @post = Post.new
         @post.content = "<span class='timestamp' style='font-size:15px;'>added " + view_context.pluralize(@album.photos.count, "photo") + " to the album </span><strong><a href='/albums/" + @album.id.to_s + "' style='font-size:15px;word-wrap:break-word;' data-remote='true' > " + @album.title + " </a>.</strong>"
@@ -65,6 +68,7 @@ class AlbumsController < ApplicationController
     @cld = Cloudinary::Uploader.multi(@str, :format => 'zip')
     @album.downloadlink = @cld["url"]
     @album.save
+    redirect_to  @album.downloadlink
   end
 
 
@@ -108,6 +112,7 @@ class AlbumsController < ApplicationController
   end
 
   def show
+    @page = params[:from_page].nil? ? Objecttypeenum::ALBUM : params[:from_page]
     @album = Album.find(params[:id])
     @share = Share.new
        respond_to do |format|
@@ -129,6 +134,7 @@ class AlbumsController < ApplicationController
   def list
     @albums = current_user.albums.all.reverse
     @album = Album.new
+    store_location
      respond_to do |format|
          format.html {  }
          format.js { render  :locals => { :albums => @albums } }

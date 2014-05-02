@@ -93,8 +93,9 @@ EMS::Application.routes.draw do
       delete :delete_activity
     end
     collection do
-      get :active_com , :joined_com, :public_com, :private_com, :moderated_com, :search_address, :get_geo_coordinates, :invites_requests, :community_post_paginate, :my_com, :other_com
+      get :active_com , :joined_com, :public_com, :private_com, :moderated_com, :search_address, :get_geo_coordinates, :invites_requests, :community_post_paginate, :my_com, :other_com, :delete_album, :delete_photo
       post :create_album, :create_event
+      put :update_album
     end
   end 
    

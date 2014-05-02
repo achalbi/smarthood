@@ -13,6 +13,7 @@ class Objecttypeenum
     end
 
     Objecttypeenum.add_item :COMUNITY, "ComUnity"
+    Objecttypeenum.add_item :COMMUNITY, "Community"
     Objecttypeenum.add_item :EVENT, "Event"
     Objecttypeenum.add_item :ACTIVITY, "Activity"
     Objecttypeenum.add_item :GROUP, "Group"

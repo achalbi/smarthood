@@ -715,6 +715,9 @@ def search_app_user
 
   def photos_com
     flash.clear
+    if params[:id].nil?
+      params[:id] = active_community.id
+    end
     @community = Community.find(params[:id])
     @albums = @community.albums
     @selected_community = @community
@@ -722,6 +725,7 @@ def search_app_user
     @group_ids = current_user.user_groups.where("invitation = ? AND community_id = ?", Uc_enum::JOINED, @selected_community).collect(&:group_id)
     @albums << Album.where("albumable_id IN (?) AND albumable_type = ?", @group_ids, Objecttypeenum::GROUP)      
     @albums = @albums.sort_by(&:created_at).reverse
+    store_location
   end
 
  def members_com
@@ -1245,6 +1249,7 @@ def search_app_user
       @community = Community.find(params[:id])
       @activities = @event.activities
     end
+    store_location
   end
 
     def create_event_album
@@ -1297,18 +1302,7 @@ def search_app_user
         @community.albums << @album
         @community.save
         @albums = @community.albums
-        @pic_arr = []
-        @album.photos.each do |photo|
-          @pic_arr << File.basename( photo.pic_url, ".*" )
-        end
-        @str = @album.title+"_"+@album.id.to_s
-        @str = @str.downcase.tr(" ", "_")
-            Cloudinary::Uploader.add_tag(@str, @pic_arr)
-            if params[:downloadable]
-                  @cld = Cloudinary::Uploader.multi(@str, :format => 'zip')
-                  @album.downloadlink = @cld["url"]
-                  @album.save
-            end
+       
       if @album.privacy == Privacyenum::PUBLIC
         @post = Post.new
         @post.content = "<span class='timestamp' style='font-size:15px;'>added " + view_context.pluralize(@album.photos.count, "photo") + " to the album </span><strong><a href='/albums/" + @album.id.to_s + "' style='font-size:15px;word-wrap:break-word;' data-remote='true' > " + @album.title + " </a>.</strong>"
@@ -1377,6 +1371,7 @@ def search_app_user
     @album = Album.new
     @albums = @group.albums
     @community = Community.find(params[:id])
+    store_location
   end
 
   def destroy
@@ -1389,8 +1384,24 @@ def search_app_user
      end
   end
 
-def cu_list
-  
+def update_album
+    @album = Album.find(params[:id])
+    unless params[:photos].nil?
+    params[:photos][:pic].each do |pic|
+          @photo = Photo.new
+            @photo.pic = pic
+            @album.photos << @photo
+        end
+    end
+    @album.update_attributes(params[:album])
+   # flash[:success] = "Album updated successfully!"
+   redirect_to @album 
 end
+
+  def delete_album
+    Album.find(params[:id]).destroy
+   redirect_back_or root_path
+  end
+
 
 end

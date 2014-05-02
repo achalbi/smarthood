@@ -569,6 +569,7 @@ class EventsController < ApplicationController
       @activity = Activity.find(params[:activity_id])
       @event = Event.find(params[:id])
       @activities = @event.activities
+      store_location
   end
 
  def add_event_moderators

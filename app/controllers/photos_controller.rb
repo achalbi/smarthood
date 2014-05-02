@@ -28,7 +28,10 @@ class PhotosController < ApplicationController
   end
  
   def destroy
-    redirect_to photos_path
+    Photo.find(params[:id]).destroy
+    respond_to do |format|
+      format.all { render :nothing => true, :status => 200 }
+   end
   end
 
     def updates

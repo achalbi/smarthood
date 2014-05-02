@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140422043353) do
+ActiveRecord::Schema.define(:version => 20140501072154) do
 
   create_table "activities", :force => true do |t|
     t.string   "title"
@@ -109,6 +109,7 @@ ActiveRecord::Schema.define(:version => 20140422043353) do
     t.integer  "albumable_id"
     t.string   "albumable_type"
     t.string   "downloadlink"
+    t.boolean  "downloadable"
   end
 
   create_table "attachinary_files", :force => true do |t|

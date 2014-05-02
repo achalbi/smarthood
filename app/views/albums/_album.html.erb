@@ -1,16 +1,23 @@
     <script type="text/javascript">var photoCount = 0;</script>
 
-    <%= form_for  @album, :url => { :action => "edit" },  :method => :get, remote: true do  |f| %>
           <div style="margin-right:120px;"  >
                <div id="album_indiv" style=" margin-bottom:0px;">
                   <ul class="breadcrumb" style="width:535px;height:22px;">
                     <!-- <li><a href="#" class="marginLeft10 marginRight10" style="line-height:21px;" id="album_bc">Albums</a><span class="divider" style="line-height:21px;" >></span> </li>
                     <li><a href="#" class="marginLeft5" style="line-height:21px;"  ><%= @album.title %></a></li> -->
-                    <span style="margin-right:5px;float:right;"><li><%= link_to "Share", '#', id: "share",  class: "uibutton icon add" %></li>
-                      <% unless @album.downloadlink.blank? %>
-                        <li><%= link_to "Download", @album.downloadlink , id: "download",  class: "uibutton" %></li>
-                      <% else %>
-                       <li><%= link_to "Generate downloadable link", gen_downloadable_link_album_path(@album.id) , id: "gen_download",  class: "uibutton", remote: true %></li>
+                    <% if @album.user == current_user %>
+                    <% if @album.albumable_type == @page %>
+                    <% end %>
+                      <%= link_to "Delete", "/communities/delete_album?id=#{@album.id}" , method: :get, class: "uibutton danger pull-left del-alb",
+                                             data: { confirm: "You sure?" }, remote: true,
+                                             title: "Delete album: " + @album.title %>
+                      <%= link_to "edit", '#', id: "edit_album",  class: "uibutton icon edit pull-left" %>
+                    <% end %>
+                      <% if @album.privacy ==  Privacyenum::PUBLIC || @album.user == current_user  %>
+                        <span style="margin-right:5px;float:right;"><li><%= link_to "Share", '#', id: "share",  class: "uibutton icon add" %></li>
+                      <% end %>
+                      <% if @album.downloadable? %>
+                         <li><%= link_to "Download", gen_downloadable_link_album_path(@album.id) , id: "gen_download",  class: "uibutton", target: "_blank" %></li>
                       <% end %>
                     </span>
                   </ul>
@@ -65,10 +72,25 @@
     <span style="clear:both;" ></span>
     <div id="gallery1" class="pull-left">
       <ul id="grid" style="margin:0px;">
+        <% if @album.user == current_user %>
+<!--           <li style="background-color:#ffffff!important;margin-left:0px;">
+            <div id="upload_pics"  style = "border:2px dashed #ddd; width:106px; height:106px; padding:10px;  left:40px; text-align:middle; z-index: 1;  cursor:pointer;  float:left; margin-bottom:3px;" class="bgClrChg">  <h5 class="center" style="margin:38px 0 0 0 "> Add Photos </h5>
+            </div>
+          </li>    -->            
+        <% end %>
+
+
         <% @album.photos.each do |photo| %>
-          <li style="margin-left:0px;">
+          <li style="margin-left:0px;position:relative" class="img-hover-btn">
                   <a href="<%= photo.pic_url %>"  class="fancybox-album" rel="group1">
-                  <%= cl_image_tag(photo.pic_url(:small_mid), class:"thumbnail", style: "margin:0px!important;", alt: "http://res.cloudinary.com/rashi/image/upload/v1377921346/RYW-Logo-smaller_rbkszn.png")  %></a> 
+                  <%= cl_image_tag(photo.pic_url(:small_mid), class:"thumbnail", style: "margin:0px!important;", alt: "http://res.cloudinary.com/rashi/image/upload/v1377921346/RYW-Logo-smaller_rbkszn.png")  %>
+                  
+        <% if @album.user == current_user  && @album.photos.count > 1 %>
+                  <div class="btn_overlay_cu_cover_pic active_hide">
+                    <%= link_to "Delete", photo , method: :delete, class: "uibutton danger pull-right photo_del", remote: true, title: "Delete photo" %>
+                  </div>
+        <% end %>
+                </a> 
               </li>
             
         <% end %>
@@ -76,7 +98,73 @@
       </ul>
     </div>
   </div>
+
+<%= form_for(@album , url: update_album_communities_path, remote: true, :html => {:multipart => true, id: 'update_album'}) do  |f| %> 
+<div id="modal_com" style="display:none" >
+  <div id="modal-from-dom_com" class="modal hide fade in" style="display: block;width:700px;">
+    <div class="modal-header">
+      <a href="#" id="closeX_com" class="close">×</a>
+      <h3>Edit album</h3>
+    </div>
+    <div class="modal-body" style="max-height:450px;">
+      <div class="row">
+        <div class="span14 ui-front "  >
+
+         <%= render 'shared/error_messages', object: f.object %>
+         <div class="center_block clearfix pull-left">
+          <%= f.label :title %>
+          <div class="input">
+            <%= f.text_field :title, :placeholder=>"Title", 'data-validation' => "length",
+     'data-validation-length' =>"3-25", 'data-validation-error-msg' => "The album title has to be a value between 3-25 characters" %>
+          </div>
+        </div>
+
+        <div class="center_block clearfix pull-left">
+          <%= f.label :description %>
+          <div class="input">
+            <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title=>"Description", rows: 3, cols: 75, 'data-validation' => "length ",
+     'data-validation-length' =>"3-250", 'data-validation-error-msg' => "The album description has to be an alphanumeric value between 3-250 characters"   %> 
+          </div>
+        </div>
+        <span class="overrideClass">
+          <div class="center_block clearfix pull-left">
+            <%= f.label "privacy:" %>
+            <div class="input">
+              <%= f.select :privacy, options_for_select([["Public", Privacyenum::PUBLIC], ["Private", Privacyenum::PRIVATE]], f.object.privacy) %>
+            </div>
+          </div>
+        </span>
+          <div class="center_block clearfix pull-left ">
+            <%= f.label  "Album downloadable: " %>
+            <div class="input">
+              <%= f.check_box :downloadable %>
+            </div>
+          </div>
+        <div class="center_block clearfix pull-left clear">
+         <div class="input">    
+           <%= fields_for :photos, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
+
+           <%= photo_form.file_field :pic, id: "pic_com", :multiple => true, style: "width:0px; height:0px; padding:0px;  left:0px;" %>  
+           <% end %>
+           <%= hidden_field_tag 'type', 'album' %>  
+           <%= hidden_field_tag "id", "#{@album.id}" %>
+           <%= f.hidden_field :id %>
+           <canvas id="imageCanvas_com" style = "border: 1px solid #ddd; padding:5px; align:center;cursor:pointer;" >click to add photos</canvas>
+         </div>
+       </div>
+     </div>
+   </div>
+ </div>
+ <div class="modal-footer" >
+  <%= f.submit "Update", class: "btn primary pull-right busy", id: "updAlb_com" %> 
+  <%= f.submit "", :class => 'active_hide reset_form', :type => 'reset' %> 
+
+</div>
+</div>
+</div>
 <% end %>
+
+
     <%= form_for  @share, :url => new_share_path, :method => :get, remote: true do  |f| %>
       <div id="modal" style="display:none" >
           <div id="modal-from-dom" class="modal hide fade in" style="display: block;">
@@ -147,11 +235,133 @@
 
     $(document).ready(function(){
       $.validate({
+        form : '#new_share',
         onSuccess : function() {
           $('#modal').modal('hide');
         },
       });
   });
 
+
+
+$("#edit_album").click(function(){
+    $('#modal_com').modal({
+    //  keyboard: true,
+      backdrop: "static",
+    });
+ // $('#modal_com').modal('show');
+});
+
+$("#closeX_com").click(function(){
+  $('#modal_com').modal('hide');
+  $('.reset_form').click();
+
+
+  $('#pic_com').val('');
+  var canvas = document.getElementById('imageCanvas_com');
+  var ctx = canvas.getContext('2d');
+  canvas.width = 300;
+  canvas.height = 155;
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.font="15px Arial";
+      ctx.fillText("Click here to add photos (Max: 50 files)",25,75);
+
+});
+
+
+$(document).ready(function(){
+  $.validate({
+    form : '#update_album',
+    onSuccess : function() {
+      $('#updAlb_com').attr('data-loading-text', 'Updating...');
+      $('#updAlb_com').button('loading');
+     // return false; // Will stop the submission of the form
+    },
+  });
+});
+
+
+var imageLoader = document.getElementById('pic_com');
+imageLoader.addEventListener('change', handleImage, false);
+$("#imageCanvas_com").click(function(){
+  $("#pic_com").click();
+});
+
+var canvas = document.getElementById('imageCanvas_com');
+var ctx = canvas.getContext('2d');
+  ctx.font="15px Arial";
+  ctx.fillText("Click here to add photos (Max: 50 files)",25,75);
+
+function handleImage(e){
+  var canvas = document.getElementById('imageCanvas_com');
+  var ctx = canvas.getContext('2d');
+  var iCnt=0;
+  var files = e.target.files;
+   if(files.length>50){
+      alert("Maximum of 50 files can be selected");
+      $('#pic_com').val('');
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      canvas.width = 300;
+      canvas.height = 155;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.font="15px Arial";
+      ctx.fillText("Click here to add photos (Max: 50 files)",25,75);
+      return;
+    }
+   if(files.length<1){
+    $('#pic_com').val('');
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      canvas.width = 300;
+      canvas.height = 155;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.font="15px Arial";
+      ctx.fillText("Click here to add photos (Max: 50 files)",25,75);
+      return;
+    }
+  canvas.width = 453;
+  canvas.height = 155*(Math.ceil(files.length/3));
+  for( var i = 0, len = files.length; i < len; i++) 
+  {
+    if(files[i])
+    {
+      var reader = new FileReader();
+      reader.onload = function(event){
+        var img = new Image();
+
+        img.onload = function(){
+          var ratioPx = 150;
+          var sWidth =ratioPx;
+          var ratio = img.width/sWidth;
+          var sHeight = img.height/ratio;   
+          if(sHeight>ratioPx){
+           sHeight =ratioPx;
+           ratio = img.height/sHeight;
+           sWidth = img.width/ratio;  
+         }
+         ctx.drawImage(img, 155*(iCnt%3),155*(Math.floor(iCnt/3)),sWidth,sHeight);
+                          //ctx.drawImage(img,0,0,sWidth,sHeight);
+                          iCnt++;
+                        }
+                        img.src = event.target.result;
+                      }
+                      reader.readAsDataURL(e.target.files[i]);     
+                    }
+                  }
+                }
+
+     $('.img-hover-btn').hover(function() {
+       $(this).find('.btn_overlay_cu_cover_pic').show();
+       }, function() {
+         $(this).find('.btn_overlay_cu_cover_pic').hide();
+    });
+
+$(".photo_del").click(function(){
+  $(this).closest('li').hide();
+});
+
+$(".del-alb").click(function(){
+ // $('.loading_page').show();
+});
 
       </script>
