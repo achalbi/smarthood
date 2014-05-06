@@ -73,8 +73,8 @@ class EventsController < ApplicationController
 
       if @event.privacy == Privacyenum::PUBLIC
         @post = Post.new
-        @post.content = "<span class='timestamp' style='font-size:15px;'> added event </span><strong><a href='/events/" + @event.id.to_s + "' style='font-size:15px;word-wrap:break-word;' data-remote='true' > " + @event.title + " </a>.</strong>"
-
+        @post.title = "<span class='timestamp' style='font-size:15px;'> added event </span><strong><a href='/events/" + @event.id.to_s + "' style='font-size:15px;word-wrap:break-word;' data-remote='true' > " + @event.title + " </a>.</strong>"
+        @post.content = ""
         @post.user_id = current_user.id
         @post.postable = @event
         @post.save
@@ -772,7 +772,8 @@ class EventsController < ApplicationController
         @albums = @activity.albums
       if @album.privacy == Privacyenum::PUBLIC
         @post = Post.new
-        @post.content = "<span class='timestamp' style='font-size:15px;'>added " + view_context.pluralize(@album.photos.count, "photo") + " to the album </span><strong><a href='/albums/" + @album.id.to_s + "' style='font-size:15px;word-wrap:break-word;' data-remote='true' > " + @album.title + " </a></strong>" + "<span class='timestamp' style='font-size:15px;'> under the event </span><strong><a href='/events/" + @event.id.to_s + "' style='font-size:15px;word-wrap:break-word;' data-remote='true' > " + @event.title + " </a>.</strong>"
+        @post.title = "<span class='timestamp' style='font-size:15px;'>added " + view_context.pluralize(@album.photos.count, "photo") + " to the album </span><strong><a href='/albums/" + @album.id.to_s + "' style='font-size:15px;word-wrap:break-word;' data-remote='true' > " + @album.title + " </a></strong>" + "<span class='timestamp' style='font-size:15px;'> under the event </span><strong><a href='/events/" + @event.id.to_s + "' style='font-size:15px;word-wrap:break-word;' data-remote='true' > " + @event.title + " </a>.</strong>"
+        @post.content = ""
         @post.user_id = current_user.id
         @post.postable = @album
         @post.save

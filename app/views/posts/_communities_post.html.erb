@@ -1,6 +1,6 @@
 <div class="center loading_page active_hide" ><img src="/assets/loading.gif"></div>
 <div id="image" style="display:block;width:585px;">
-  <%= form_for(@post, remote: true,  :html => {:multipart => true}) do |f| %>
+  <%= form_for(@post, remote: true,  :html => {:multipart => true, id: "communities_post"}) do |f| %>
   <div id="textarea_div" style="border: 1px solid #d4dae8;overflow: hidden;background-color:#f2f2f2;">
     <%= render 'shared/error_messages', object: f.object %>
     <%= fields_for :photo, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
@@ -107,6 +107,8 @@
 $(document).ready(function(){
     $("#cu_label_<%= active_community.id.to_s %>").show();
   $.validate({
+    form : "#communities_post",
+    validateOnBlur : false,
     onSuccess : function() {
       $('.loading_page').show();
       $('#community_post_submit').attr('data-loading-text', 'Posting...');
@@ -182,7 +184,7 @@ $(document).ready(function(){
 
 
         var currentPage = 1;
-        var intervalID = -1000;
+        var comms_post_intervalID = -1000;
         var insideLoop ="false"; 
 
         function checkScroll_comms_post() {
@@ -190,20 +192,21 @@ $(document).ready(function(){
             insideLoop="true";
             currentPage++;
             $('#loading_page').show();
-    console.log($('.home_page_post').length);
+  //  console.log($('.home_page_post').length);
+  //  console.log(comms_post_intervalID);
     if($('.home_page_post').length == 0){
-      clearInterval(intervalID);
-      for (var i = 1; i < 99999; i++){
+      clearInterval(comms_post_intervalID);
+     for (var i = comms_post_intervalID; i > 0; i--){
        window.clearInterval(i);
      }
-     insideLoop = "false";
+   insideLoop = "false";
      return;
    }
    jQuery.ajax('/posts/cus_post_paginate?page=' + currentPage, {asynchronous:true, evalScripts:true, method:'get', success: function(data, textStatus, jqXHR) {
     $('.home_page_post').append($(data));
     $('#loading_page').hide();
     if(typeof jQuery(data) == 'undefined' ||jQuery(data).html() == null || $(data).find('.paginate_do').html()==null){
-      clearInterval(intervalID);
+      clearInterval(comms_post_intervalID);
       for (var i = 1; i < 99999; i++){
        window.clearInterval(i);
      }
@@ -227,7 +230,7 @@ function pageHeight() {
 }
 
 $('document').ready(function(){
-  intervalID = setInterval(checkScroll_comms_post, 500);
+  comms_post_intervalID = setInterval(checkScroll_comms_post, 500);
 })
 
 $("#community_post_select").click(function(){

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140501072154) do
+ActiveRecord::Schema.define(:version => 20140504152321) do
 
   create_table "activities", :force => true do |t|
     t.string   "title"
@@ -430,6 +430,7 @@ ActiveRecord::Schema.define(:version => 20140501072154) do
     t.datetime "photo_updated_at"
     t.integer  "postable_id"
     t.string   "postable_type"
+    t.text     "title"
   end
 
   add_index "posts", ["user_id", "created_at"], :name => "index_posts_on_user_id_and_created_at"

@@ -87,7 +87,8 @@ class BuysellController < ApplicationController
         end    
     @buysellitem.save
         @post = Post.new
-        @post.content = "Item: '" + @buysellitem.name << "' was posted by '" << current_user.name << "' to " << @buysellitem.item_type << " at " << @buysellitem.currency << " " << @buysellitem.price.to_s << ". " 
+        @post.title = "Item: '" + @buysellitem.name << "' was posted by '" << current_user.name << "' to " << @buysellitem.item_type << " at " << @buysellitem.currency << " " << @buysellitem.price.to_s << ". " 
+        @post.content = ""
         @post.user_id = current_user.id
         @post.postable = @buysellitem
         @post.save

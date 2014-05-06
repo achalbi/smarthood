@@ -17,7 +17,7 @@
     <% end %>
     <address style="margin-top:2px;margin-bottom:0;">
       <span>
-     <strong style="font-size:13px; float: left; line-height: 1;margin-right: 8px;"> <%= link_to post.user.name, post.user, remote: true %></strong>
+     <strong style="font-size:13px; float: left; line-height: 1;margin-right: 8px;"> <%= link_to comment.user.name, comment.user, remote: true %></strong>
       </span>
      <span class="content" style="font-size:13px;line-height: 1;"> <%= comment.content %></span>
      <span class="timestamp">
@@ -43,7 +43,7 @@ $("#comments_del_<%= comment.id %>").click(function(){
 <ol style="padding:5px;margin:0;height:30px;overflow:hidden;">
 <%= gravatar_for(current_user, size: 38) %>
 <%= form_for [post.comments.build], remote: true, html: {style: "margin-bottom: 0px;", id: "comment_#{post.id}"}  do |f| %>
-    <%= f.text_field :content, :placeholder=>"Comment...", style: 'width:465px;', :title => "Comment"  %>
+    <%= f.text_field :content, :placeholder=>"Comment...", style: 'width:465px;', :title => "Comment", 'data-validation' => "required", 'data-validation-error-msg' => "Comment can't be blank"  %>
     <div class="center loading_page_<%= post.id %> pull-right active_hide" style="padding:0 5px;margin:0 8px;"><img src="/assets/loading.gif"></div>
     <%= f.hidden_field :post_id %>
     <div class="active_hide pull-left">
@@ -68,7 +68,15 @@ $("#cmnts_<%= post.id %>").click(function(){
   $("#cmnts_<%= post.id %>").hide();
 });
 
-
+     $(document).ready(function(){
+        $.validate({
+          validateOnBlur : false,
+          form : '#comment_<%= post.id %>',
+          onSuccess : function() {
+           // $(".loading_page_<%= post.id %>").show();
+          },
+        });
+    });
 
 /*$('.pop_up').popover({
     html: true,

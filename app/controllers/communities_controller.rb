@@ -863,7 +863,8 @@ def search_app_user
 
       if @event.privacy == Privacyenum::PUBLIC
         @post = Post.new
-        @post.content = "<span class='timestamp' style='font-size:15px;'> added event </span><strong><a href='/events/" + @event.id.to_s + "' style='font-size:15px;word-wrap:break-word;' data-remote='true' > " + @event.title + " </a>.</strong>"
+        @post.title = "<span class='timestamp' style='font-size:15px;'> added event </span><strong><a href='/events/" + @event.id.to_s + "' style='font-size:15px;word-wrap:break-word;' data-remote='true' > " + @event.title + " </a>.</strong>"
+        @post.content = ""
         @post.user_id = current_user.id
         @post.postable = @event
         @post.save
@@ -1029,7 +1030,8 @@ def search_app_user
         @activity.activitydetails << @ad
       if @activity.privacy == Privacyenum::PUBLIC
         @post = Post.new
-        @post.content = "<span class='timestamp' style='font-size:15px;'> added an activity </span><strong><a href='/activities/" + @activity.id.to_s + "' style='font-size:15px;word-wrap:break-word;' data-remote='true' > " + @activity.title + " </a></strong><span class='timestamp' style='font-size:15px;'> to the event </span><strong><a href='/events/" + @event.id.to_s + "' style='font-size:15px;word-wrap:break-word;' data-remote='true' > " + @event.title + " </a>.</strong>"
+        @post.title = "<span class='timestamp' style='font-size:15px;'> added an activity </span><strong><a href='/activities/" + @activity.id.to_s + "' style='font-size:15px;word-wrap:break-word;' data-remote='true' > " + @activity.title + " </a></strong><span class='timestamp' style='font-size:15px;'> to the event </span><strong><a href='/events/" + @event.id.to_s + "' style='font-size:15px;word-wrap:break-word;' data-remote='true' > " + @event.title + " </a>.</strong>"
+        @post.content = ""
         @post.user_id = current_user.id
         @post.postable = @activity
         @post.save
@@ -1270,7 +1272,8 @@ def search_app_user
         @albums = @activity.albums
       if @album.privacy == Privacyenum::PUBLIC
         @post = Post.new
-        @post.content = "<span class='timestamp' style='font-size:15px;'>added " + view_context.pluralize(@album.photos.count, "photo") + " to the album </span><strong><a href='/albums/" + @album.id.to_s + "' style='font-size:15px;word-wrap:break-word;' data-remote='true' > " + @album.title + " </a></strong>" + "<span class='timestamp' style='font-size:15px;'> under the event </span><strong><a href='/events/" + @event.id.to_s + "' style='font-size:15px;word-wrap:break-word;' data-remote='true' > " + @event.title + " </a>.</strong>"
+        @post.title = "<span class='timestamp' style='font-size:15px;'>added " + view_context.pluralize(@album.photos.count, "photo") + " to the album </span><strong><a href='/albums/" + @album.id.to_s + "' style='font-size:15px;word-wrap:break-word;' data-remote='true' > " + @album.title + " </a></strong>" + "<span class='timestamp' style='font-size:15px;'> under the event </span><strong><a href='/events/" + @event.id.to_s + "' style='font-size:15px;word-wrap:break-word;' data-remote='true' > " + @event.title + " </a>.</strong>"
+        @post.content = ""
         @post.user_id = current_user.id
         @post.postable = @album
         @post.save
@@ -1298,14 +1301,16 @@ def search_app_user
             @photo.pic = pic
             @album.photos << @photo
           end
-        @album.save
         @community.albums << @album
+        @album.save
         @community.save
         @albums = @community.albums
        
       if @album.privacy == Privacyenum::PUBLIC
+        
         @post = Post.new
-        @post.content = "<span class='timestamp' style='font-size:15px;'>added " + view_context.pluralize(@album.photos.count, "photo") + " to the album </span><strong><a href='/albums/" + @album.id.to_s + "' style='font-size:15px;word-wrap:break-word;' data-remote='true' > " + @album.title + " </a>.</strong>"
+        @post.title = "<span class='timestamp' style='font-size:15px;'>added " + view_context.pluralize(@album.photos.count, "photo") + " to the album </span><strong><a href='/albums/" + @album.id.to_s + "' style='font-size:15px;word-wrap:break-word;' data-remote='true' > " + @album.title + " </a>.</strong>"
+        @post.content = ""
         @post.user_id = current_user.id
         @post.postable = @album
         @post.save
@@ -1399,6 +1404,11 @@ def update_album
 end
 
   def delete_album
+    @album = Album.find(params[:id])
+    @album.photos.each do |photo|
+      photo.remove_pic!
+      photo.destroy
+    end
     Album.find(params[:id]).destroy
    redirect_back_or root_path
   end

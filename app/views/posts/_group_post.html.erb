@@ -1,6 +1,6 @@
   <div id="image" style="display:block;">
     <div id="textarea_div" style="resize: both;border: 1px solid #d4dae8;overflow: hidden;background-color:#f2f2f2;">
-<%= form_for(@post, remote: true,  :html => {:multipart => true}) do |f| %>
+<%= form_for(@post, remote: true,  :html => {:multipart => true, id: "group_post"}) do |f| %>
     <%= render 'shared/error_messages', object: f.object %>
                 <%= fields_for :photo, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
                  
@@ -35,6 +35,8 @@ $("#remove_image").click(function(){
 
 $(document).ready(function(){
   $.validate({
+    form : "#group_post",
+    validateOnBlur : false,
     onSuccess : function() {
       $('.loading_page').show();
       $('#submit_grp_post').attr('data-loading-text', 'Posting...');

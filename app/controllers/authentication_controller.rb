@@ -37,6 +37,7 @@ class AuthenticationController < ApplicationController
         user.user_info.dob = user_session['birthday']
         user.name = user.user_info.first_name + ' '.to_s + user.user_info.last_name
         #user.valid = true
+        #user.save(:validate=>false)
         user.save!
       end
 

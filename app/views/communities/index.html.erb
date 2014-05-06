@@ -79,7 +79,7 @@ $(document).ready(function(){
 
  </div>
 
- <%= form_for( Community.new, remote: true, :html => {:multipart => true}) do |f| %>
+ <%= form_for( Community.new, remote: true, :html => {:multipart => true, id: "create_community"}) do |f| %>
  <div id="modal" style="display:none;" >
   <div id="modal-from-dom2" class="modal hide fade in" style="display: block;width:700px;">
     <div class="modal-header">
@@ -158,7 +158,7 @@ $(document).ready(function(){
 <script type="text/javascript">
 $(document).ready(function(){
   $.validate({
-    modules : 'security',
+    form : "#create_community",
     onSuccess : function() {
       $('#crtComUnity').attr('data-loading-text', 'Creating...');
       $('#crtComUnity').button('loading');
@@ -313,17 +313,17 @@ function handleImage(e){
     $('.loading_page').show();    
   });
 
-
+/*
 $(document).ready(function(){
   $.validate({
-//    validateOnBlur : false,
+    validateOnBlur : false,
     onSuccess : function() {
       $('.loading_page').show();
       $('#community_post_submit').attr('data-loading-text', 'Posting...');
       $('#community_post_submit').button('loading');
     },
   });
-});
+});*/
 
 
 

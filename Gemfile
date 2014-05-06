@@ -30,6 +30,7 @@ gem 'jquery-tokeninput-rails'
 #gem "jquery-fileupload-rails"
 #gem 'jquery-lazy-images'
 gem 'koala'
+gem 'newrelic_rpm'
 #gem 'bootstrap-multiselect-rails'
 #gem 'autogrow-textarea-rails'
 #gem 'node'

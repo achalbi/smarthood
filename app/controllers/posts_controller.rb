@@ -194,7 +194,7 @@ def userUnlike
 end
 
 def share
-  @post = Post.find(params[:post][:id])
+  @post = Post.find(params[:post][:id]).dup
   unless params[:community_id].blank?
       @post_cus = Community.where('id IN (?)',params[:community_id])
       @post_cus.each do |cu|
@@ -211,8 +211,8 @@ def share
         end
       end
   end
+  @post.title = "<span class='timestamp' style='font-size:15px;'>shared </span><strong><a href='/users/" + @post.user.id.to_s + "' style='font-size:15px;word-wrap:break-word;' data-remote='true' > " + @post.user.name + "'s </a></strong>" + "<span class='timestamp' style='font-size:15px;'> post </span>"
   @post.save
-  @post.touch
  #getNotifiableUsers(Objecttypeenum::POST, @post, Objecttypeenum::COMUNITY, @post.communities, Uc_enum::SHARED)
 end
 

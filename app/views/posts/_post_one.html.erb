@@ -17,7 +17,9 @@
                     <address style="margin-top:5px;">
                       <strong style="font-size:15px;letter-spacing:0.02em;"> <%= link_to post.user.name, post.user, remote: true %></strong>
                       <% unless (post.postable_type != Objecttypeenum::EVENT && post.postable_type != Objecttypeenum::ACTIVITY && post.postable_type != Objecttypeenum::ALBUM && post.postable_type != Objecttypeenum::BUYSELL)%>
-                       <%= post.content.gsub(/\n/, '<br>').html_safe %>
+                        <% unless post.title.blank? %>
+                            <%= post.title.gsub(/\n/, '<br>').html_safe %>
+                        <% end %>
                       <% end %>
                        <br>
                       <span class="timestamp" >

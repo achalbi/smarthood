@@ -1,5 +1,5 @@
 class Post < ActiveRecord::Base
-  attr_accessible :content, :user_id, :photo, :photo_file_name, :photo_content_type, :photo_file_size, :photo_updated_at, :photos_attributes, :pic, :event_id, :postable_id, :postable_type 
+  attr_accessible :content, :user_id, :photo, :photo_file_name, :photo_content_type, :photo_file_size, :photo_updated_at, :photos_attributes, :pic, :event_id, :postable_id, :postable_type, :title
 
 
   belongs_to :user
@@ -23,7 +23,7 @@ class Post < ActiveRecord::Base
   
   has_many :comments
 
-  validates :content, presence: true
+ # validates :content, presence: true
   validates :user_id, presence: true
 
   default_scope order: 'posts.updated_at DESC'
