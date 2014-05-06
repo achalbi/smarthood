@@ -1,3 +1,2 @@
-# Event Management System
+# Comm test
 
-This is Event management application for All
