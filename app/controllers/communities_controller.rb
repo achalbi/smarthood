@@ -1413,5 +1413,16 @@ end
    redirect_back_or root_path
   end
 
+   def getname
+	  if Community.find_by_name(params[:name]).blank?
+	    result = true
+	  else
+	    result = false
+	  end
+	  respond_to do |format|
+	    format.json {render :json => result}
+	  end
+	end
+
 
 end

@@ -94,9 +94,10 @@ $(document).ready(function(){
 
          <div class="center_block clearfix">
           <%= f.label :name %>
-          <div class="input">
+          <div class="input getname">
             <%= f.text_field :name, :placeholder=>"Title", 'data-validation' => "length",
-     'data-validation-length' =>"3-25", 'data-validation-error-msg' => "The community name has to be a value between 3-25 characters" %>
+     'data-validation-length' =>"3-25", 'data-validation-error-msg' => "The community name has to be a value between 3-25 characters", id: "comm_name" %>
+          <span style="margin-left:10px;"></span>
           </div>
           </div>
 
@@ -146,8 +147,8 @@ $(document).ready(function(){
       </div>
     </div>
     <div class="modal-footer" >
-      <%= f.submit "Create", class: "btn primary pull-right busy", id: "crtComUnity" %> 
-      <%= f.submit "", :class => 'active_hide reset_form', :type => 'reset' %> 
+       <a class="btn primary pull-right busy " id="crtComUnity">Create</a>
+    
     </div>
   </div>
 </div>
@@ -156,6 +157,49 @@ $(document).ready(function(){
 
 
 <script type="text/javascript">
+
+  
+  $("#comm_name").blur(function() {
+      var url_getname = "/communities/getname?name="+$('#comm_name').val();
+    $.ajax({
+      type: "GET",
+      url: url_getname,
+      dataType: "json",
+      success: function(data) {
+        if(data){
+          $('#comm_name').css('border-color','green');
+           $('#comm_name').addClass('valid');
+          $('.getname').find('span').css('color', 'green').text("Name is available");
+        }else{
+          $('#comm_name').css('border-color','red');
+          $('#comm_name').removeClass('valid');
+          $('.getname').find('span').css('color', 'red').text("Name is unavailable");
+        }
+          }
+    }); 
+  });
+  $('#crtComUnity').click(function(){
+     var url_getname = "/communities/getname?name="+$('#comm_name').val();
+  $.ajax({
+    type: "GET",
+    url: url_getname,
+    dataType: "json",
+    success: function(data) {
+      if(data){
+          $('#create_community').submit();
+        $('#comm_name').css('border-color','green');
+         $('#comm_name').addClass('valid');
+        $('.getname').find('span').css('color', 'green').text("Name is available");
+      }else{
+        $('#comm_name').css('border-color','red');
+        $('#comm_name').removeClass('valid');
+        $('.getname').find('span').css('color', 'red').text("Name is unavailable");
+      }
+        }
+  }); 
+
+  });
+
 $(document).ready(function(){
   $.validate({
     form : "#create_community",
