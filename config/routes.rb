@@ -15,6 +15,7 @@ EMS::Application.routes.draw do
 
   match '/auth/:provider/callback' => 'authentication#create'
   match '/auth/failure' => 'authentication#failure'
+  get '/token/:id', to: 'password_resets#token_edit', as: 'new_token'
 
   resources :users
   resources :sessions, only: [:new, :create, :destroy]
@@ -82,6 +83,7 @@ EMS::Application.routes.draw do
   resources :password_resets do
     member do
       get :add
+      put :token_update  
     end
   end
 

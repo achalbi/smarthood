@@ -35,11 +35,15 @@
                 <li><%= link_to "Settings", edit_user_path(current_user) %></li>
                 <li class="divider"></li>
                 <li>
-                  <%= link_to "Sign out", "#", class: "sign_out_fb" %> <!-- , method: "delete" %> -->
+                  <%= link_to "Sign out", signout_path, class: "sign_out_fb" %> <!-- , method: "delete" %> -->
                 </li>
               </ul>
                <li>
-                  <%= link_to "Sign out", signout_path, id: "sign_out_fb" %> <!-- , method: "delete" %> -->
+                            <div class="active_hide fb_logout">
+                             <div class="fb-login-button" data-max-rows="1" data-size="large" data-show-faces="false" data-auto-logout-link="true"></div>                        
+                            </div>
+
+                  <%= link_to "Sign out", signout_path, class: "sign_out_fb" , id: "sign_out_fb" %> <!-- , method: "delete" %> -->
               </li>
             </li>
         </ul>
@@ -76,7 +80,7 @@
                               </table>
                             </td>
                             <td style="border:0px;padding:0px 0px 5px 5px;width:20px;" >
-                                    <%= submit_tag "Log In", class: "ui-button active" %>
+                                    <%= submit_tag "Log In", class: "ui-button", style: "padding:5px 10px;" %>
                             </td>
                             <td style="border:0px;padding:0px 0px 5px 5px;width:20px;" >
                                   <p style="margin-left:20px;margin-right:20px;color:white;margin-top:0px;font-size:small;">
@@ -84,7 +88,10 @@
                                   </p> 
                             </td>
                           <td style="border:0px;padding:0px 0px 5px 5px;">
-                            <%= link_to image_tag("facebook.png", alt: "Log In with Facebook"), '#', id: "sign_in_fb" %>
+                           <!--  <div class="active_hide fb_logout">
+                             <div class="fb-login-button" data-max-rows="1" data-size="large" data-show-faces="false" data-auto-logout-link="true"></div>                        
+                            </div> -->
+                              <%= link_to image_tag("facebook.png", alt: "Log In with Facebook"), '#', id: "sign_in_fb" %>
                           </td>
                         </tr>
                             <!--
@@ -118,24 +125,61 @@
 
 
 window.fbAsyncInit = function() {
+  FB._initialized = false;
   FB.init({
     appId: '<%= FACEBOOK_CONFIG["FACEBOOK_APP_ID"] %>',
-    cookie: true
+    status     : true,
+    xfbml      : true,
+    version    : 'v2.0',
   });
   $('#sign_in_fb').click(function(e) {
     e.preventDefault();
-    return FB.login(function(response) {
-      if (response.authResponse) {
-        return window.location = '/auth/facebook/';
+     FB.getLoginStatus(function(response) {
+     if (response.status === 'connected') {
+        // the user is logged in and has authenticated your
+        // app, and response.authResponse supplies
+        // the user's ID, a valid access token, a signed
+        // request, and the time the access token 
+        // and signed request each expire
+        var uid = response.authResponse.userID;
+        var accessToken = response.authResponse.accessToken;
+         FB.logout();  
+      } else if (response.status === 'not_authorized') {
+        // the user is logged in to Facebook, 
+        // but has not authenticated your app
+      } else {
+        // the user isn't logged in to Facebook.
       }
     });
+        return FB.login(function(response) {
+          if (response.authResponse) {
+            return window.location = '/auth/facebook/';
+          }
+        });
   });
-  return $('#sign_out_fb').click(function(e) {
+  return $('.sign_out_fb').click(function(e) {
     FB.getLoginStatus(function(response) {
-      if (response.authResponse) {
+      if (response.status === 'connected') {
+        // the user is logged in and has authenticated your
+        // app, and response.authResponse supplies
+        // the user's ID, a valid access token, a signed
+        // request, and the time the access token 
+        // and signed request each expire
+        var uid = response.authResponse.userID;
+        var accessToken = response.authResponse.accessToken;
+        $('.fb_logout').click();
+        return FB.logout(); 
+      } else if (response.status === 'not_authorized') {
+        // the user is logged in to Facebook, 
+        // but has not authenticated your app
+      } else {
+        // the user isn't logged in to Facebook.
+      }
+/*      if (response.authResponse) {
         return FB.logout();
       }
-    });
+*/ 
+   });
     return true;
   });
 };

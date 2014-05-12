@@ -4,11 +4,11 @@
     <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
   </head>
   <body>
-    <h1>Welcome to ems-rashi.herokuapp.com</h1>
+    <h2>Welcome to Smarthood.in</h2>
     
     <p>
       You have are invited to join Smarthood.in, just follow the below link to join:
-      <%= add_password_reset_url(@user.password_reset_token) %>
+      <%= new_token_url(@user.password_reset_token) %>
     </p>
 
     <p>Regards,</p>

@@ -13,7 +13,7 @@ end
 
   def welcome_email(user)
     @user = user
-    @url  = "https://ems-rashi.herokuapp.com/signin"
+    @url  = "http://smarthood.in/signin"
    # attachments.inline['image.jpg'] = File.read(gravatar_for(user))
     attachments.inline['indy.png'] = File.read("#{Rails.root}/public/assets/indy.png")
     mail(:to => user.email, :subject => "Welcome to Rashi EMS")

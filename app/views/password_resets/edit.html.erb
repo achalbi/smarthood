@@ -1,21 +1,55 @@
-<%= form_for @user, :url => password_reset_path(params[:id]) do |f| %>
-  <% if @user.errors.any? %>
-    <div class="error_messages">
-      <h2>Form is invalid</h2>
-      <ul>
-        <% for message in @user.errors.full_messages %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
-  <div class="field">
-    <%= f.label :password %>
-    <%= f.password_field :password %>
+<% provide(:title, " - Reset password") %>
+
+<div class="container  center-signin uiBoxWhite">
+  <div class="span14 signin-name-div"><h3 class="signin-name">Reset Password</h3><br>
+      <div class="alert-message block-message error">    
+        <p><strong>Reset password</strong></p><br>
+        <ul class="post_grid">
+          <li>Please enter new password to reset your password</li><br>
+        </ul>
+      </div>
   </div>
-  <div class="field">
-    <%= f.label :password_confirmation %>
-    <%= f.password_field :password_confirmation %>
+  <div class="row">
+
+                <%= form_for @user, :url => password_reset_path(params[:id]) do |f| %>
+              <% if @user.errors.any? %>
+                <div class="error_messages">
+                  <ul class="marginLeft50">
+                    <% for message in @user.errors.full_messages %>
+                      <li><%= message %></li>
+                    <% end %>
+                  </ul>
+                </div>
+              <% end %>
+                  <div class="center_block clearfix signin-maginleft">
+                      <%= f.label :password %>
+                    <div class="input">
+                      <%= f.password_field :password  , 'data-validation' => "required", 'data-validation-error-msg' => "Password can't be blank"%>
+                    </div>
+                  </div>
+                  <div class="center_block clearfix signin-maginleft">
+                      <%= f.label :password_confirmation %>
+                    <div class="input">
+                      <%= f.password_field :password_confirmation , 'data-validation' => "required", 'data-validation-error-msg' => "Password can't be blank" %>
+                    </div>
+                  </div>
+                      <div class="center_block clearfix signin-maginleft">
+                        <div class="input">
+                          <strong><%= f.submit "Update Password", class: "btn primary", id: "update_password" %></strong>
+                        </div>
+                      </div>
+            <% end %>
+
   </div>
-  <div class="actions"><%= f.submit "Update Password" %></div>
-<% end %>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){
+  $.validate({
+    onSuccess : function() {
+      $("#update_password").attr('data-loading-text', 'Updating...');
+      $("#update_password").button('loading');
+
+    },
+  });
+  });
+</script>
