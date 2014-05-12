@@ -160,44 +160,49 @@ $(document).ready(function(){
 
   
   $("#comm_name").blur(function() {
+    if($('#comm_name').val().length > 2){
       var url_getname = "/communities/getname?name="+$('#comm_name').val();
-    $.ajax({
-      type: "GET",
-      url: url_getname,
-      dataType: "json",
-      success: function(data) {
-        if(data){
-          $('#comm_name').css('border-color','green');
-           $('#comm_name').addClass('valid');
-          $('.getname').find('span').css('color', 'green').text("Name is available");
-        }else{
-          $('#comm_name').css('border-color','red');
-          $('#comm_name').removeClass('valid');
-          $('.getname').find('span').css('color', 'red').text("Name is unavailable");
-        }
+      $.ajax({
+        type: "GET",
+        url: url_getname,
+        dataType: "json",
+        success: function(data) {
+          if(data){
+            $('#comm_name').css('border-color','green');
+             $('#comm_name').addClass('valid');
+            $('.getname').find('span').css('color', 'green').text("Name is available");
+          }else{
+            $('#comm_name').css('border-color','red');
+            $('#comm_name').removeClass('valid');
+            $('.getname').find('span').css('color', 'red').text("Name is unavailable");
           }
-    }); 
+            }
+      }); 
+    }else{
+      $('.getname').find('span').text("");
+    }
   });
   $('#crtComUnity').click(function(){
+    if($('#comm_name').val().length > 2){
      var url_getname = "/communities/getname?name="+$('#comm_name').val();
-  $.ajax({
-    type: "GET",
-    url: url_getname,
-    dataType: "json",
-    success: function(data) {
-      if(data){
-          $('#create_community').submit();
-        $('#comm_name').css('border-color','green');
-         $('#comm_name').addClass('valid');
-        $('.getname').find('span').css('color', 'green').text("Name is available");
-      }else{
-        $('#comm_name').css('border-color','red');
-        $('#comm_name').removeClass('valid');
-        $('.getname').find('span').css('color', 'red').text("Name is unavailable");
-      }
-        }
-  }); 
-
+      $.ajax({
+        type: "GET",
+        url: url_getname,
+        dataType: "json",
+        success: function(data) {
+          if(data){
+              $('#create_community').submit();
+            $('#comm_name').css('border-color','green');
+             $('#comm_name').addClass('valid');
+            $('.getname').find('span').css('color', 'green').text("Name is available");
+          }else{
+            $('#comm_name').css('border-color','red');
+            $('#comm_name').removeClass('valid');
+            $('.getname').find('span').css('color', 'red').text("Name is unavailable");
+          }
+            }
+      }); 
+    }
   });
 
 $(document).ready(function(){

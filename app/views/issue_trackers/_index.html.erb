@@ -4,13 +4,13 @@
 <br>
 <br>
 </div>
-<aside class="well span5" style="margin:0px;">
+<aside class="well " style="margin:0px;">
 <h4>Quick Filter</h4>
 	<section>
 
 	<%= form_tag '/issue_trackers/quick_filter', :method => :post, :remote => true do %>
 
-	<div  class="span4" style="padding:5px;" >
+	<div  class="span4" style="border-top:1px solid #aaa;padding:5px;margin-left:0px;" >
 			<h4>Issue Type:
 				<span style="overflow: hidden;font-size:small">
 					<%= select_tag "issue_type", options_for_select([["Bug", "Bug"], ["Improvement", "Improvement"], ["New feature", "New feature"], ["Task", "Task"], ["Sub-task", "Sub-task"]]),  multiple: true, class: "span4 quick_filter", id: "issue_type_search", size: "5", style: "width:110%;" %>
@@ -19,28 +19,28 @@
 			
 		</div>
 
-		<div class="span4" style="border-top:1px solid #aaa; padding:5px;">
+		<div class="span4" style="border-top:1px solid #aaa; padding:5px;margin-left:0px;">
 			<h4>Module:
 				<span style="overflow: hidden;font-size:small">
 					<%= select_tag :module, options_for_select([["Home", "Home"], ["Community", "ComUnity"], ["Users", "Users"], ["Events", "Events"], ["Photos", "Photos"], ["Groups", "Groups"], ["Notifications", "Notifications"], ["Issues Tracker", "Issues tracker"]]),  multiple: true, class: "span4 quick_filter", style: "width:110%;", id: "issue_module_search", size: "8" %>
 				</span> 
 			</h4>
 		</div>
-		<div class="span4" style="border-top:1px solid #aaa;padding:5px;">
+		<div class="span4" style="border-top:1px solid #aaa;padding:5px;margin-left:0px;">
 			<h4>Priority:
 				<span style="overflow: hidden;font-size:small">
 					<%= select_tag :priority, options_for_select([["Critical", "Critical"], ["High", "High"], ["Medium", "Medium"], ["Low", "Low"]]),  multiple: true, class: "span4 quick_filter", style: "width:110%;", id: "issue_priority_search", size: "4" %>
 				</span> 
 			</h4>
 		</div>
-		<div class="span4" style="border-top:1px solid #aaa;padding:5px;">
+		<div class="span4" style="border-top:1px solid #aaa;padding:5px;margin-left:0px;">
 			<h4>Severity :
 				<span style="overflow: hidden;font-size:small">
 					<%= select_tag :severity, options_for_select([["Critical", "Critical"], ["High", "High"], ["Medium", "Medium"], ["Low", "Low"]]),  multiple: true, class: "span4 quick_filter", style: "width:110%;", id: "issue_severity_search", size: "4" %>
 				</span> 
 			</h4>
 		</div>
-		<div class="span4" style="border-top:1px solid #aaa;padding:5px;">
+		<div class="span4" style="border-top:1px solid #aaa;padding:5px;margin-left:0px;">
 			<h4>Status :
 				<span style="overflow: hidden;font-size:small">
 					<%= select_tag :status, options_from_collection_for_select(@ticket_actions, "description", "description"),  multiple: true, class: "span4 quick_filter", style: "width:110%;", id: "ticket_action_id_search", size: "7" %>
@@ -53,7 +53,8 @@
 		<% end %>
 	</section>
 </aside>
-<div id="quick_filter" class="span20">
+<br>
+<div id="quick_filter" class="span14">
 	<%=render 'issue_trackers/table' %>
 </div>
 

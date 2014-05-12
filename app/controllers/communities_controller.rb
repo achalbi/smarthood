@@ -456,12 +456,12 @@ def my_com
     @mod_comm_id = current_user.usercommunities.where("is_admin = ? AND invitation = ?", true, Uc_enum::JOINED ).collect(&:community_id)
     @active_comm = []
     @active_comm << active_community.id
-    @moderated_communities = Community.where(['id IN (?) AND id NOT IN (?)', @mod_comm_id, @active_comm ])
+    @moderated_communities = Community.where(['id IN (?) AND id NOT IN (?)', @mod_comm_id, @active_comm ]).order( 'LOWER(name) ASC' )
     @moderated_communities.each do |community|
       community.req_pending_cnt = community.requested_uc.collect(&:user_id).size
     end
     @comm_id = current_user.usercommunities.where("is_admin = ? AND invitation = ?", false, Uc_enum::JOINED ).collect(&:community_id)
-    @my_communities = Community.where(['id IN (?) AND id NOT IN (?)', @comm_id, @active_comm ])
+    @my_communities = Community.where(['id IN (?) AND id NOT IN (?)', @comm_id, @active_comm ]).order( 'LOWER(name) ASC' )
     @my_communities.each do |community|
       community.req_pending_cnt = community.requested_uc.collect(&:user_id).size
     end
@@ -470,7 +470,7 @@ end
 def other_com
     @my_comm_id = current_user.usercommunities.where("invitation = ?", Uc_enum::JOINED ).collect(&:community_id).uniq
     @comm_id = Usercommunity.where(" user_id != ?", current_user.id ).collect(&:community_id).uniq
-    @communities = Community.where('id IN (?) AND  id NOT IN (?)', @comm_id, @my_comm_id )
+    @communities = Community.where('id IN (?) AND  id NOT IN (?)', @comm_id, @my_comm_id ).order( 'LOWER(name) ASC' )
 end
 
 def moderated_com
@@ -1414,7 +1414,7 @@ end
   end
 
    def getname
-	  if Community.find_by_name(params[:name]).blank?
+	  if Community.where('LOWER(name) = ?',params[:name].downcase).blank?
 	    result = true
 	  else
 	    result = false
