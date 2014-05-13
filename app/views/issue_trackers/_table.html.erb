@@ -45,7 +45,7 @@
 				<td>
 			    <%= link_to "Delete", issue, method: :delete, class: "btn danger pull-left",
 			                                     data: { confirm: "You sure?" }, remote: true,
-			                                     title: @issue.title %>
+			                                     title: issue.title %>
 				</td>
 			</tr>
 		<% end %>

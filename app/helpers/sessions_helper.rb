@@ -24,6 +24,7 @@ module SessionsHelper
     self.current_user = nil
     session.delete(:return_to)
     cookies.delete(:remember_token)
+    session[:return_to] = root_url
   end
 
     def redirect_back_or(default)
@@ -123,7 +124,7 @@ module SessionsHelper
          end
         #@user.valid = false
         @user.save(validate: false)
-        @authentication = Authentication.find_or_create_by_uid(@user.id)
+        @authentication = Authentication.find_or_create_by_uid(@user.id.to_s)
         @authentication.provider = 'identity'
         @authentication.user_id = @user.id
         @authentication.uid = @user.id
