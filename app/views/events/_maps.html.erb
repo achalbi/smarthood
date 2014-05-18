@@ -1,1 +1,1 @@
-<%= image_tag "http://maps.google.com/maps/api/staticmap?size=550x200&sensor=true&zoom=15&markers=#{location.latitude}%2C#{location.longitude}" %>
+<% if dim.nil? %><%= image_tag "http://maps.google.com/maps/api/staticmap?size=550x200&sensor=true&zoom=15&markers=#{location.latitude}%2C#{location.longitude}" %><% else %><%= image_tag "http://maps.google.com/maps/api/staticmap?size=250x200&sensor=true&zoom=15&markers=#{location.latitude}%2C#{location.longitude}" %><% end %>

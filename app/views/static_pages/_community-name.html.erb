@@ -1,4 +1,20 @@
-<a href="<%= communities_path %>" data-remote="true">
-<%= cl_image_tag(community.photo.pic_url(:tiny_logo), class:"pull-left ", id:"#{community.photo.id}", style:"padding:4px;background-color:transparent; ") %>
-<span style="padding:6px;line-height:2;font-size:13px;"><%= community.name %></span>
+<a href="communities/<%= active_community.id %>" data-remote="true" style="padding:0px;width:100%">
+<%= cl_image_tag(community.photo.pic_url(:comm_img), class:"pull-left ", id:"#{community.photo.id}", style:"background-color:transparent; ") %>
+<span style="padding:10px;line-height:3;font-size:14px;white-space:nowrap;"><%= community.name %></span>
 </a>
+  <script type="text/javascript">
+  $(function() {
+    $('#menu a').on('click', function() {
+        $('#content').load(this.href);
+        var p = $(this).parent();
+        if ($(p).hasClass('active_side_tab')) {
+            $("#menu li").removeClass('active_side_tab');
+            $(p).addClass('active_side_tab');
+        } else {
+            $("#menu li").removeClass('active_side_tab');
+            $(p).addClass('active_side_tab');
+        }
+        return false;
+    });
+  });
+  </script>

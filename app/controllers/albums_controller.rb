@@ -101,7 +101,11 @@ class AlbumsController < ApplicationController
     @camera_roll = current_user.photos.order('created_at DESC').all
     @album = Album.find(params[:id])
      @title = @album.title
-     Album.find(params[:id]).destroy
+    @album.photos.each do |photo|
+      photo.remove_pic!
+      photo.destroy
+    end
+    Album.find(params[:id]).destroy
     @camera_roll = @camera_roll.group_by { |t| t.created_at.beginning_of_month }  
     @albums = current_user.albums.all
     @album = Album.new
@@ -161,6 +165,7 @@ def edit
   def delete_photos
       @photos = Photo.find(params[:photo2].keys.collect(&:to_i)) 
       @photos.each do  |photo|
+           photo.remove_pic!
            photo.destroy     
        end
        @camera_roll = current_user.photos.order('created_at DESC').all

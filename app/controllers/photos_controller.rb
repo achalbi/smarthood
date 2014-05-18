@@ -28,6 +28,8 @@ class PhotosController < ApplicationController
   end
  
   def destroy
+    @photo = Photo.find(params[:id])
+    @photo.remove_pic!
     Photo.find(params[:id]).destroy
     respond_to do |format|
       format.all { render :nothing => true, :status => 200 }
@@ -47,6 +49,7 @@ class PhotosController < ApplicationController
   def delete_photos
       @photos = Photo.find(params[:photo2].keys.collect(&:to_i)) 
       @photos.each do  |photo|
+           photo.remove_pic!
            photo.destroy     
        end
        @camera_roll = current_user.photos.order('created_at DESC').all

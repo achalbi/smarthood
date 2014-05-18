@@ -1,0 +1,361 @@
+ <% unless community.nil? %>
+<table class="bordered-table zebra-striped">
+        <thead>
+          <tr>
+            <th style="width: 250px;line-height:2">About
+
+
+
+ <% if community.is_private?(current_user) %>
+     <% unless community.is_requested?(current_user) %>
+       <%= link_to "Send request", sendrequest_community_path(community), class: "uibutton icon secure pull-right show_loading", style:"margin-right:5px;", remote: true, id: "send_req" %>
+     <% end %>
+ <% elsif community.is_public?(current_user) %>
+   <%= link_to "Join", join_cu_community_path(community), class: "uibutton icon prev pull-right show_loading", remote: true, id: "join_com", style:"margin-right:5px;" %>
+ <% end %>
+  <% if community.is_joined?(current_user, community) && community.can_admin_unjoin?(current_user) %>
+ <span class="marginLeft15">
+   <%= link_to "Unjoin", unjoin_cu_community_path(community), class: "uibutton icon prev pull-right marginLeft10 show_loading", remote: true, id: "unjoin_com", style:"margin-right:5px;" %>
+ </span>
+ <% end %>
+
+ <% if current_user.is_cu_admin?(community) %>
+    <%= link_to "edit", '#', id: "edit_comUnity",  class: "marginRight10 pull-right uibutton icon edit",:title => "Edit", style:"margin-right:5px;" %>
+ <% end %>
+
+ <% if current_user.is_cu_admin?(community) %>
+    <%= link_to "delete", community, method: :delete, remote: true, data: { confirm: "Do you really want to delete this community?" }, class: "pull-right uibutton ", title: community.name, style:"margin-right:5px;" %>
+ <% end %>
+
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+                <address>
+                    <strong> <%= link_to community.name, "#", style: "font-size:14px;", class: "a_dummy" %></strong> <br>
+                    <strong>Description : &nbsp;</strong> <%= community.description %><br>
+                    <strong>Privacy : &nbsp;</strong><%= privacy_str(community) %><br>
+                  <% unless (community.req_pending_cnt.nil? || community.req_pending_cnt == 0)%>
+                    <strong><%=  'Request'.pluralize(community.req_pending_cnt) %> pending : &nbsp;</strong> <span class=" label important" style="right:0;padding-bottom:2px;"><%= if community.req_pending_cnt > 0 then community.req_pending_cnt end %></span><br>
+                  <% end %>
+                  <strong><%= "Member".pluralize(community.users_count) %> : </strong><%= pluralize(community.users_count, "person") %> <br> 
+                    <strong>Location : &nbsp;</strong><%= community.address %><br><br>
+
+                 <%= render :partial => "events/maps", :locals => { :location => community, :dim  => 250 } %><br>
+                  </address>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+<%= form_for( community, remote: true, :html => {:multipart => true , id: "update_community"}) do |f| %>
+<div id="modal2" style="display:none;" >
+  <div id="modal-from-dom2" class="modal hide fade in" style="display: block;width:700px;top: 40%!important;">
+    <div class="modal-header">
+      <a href="#" id="close2X" class="close">×</a>
+      <h3>Edit community</h3>
+    </div>
+    <div class="modal-body" style="max-height:550px;">
+      <div class="row">
+        <div class="span14 ui-front">
+
+         <%= render 'shared/error_messages', object: f.object %>
+
+         <div class="center_block clearfix">
+          <%= f.label :name %>
+          <div class="input getname">
+            <%= f.text_field :name, :placeholder=>"Title", 'data-validation' => "length",
+     'data-validation-length' =>"3-25", 'data-validation-error-msg' => "The community name has to be a value between 3-25 characters", id: "comm_name" %>
+          <p style="margin-left:10px;"></p>
+          </div>
+          </div>
+
+          <div class="center_block clearfix">
+            <%= f.label :location %>
+            <div class="input ">
+              <%= f.text_field :address, :placeholder => :location, :size => 43, class: 'events_with_autocomplete inherit_width', id: 'community_address2', 'data-autocompleteUrl' => search_address_communities_path, 'data-validation' => "required", 'data-validation-error-msg' => "Location can't be blank" %>&nbsp;&nbsp;&nbsp;
+
+              <%= link_to "View map", '#', id: "view_map_link2",  class: "uibutton icon prev" %>
+            </div>
+            <div class="input" id="view_map2">
+
+            </div>
+          </div>
+          <div class="center_block clearfix">
+            <%= f.label :description %>
+            <div class="input">
+              <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title => "Description", rows: 3, cols: 75, 'data-validation' => "length ",
+     'data-validation-length' =>"0-250", 'data-validation-error-msg' => "The community description has to be maximum 250 characters"  %> 
+            </div>
+          </div>
+                <div class="center_block clearfix">
+                  <%= label_tag :comm_type, "Type" %>
+                  <div class="input">
+                    <%= f.select :comm_type, options_for_select([["Residential", "residential"], ["Organisation", "organisation"]], f.object.comm_type) %>
+                  </div>
+                </div>          
+
+          <div class="center_block clearfix">
+            <%= label_tag :privacy %>
+            <div class="input">
+              <%= f.select :privacy, options_for_select([["Public", Privacyenum::PUBLIC], ["Private", Privacyenum::PRIVATE], ["Protected", Privacyenum::PROTECTED]], f.object.privacy) %>
+            </div>
+          </div> <br>
+          <div class="center_block clearfix">
+            <%= label_tag "Change picture:" %>
+            <%= f.fields_for :photo, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
+
+            <%= photo_form.file_field :pic, id: "pic2",style: "width:0px; height:0px; padding:0px;  left:0px;" %>  
+
+            <% end %>
+            <div class="input"> 
+              <% unless community.photo.nil? %>
+              <%= cl_image_tag(community.photo.pic_url(:small), class:" thumbnail albumLink", id:"community_pic", style: "cursor:pointer;") %>   
+              <% end %>
+              <canvas id="imageCanvas2" style = "border: 1px solid #ddd; padding:5px; align:center; width:200px;display:none;cursor:pointer" >select new image</canvas>
+            </div>
+          </div>
+        </div>
+      </div>                 
+    </div>
+    <div class="modal-footer" >
+       <a class="btn primary pull-right busy " id="updComUnity">Update</a>
+    </div>
+  </div>
+</div>
+<% end %>
+
+<script type="text/javascript">
+
+  $("#comm_name").blur(function() {
+    if($('#comm_name').val().length > 2){
+      var url_getname = "/communities/getname_edit?name="+$('#comm_name').val();
+      $.ajax({
+        type: "GET",
+        url: url_getname,
+        dataType: "json",
+        success: function(data) {
+          if(data){
+            $('#comm_name').css('border-color','green');
+             $('#comm_name').addClass('valid');
+            $('.getname').find('p').css('color', 'green').text("Name is available");
+          }else{
+            $('#comm_name').css('border-color','red');
+            $('#comm_name').removeClass('valid');
+            $('.getname').find('p').css('color', 'red').text("Name is unavailable");
+          }
+            }
+      }); 
+    }else{
+      $('.getname').find('p').text("");
+    }
+  });
+  $('#updComUnity').click(function(){
+    if($('#comm_name').val().length > 2){
+     var url_getname = "/communities/getname_edit?name="+$('#comm_name').val();
+      $.ajax({
+        type: "GET",
+        url: url_getname,
+        dataType: "json",
+        success: function(data) {
+          if(data){
+              $('#update_community').submit();
+            $('#comm_name').css('border-color','green');
+             $('#comm_name').addClass('valid');
+            $('.getname').find('p').css('color', 'green').text("Name is available");
+          }else{
+            $('#comm_name').css('border-color','red');
+            $('#comm_name').removeClass('valid');
+            $('.getname').find('p').css('color', 'red').text("Name is unavailable");
+          }
+            }
+      }); 
+    }
+  });
+
+  $('.show_loading').click(function(){
+    $('.loading_page').show();    
+  });
+
+
+$("#send_req").click(function(){
+  $(this).hide();
+});
+
+$("#join_com").click(function(){
+  $(this).hide();
+});
+
+$("#unjoin_com").click(function(){
+  $(this).hide();
+});
+
+$(document).ready(function(){
+  $.validate({
+    form : "#update_community",
+    onSuccess : function() {
+      $('#updComUnity').attr('data-loading-text', 'Updating...');
+      $('#updComUnity').button('loading');
+     // return false; // Will stop the submission of the form
+    },
+  });
+});
+
+
+$(document).ready(function(){
+//  $('#edit_comUnity').hide();
+//  $('.gravatar').addClass('thumbnail pop_up');  
+  $('.gravatar').addClass('pop_up');  
+  $('#view_map_link2').hide();
+
+
+  $('#posts_community_li').removeClass('active');
+ // $('#about_community_li').addClass('active');
+  $('#photos_community_li').removeClass('active');
+  $('#members_community_li').removeClass('active');
+  $('#requests_community_li').removeClass('active');
+
+});
+
+/*$('#aboutDiv').hover(function(){
+  $('#edit_comUnity').toggle();
+},function(){
+  $('#edit_comUnity').toggle();
+});*/
+
+$("#edit_comUnity").click(function(){
+    $('#modal2').modal({
+      backdrop: "static"
+    });
+});
+$("#close2X").click(function(){
+  $('#modal2').modal('hide');
+  $('#about_community').click();
+});
+
+
+$('#community_address2').keydown(function(){
+  $('#view_map_link2').hide();
+  $('#view_map2').hide();
+});
+
+$('#view_map_link').click(function(){
+  var address = "/communities/get_geo_coordinates?address="+$('#community_address2').val();
+  $.ajax({
+    type: "GET",
+    url: address,
+    dataType: "script"
+  }); 
+});
+
+$('a.ui-corner-all').on("click", function(){
+  if($('#community_address2').val()!=""){
+    $('#view_map_link2').show();
+  }else{
+    $('#view_map_link2').hide();
+  }
+});
+
+
+$(function() {
+  return $('.events_with_autocomplete').autocomplete({
+    minLength: 2,
+    source: function(request, response) {
+      return $.ajax({
+        url: $('.events_with_autocomplete').data('autocompleteurl'),
+        dataType: "json",
+        data: {starts_at: "", ends_at: "", address: request.term},
+        success: function(data) {
+          return response(data);
+        }
+      });
+    }
+  });
+});
+
+
+var imageLoader = document.getElementById('pic2');
+imageLoader.addEventListener('change', handleImage, false);
+$("#imageCanvas2").click(function(){
+  $("#pic2").click();
+});
+var canvas = document.getElementById('imageCanvas2');
+var ctx = canvas.getContext('2d');
+ctx.font="30px Arial";
+ctx.fillText("Change picture",10,50);
+
+function handleImage(e){
+  var canvas = document.getElementById('imageCanvas2');
+  var ctx = canvas.getContext('2d');
+  var iCnt=0;
+  var files = e.target.files;
+  canvas.width = 180;
+  canvas.height = 155*(Math.ceil(files.length/4));
+     if(files.length<1){
+      $('#pic2').val('');
+      $('#community_pic').show();
+      $('#imageCanvas2').hide();
+      return;
+    }
+  for( var i = 0, len = files.length; i < len; i++) 
+  {
+          $('#community_pic').hide();
+          $('#imageCanvas2').show();
+    if(files[i])
+    {
+      var reader = new FileReader();
+      reader.onload = function(event){
+        var img = new Image();
+
+        img.onload = function(){
+          var ratioPx = 150;
+          var sWidth =ratioPx;
+          var ratio = img.width/sWidth;
+          var sHeight = img.height/ratio;   
+          if(sHeight>ratioPx){
+           sHeight =ratioPx;
+           ratio = img.height/sHeight;
+           sWidth = img.width/ratio;  
+         }
+         ctx.drawImage(img, 155*(iCnt%4),155*(Math.floor(iCnt/4)),sWidth,sHeight);
+                  //ctx.drawImage(img,0,0,sWidth,sHeight);
+                  iCnt++;
+                }
+                img.src = event.target.result;
+              }
+              reader.readAsDataURL(e.target.files[i]);     
+            }
+          }
+        }
+
+        $('.pop_up').popover({
+          html: true,
+          trigger: 'manual',
+          placement: 'left',
+          delay: { hide: 500},
+          template: ' <div class="popover"><div class="pop_div"><div class="arrow1" stlye="margin-right:10px;"></div><div class="popover-inner"  ><h3 class="popover-title" ></h3><div class="popover-content" ><p></p><br></div></div></div></div>'
+        });
+
+        $(".pop_up").hover(function(){
+          $(this).popover('show');        
+        },function(){
+          $(this).popover('hide');        
+        });
+
+        $("#community_pic").click(function(){
+          $('#pic2').click();
+        });
+
+
+
+
+
+
+
+
+
+        </script>
+
+<% end %>

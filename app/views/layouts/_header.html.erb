@@ -10,10 +10,11 @@
           <nav>
            <ul class="nav pull-left">            
             <li id="fat-menu">
-            <div id="logo_community_name">
+            <!-- <div id="logo_community_name">
               <%= render partial: '/static_pages/community-name', locals: {community: active_community } %>
             </div>
-         </li>
+ -->         
+            </li>
         </ul>
       </nav>
        <nav class="center">
@@ -60,8 +61,8 @@
                             </td>
                             <td class="html7magic " style="border:0px;padding:0px;">
                                 <label for="password" style="color:white; float:left!important;">Password</label>
-                            </td> -->
-                        </tr>
+                            </td>
+                        </tr> -->
                         <tr>
                             <td style="border:0px;padding:0px;">
                                 <%= text_field_tag :auth_key, nil, placeholder: "Email" %>
@@ -113,8 +114,8 @@
                         
                     </tbody>
                 </table>
-                <% end %>
             </div>
+                <% end %>
            
           <% end %>
     </div>

@@ -17,6 +17,7 @@ class CommunitiesController < ApplicationController
     @posts = nil
     @post = Post.new
     @requested_users = nil
+=begin
     unless @selected_community.nil?
       @ad_eds = @selected_community.usercommunities.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED, true )
       @non_ad_eds = @selected_community.usercommunities.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED, false)
@@ -43,6 +44,16 @@ class CommunitiesController < ApplicationController
         @selected_community.req_pending_cnt = @requested_users.count
       end  
     end
+=end
+#---
+      @ucs = @selected_community.usercommunities.where("user_id = ?  AND is_admin=?",current_user.id, true )
+        @selected_community.req_pending_cnt = 0
+      if @ucs.count > 0
+        @requested_users = User.where(['id IN (?)' , @selected_community.requested_uc.collect(&:user_id)])
+        @selected_community.req_pending_cnt = @requested_users.count
+      end  
+#---
+
     @users_pp = []
     @ucs_all = current_user.usercommunities.where("is_admin=?", true )
     @my_mod_communities = Community.where(['id IN (?)', @ucs_all.collect(&:community_id)]) 
@@ -50,9 +61,27 @@ class CommunitiesController < ApplicationController
     @my_mod_communities.each do |community|
       @requested_users_all +=  community.requested_uc.collect(&:user_id).size
     end
+
+    #-----
+
+    @mod_comm_id = current_user.usercommunities.where("is_admin = ? AND invitation = ?", true, Uc_enum::JOINED ).collect(&:community_id)
+    @active_comm = []
+    @active_comm << active_community.id
+    @moderated_communities = Community.where(['id IN (?) AND id NOT IN (?)', @mod_comm_id, @active_comm ]).order( 'LOWER(name) ASC' )
+    @moderated_communities.each do |community|
+      community.req_pending_cnt = community.requested_uc.collect(&:user_id).size
+    end
+    @comm_id = current_user.usercommunities.where("is_admin = ? AND invitation = ?", false, Uc_enum::JOINED ).collect(&:community_id)
+    @my_communities = Community.where(['id IN (?) AND id NOT IN (?)', @comm_id, @active_comm ]).order( 'LOWER(name) ASC' )
+    @my_communities.each do |community|
+      community.req_pending_cnt = community.requested_uc.collect(&:user_id).size
+    end
+
+    #-----
+
     @requested_users_all -= @selected_community.req_pending_cnt
     @inv_req_cu = Community.where(['id IN (?)' , current_user.communities.where('invitation = ?',Uc_enum::INVITED).collect(&:id)])
-    @inv_req_grps = current_user.invited_groups.collect(&:group_id)
+    #@inv_req_grps = current_user.invited_groups.collect(&:group_id)
     @ucs = @selected_community.usercommunities unless @selected_community.nil?
   	@community = @selected_community
     @my_groups_ids = current_user.user_groups.where("community_id = ? AND invitation = ? ", @community.id, Uc_enum::JOINED ).collect(&:group_id).uniq
@@ -357,6 +386,7 @@ def remove_user_cu
 end
 
 def show
+  flash.clear
   @community = Community.find(params[:id])
   # set active - start
   if @community.is_joined?(current_user, @community)
@@ -1413,7 +1443,7 @@ end
    redirect_back_or root_path
   end
 
-   def getname
+  def getname
 	  if Community.where('LOWER(name) = ?',params[:name].downcase).blank?
 	    result = true
 	  else
@@ -1423,6 +1453,18 @@ end
 	    format.json {render :json => result}
 	  end
 	end
+
+  def getname_edit
+    if Community.where('LOWER(name) = ? AND id != ?',params[:name].downcase, active_community.id).blank?
+      result = true
+    else
+      result = false
+    end
+    respond_to do |format|
+      format.json {render :json => result}
+    end
+  end
+
 
 
 end

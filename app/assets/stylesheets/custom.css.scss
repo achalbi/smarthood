@@ -527,12 +527,12 @@ opacity:1; filter:alpha(opacity=100);
 }
 
 #ctn{
-  margin-left:190px;
-  margin-top:60px;
+  margin-left:220px;
+  margin-top:55px;
 }
 
 .container-wide{
-  margin-left:190px;
+  margin-left:220px;
 
 }
 
@@ -1184,4 +1184,8 @@ box-shadow: 0 0 0px 0px rgba(82, 82, 82, 0.7)!important;
 /* -webkit-background-clip: padding-box; */
 -moz-background-clip: padding-box!important;
 /* background-clip: padding-box; */
+}
+
+.a_dummy{
+  text-decoration: none;
 }

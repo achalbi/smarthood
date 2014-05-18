@@ -1,18 +1,41 @@
 <% provide(:title, "Communities") %>
 <script type="text/javascript">
 $(document).ready(function(){
- // $('#joined_comUnity').click();
-  $('#joined_li').addClass('sidetabs_selected');
-//  $('.loading_page').show();    
+  $('#public_comUnity').click();
+  $('#public_li').addClass('sidetabs_selected');
 });
 </script>
 <div class="row">
   <aside class="span6">
+    <section id="cu_pic" class="active_hide">
+    <% unless @selected_community.nil? %>
+      <%= render partial: 'communities/cu_pic', locals: {community: @selected_community} %>
+    <% end %>
+    </section>
+
     <section id="comUnity_sec" style="background-color:#e5e5e5;padding:10px;" class="well">
       <span style="clear:both"></span>
       <%= link_to "Create Community", '#', id: "ComUnity",  class: " pull-right uibutton icon add" %><br><br>
-      <div id="comUnity_div">
-        <li class="sidetabs notActive show_loading" style="list-style-type: none;padding:5px; margin:5px;" id="joined_li" >
+      <div id="comUnity_div">    
+      <!--   <% unless @selected_community.nil? %>
+        <li class="sidetabs sidetabs_selected show_loading" style="list-style-type: none;padding:5px; margin:5px;">
+          <h6><a>Active community</a>
+            <span id="act_req_count"  class="pull-right">
+              <%= render partial: 'communities/act_req_count'%>
+            </span>
+          </h6>
+        </li>
+        <%= link_to "", active_com_communities_path, id: "active_comUnity", remote: true %>
+      <li class="sidetabs notActive" style="list-style-type: none;padding:5px; margin:5px;">
+          <h6><a>Moderated</a>
+          <% unless (@requested_users_all.nil? || @requested_users_all == 0)%>
+            <span class="pull-right label important" style="margin:5px;"><%= if @requested_users_all > 0 then @requested_users_all end %></span>
+          <% end %>
+        </h6>
+        </li>
+        <%= link_to "", moderated_com_communities_path , id: "moderated_comUnity", remote: true %>
+        <% end %>-->
+        <li class="sidetabs notActive show_loading" style="list-style-type: none;padding:5px; margin:5px;">
           <h6><a>My communities</a>
           <span id="mem_req_count"  class="pull-right">
             <%= render partial: 'communities/mem_req_count'%>
@@ -20,10 +43,14 @@ $(document).ready(function(){
           </h6>
         </li>
         <%= link_to "", my_com_communities_path , id: "joined_comUnity", remote: true %>
-        <li class="sidetabs notActive show_loading" id="public_li" style="list-style-type: none;padding:5px; margin:5px;">
+        <li class="sidetabs notActive show_loading"id="public_li" style="list-style-type: none;padding:5px; margin:5px;">
           <h6><a>Other communities</a></h6>
         </li>
         <%= link_to "", other_com_communities_path,id: "public_comUnity", remote: true %>
+        <!--<li class="sidetabs notActive" style="list-style-type: none;padding:5px; margin:5px;">
+          <h6><a>Private</a></h6>
+        </li>
+        <%= link_to "", private_com_communities_path , id: "private_comUnity", remote: true %> -->
         <li class="sidetabs notActive show_loading" style="list-style-type: none;padding:5px; margin:5px;">
           <h6><a>Invites from communities</a>
             <span id="inv_req_count" class="pull-right">
@@ -43,7 +70,7 @@ $(document).ready(function(){
   </aside>
   <div id="community_list" class="span13" style="margin-top:5px;">
     <div id="community_tabs" >  
-      <%= render 'communities/my_communities' %>
+      <%= render partial: 'communities/community_post', locals: {posts: @posts, community: @selected_community} %>
    </div>
 
  </div>

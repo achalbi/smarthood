@@ -42,6 +42,9 @@
       <div id="menu" class="stick">
                 <h3>Menu</h3>
           <ul>
+            <li id="logo_community_name">
+                  <%= render partial: '/static_pages/community-name', locals: {community: active_community } %>
+            </li>
             <% if is_community_active? %>
             <li class="active_side_tab"><%= link_to "Home", root_path, id: 'root_home' %></li>
             <% end %>
@@ -100,25 +103,6 @@
   </body>
   <div id="spinner">
   </div>
-  <script type="text/javascript">
-  $(function() {
-    $('#menu a').on('click', function() {
-        $('#content').load(this.href);
-        var p = $(this).parent();
-        if ($(p).hasClass('active_side_tab')) {
-            $("#menu li").removeClass('active_side_tab');
-            $(p).addClass('active_side_tab');
-        } else {
-            $("#menu li").removeClass('active_side_tab');
-            $(p).addClass('active_side_tab');
-        }
-        return false;
-    });
-  });
-
-
-
-  </script>
 
   <script type="text/javascript">
     var spinnerVisible = false;
