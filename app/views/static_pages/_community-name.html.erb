@@ -1,4 +1,4 @@
-<a href="communities/<%= active_community.id %>" data-remote="true" style="padding:0px;width:100%">
+<a href="/communities/<%= active_community.id %>" data-remote="true" style="padding:0px;width:100%">
 <%= cl_image_tag(community.photo.pic_url(:comm_img), class:"pull-left ", id:"#{community.photo.id}", style:"background-color:transparent; ") %>
 <span style="padding:10px;line-height:3;font-size:14px;white-space:nowrap;"><%= community.name %></span>
 </a>
