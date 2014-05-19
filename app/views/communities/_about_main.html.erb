@@ -14,9 +14,7 @@
    <%= link_to "Join", join_cu_community_path(community), class: "uibutton icon prev pull-right show_loading", remote: true, id: "join_com", style:"margin-right:5px;" %>
  <% end %>
   <% if community.is_joined?(current_user, community) && community.can_admin_unjoin?(current_user) %>
- <span class="marginLeft15">
    <%= link_to "Unjoin", unjoin_cu_community_path(community), class: "uibutton icon prev pull-right marginLeft10 show_loading", remote: true, id: "unjoin_com", style:"margin-right:5px;" %>
- </span>
  <% end %>
 
  <% if current_user.is_cu_admin?(community) %>
@@ -43,7 +41,7 @@
                   <strong><%= "Member".pluralize(community.users_count) %> : </strong><%= pluralize(community.users_count, "person") %> <br> 
                     <strong>Location : &nbsp;</strong><%= community.address %><br><br>
 
-                 <%= render :partial => "events/maps", :locals => { :location => community, :dim  => 250 } %><br>
+                 <%= render :partial => "events/maps", :locals => { :location => community, :dim  => 227 } %><br>
                   </address>
             </td>
           </tr>
