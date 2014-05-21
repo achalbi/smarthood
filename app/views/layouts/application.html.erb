@@ -32,22 +32,22 @@
     </span>
     
     
-    <div class="container1">
+    <div class="container" style="width:1200px;">
       <% flash.each do |key, value| %>
         <!--<div class="alert alert-<%= key %>"><%= value %></div>-->
       <% end %>
       <% if signed_in? %>
       <aside>
 
-      <div id="menu" class="stick">
+      <div id="menu-1" class="stick">
                 <h3>Menu</h3>
-          <ul>
-            <li id="logo_community_name">
-                  <%= render partial: '/static_pages/community-name', locals: {community: active_community } %>
-            </li>
+          <ul style="margin-top:2px;">
             <% if is_community_active? %>
             <li class="active_side_tab"><%= link_to "Home", root_path, id: 'root_home' %></li>
             <% end %>
+            <li id="logo_community_name">
+                  <%= render partial: '/static_pages/community-name', locals: {community: active_community } %>
+            </li>
             <li><%= link_to "Communities", communities_path %><span style="display:none"><%= link_to "", communities_path, id: 'home_comunity' %></span></li>
            <% if is_community_active? %>
             <!--<li><%= link_to "Users", users_path %></li>

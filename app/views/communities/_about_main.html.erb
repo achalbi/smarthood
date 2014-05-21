@@ -2,43 +2,14 @@
 <table class="bordered-table zebra-striped">
         <thead>
           <tr>
-            <th style="width: 250px;line-height:2">About
-
-
-
- <% if community.is_private?(current_user) %>
-     <% unless community.is_requested?(current_user) %>
-       <%= link_to "Send request", sendrequest_community_path(community), class: "uibutton icon secure pull-right show_loading", style:"margin-right:5px;", remote: true, id: "send_req" %>
-     <% end %>
- <% elsif community.is_public?(current_user) %>
-   <%= link_to "Join", join_cu_community_path(community), class: "uibutton icon prev pull-right show_loading", remote: true, id: "join_com", style:"margin-right:5px;" %>
- <% end %>
-  <% if community.is_joined?(current_user, community) && community.can_admin_unjoin?(current_user) %>
-   <%= link_to "Unjoin", unjoin_cu_community_path(community), class: "uibutton icon prev pull-right marginLeft10 show_loading", remote: true, id: "unjoin_com", style:"margin-right:5px;" %>
- <% end %>
-
- <% if current_user.is_cu_admin?(community) %>
-    <%= link_to "edit", '#', id: "edit_comUnity",  class: "marginRight10 pull-right uibutton icon edit",:title => "Edit", style:"margin-right:5px;" %>
- <% end %>
-
- <% if current_user.is_cu_admin?(community) %>
-    <%= link_to "delete", community, method: :delete, remote: true, data: { confirm: "Do you really want to delete this community?" }, class: "pull-right uibutton ", title: community.name, style:"margin-right:5px;" %>
- <% end %>
-
-            </th>
+            <th style="width: 250px;line-height:2">Map</th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td>
                 <address>
-                    <strong> <%= link_to community.name, "#", style: "font-size:14px;", class: "a_dummy" %></strong> <br>
-                    <strong>Description : &nbsp;</strong> <%= community.description %><br>
-                    <strong>Privacy : &nbsp;</strong><%= privacy_str(community) %><br>
-                  <% unless (community.req_pending_cnt.nil? || community.req_pending_cnt == 0)%>
-                    <strong><%=  'Request'.pluralize(community.req_pending_cnt) %> pending : &nbsp;</strong> <span class=" label important" style="right:0;padding-bottom:2px;"><%= if community.req_pending_cnt > 0 then community.req_pending_cnt end %></span><br>
-                  <% end %>
-                  <strong><%= "Member".pluralize(community.users_count) %> : </strong><%= pluralize(community.users_count, "person") %> <br> 
+                   
                     <strong>Location : &nbsp;</strong><%= community.address %><br><br>
 
                  <%= render :partial => "events/maps", :locals => { :location => community, :dim  => 227 } %><br>

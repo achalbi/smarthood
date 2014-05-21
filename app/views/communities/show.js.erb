@@ -1,5 +1,7 @@
 $("#logo_community_name").html("<%= escape_javascript(  render partial: '/static_pages/community-name', locals: {community: active_community } ) %>");
-$("#community_tabs").html("<%= escape_javascript(render partial: 'communities/community_post', locals: {posts: @posts, community: @community}) %>");
-$('#cu_pic').html("<%= escape_javascript( render partial: 'communities/cu_pic', locals: {community: @community} ) %>");
-$('#cu_pic').show();
-$('.tabs').show();
+$("#content").html("<%= escape_javascript(render partial: 'communities/show', locals: {posts: @posts, community: @community}) %>");
+//$('#cu_pic').html("<%= escape_javascript( render partial: 'communities/cu_pic', locals: {community: @community} ) %>");
+//$('#cu_pic').show();
+//$('.tabs').show();
+$('#menu-1').find('.active_side_tab').removeClass('active_side_tab');
+$('#logo_community_name').addClass('active_side_tab');

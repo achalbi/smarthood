@@ -10,7 +10,7 @@
 #
 
 class User < OmniAuth::Identity::Models::ActiveRecord
-  attr_accessible :name, :email, :password, :email_confirmation, :password_confirmation, :photo, :photo_file_name, :photo_content_type, :photo_file_size, :photo_updated_at, :photos_attributes, :pic, :profile_pic, :user_info_attributes, :user_info, :address_id, :address_attributes, :fb_uid
+  attr_accessible :name, :email, :password, :email_confirmation, :password_confirmation, :photo, :photo_file_name, :photo_content_type, :photo_file_size, :photo_updated_at, :photos_attributes, :pic, :profile_pic, :user_info_attributes, :user_info, :address_id, :address_attributes, :fb_uid, :admin
   attr_accessor :profile_pic
 
   has_secure_password

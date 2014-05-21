@@ -167,6 +167,7 @@ $('#posts_community_li').click(function(){
   
 <div class="center loading_page active_hide" ><img src="/assets/loading.gif"></div>
 <div id="aboutDiv">
+<!-- 
  <% if @selected_community.is_private?(current_user) %>
      <% unless @selected_community.is_requested?(current_user) %>
        <%= link_to "Send request", sendrequest_community_path(@selected_community), class: "uibutton icon secure pull-right show_loading", remote: true, id: "send_req_com" %>
@@ -189,7 +190,7 @@ $('#posts_community_li').click(function(){
     <strong>Location : &nbsp;</strong><%= community.address %><br><br>
 
  <%= render :partial => "events/maps", :locals => { :location => community } %><br>
-  </address>
+  </address> -->
 </div>
 <script type="text/javascript">
 

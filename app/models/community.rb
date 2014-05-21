@@ -1,5 +1,5 @@
 class Community < ActiveRecord::Base
-  attr_accessible :community_id, :photo_id, :photo_attributes, :name, :description, :status, :privacy, :address, :latitude, :longitude, :req_pending_cnt, :user_tokens, :comm_type
+  attr_accessible :community_id, :photo_id, :photo_attributes, :name, :description, :status, :privacy, :address, :latitude, :longitude, :req_pending_cnt, :user_tokens, :comm_type, :user_id
 
   attr_accessor :req_pending_cnt
 

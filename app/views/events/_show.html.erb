@@ -7,7 +7,7 @@
     <br> 
     <br> 
 <% end %>
-<div class="container container-fluid">
+<div class="">
       <div  class="image_overlay tr-hover-btn" >
 <!--  
              <h4 class="pull-left" style="margin-left:10px;font-size:18px;">
@@ -36,7 +36,7 @@
               <div id="edit_del_btn">
                 <% if @event.responded?(current_user) %>
                   <% if @event.is_admin?(current_user) %>
-                       <button class=" pull-right uibutton icon edit button_toggle_pic" id="edit_event">edit</button>
+                       <button class=" pull-right uibutton icon edit button_toggle_pic " id="edit_event">edit</button>
                    <% end %>
 
                    <span class="pull-right "> &nbsp;</span>
@@ -54,7 +54,7 @@
               <%= render partial: "events/text_overlay", locals: {obj: @event} %>
             </h2>
         </div>
-  <aside class="span6">
+  <aside class="span6" style="margin-left:10px;">
     <section>
 
 

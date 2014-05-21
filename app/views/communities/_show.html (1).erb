@@ -1,0 +1,47 @@
+<% provide(:title, @community.name) %>
+<div class="row">
+  <aside class="span7">
+    <section>
+      <%=  cl_image_tag(@community.photo.pic_url(:thumb_medium), class:"image_al_c1 thumbnail", id:"#{@community.photo.id}") %>
+      <h4>
+        <%= @community.name %>
+      </h4>
+      <small><%= @community.description %></small>
+    </section>
+    <% if @community.user != current_user %>
+    <section>
+        <div class="center" id="follow_form">
+          
+          <br>
+          <%= link_to "Send request",'', class: "uibutton icon secure" %>
+        </div>
+    </section>
+    <% end %>
+    <% unless @community.user.nil? %>
+    <section>
+             <br>
+            <b id="followers" class="stat">
+              Admin  
+            </b>
+           
+            <div class="user_avatars">
+                <%= link_to gravatar_for(@community.user, size: 30), @community.user, :title => @community.user.name %>
+            </div>          
+    </section>
+    <% end %>  
+    <section>
+      <%= render 'shared/community_stats' %>
+      <% if @users.any? %>
+        <div class="user_avatars">
+          <% @users.each do |user| %>
+            <%= link_to gravatar_for(user, size: 30), user, :title => user.name %>
+          <% end %>
+        </div>
+      <% end %>
+    </section>
+
+  </aside>
+  <div class="span12">
+  	 
+  </div>
+</div>
