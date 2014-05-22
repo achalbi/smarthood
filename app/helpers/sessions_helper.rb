@@ -2,6 +2,7 @@ module SessionsHelper
 	def sign_in(user)
     cookies.permanent[:remember_token] = user.remember_token
     self.current_user = user
+    session[:return_to] = root_url
   end
 
    def current_user=(user)

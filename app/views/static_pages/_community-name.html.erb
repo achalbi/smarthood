@@ -1,19 +1,45 @@
-<a href="/communities/<%= active_community.id %>" data-remote="true" style="padding:0px;width:100%">
-<span style="padding:10px;line-height:2.5;font-size:14px;white-space:nowrap;font-weight:bold!important;"><%= community.name %></span>
+<a href="/communities/<%= active_community.id %>" data-remote="true">
+<span style=""><%= community.name %></span>
 </a>
   <script type="text/javascript">
   $(function() {
-    $('#menu-1 a').on('click', function() {
+  $('#cssmenu > ul > li:has(ul)').addClass("has-sub");
+ // $('#cssmenu ul ul:visible').slideUp('normal');
+    $('#cssmenu a').on('click', function() {
         $('#content').load(this.href);
         var p = $(this).parent();
-        if ($(p).hasClass('active_side_tab')) {
-            $("#menu-1 li").removeClass('active_side_tab');
-            $(p).addClass('active_side_tab');
+        if ($(p).hasClass('active')) {
+            $("#cssmenu li").removeClass('active');
+            $(p).addClass('active');
         } else {
-            $("#menu-1 li").removeClass('active_side_tab');
-            $(p).addClass('active_side_tab');
+            $("#cssmenu li").removeClass('active');
+            $(p).addClass('active');
         }
         return false;
     });
+
+/*$('#cssmenu > ul > li > a').click(function() {
+
+  var checkElement = $(this).next();
+
+  $('#cssmenu li').removeClass('active');
+  $(this).closest('li').addClass('active'); 
+
+  if((checkElement.is('ul')) && (checkElement.is(':visible'))) {
+    $(this).closest('li').removeClass('active');
+    checkElement.slideUp('normal');
+  }
+
+  if((checkElement.is('ul')) && (!checkElement.is(':visible'))) {
+    $('#cssmenu ul ul:visible').slideUp('normal');
+    checkElement.slideDown('normal');
+  }
+
+  if (checkElement.is('ul')) {
+    return false;
+  } else {
+    return true;  
+  }
+});*/
   });
   </script>
