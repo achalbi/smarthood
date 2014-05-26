@@ -38,7 +38,7 @@
       <% end %>
       <% if signed_in? %>
       <aside>
-      <div id='cssmenu'>
+      <!-- <div id='cssmenu'>
                 <h3>Menu</h3>
         <ul>
             <% if is_community_active? %>
@@ -49,13 +49,50 @@
             <% end %>
             <li><%= link_to "Communities", communities_path %><span style="display:none"><%= link_to "", communities_path, id: 'home_comunity' %></span></li>
             <% if is_community_active? %>
-            <li class='last' ><%= link_to "Photos", photos_path %></li>
             <li><%= link_to "Events", events_path %></li>
+            <li class='has-sub last' ><%= link_to "Photos", photos_path %>
+              <ul>
+                <li><%= link_to "Camera roll", photos_path , id: "roll", remote: true %></li>
+                 <li class="last"> <%= link_to "Albums", list_albums_path, id: "list_album", remote: true %></li>
+              </ul>
+            </li>
             <% end %>
         </ul>
       </div>
+ -->
 
-
+<div id='cssmenu'>
+  <h3>Menu</h3>
+<ul>
+   <li class='active'><a href='<%= root_path %>' id='root_home' data-remote="true"><span>Home</span></a></li>
+   <li id="logo_community_name">
+      <%= render partial: '/static_pages/community-name', locals: {community: active_community } %>
+   </li>
+   <li class='has-sub'><a href='#' id='home_comunity' ><span>Communities</span></a>
+      <ul>
+         <li class=''><%= link_to "+  Create", create_community_communities_path, id: "ComUnity",  class: "", remote: true %></li>
+         <li><%= link_to "My communities", my_com_communities_path , id: "joined_comUnity", remote: true %>
+          <span id="mem_req_count"  class="cnt">
+            <%= render partial: 'communities/mem_req_count'%>
+          </span>
+         </li>
+         <li><%= link_to "Other communities", other_com_communities_path,id: "public_comUnity", remote: true %></li>
+         <li class='last'><%= link_to "Invites", invites_requests_communities_path , id: "invites_comUnity", remote: true %>
+            <span id="inv_req_count"  class="cnt">
+            <%= render partial: 'communities/inv_req_count'%>
+          </span>
+         </li>
+      </ul>
+   </li>
+   <li><a href='<%= events_path %>' data-remote="true" ><span>Events</span></a></li>
+   <li class='has-sub last'><a href='#'><span>Photos</span></a>
+      <ul>
+         <li><a href="<%= photos_path %>" data-remote="true" id="roll"><span>Camera roll</span></a></li>
+         <li class='last'><a href="<%= list_albums_path %>" data-remote="true" id="list_album"><span>Albums</span></a></li>
+      </ul>
+   </li>
+</ul>
+</div>
       </aside> 
 
         <div data-role="page" class="pages" id="home">
@@ -106,6 +143,9 @@ function restartInterval(){
  //       $.get(' <%= update_count_activitynotifications_path %>');
       }, 10000);
 }
+
+
+
 
 </script>
 </html>

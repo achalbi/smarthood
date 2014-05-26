@@ -3,5 +3,9 @@ $("#content").html("<%= escape_javascript(render partial: 'communities/show', lo
 //$('#cu_pic').html("<%= escape_javascript( render partial: 'communities/cu_pic', locals: {community: @community} ) %>");
 //$('#cu_pic').show();
 //$('.tabs').show();
-$('#menu-1').find('.active_side_tab').removeClass('active');
-$('#logo_community_name').addClass('active');
+<% if @selected_community.is_joined?(current_user, @selected_community) %>
+  $('#cssmenu ul ul:visible').hide();
+  $('#cssmenu ul ul li').removeClass('active-sub');
+  $('#cssmenu li').removeClass('active');
+  $('#logo_community_name').addClass('active');
+<% end %>

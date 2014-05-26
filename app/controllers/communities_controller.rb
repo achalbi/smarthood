@@ -80,11 +80,11 @@ class CommunitiesController < ApplicationController
     #-----
 
     @requested_users_all -= @selected_community.req_pending_cnt
-    @inv_req_cu = Community.where(['id IN (?)' , current_user.communities.where('invitation = ?',Uc_enum::INVITED).collect(&:id)])
+    @inv_req_cu = Community.where(['id IN (?)' , current_user.communities.where('invitation = ?',Uc_enum::INVITED).pluck(:id)])
     #@inv_req_grps = current_user.invited_groups.collect(&:group_id)
     @ucs = @selected_community.usercommunities unless @selected_community.nil?
   	@community = @selected_community
-    @my_groups_ids = current_user.user_groups.where("community_id = ? AND invitation = ? ", @community.id, Uc_enum::JOINED ).collect(&:group_id).uniq
+    @my_groups_ids = current_user.user_groups.where("community_id = ? AND invitation = ? ", @community.id, Uc_enum::JOINED ).pluck(:group_id).uniq
     @groups = Group.where('id IN (?)', @my_groups_ids)
     @group = nil
   end
@@ -1465,6 +1465,8 @@ end
     end
   end
 
-
+  def create_community
+    
+  end
 
 end

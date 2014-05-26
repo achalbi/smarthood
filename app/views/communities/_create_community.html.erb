@@ -1,0 +1,277 @@
+<% provide(:title, "Communities") %>
+<h2>Create community</h2>
+
+ <%= form_for( Community.new, remote: true, :html => {:multipart => true, id: "create_community"}) do |f| %>
+ <div id="modal" style="display:none;" >
+  <div id="modal-from-dom2" class="modal hide fade in" style="display: block;width:700px;">
+    <div class="modal-header">
+      <a href="#" id="closeX" class="close">×</a>
+      <span style="font-size:20px;line-height: 2;">Create Community</span>
+    </div>
+    <div class="modal-body" style="max-height:550px;">
+      <div class="row">
+        <div class="span14 ui-front">
+
+         <%= render 'shared/error_messages', object: f.object %>
+
+         <div class="center_block clearfix">
+          <%= f.label :name %>
+          <div class="input getname">
+            <%= f.text_field :name, :placeholder=>"Title", 'data-validation' => "length",
+     'data-validation-length' =>"3-25", 'data-validation-error-msg' => "The community name has to be a value between 3-25 characters", id: "comm_name" %>
+          <p style="margin-left:10px;"></p>
+          </div>
+          </div>
+
+          <div class="center_block clearfix">
+            <%= f.label :location %>
+            <div class="input ">
+              <%= f.text_field :address, :placeholder => :location, :size => 43, class: 'cu_with_autocomplete inherit_width', 'data-autocompleteUrl' => search_address_communities_path, id: "create_community_address", 'data-validation' => "required", 'data-validation-error-msg' => "Location can't be blank" %>&nbsp;&nbsp;&nbsp;
+
+              <%= link_to "View map", '#', id: "view_map_link_crt",  class: "uibutton icon prev" %>
+            </div>
+            <div class="input" id="view_map_crt">
+
+            </div>
+          </div>
+          <div class="center_block clearfix">
+            <%= f.label :description %>
+            <div class="input">
+              <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title=>"Description", rows: 3, cols: 75, 'data-validation' => "length ",
+     'data-validation-length' =>"3-250", 'data-validation-error-msg' => "The community description has to be a value between 3-250 characters"  %> 
+            </div>
+          </div>
+                <div class="center_block clearfix">
+                  <%= label_tag :comm_type, "Type" %>
+                  <div class="input">
+                    <%= f.select :comm_type, options_for_select([["Residential", "residential"], ["Organisation", "organisation"]]) %>
+                  </div>
+                </div>
+
+          <div class="center_block clearfix">
+            <%= label_tag :privacy %>
+            <div class="input">
+              <%= f.select :privacy, options_for_select([["Public", Privacyenum::PUBLIC], ["Private", Privacyenum::PRIVATE], ["Protected", Privacyenum::PROTECTED]]) %>
+            </div>
+          </div> 
+          <div class="center_block clearfix">
+            <%= label_tag "Add picture:" %>
+            <%= f.fields_for :photo, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
+
+            <%= photo_form.file_field :pic, id: "pic",style: "width:0px; height:0px; padding:0px;  left:0px;" %>  
+
+            <% end %>
+            <div class="input">
+              <canvas id="imageCanvas" style = "border: 1px solid #ddd; padding:5px; align:center;cursor:pointer" >select new image</canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer" >
+       <a class="btn primary pull-right busy " id="crtComUnity">Create</a>
+    
+    </div>
+  </div>
+</div>
+<% end %>
+
+
+
+<script type="text/javascript">
+
+  
+  $("#comm_name").blur(function() {
+    if($('#comm_name').val().length > 2){
+      var url_getname = "/communities/getname?name="+$('#comm_name').val();
+      $.ajax({
+        type: "GET",
+        url: url_getname,
+        dataType: "json",
+        success: function(data) {
+          if(data){
+            $('#comm_name').css('border-color','green');
+             $('#comm_name').addClass('valid');
+            $('.getname').find('p').css('color', 'green').text("Name is available");
+          }else{
+            $('#comm_name').css('border-color','red');
+            $('#comm_name').removeClass('valid');
+            $('.getname').find('p').css('color', 'red').text("Name is unavailable");
+          }
+            }
+      }); 
+    }else{
+      $('.getname').find('p').text("");
+    }
+  });
+  $('#crtComUnity').click(function(){
+    if($('#comm_name').val().length > 2){
+     var url_getname = "/communities/getname?name="+$('#comm_name').val();
+      $.ajax({
+        type: "GET",
+        url: url_getname,
+        dataType: "json",
+        success: function(data) {
+          if(data){
+              $('#create_community').submit();
+            $('#comm_name').css('border-color','green');
+             $('#comm_name').addClass('valid');
+            $('.getname').find('p').css('color', 'green').text("Name is available");
+          }else{
+            $('#comm_name').css('border-color','red');
+            $('#comm_name').removeClass('valid');
+            $('.getname').find('p').css('color', 'red').text("Name is unavailable");
+          }
+            }
+      }); 
+    }
+  });
+
+$(document).ready(function(){
+  $.validate({
+    form : "#create_community",
+    onSuccess : function() {
+      $('#crtComUnity').attr('data-loading-text', 'Creating...');
+      $('#crtComUnity').button('loading');
+     // return false; // Will stop the submission of the form
+    },
+  });
+});
+
+
+$(document).ready(function(){ 
+  $('#view_map_link_crt').hide();
+    $('.loading_header_page').hide();
+
+  $('#modal').modal({
+      keyboard: true,
+      backdrop: "static",
+    });
+  $('#modal').modal('show');
+});
+
+
+/*$("#ComUnity").click(function(){
+  $('#modal').modal({
+      keyboard: true,
+      backdrop: "static",
+    });
+  $('#modal').modal('show');
+});*/
+$("#closeX").click(function(){
+  $('#modal').modal('hide');
+  $('.reset_form').click();
+
+  $('#pic').val('');
+  var canvas = document.getElementById('imageCanvas');
+  var ctx = canvas.getContext('2d');
+  canvas.width = 300;
+  canvas.height = 155;
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.font="15px Arial";
+      ctx.fillText("Click here to add picture",25,75);
+});
+
+
+
+$('#create_community_address').keydown(function(){
+  $('#view_map_link_crt').hide();
+  $('#view_map_crt').hide();
+});
+
+$('#view_map_link_crt').click(function(){
+  var address = "/communities/get_geo_coordinates?address="+$('#create_community_address').val();
+  $.ajax({
+    type: "GET",
+    url: address,
+    dataType: "script"
+  }); 
+});
+
+$('a.ui-corner-all').on("click", function(){
+  if($('#create_community_address').val()!=""){
+    $('#view_map_link_crt').show();
+  }else{
+    $('#view_map_link_crt').hide();
+  }
+});
+
+
+$(function() {
+  return $('.cu_with_autocomplete').autocomplete({
+    minLength: 2,
+    source: function(request, response) {
+      return $.ajax({
+        url: $('.cu_with_autocomplete').data('autocompleteurl'),
+        dataType: "json",
+        data: {address: request.term},
+        success: function(data) {
+          return response(data);
+        }
+      });
+    }
+  });
+});
+
+var imageLoader = document.getElementById('pic');
+imageLoader.addEventListener('change', handleImage, false);
+$("#imageCanvas").click(function(){
+  $("#pic").click();
+});
+var canvas = document.getElementById('imageCanvas');
+var ctx = canvas.getContext('2d');
+  ctx.font="15px Arial";
+  ctx.fillText("Click here to add a picture",25,75);
+
+function handleImage(e){
+  var canvas = document.getElementById('imageCanvas');
+  var ctx = canvas.getContext('2d');
+  var iCnt=0;
+  var files = e.target.files;
+   if(files.length<1){
+      $('#pic').val('');
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      canvas.width = 300;
+      canvas.height = 155;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.font="15px Arial";
+      ctx.fillText("Click here to add a picture",25,75);
+      return;
+    }
+  canvas.width = 200;
+  canvas.height = 155*(Math.ceil(files.length/4));
+  for( var i = 0, len = files.length; i < len; i++) 
+  {
+    if(files[i])
+    {
+      var reader = new FileReader();
+      reader.onload = function(event){
+        var img = new Image();
+
+        img.onload = function(){
+          var ratioPx = 195;
+          var sWidth =ratioPx;
+          var ratio = img.width/sWidth;
+          var sHeight = img.height/ratio;   
+          if(sHeight>ratioPx){
+           sHeight =ratioPx;
+           ratio = img.height/sHeight;
+           sWidth = img.width/ratio;  
+         }
+         ctx.drawImage(img, 155*(iCnt%4),155*(Math.floor(iCnt/4)),sWidth,sHeight);
+                  //ctx.drawImage(img,0,0,sWidth,sHeight);
+                  iCnt++;
+                }
+                img.src = event.target.result;
+              }
+              reader.readAsDataURL(e.target.files[i]);     
+            }
+          }
+        }
+
+  $('.show_loading').click(function(){
+    $('.loading_page').show();    
+  });
+
+</script>
