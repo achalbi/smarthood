@@ -27,9 +27,9 @@ require 'uri'
     begin
       size = options[:size]
       unless user.authentications.first.nil?
-        size = (size.to_i-10).to_s
         auth = user.authentications.find_by_provider('facebook')
         unless auth.nil?
+        size = (size.to_i-10).to_s
           gravatar_url = "http://graph.facebook.com/#{auth.username}/picture?width=#{size}&height=#{size}"
             u = URI.parse(gravatar_url)
             head = Net::HTTP.get_response(u)

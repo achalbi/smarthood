@@ -1,8 +1,8 @@
     <script type="text/javascript">var photoCount = 0;</script>
 
-          <div style="margin-right:120px;"  >
+          <div class="span13" style="margin-right:120px;"  >
                <div id="album_indiv" style=" margin-bottom:0px;">
-                  <ul class="breadcrumb" style="width:535px;height:22px;">
+                  <ul class="breadcrumb" style="width:100%;height:22px;">
                     <!-- <li><a href="#" class="marginLeft10 marginRight10" style="line-height:21px;" id="album_bc">Albums</a><span class="divider" style="line-height:21px;" >></span> </li>
                     <li><a href="#" class="marginLeft5" style="line-height:21px;"  ><%= @album.title %></a></li> -->
                     <% if @album.user == current_user %>
@@ -68,8 +68,8 @@
             </h4>
     </div>
     <span style="clear:both;" ></span>
-    <div id="gallery1" class="pull-left">
-      <ul id="grid" style="margin:0px;">
+    <div id="gallery1" class="pull-left span13">
+      <ul id="grid" style="margin:0px;"  class="pull-left span13" >
         <% if @album.user == current_user %>
 <!--           <li style="background-color:#ffffff!important;margin-left:0px;">
             <div id="upload_pics"  style = "border:2px dashed #ddd; width:106px; height:106px; padding:10px;  left:40px; text-align:middle; z-index: 1;  cursor:pointer;  float:left; margin-bottom:3px;" class="bgClrChg">  <h5 class="center" style="margin:38px 0 0 0 "> Add Photos </h5>

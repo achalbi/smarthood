@@ -529,7 +529,8 @@ opacity:1; filter:alpha(opacity=100);
 #ctn{
   margin-left:220px;
   margin-top:40px;
-  min-width:860px;
+  min-width:580px;
+  background-color: white;
 }
 
 .container-wide{
@@ -1284,4 +1285,10 @@ top: 40%!important;
 #cssmenu ul ul li.active-sub a{
   color: #496ebd;
   border-left: 3px solid #496ebd;
+}
+
+@media (min-width: 1200px) {
+  .container {
+    max-width: 970px;
+  }
 }

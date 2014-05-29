@@ -5,9 +5,30 @@
 
                     <p><strong><%= "Member".pluralize(obj.users_count) %> : &nbsp;</strong><span><%= pluralize(obj.users_count, "person") %></span><br> 
 
-                     <!-- <p><strong>Location : &nbsp;</strong><span>
-                       <%= obj.address %>
+                     <p><strong>Location : &nbsp;</strong><span>
+                       <span id="map_address" style="text-decoration:underline;cursor:pointer"><%= obj.address %></span>
                      </span>
-                     </p> -->
+                     </p> 
                     <br>
                   </address> 
+
+<div id="modal_maps" style="display:none;" >
+  <div id="modal-from-dom2" class="modal hide fade in" style="display: block;width:675px;">
+    <div class="modal-header">
+      <a href="#" id="close_map" class="close">×</a>
+      <span style="font-size:15px;line-height: 2;"><strong>Maps</strong></span>
+    </div>
+    <div class="modal-body" style="max-height:550px;">
+        <%= image_tag "http://maps.google.com/maps/api/staticmap?size=650x400&sensor=false&zoom=15&markers=#{obj.latitude}%2C#{obj.longitude}" %>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+$("#map_address").click(function(){
+  $("#modal_maps").modal('show');
+});
+
+$("#close_map").click(function(){
+  $('#modal_maps').modal('hide');
+});
+</script>

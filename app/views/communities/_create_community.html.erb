@@ -160,6 +160,7 @@ $(document).ready(function(){
 });*/
 $("#closeX").click(function(){
   $('#modal').modal('hide');
+  $('.modal-backdrop').remove();
   $('.reset_form').click();
 
   $('#pic').val('');

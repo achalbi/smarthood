@@ -1,0 +1,64 @@
+<% provide(:title, 'Home') %>
+<% if signed_in? %>
+  <% if is_community_active? %>
+  <div class="row">
+     <div id="cu_post" class="span12" style="margin-left:15px;">
+      <%= render 'posts/communities_post' %> 
+    </div>
+  </div> 
+  <% else %>
+    <script type="text/javascript">
+    window.location.href="/communities" 
+  </script>
+  <% end %>
+
+<% else %>
+<div class="hero-unit container-fluid " style="margin-top:70px;">
+  <div class="" style="width: 980px; margin: 0 auto">
+    <aside>
+      <section class="span8 center">
+        <div >
+          <h1 class="inlineBlock" style="padding: 42px 0 24px; font-size: 28px; line-height: 36px">
+            Come unite with friends, neighbours and the
+            <br>
+            world around you on Smarthood. 
+          </h1>
+        </div>
+      </section>
+    </aside>
+  <div class="span13">
+  <h1 style="font-size: 36px">
+      Sign Up
+    </h1>
+    <h5 class="center">
+      It’s free. If you have Facebook account, just login with it.
+    </h5>
+    <br>
+    <div>
+      <div>
+        <noscript>
+          &lt;div id="no_js_box"&gt;&lt;h2&gt;JavaScript is disabled on your browser.&lt;/h2&gt;&lt;p&gt;Please enable JavaScript on your browser or upgrade to a JavaScript-capable browser to register for Facebook.&lt;/p&gt;&lt;/div&gt;
+        </noscript>
+    </div>
+    <%= render 'user_info_login' %>
+  </div>
+  </div>
+</div>
+</div>
+<!--
+<%= link_to image_tag("indy.png", alt: "Rashi"), 'http://rashi.org/' %> -->
+<% end %> 
+<script type="text/javascript">
+$("#mp_link").click(function(){
+  $("#mp_link").css("text-decoration","underline");
+  $("#gp_link").css("text-decoration","none");
+  $("#gp_div").hide();
+  $("#mp_div").show();
+})
+$("#gp_link").click(function(){
+  $("#gp_link").css("text-decoration","underline");
+  $("#mp_link").css("text-decoration","none");
+  $("#mp_div").hide();
+  $("#gp_div").show();
+})
+</script>

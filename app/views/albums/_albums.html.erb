@@ -1,8 +1,8 @@
-   <div id="camera_rolls" style="margin-bottom:0px;">
-    <ul class="breadcrumb" style="width:667px">
+   <div id="camera_rolls" style="margin-bottom:0px;" class="spam13">
+    <ul class="breadcrumb" style="width:100%;">
       <li><a href="#" class="marginLeft10">Albums</a> </li>
 
-      <span style="margin-left:510px;"><li><%= link_to "Create Album", '#', id: "addTo",  class: "uibutton icon add " %></li></span>
+      <span style="margin-left:410px;"><li><%= link_to "Create Album", '#', id: "addTo",  class: "uibutton icon add " %></li></span>
     </ul>
   </div>
 
@@ -69,8 +69,8 @@
 
 <% unless @albums.nil? %>
 
-<div id="gallery1" style="margin:0px 0px 0px 10px;width:720px;">
- <ul id="grid"  style="margin:0px;width:720px;">
+<div id="gallery1" style="margin:0px 0px 0px 10px;width:100%;">
+ <ul id="grid"  style="width:100%;">
 
    <% @albums.each do |album| %>
    <% unless album.photos[0].nil? %>

@@ -25,6 +25,7 @@ class StaticPagesController < ApplicationController
         current_user.address = Address.new
       end
       @inv_req_cu = Community.where(['id IN (?)' , current_user.communities.where('invitation = ?',Uc_enum::INVITED).pluck(:id)])
+      @user = current_user
     else
       @user = env['omniauth.identity'] ||= User.new
       @user.user_info = UserInfo.new

@@ -32,7 +32,7 @@
     </span>
     
     
-    <div class="container" style="width:1200px;">
+    <div class="container" style="width: 860px!important;">
       <% flash.each do |key, value| %>
         <!--<div class="alert alert-<%= key %>"><%= value %></div>-->
       <% end %>
@@ -98,8 +98,8 @@
         <div data-role="page" class="pages" id="home">
           
           
-          <div data-role="content" id="ctn" class="container container-fluid">
-            <div id="content">
+          <div data-role="content" id="ctn" class="main-container container"> <!-- class="container container-fluid"> -->
+            <div id="content" class="marginLeft15">
               <div id="mainHome" >
                   <%= yield %>
               </div>
