@@ -1,6 +1,6 @@
    <div id="camera_rolls" style="margin-bottom:0px;" class="spam20">
     <ul class="breadcrumb" style="line-height:2">
-      <li><a href="#" class="marginLeft10">Albums</a> </li>
+      <li><a href="<%= list_albums_path %>" data-remote="true" class="marginLeft10">Albums</a> </li>
       <li>
       <span style="float:right;"><%= link_to "Create Album", '#', id: "addTo",  class: "uibutton icon add " %></span>
       </li>
@@ -70,7 +70,7 @@
 
 <% unless @albums.nil? %>
 
-<div id="gallery1" style="margin:0px 0px 0px -5px;width:100%;">
+<div id="gallery" style="margin:0px 0px 0px -5px;width:100%;">
  <ul id="grid"  style="width:100%;">
 
    <% @albums.each do |album| %>
