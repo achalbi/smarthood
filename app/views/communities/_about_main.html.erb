@@ -1,9 +1,9 @@
  <% unless community.nil? %>
-<!-- 
+
 <table class="bordered-table zebra-striped">
         <thead>
           <tr>
-            <th style="width: 250px;line-height:2">Map</th>
+            <th style="width: 290px;line-height:2">Map</th>
           </tr>
         </thead>
         <tbody>
@@ -19,7 +19,7 @@
           </tr>
         </tbody>
       </table> 
-    -->
+    
 
 <%= form_for( community, remote: true, :html => {:multipart => true , id: "update_community"}) do |f| %>
 <div id="modal2" style="display:none;" >

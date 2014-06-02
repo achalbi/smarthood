@@ -32,7 +32,7 @@
     </span>
     
     
-    <div class="container" style="width: 860px!important;">
+    <div class="container" style="width: 1130px!important;">
       <% flash.each do |key, value| %>
         <!--<div class="alert alert-<%= key %>"><%= value %></div>-->
       <% end %>
@@ -91,6 +91,7 @@
          <li class='last'><a href="<%= list_albums_path %>" data-remote="true" id="list_album"><span>Albums</span></a></li>
       </ul>
    </li>
+   <li><%= link_to "Buy & Sell", buysell_index_path, id: "buysell_home", remote: true %></li>
 </ul>
 </div>
       </aside> 

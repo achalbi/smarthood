@@ -2,7 +2,13 @@
 <% if signed_in? %>
   <% if is_community_active? %>
   <div class="row">
-     <div id="cu_post" class="span12" style="margin-left:15px;">
+      <aside class="span6">
+        <section>
+          <%= render 'shared/user_info' %>
+          <br>
+        </section>
+      </aside>
+     <div id="cu_post" class="span12" style="margin-left:0px;">
       <%= render 'posts/communities_post' %> 
     </div>
   </div> 
