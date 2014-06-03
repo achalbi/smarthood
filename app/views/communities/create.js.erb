@@ -1,4 +1,5 @@
-$(".busy").button('reset');
 $('#modal').modal('hide');
-$('#logo_community_name').click();
+$(".busy").button('reset');
+$('.modal-backdrop').remove();
 $("#logo_community_name").html("<%= escape_javascript(  render partial: '/static_pages/community-name', locals: {community: active_community } ) %>");
+$("#active_community_link").click();

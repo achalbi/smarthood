@@ -13,7 +13,7 @@ class Community < ActiveRecord::Base
   after_validation :geocode, :if => :address_changed?          # auto-fetch coordinates
   
   belongs_to :user
-  belongs_to :photo
+  belongs_to :photo, dependent: :destroy
 
   has_many :communityposts, dependent: :destroy
 #  has_many :posts, :as => :postable

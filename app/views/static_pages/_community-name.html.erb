@@ -1,4 +1,4 @@
-<a href="/communities/<%= active_community.id %>" data-remote="true">
+<a href="/communities/<%= active_community.id %>" data-remote="true" id="active_community_link">
 <span style=""><%= community.name %></span>
 </a>
   <script type="text/javascript">
@@ -48,7 +48,13 @@ $('#cssmenu > ul > li > a').click(function() {
 
 
 $(document).ready(function(){
-/*
+
+  cssmenuSidebar();
+
+});
+
+function cssmenuSidebar(){
+  /*
 $('#cssmenu > ul > li ul').each(function(index, e){
   var count = $(e).find('li').length;
   var content = '<span class="cnt">' + count + '</span>';
@@ -83,6 +89,5 @@ $('#cssmenu > ul > li > ul > li > a').click(function() {
   $(this).closest('li').addClass('active-sub');  
 });
 
-});
-
+}
   </script>

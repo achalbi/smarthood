@@ -141,7 +141,11 @@ end
 
 def update
   @community = Community.find(params[:id])
+  @com_photo = @community.photo
   @community.update_attributes(params[:community])
+  unless params[:community][:photo_attributes].nil?
+    @com_photo.remove_pic!
+  end
   flash[:success] = "community: " + @community.name + " updated!"
   @selected_community = @community
   @ad_eds = @community.usercommunities.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED, true )

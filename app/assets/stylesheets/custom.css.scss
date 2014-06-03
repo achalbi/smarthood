@@ -1287,8 +1287,7 @@ top: 40%!important;
   border-left: 3px solid #496ebd;
 }
 
-@media (min-width: 1200px) {
-  .container {
-    max-width: 1200px;
-  }
+.container{
+  max-width: none !important;
+  width: 1130px;
 }
