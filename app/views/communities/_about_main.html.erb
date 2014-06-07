@@ -3,18 +3,16 @@
 <table class="bordered-table zebra-striped">
         <thead>
           <tr>
-            <th style="width: 290px;line-height:2">Map</th>
+            <th style="width: 290px;line-height:2">About</th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td>
+              <%= render partial: "communities/text_overlay_main", locals: {obj: @selected_community} %>
                 <address>
-                   
-                    <strong>Location : &nbsp;</strong><%= community.address %><br><br>
-
-                 <%= render :partial => "events/maps", :locals => { :location => community, :dim  => 227 } %><br>
-                  </address>
+                   <%= render :partial => "events/maps", :locals => { :location => community, :dim  => 227 } %><br>
+                </address>
             </td>
           </tr>
         </tbody>

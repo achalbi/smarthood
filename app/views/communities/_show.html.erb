@@ -1,10 +1,12 @@
 <% provide(:title, @selected_community.name) %>
   <div class="">
      <div  class="image_overlay tr-hover-btn" >
+      <div id="CU-pic">
     <%= link_to cl_image_tag(@selected_community.photo.pic_url(:largest), class:"padding1",rel: "#{@selected_community.id}", id:"#{@selected_community.photo.id}") , @selected_community.photo.pic_url, class: "fancybox-album", rel: "#{@selected_community.id}" , title: "#{@selected_community.name}"    %>
+      </div>
 
             <div class="btn_overlay_cu_cover_pic">
-              <div id="edit_del_btn">
+              <div>
                   <% if @community.is_requested?(current_user) %>
                     <span class=" padding5 label warning pull-right" style="font-size:small;"><strong>Request pending to join the community</strong></span><br>
                   <% end %>         
@@ -29,9 +31,9 @@
 
               </div>
             </div>
-            <h2 class="text_overlay_cover_pic button_toggle_pic">
+            <!-- <h2 class="text_overlay_cover_pic ">
               <%= render partial: "communities/text_overlay", locals: {obj: @selected_community} %>
-            </h2>
+            </h2> -->
         </div>
   </div><br>
 <div class="row">

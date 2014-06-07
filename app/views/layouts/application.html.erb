@@ -17,6 +17,21 @@
 
         <%= csrf_meta_tags %>
     <%= render 'layouts/shim' %> 
+
+    <script>
+    //https://my.pingdom.com/
+    var _prum = [['id', '53931587abe53d0b10aa0b6d'],
+                 ['mark', 'firstbyte', (new Date()).getTime()]];
+    (function() {
+        var s = document.getElementsByTagName('script')[0]
+          , p = document.createElement('script');
+        p.async = 'async';
+        p.src = '//rum-static.pingdom.net/prum.min.js';
+        s.parentNode.insertBefore(p, s);
+    })();
+    </script>
+    
+
   </head>
   <body>
     <div id="fb-root"></div>
@@ -59,7 +74,7 @@
             <% end %>
         </ul>
       </div>
- -->
+ -->  
 
 <div id='cssmenu'>
   <h3>Menu</h3>

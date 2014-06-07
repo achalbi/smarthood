@@ -1072,11 +1072,12 @@ def search_app_user
         @post.communities << active_community 
         @post.photos << @event.photo
       end
-    getNotifiableUsers(Objecttypeenum::ACTIVITY, @activity, nil, nil, Uc_enum::CREATED)
+    #getNotifiableUsers(Objecttypeenum::ACTIVITY, @activity, nil, nil, Uc_enum::CREATED)
     @activities = @event.activities
     @community = Community.find(params[:id])
     @eds = @event.eventdetails
     @ads = @activity.activitydetails
+    @urs = @eds.pluck(:user_id).uniq - @ads.pluck(:user_id).uniq
     @ad_users = @activity.activitydetails.where(" is_admin=?", true)
     @inv_users = @activity.activitydetails.where(" is_admin=?", false)
     render :action => :get_activity
