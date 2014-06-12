@@ -1,4 +1,3 @@
-<% if @selected_community.is_joined?(current_user, @selected_community) %> 
     <ul class="tabs">
         <%= render 'communities/links', locals: { community: @selected_community} %>
   </ul>
@@ -14,7 +13,7 @@
                   <%= render 'posts/post' %>
                
               </div>
-               <div id="loading_page" class="center" ><img src="/assets/loading-sub.gif"></div>
+               <div id="loading_page" class="center active_hide loading_page" ><img src="/assets/loading-sub.gif"></div>
             </div>
 
 </div>
@@ -92,8 +91,9 @@ function checkScroll_comm_post() {
   if (nearBottomOfPage() && insideLoop!="true" ) {
     insideLoop ="true";
     currentPage<%= @selected_community.id.to_s %>++;
-  $('#loading_page').show();
+  $('.loading_page').show();
       if($('#div_post_<%= @selected_community.id.to_s %>').length == 0){
+      $('.loading_page').hide();
       clearInterval(intervalID);
       for (var i = 1; i < 99999; i++){
          window.clearInterval(i);
@@ -103,7 +103,7 @@ function checkScroll_comm_post() {
     }
     jQuery.ajax('/communities/community_post_paginate?page=' + currentPage<%= @selected_community.id.to_s %> + '&id=' + '<%= @selected_community.id.to_s %>' , {asynchronous:true, evalScripts:true, method:'get', success: function(data, textStatus, jqXHR) {
     $('#div_post_<%= @selected_community.id.to_s %>').append($(data));
-    $('#loading_page').hide();
+    $('.loading_page').hide();
     if(typeof jQuery(data) == 'undefined' ||jQuery(data).html() == null || $(data).find('.paginate_do').html()==null){
       clearInterval(intervalID);
       for (var i = 1; i < 99999; i++){
@@ -163,11 +163,12 @@ $('#posts_community_li').click(function(){
 
 
 </script>
+<% if @selected_community.is_joined?(current_user, @selected_community) %> 
 <% else %>
   
+<!-- 
 <div class="center loading_page active_hide" ><img src="/assets/loading.gif"></div>
 <div id="aboutDiv">
-<!-- 
  <% if @selected_community.is_private?(current_user) %>
      <% unless @selected_community.is_requested?(current_user) %>
        <%= link_to "Send request", sendrequest_community_path(@selected_community), class: "uibutton icon secure pull-right show_loading", remote: true, id: "send_req_com" %>
@@ -180,18 +181,19 @@ $('#posts_community_li').click(function(){
   <% end %>
 <br>
 <address>
-    <strong> <%= link_to community.name.capitalize, "#", style: "font-size:14px;" %></strong> <br>
-    <strong>Description : &nbsp;</strong> <%= community.description %><br>
-    <strong>Privacy : &nbsp;</strong><%= privacy_str(community) %><br>
-  <% unless (community.req_pending_cnt.nil? || community.req_pending_cnt == 0)%>
-    <strong><%=  'Request'.pluralize(community.req_pending_cnt) %> pending : &nbsp;</strong> <span class=" label important" style="right:0;padding-bottom:2px;"><%= if community.req_pending_cnt > 0 then community.req_pending_cnt end %></span><br>
+    <strong> <%= link_to @community.name, "#", style: "font-size:14px;" %></strong> <br>
+    <strong>Description : &nbsp;</strong> <%= @community.description %><br>
+    <strong>Privacy : &nbsp;</strong><%= privacy_str(@community) %><br>
+  <% unless (@community.req_pending_cnt.nil? || @community.req_pending_cnt == 0)%>
+    <strong><%=  'Request'.pluralize(@community.req_pending_cnt) %> pending : &nbsp;</strong> <span class=" label important" style="right:0;padding-bottom:2px;"><%= if @community.req_pending_cnt > 0 then @community.req_pending_cnt end %></span><br>
   <% end %>
-  <strong><%= "Member".pluralize(community.users_count) %> : </strong><%= pluralize(community.users_count, "person") %> <br> 
-    <strong>Location : &nbsp;</strong><%= community.address %><br><br>
+  <strong><%= "Member".pluralize(@community.users_count) %> : </strong><%= pluralize(@community.users_count, "person") %> <br> 
+    <strong>Location : &nbsp;</strong><%= @community.address %><br><br>
 
- <%= render :partial => "events/maps", :locals => { :location => community } %><br>
-  </address> -->
+ <%= render :partial => "events/maps", :locals => { :location => @community } %><br>
+  </address> 
 </div>
+-->
 <script type="text/javascript">
 
 $(document).ready(function(){

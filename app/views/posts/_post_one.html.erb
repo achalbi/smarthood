@@ -248,7 +248,7 @@
                       <%= link_to cl_image_tag(group.photo.pic_url(:smallest), class:"image_al_c1 thumbnail pull-left ", id:"#{group.photo.id}"), "#" %>
                     </div>
                                     <address style="margin-left:82px;margin-top:5px;">
-                                      <strong> <%= link_to group.name.capitalize, "#", style: "font-size:13px;" %></strong> <br>
+                                      <strong> <%= link_to group.name, "#", style: "font-size:13px;" %></strong> <br>
                                        <%= group.description %><br>
                                     </address> 
                   </li>

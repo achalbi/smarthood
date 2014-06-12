@@ -3,11 +3,13 @@ class BuysellController < ApplicationController
   end
 
   def index
-  	@comm_id = current_user.usercommunities.where("is_admin=? OR invitation != ?", true, Uc_enum::JOINED ).collect(&:community_id)
+  	@comm_id = current_user.usercommunities.where("is_admin=? OR invitation != ?", true, Uc_enum::JOINED ).pluck(:community_id)
     @comm_id << active_community.id
-    @joined_communities = Community.where(['id IN (?) and id NOT IN (?)', current_user.joined_uc.collect(&:community_id), @comm_id]) 
+    @joined_communities = Community.where(['id IN (?) and id NOT IN (?)', current_user.joined_uc.pluck(:community_id), @comm_id]) 
     @selected_comm = []
     @selected_comm << active_community
+    @posts  = Post.where('postable_type = ? ', Objecttypeenum::BUYSELLITEM).order('updated_at DESC') #.paginate(:page => params[:page], :per_page => 4)
+=begin
     @items = BuysellItem.all
     @posts = []
     @items.each do |item|
@@ -16,6 +18,8 @@ class BuysellController < ApplicationController
       end
     end
     @posts = @posts.reverse
+=end
+
     @category = BuysellItemCategory.new
     @subcategory = BuysellItemSubcategory.new
     @subcategories = []
@@ -132,7 +136,7 @@ class BuysellController < ApplicationController
       unless params[:price_to].blank?
         @items = @items.where("price <= ?", params[:price_to]) 
       end
-      @items = @items.all
+      @items = @items.paginate(:page => params[:page], :per_page => 4)
 
     @posts = []
     @items.each do |item|
@@ -142,7 +146,7 @@ class BuysellController < ApplicationController
     end
     @posts = @posts.reverse
     
-  end
+      end
 
 
   def update
@@ -156,6 +160,10 @@ class BuysellController < ApplicationController
     @item = @post.postable
     @post.destroy
     @item.destroy
+  end
+
+  def buysell_posts_page
+    @posts  = Post.where('postable_type = ? ', Objecttypeenum::BUYSELLITEM).order('updated_at DESC').paginate(:page => params[:page], :per_page => 4)
   end
 
 end

@@ -84,7 +84,7 @@ class EventsController < ApplicationController
 
       respond_to do |format|
         if @event.save
-          getNotifiableUsers(Objecttypeenum::EVENT, @event, nil, nil, Uc_enum::CREATED)
+        #  getNotifiableUsers(Objecttypeenum::EVENT, @event, nil, nil, Uc_enum::CREATED)
         #  format.html { redirect_to @event, format: 'js', :success => 'Event was successfully created.' }
           format.json { render :json => @event, :status => :created, :location => @event }
           format.js { redirect_to(:action => :show, :format => :js, :id => @event.id)} #redirect_to @event, format: :js, :success => 'Event was successfully created.' }
@@ -540,7 +540,7 @@ class EventsController < ApplicationController
       else
         @posts = @activity.posts.paginate(:page => params[:page], :per_page => 4)
       end 
-      getNotifiableUsers(Objecttypeenum::POST, @post, Objecttypeenum::ACTIVITY, @activity, Uc_enum::CREATED)
+      #getNotifiableUsers(Objecttypeenum::POST, @post, Objecttypeenum::ACTIVITY, @activity, Uc_enum::CREATED)
       @post_type = 'activity'
       respond_to do |format|
         format.html { redirect_to @activity, format: 'js' }

@@ -25,6 +25,8 @@ class Objecttypeenum
     Objecttypeenum.add_item :USER, "User"
     Objecttypeenum.add_item :USER_IDS, "User_id"
     Objecttypeenum.add_item :BUYSELL, "Buysell"
+    Objecttypeenum.add_item :BUYSELLITEM, "BuysellItem"
+
 
 =begin
     Objecttypeenum.add_item :COMMUNITY_CREATE, "COMMUNITY_CREATE"

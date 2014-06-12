@@ -47,7 +47,7 @@ class AlbumsController < ApplicationController
         body_text = "The Album '" + @album.title + "' was created by "+ current_user.name
         href = "/albums/"+ @album.id.to_s
 
-        getNotifiableUsers(Objecttypeenum::ALBUM, @album, @album.albumable_type, @album.albumable_id, Uc_enum::CREATED)
+      #  getNotifiableUsers(Objecttypeenum::ALBUM, @album, @album.albumable_type, @album.albumable_id, Uc_enum::CREATED)
 
     
       respond_to do |format|

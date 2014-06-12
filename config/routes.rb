@@ -37,7 +37,7 @@ EMS::Application.routes.draw do
     end
     collection do
       post :add_category, :add_subcategory, :search_items
-      get :load_subcategory, :edit_subcategory
+      get :load_subcategory, :edit_subcategory, :buysell_posts_page
     end
   end
   

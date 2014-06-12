@@ -127,7 +127,7 @@ class CommunitiesController < ApplicationController
       end
         @post_ids << @community.posts.collect(&:id)
         @posts = Post.where(id: @post_ids.uniq).paginate(page: params[:page], :per_page => 4)
-      getNotifiableUsers(Objecttypeenum::COMUNITY, @community, nil, nil, Uc_enum::CREATED)
+    #  getNotifiableUsers(Objecttypeenum::COMUNITY, @community, nil, nil, Uc_enum::CREATED)
 
   else
     #	flash[:error] = "community: " + @community.name + " not created!"
@@ -173,7 +173,7 @@ def update
       end
         @post_ids << @community.posts.collect(&:id)
         @posts = Post.where(id: @post_ids.uniq).paginate(page: params[:page], :per_page => 4)
-  getNotifiableUsers(Objecttypeenum::COMUNITY, @community, nil, nil, Uc_enum::UPDATED)
+ # getNotifiableUsers(Objecttypeenum::COMUNITY, @community, nil, nil, Uc_enum::UPDATED)
 
 end
 
@@ -223,7 +223,7 @@ def sendrequest
   end
  @community = Community.find(params[:id])
  flash[:success] = "Request sent to community: " + @community.name
- getNotifiableUsers(Objecttypeenum::COMUNITY, @community, Objecttypeenum::USER, current_user, Uc_enum::REQUESTED)
+# getNotifiableUsers(Objecttypeenum::COMUNITY, @community, Objecttypeenum::USER, current_user, Uc_enum::REQUESTED)
 
 end
 
@@ -261,7 +261,7 @@ def acceptrequest
     if @notifications_settings.blank?
       createNotificationSettings(params[:id], params[:user_id])
     end
-  getNotifiableUsers(Objecttypeenum::COMUNITY, @community, Objecttypeenum::USER, @usr, Uc_enum::ACCEPTED)  
+#  getNotifiableUsers(Objecttypeenum::COMUNITY, @community, Objecttypeenum::USER, @usr, Uc_enum::ACCEPTED)  
 end
 
 def declinerequest
@@ -329,7 +329,7 @@ def join_cu
       end
       @community = Community.find(params[:id])
       flash[:success] = "Joined community: " + @community.name
-    getNotifiableUsers(Objecttypeenum::COMUNITY, @community, Objecttypeenum::USER, current_user, Uc_enum::JOINED)
+   # getNotifiableUsers(Objecttypeenum::COMUNITY, @community, Objecttypeenum::USER, current_user, Uc_enum::JOINED)
   
   end
   @uc_count = current_user.usercommunities.where('status=?','active').count
@@ -625,17 +625,17 @@ def search_app_user
            @usercommunity.invitation = Uc_enum::INVITED
            @usercommunity.save
             @usr = User.find(id)
-            getNotifiableUsers(Objecttypeenum::COMUNITY, @community, Objecttypeenum::USER, @usr, Uc_enum::INVITED)
+          #  getNotifiableUsers(Objecttypeenum::COMUNITY, @community, Objecttypeenum::USER, @usr, Uc_enum::INVITED)
          elsif (@usercommunity.invitation==Uc_enum::REQUESTED || @usercommunity.invitation==Uc_enum::MODERATOR_DECLINED)
            @usercommunity.invitation = Uc_enum::JOINED
            @usercommunity.save
             @usr = User.find(id)
-            getNotifiableUsers(Objecttypeenum::COMUNITY, @community, Objecttypeenum::USER, @usr, Uc_enum::ACCEPTED)
+          #  getNotifiableUsers(Objecttypeenum::COMUNITY, @community, Objecttypeenum::USER, @usr, Uc_enum::ACCEPTED)
          elsif (@usercommunity.invitation == Uc_enum::USER_DECLINED || @usercommunity.invitation == Uc_enum::UNJOINED)
            @usercommunity.invitation = Uc_enum::INVITED
            @usercommunity.save
             @usr = User.find(id)
-            getNotifiableUsers(Objecttypeenum::COMUNITY, @community, Objecttypeenum::USER, @usr, Uc_enum::INVITED)
+          #  getNotifiableUsers(Objecttypeenum::COMUNITY, @community, Objecttypeenum::USER, @usr, Uc_enum::INVITED)
 
          end
 
@@ -694,7 +694,7 @@ def search_app_user
     @users = User.where("id IN (?)", params[:user_ids])
     @community = Community.find(params[:id])
       @users.each do |usr|
-        getNotifiableUsers(Objecttypeenum::COMUNITY, @community, Objecttypeenum::USER, usr, Uc_enum::ADD_MODERATOR)
+    #    getNotifiableUsers(Objecttypeenum::COMUNITY, @community, Objecttypeenum::USER, usr, Uc_enum::ADD_MODERATOR)
       end
  end
 
@@ -908,7 +908,7 @@ def search_app_user
 
       respond_to do |format|
         if @event.save
-          getNotifiableUsers(Objecttypeenum::EVENT, @event, nil, nil, Uc_enum::CREATED)
+        #  getNotifiableUsers(Objecttypeenum::EVENT, @event, nil, nil, Uc_enum::CREATED)
         #  format.html { redirect_to @event, format: 'js', :success => 'Event was successfully created.' }
           format.json { render :json => @event, :status => :created, :location => @event }
           format.js { redirect_to(:action => :show_event, :format => :js, :event_id => @event.id, id: active_community.id)} #redirect_to @event, format: :js, :success => 'Event was successfully created.' }
@@ -1247,7 +1247,7 @@ def search_app_user
       else
         @posts = @activity.posts.paginate(:page => params[:page], :per_page => 4)
       end 
-      getNotifiableUsers(Objecttypeenum::POST, @post, Objecttypeenum::ACTIVITY, @activity, Uc_enum::CREATED)
+     # getNotifiableUsers(Objecttypeenum::POST, @post, Objecttypeenum::ACTIVITY, @activity, Uc_enum::CREATED)
       @post_type = 'activity'
       respond_to do |format|
         format.html { redirect_to @activity, format: 'js' }

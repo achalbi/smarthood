@@ -40,7 +40,7 @@ class GroupsController < ApplicationController
     @group.follow!(current_user, @group.id, Uc_enum::JOINED, true,  params[:community_id])
     #UserGroup.where("user_id = ? AND group_id = ?",current_user.id, @group.id).update_all(is_admin: true, invitation: Uc_enum::JOINED)
       # redirect_to :action => :index
-      getNotifiableUsers(Objecttypeenum::GROUP, @group, nil, nil, Uc_enum::CREATED)
+     # getNotifiableUsers(Objecttypeenum::GROUP, @group, nil, nil, Uc_enum::CREATED)
     else
     	flash[:error] = "Group not created!"
        # redirect_to :action => :index
@@ -136,7 +136,7 @@ def invite_app_user
     #   @usergroup.invitation = Uc_enum::INVITED
     #   getNotifiableUsers(Objecttypeenum::GROUP, @group, Objecttypeenum::USER, @user_ids, Uc_enum::INVITED)
      end
-     getNotifiableUsers(Objecttypeenum::GROUP, @group, Objecttypeenum::USER, @user_ids, Uc_enum::JOINED)
+    # getNotifiableUsers(Objecttypeenum::GROUP, @group, Objecttypeenum::USER, @user_ids, Uc_enum::JOINED)
      @usergroup.save
 
    end
@@ -228,7 +228,7 @@ def create_album
   def update
     @group = Group.find(params[:id])
     @group.update_attributes(params[:group])
-    getNotifiableUsers(Objecttypeenum::GROUP, @group, nil, nil, Uc_enum::UPDATED)
+   # getNotifiableUsers(Objecttypeenum::GROUP, @group, nil, nil, Uc_enum::UPDATED)
         respond_to do |format|
            format.html { }
            format.js { redirect_to :controller => 'communities', :action => 'show_group', :grp_id => @group.id, id: @group.community_id }

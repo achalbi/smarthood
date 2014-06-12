@@ -5,7 +5,7 @@
   <% end %>
             <div style="margin-left:95px;margin-top:5px;">
               <address>
-                <strong> <%= link_to group.name.capitalize, "#", style: "font-size:13px;" %></strong> <br>
+                <strong> <%= link_to group.name, "#", style: "font-size:13px;" %></strong> <br>
                 <strong>Description : &nbsp;</strong> <%= group.description %><br>
                 <strong>Privacy : &nbsp;</strong><%= privacy_str(group) %><br>
                  <strong><%= "Member".pluralize(group.users.count) %> : </strong><%= pluralize(group.users.count, "person") %> <br> 

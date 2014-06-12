@@ -14,10 +14,12 @@
     </h4></a></li><%= link_to "", members_com_community_path(@community) , id: "members_community", remote: true %>
     <li id="groups_community_li"><a ><h4>Groups</h4></a></li><%= link_to "", groups_com_community_path(@community) , id: "groups_community", remote: true %>
     <li id="events_community_li"><a ><h4>Events</h4></a></li><%= link_to "", events_com_community_path(@community) , id: "events_community", remote: true %>
-
+<!--
 <% unless @community.is_active?(current_user, @community) %>
-		<%= render 'setactive', :@community => @community %>
+    <%= render 'setactive', :@community => @community %>
 <% end %>
+-->
+
 <script type="text/javascript">
 $(".alert").click(function(){
     $(this).hide('slow');

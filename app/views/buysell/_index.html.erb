@@ -1,6 +1,7 @@
 <% provide(:title, 'Buy/Sell/Rent') %>
 <div class="row">
 <%= form_tag( '/buysell/search_items' , remote: true) do  %>	
+  <%= hidden_field_tag :page, params[:page] %>
   <aside class="span5 well " style="margin: 0px 15px; 15px 15px; position: fixed;">
     <section>
       <%= link_to "Category ",  "#", id: "add_category",  class: "icon add uibutton" , style:"margin-left:5px;"%>
@@ -82,12 +83,12 @@
 <% end %>
 <div id="aboutDiv" style="margin-left: 300px;">  
     <ul class="users span14">
-      <div id="results">
-           <%= render :partial => 'buysell/post' %>
-    <div class="ressources">
-    </div>
-      </div>
-    <!-- <div id="loading_page" class="center" ><img src="http://res.cloudinary.com/rashi/image/upload/v1377924529/loading7_gvb06y.gif"></div> -->
+        <div id="div_buysell_post" class="resources">
+              <%= render :partial => 'buysell/post' %>
+        </div>
+    <!--
+        <div class="center loading_sub active_hide" id="loading_page"  ><img src="/assets/loading-sub.gif"></div>
+     <div id="loading_page" class="center" ><img src="http://res.cloudinary.com/rashi/image/upload/v1377924529/loading7_gvb06y.gif"></div> -->
   </ul>
 </div>
 </div>
@@ -330,6 +331,62 @@
         </div>
 <% end %>
 
+      <script type="text/javascript">
+
+/*
+            var currentPage_buysell_post = 1;
+            var intervalID_buysell_post = -1000;
+            var insideLoop_buysell_post ="false"; 
+
+            function checkScroll_buysell_post() {
+              if (nearBottomOfPage() && insideLoop_buysell_post!="true") {
+                insideLoop_buysell_post="true";
+                currentPage_buysell_post++;
+                $('#loading_page').show();
+        if($('#div_buysell_post').length == 0){
+          clearInterval(intervalID_buysell_post);
+          for (var i = 1; i < 99999; i++){
+           window.clearInterval(i);
+         }
+         insideLoop_buysell_post = "false";
+         return;
+       }
+       jQuery.ajax('/buysell/buysell_posts_page?page=' + currentPage_buysell_post, {asynchronous:true, evalScripts:true, method:'get', success: function(data, textStatus, jqXHR) {
+        $('.resources').append($(data));
+        $('#loading_page').hide();
+        console.log($.trim(jQuery(data).html()));
+        if(typeof jQuery(data) == 'undefined' || jQuery(data).html() == null || $.trim(jQuery(data).html()) == "" ){
+          clearInterval(intervalID_buysell_post);
+          for (var i = 1; i < 99999; i++){
+           window.clearInterval(i);
+         }
+         $('#div_buysell_post').append("<br>  <div class='center'>No posts to display</div>")
+         
+         restartInterval();
+       }
+       insideLoop_buysell_post ="false"; 
+     },});
+     }
+    }
+
+    function nearBottomOfPage() {
+      return scrollDistanceFromBottom() < 150;
+    }
+
+    function scrollDistanceFromBottom(argument) {
+      return pageHeight() - (window.pageYOffset + self.innerHeight);
+    }
+
+    function pageHeight() {
+      return Math.max(document.body.scrollHeight, document.body.offsetHeight);
+    }
+
+    $('document').ready(function(){
+      intervalID_buysell_post = setInterval(checkScroll_buysell_post, 500);
+    });
+*/
+
+</script>
 
 <script type="text/javascript">
 
@@ -520,11 +577,12 @@ $('document').ready(function(){
 });
 
 $(".quick_filter").on("change", function(){
-  console.log("123");
+  $("#page").val('1');
   $("#search_submit").click();
 });
 
 $(".quick_filter_price").change(function(){
+  $("#page").val('1');
   $("#search_submit").click();
 });
 </script>

@@ -26,7 +26,7 @@
         <%= link_to cl_image_tag(cu.photo.pic_url(:smallest), class:"image_al_c1 thumbnail pull-left ", id:"#{cu.photo.id}"), "#" %>
         <div style="margin-left:65px;margin-top:5px;">
            <address>
-             <strong><%= link_to cu.name.capitalize, "#", style: "font-size:13px;word-wrap:break-word;" %></strong><br>
+             <strong><%= link_to cu.name, "#", style: "font-size:13px;word-wrap:break-word;" %></strong><br>
               <span style="word-wrap:break-word;"><%= cu.description.length > 17 ? cu.description.slice(0..17) + "..." : cu.description %></span><br>
            </address>  
         </div>
@@ -80,7 +80,7 @@
                       <%= link_to cl_image_tag(cu.photo.pic_url(:smallest), class:"image_al_c1 thumbnail pull-left ", id:"#{cu.photo.id}"), "#" %>
                     </div>
                     <address style="margin-left:82px;margin-top:5px;">
-                      <strong> <%= link_to cu.name.capitalize, "#", style: "font-size:13px;" %></strong> <br>
+                      <strong> <%= link_to cu.name, "#", style: "font-size:13px;" %></strong> <br>
                       <%= cu.description %><br>
                     </address> 
                   </li>

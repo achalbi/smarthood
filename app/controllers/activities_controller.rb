@@ -39,7 +39,7 @@ class ActivitiesController < ApplicationController
         @post.communities << active_community 
         @post.photos << @et.photo
       end
-    getNotifiableUsers(Objecttypeenum::ACTIVITY, @activity, nil, nil, Uc_enum::CREATED)
+  #  getNotifiableUsers(Objecttypeenum::ACTIVITY, @activity, nil, nil, Uc_enum::CREATED)
     @activities = @et.activities
     #flash[:success] = "Activity created!"
     respond_to do |format|
@@ -125,7 +125,7 @@ class ActivitiesController < ApplicationController
         @activity.albums << @album
         @activity.save
         @albums = @activity.albums
-        getNotifiableUsers(Objecttypeenum::ALBUM, @album, nil, nil, Uc_enum::CREATED)
+      #  getNotifiableUsers(Objecttypeenum::ALBUM, @album, nil, nil, Uc_enum::CREATED)
         @album = Album.new
         #  flash[:success] = "Album created"
       @share = Share.new
