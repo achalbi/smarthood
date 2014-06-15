@@ -14,5 +14,5 @@ admins = User.create!([name:     "Achal BI",
                        address_id: addresses.first.id, admin: true])
 ui = UserInfo.create!([first_name: "Achal", last_name: "BI", user: admins.first])
 photos = Photo.create!([pic: '', user_id: admins.first.id])
-communities = Community.create!([user_id: admins.first.id, photo_id: photos.first.id, name: "Smarthood", description: "Smarthood community", privacy: 1, address: "Bangalore, Karnataka, India", latitude: 12.9715987, longitude: 77.5945627, comm_type: "organisation"])
+communities = Community.create!([user_id: admins.first.id, photo_id: photos.first.id, name: "Smarthood", description: "Smarthood community", privacy: 7, address: "Bangalore, Karnataka, India", latitude: 12.9715987, longitude: 77.5945627, comm_type: "organisation"])
 Usercommunity.create!(community_id: communities.first.id, user_id: admins.first.id, status: "active", is_admin: true, invitation: "joined")

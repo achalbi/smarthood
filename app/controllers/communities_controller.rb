@@ -1232,6 +1232,7 @@ def search_app_user
       @event = Event.find(params[:event_id])
       @activity = Activity.find(params[:activity_id])
       @post = @activity.posts.build(params[:post])
+      @post.content = Sanitize.clean(@post.content, Sanitize::Config::RELAXED)
       @post.user = current_user
       @post.save
       unless params[:photo].nil?

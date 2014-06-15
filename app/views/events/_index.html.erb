@@ -200,6 +200,7 @@
 </div>
 <script type="text/javascript">
 
+var same_page = true;
 
 var startDateTextBox = $("#event_starts_at");
 var endDateTextBox = $("#event_ends_at");
@@ -479,6 +480,7 @@ restartInterval();
 		$('#list_view').hide();
 		$('#calendar_events').hide();
 		$('#h3Cal').hide();
+    same_page = true;
 	});
 
 		//$('#calendar').fullCalendar('today');
@@ -503,7 +505,7 @@ restartInterval();
 		$('#calendar_events').show();
 		$('#h3Cal').show();
     $('#calendar_events').fullCalendar('render');
-
+    same_page = false;
 	});
 
 var updateEvent;
@@ -628,7 +630,7 @@ $('#today_events_li').click(function(){
 });
 
 function checkScroll_evt_idx(paginate) {
-  if (nearBottomOfPage()) {
+  if (nearBottomOfPage() && same_page) {
       var currentPage=0;
       var intervalID;
     if (paginate === "upcoming_events_paginate") {

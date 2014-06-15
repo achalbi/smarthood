@@ -14,6 +14,7 @@ class PostsController < ApplicationController
     when "activity"
       @activity = Activity.find(params[:activity])
       @post = @activity.posts.build(params[:post])
+      @post.content = Sanitize.clean(@post.content, Sanitize::Config::RELAXED)
       @post.user = current_user
       @post.save
       unless params[:photo].nil?
@@ -35,6 +36,7 @@ class PostsController < ApplicationController
    when "group"
     @group = Group.find(params[:group_id])
     @post = @group.posts.build(params[:post])
+    @post.content = Sanitize.clean(@post.content, Sanitize::Config::RELAXED)
     @post.user = current_user
     @post.save(:validate => false)
     unless params[:photo].nil?
@@ -60,6 +62,7 @@ class PostsController < ApplicationController
       else
         @post_groups = Group.where('id IN (?)',params[:grp_ids])
         @post = current_user.posts.build(params[:post])
+        @post.content = Sanitize.clean(@post.content, Sanitize::Config::RELAXED)
         @post.user = current_user
         @post.save(:validate => false)
         unless params[:photo].nil?
@@ -83,6 +86,7 @@ class PostsController < ApplicationController
        when "communities"
         if params[:cu_ids].nil?
           @post = current_user.posts.build(params[:post])
+          @post.content = Sanitize.clean(@post.content, Sanitize::Config::RELAXED)
           @communities = Community.where(['id IN (?)', current_user.communities.collect(&:id)]) 
           @post.user = current_user
           @post.save(:validate => false)
@@ -95,6 +99,7 @@ class PostsController < ApplicationController
         else
           @post_cus = Community.where('id IN (?)',params[:cu_ids])
           @post = current_user.posts.build(params[:post])
+          @post.content = Sanitize.clean(@post.content, Sanitize::Config::RELAXED)
           @post.user = current_user
           @post.save(:validate => false)
           unless params[:photo].nil?
@@ -116,6 +121,7 @@ class PostsController < ApplicationController
          #  flash[:success] = "Post created!"
      when "community"
           @post = current_user.posts.build(params[:post])
+          @post.content = Sanitize.clean(@post.content, Sanitize::Config::RELAXED)
           @post.user = current_user
           @post.save(:validate => false)
           @post_groups = Group.where('id IN (?)',params[:grp_ids])
