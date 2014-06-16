@@ -1367,6 +1367,9 @@ def search_app_user
 
     
         flash[:success] = "Album: " + @album.title + " created!"
+      @album_old = @album
+      @album = Album.new
+      @share = Share.new
       respond_to do |format|
          format.html {  }
          format.js {  }
