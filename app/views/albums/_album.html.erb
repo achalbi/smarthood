@@ -164,7 +164,7 @@
 
 
     <%= form_for  @share, :url => new_share_path, :method => :get, remote: true do  |f| %>
-      <div id="modal" style="display:none" >
+      <div id="modal_share" style="display:none" >
           <div id="modal-from-dom" class="modal hide fade in" style="display: block;">
 
             <div class="modal-header">
@@ -213,11 +213,11 @@
         $(document).ready(function(){
 
            $("#share").click(function(){
-              $('#modal').modal('show');
+              $('#modal_share').modal('show');
             });
 
            $("#clsX").click(function(){
-             $('#modal').modal('hide');
+             $('#modal_share').modal('hide');
             });
 
 
@@ -235,7 +235,7 @@
       $.validate({
         form : '#new_share',
         onSuccess : function() {
-          $('#modal').modal('hide');
+          $('#modal_share').modal('hide');
         },
       });
   });
