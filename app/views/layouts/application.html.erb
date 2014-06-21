@@ -78,32 +78,62 @@
 
 <div id='cssmenu'>
   <h3>Menu</h3>
+  <div class="center loading_sub active_hide" ><img src="/assets/loading-sub.gif"></div>
 <ul>
-   <li class='active'><a href='<%= root_path %>' id='root_home' data-remote="true"><span>Home</span></a></li>
+   <li class='active'><a href='<%= root_path %>' id='root_home' data-remote="true">
+     <div class=" loading_menu pull-right active_hide" ><img src="/assets/loading-sub.gif"></div>
+     <span>Home</span></a>
+  </li>
    <li id="logo_community_name">
       <%= render partial: '/static_pages/community-name', locals: {community: active_community } %>
    </li>
-   <li class='has-sub'><a href='#' id='home_comunity' ><span>Communities</span></a>
+   <li class='has-sub'><a href='#' id='home_comunity' >
+     <span>Communities</span></a>
       <ul>
-         <li class=''><%= link_to "+  Create", create_community_communities_path, id: "ComUnity",  class: "", remote: true %></li>
-         <li><%= link_to "My communities", my_com_communities_path , id: "joined_comUnity", remote: true %>
+         <li class=''>
+            <a href='<%= create_community_communities_path %>' id='ComUnity' data-remote="true">
+             <div class=" loading_menu pull-right active_hide" ><img src="/assets/loading-sub.gif"></div>
+             <span>+  Create</span>
+            </a>
+        </li>
+         <li>
+            <a href='<%= my_com_communities_path %>' id='joined_comUnity' data-remote="true">
+             <div class=" loading_menu pull-right active_hide" ><img src="/assets/loading-sub.gif"></div>
+             <span>My communities</span>
+            </a>
           <span id="mem_req_count"  class="cnt">
             <%= render partial: 'communities/mem_req_count'%>
           </span>
          </li>
-         <li><%= link_to "Other communities", other_com_communities_path,id: "public_comUnity", remote: true %></li>
-         <li class='last'><%= link_to "Invites", invites_requests_communities_path , id: "invites_comUnity", remote: true %>
+         <li>
+           <a href='<%= other_com_communities_path %>' id='public_comUnity' data-remote="true">
+             <div class=" loading_menu pull-right active_hide" ><img src="/assets/loading-sub.gif"></div>
+             <span>Other communities</span>
+            </a>
+        </li>
+         <li class='last'>
+           <a href='<%= invites_requests_communities_path %>' id='invites_comUnity' data-remote="true">
+             <div class=" loading_menu pull-right active_hide" ><img src="/assets/loading-sub.gif"></div>
+             <span>Invites</span>
+            </a>
             <span id="inv_req_count"  class="cnt">
             <%= render partial: 'communities/inv_req_count'%>
           </span>
          </li>
       </ul>
    </li>
-   <li><a href='<%= events_path %>' data-remote="true" ><span>Events</span></a></li>
+   <li> 
+     <a href='<%= events_path %>' data-remote="true" >
+       <div class=" loading_menu pull-right active_hide" ><img src="/assets/loading-sub.gif"></div>
+       <span>Events</span></a></li>
    <li class='has-sub last'><a href='#'><span>Photos</span></a>
       <ul>
          <!-- <li><a href="<%= photos_path %>" data-remote="true" id="roll"><span>Camera roll</span></a></li> -->
-         <li class='last'><a href="<%= list_albums_path %>" data-remote="true" id="list_album"><span>Albums</span></a></li>
+         <li class='last'> 
+           <a href="<%= list_albums_path %>" data-remote="true" id="list_album">
+             <div class=" loading_menu pull-right active_hide" ><img src="/assets/loading-sub.gif"></div> 
+             <span>Albums</span></a>
+        </li>
       </ul>
    </li>
    <!-- <li><%= link_to "Buy & Sell", buysell_index_path, id: "buysell_home", remote: true %></li> -->

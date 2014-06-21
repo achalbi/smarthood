@@ -1,4 +1,5 @@
 <a href="/communities/<%= active_community.id %>" data-remote="true" id="active_community_link">
+<div class=" loading_menu pull-right active_hide" ><img src="/assets/loading-sub.gif"></div>
 <span style=""><%= community.name %></span>
 </a>
   <script type="text/javascript">
@@ -67,6 +68,7 @@ $('#cssmenu > ul > li > a').click(function() {
   $('#cssmenu ul ul:visible').hide();
   $('#cssmenu ul ul li').removeClass('active-sub');
   $('#cssmenu li').removeClass('active');
+  $(this).find('.loading_menu').show();
   $(this).closest('li').addClass('active'); 
   var checkElement = $(this).next();
  // if((checkElement.is('ul')) && (checkElement.is(':visible'))) {
@@ -85,6 +87,7 @@ $('#cssmenu > ul > li > a').click(function() {
 });
 
 $('#cssmenu > ul > li > ul > li > a').click(function() {
+  $(this).find('.loading_menu').show();
   $('#cssmenu li').removeClass('active-sub');
   $(this).closest('li').addClass('active-sub');  
 });
