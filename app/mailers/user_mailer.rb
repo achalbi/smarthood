@@ -13,9 +13,9 @@ end
 
   def welcome_email(user)
     @user = user
-    @url  = "http://smarthood.in/signin"
+    @url  = "http://smarthood.in/"
    # attachments.inline['image.jpg'] = File.read(gravatar_for(user))
-    attachments.inline['indy.png'] = File.read("#{Rails.root}/public/assets/indy.png")
+    attachments.inline['smarthood-s.png'] = File.read("#{Rails.root}/public/assets/smarthood-s.png")
     mail(:to => user.email, :subject => "Welcome to Rashi EMS")
   end
 
