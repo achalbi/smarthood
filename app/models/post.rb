@@ -11,7 +11,7 @@ class Post < ActiveRecord::Base
   belongs_to :postable, :polymorphic => true
   has_many :userlikes, :as => :likeable
 
-  has_many :photos
+  has_many :photos, dependent: :destroy
   accepts_nested_attributes_for :photos
 
 
