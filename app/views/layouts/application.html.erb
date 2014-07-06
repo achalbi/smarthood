@@ -35,13 +35,36 @@
   </head>
   <body>
     <div id="fb-root"></div>
-      <script>(function(d, s, id) {
+      <script>
+      (function(d, s, id) {
         var js, fjs = d.getElementsByTagName(s)[0];
         if (d.getElementById(id)) return;
         js = d.createElement(s); js.id = id;
         js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&appId=<%= FACEBOOK_CONFIG['FACEBOOK_APP_ID'] %>&version=v2.0";
         fjs.parentNode.insertBefore(js, fjs);
-      }(document, 'script', 'facebook-jssdk'));</script>
+      }(document, 'script', 'facebook-jssdk'));
+
+
+      function checkBrowser(){
+      c=navigator.userAgent.search("Chrome");
+      f=navigator.userAgent.search("Firefox");
+      if (c>-1){
+      brwsr = true;
+      }
+      else if(f>-1){
+      brwsr = true;
+      }
+      return brwsr;
+      }
+      $(function(){
+      if(checkBrowser){
+      $("#login-page-check-compatibility").show();
+      $('.menu_login_container').show();
+
+      }
+      });
+
+      </script>
     <span class="header">
     <%= render 'layouts/header' %>
     </span>
@@ -78,7 +101,6 @@
 
 <div id='cssmenu'>
   <h3>Menu</h3>
-  <div class="center loading_sub active_hide" ><img src="/assets/loading-sub.gif"></div>
 <ul>
    <li class='active'><a href='<%= root_path %>' id='root_home' data-remote="true">
      <div class=" loading_menu pull-right active_hide" ><img src="/assets/loading-sub.gif"></div>

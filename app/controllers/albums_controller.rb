@@ -60,16 +60,33 @@ class AlbumsController < ApplicationController
     @album = Album.find(params[:id])
     @share = Share.new
     @pic_arr = []
+    @pic_arr_arr = []
     @album.photos.each do |photo|
       @pic_arr << File.basename( photo.pic_url, ".*" )
     end
+    if @pic_arr.count < 51
       @str = @album.title+"_"+@album.id.to_s
       @str = @str.downcase.tr(" ", "_")
       Cloudinary::Uploader.add_tag(@str, @pic_arr)
     @cld = Cloudinary::Uploader.multi(@str, :format => 'zip')
     @album.downloadlink = @cld["url"]
     @album.save
-    redirect_to  @album.downloadlink
+    #redirect_to  @album.downloadlink
+    else
+      @pic_arr_arr = @pic_arr.in_groups_of(50, false)
+      cnt = 0
+      @album.downloadlink = ''
+      @pic_arr_arr.each do |pic_arr|
+        cnt = cnt + 1
+        @str = @album.title+"_"+@album.id.to_s+"_"+cnt.to_s
+        @str = @str.downcase.tr(" ", "_")
+        Cloudinary::Uploader.add_tag(@str, pic_arr)
+        @cld = Cloudinary::Uploader.multi(@str, :format => 'zip')
+        @album.downloadlink =  @album.downloadlink + " , " unless @album.downloadlink.blank?
+        @album.downloadlink =  @album.downloadlink +  @cld["url"]
+      end
+        @album.save
+    end
   end
 
 
@@ -79,7 +96,7 @@ class AlbumsController < ApplicationController
     unless params[:photo].nil?
          @photos = Photo.find(params[:photo].keys.collect(&:to_i))  
           @album = current_user.albums.build(params[:album])
-          # @album.user = current_user
+
           @share = Share.new
           @album.save
           @photos.each do |photo|
@@ -105,6 +122,9 @@ class AlbumsController < ApplicationController
       photo.remove_pic!
       photo.destroy
     end
+    @str = @album.title+"_"+@album.id.to_s
+    @str = @str.downcase.tr(" ", "_")
+    #Cloudinary::Api.delete_resources_by_prefix(@str)
     Album.find(params[:id]).destroy
     @camera_roll = @camera_roll.group_by { |t| t.created_at.beginning_of_month }  
     @albums = current_user.albums.all

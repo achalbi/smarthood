@@ -127,7 +127,7 @@
         <ul class="users">
         <% unless post.groups[0].nil? %>
                 <% i=0 %>
-                  <span class="timestamp " style="margin:0 0 0 5px;font-size:13px;"> Posted to <%="Group".pluralize(post.groups.count) %><br>
+                  <span class="timestamp " style="margin:0 0 0 5px;font-size:13px;"> Posted to <%="group".pluralize(post.groups.count) %><br>
                 </span>
                 <span  class="center_block">
                 <% post.groups.each do |group| %>

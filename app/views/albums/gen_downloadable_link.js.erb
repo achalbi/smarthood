@@ -1,1 +1,2 @@
-window.location.href=<%= @album.downloadlink %>
+$('#album_downlink').html('<%= j (render("gen_downloadable_link")) %>');
+$('.loading_page').hide();

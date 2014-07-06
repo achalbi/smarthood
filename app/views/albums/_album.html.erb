@@ -1,5 +1,5 @@
     <script type="text/javascript">var photoCount = 0;</script>
-
+    <div id="album_downlink"></div>
           <div class="span13" style="margin-right:120px;"  >
                <div id="album_indiv" style=" margin-bottom:0px;">
                   <ul class="breadcrumb" style="width:100%;height:22px;">
@@ -15,7 +15,7 @@
                         <span style="margin-right:5px;float:right;"><li><%= link_to "Share", '#', id: "share",  class: "uibutton icon add" %></li>
                       <% end %>
                       <% if @album.downloadable? %>
-                         <li><%= link_to "Download", gen_downloadable_link_album_path(@album.id) , id: "gen_download",  class: "uibutton", target: "_blank" %></li>
+                         <li><%= link_to "Download", gen_downloadable_link_album_path(@album.id) , id: "gen_download",  class: "uibutton", remote: true %></li>
                       <% end %>
                     </span>
                   </ul>
@@ -187,6 +187,10 @@
         </div>
     <% end %>
 <script type="text/javascript">
+
+$("#gen_download").click(function(){
+  $('.loading_page').show();
+});
 
          $('.tokenfields').on('beforeCreateToken', function (e) {
             var token = e.token.value.split('|')
