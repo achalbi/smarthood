@@ -29,6 +29,23 @@ class PhotosController < ApplicationController
  
   def destroy
     @photo = Photo.find(params[:id])
+      @album = @photo.albums[0]
+      @pic_arr = []
+      @pic_arr_arr = []
+       @album.photos.each do |photo|
+          @pic_arr << File.basename( photo.pic_url, ".*" )
+       end
+      @str = @album.title+"_"+@album.id.to_s+",zip"
+      @str = @str.downcase.tr(" ", "_")
+      Cloudinary::Uploader.destroy(@str, :type => :multi)    
+      @pic_arr_arr = @pic_arr.in_groups_of(50, false)
+      cnt = 0
+      @pic_arr_arr.each do |pic_arr|
+        cnt = cnt + 1
+        @str = @album.title+"_"+@album.id.to_s+"_"+cnt.to_s+",zip"
+        @str = @str.downcase.tr(" ", "_")
+        Cloudinary::Uploader.destroy(@str, :type => :multi)
+      end
     @photo.remove_pic!
     Photo.find(params[:id]).destroy
     respond_to do |format|

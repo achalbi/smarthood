@@ -118,12 +118,26 @@ class AlbumsController < ApplicationController
     @camera_roll = current_user.photos.order('created_at DESC').all
     @album = Album.find(params[:id])
      @title = @album.title
+    @pic_arr = []
+      @pic_arr_arr = []
+       @album.photos.each do |photo|
+          @pic_arr << File.basename( photo.pic_url, ".*" )
+       end
+      @str = @album.title+"_"+@album.id.to_s+",zip"
+      @str = @str.downcase.tr(" ", "_")
+      Cloudinary::Uploader.destroy(@str, :type => :multi)    
+      @pic_arr_arr = @pic_arr.in_groups_of(50, false)
+      cnt = 0
+      @pic_arr_arr.each do |pic_arr|
+        cnt = cnt + 1
+        @str = @album.title+"_"+@album.id.to_s+"_"+cnt.to_s+",zip"
+        @str = @str.downcase.tr(" ", "_")
+        Cloudinary::Uploader.destroy(@str, :type => :multi)
+      end
     @album.photos.each do |photo|
       photo.remove_pic!
       photo.destroy
     end
-    @str = @album.title+"_"+@album.id.to_s
-    @str = @str.downcase.tr(" ", "_")
     #Cloudinary::Api.delete_resources_by_prefix(@str)
     Album.find(params[:id]).destroy
     @camera_roll = @camera_roll.group_by { |t| t.created_at.beginning_of_month }  
@@ -184,6 +198,23 @@ def edit
 
   def delete_photos
       @photos = Photo.find(params[:photo2].keys.collect(&:to_i)) 
+      @album = @photos[0].albums[0]
+      @pic_arr = []
+      @pic_arr_arr = []
+       @album.photos.each do |photo|
+          @pic_arr << File.basename( photo.pic_url, ".*" )
+       end
+      @str = @album.title+"_"+@album.id.to_s+",zip"
+      @str = @str.downcase.tr(" ", "_")
+      Cloudinary::Uploader.destroy(@str, :type => :multi)    
+      @pic_arr_arr = @pic_arr.in_groups_of(50, false)
+      cnt = 0
+      @pic_arr_arr.each do |pic_arr|
+        cnt = cnt + 1
+        @str = @album.title+"_"+@album.id.to_s+"_"+cnt.to_s+",zip"
+        @str = @str.downcase.tr(" ", "_")
+        Cloudinary::Uploader.destroy(@str, :type => :multi)
+      end
       @photos.each do  |photo|
            photo.remove_pic!
            photo.destroy     
