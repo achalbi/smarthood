@@ -1,0 +1,4 @@
+$('#gallery').html('<%= escape_javascript(render("albums/album")) %>');
+$('#show_event_div').html('<%= escape_javascript(render("albums/album")) %>');
+$(".busy").button('reset');
+$('.modal-backdrop').remove();

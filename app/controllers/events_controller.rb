@@ -66,7 +66,7 @@ class EventsController < ApplicationController
 
       if @event.photo.nil?
         @photo = Photo.new
-        @photo.remote_pic_url = "http://res.cloudinary.com/rashi/image/upload/v1378556932/events_medium_m4h4ww.jpg"
+        @photo.remote_pic_url = "http://res.cloudinary.com/rashi/image/upload/v1404833169/Event_s1xc7v.png"
         @photo.save
         @event.photo = @photo 
       end
@@ -273,7 +273,7 @@ class EventsController < ApplicationController
       #@photo = Photo.find_by_pic("v1378556932/events_medium_m4h4ww.jpg")
       if @event.photo.nil?
       @photo = Photo.new
-      @photo.remote_pic_url = "http://res.cloudinary.com/rashi/image/upload/v1378556932/events_medium_m4h4ww.jpg"
+      @photo.remote_pic_url = "http://res.cloudinary.com/rashi/image/upload/v1404833169/Event_s1xc7v.png"
       @photo.save
       @event.photo = @photo 
       end

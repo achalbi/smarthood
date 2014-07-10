@@ -96,7 +96,7 @@ class CommunitiesController < ApplicationController
    if @community.save
     if @community.photo.nil?
       @photo = Photo.new
-      @photo.remote_pic_url = "http://res.cloudinary.com/rashi/image/upload/v1379775358/comUnity_uxui7t.jpg"
+      @photo.remote_pic_url = "http://res.cloudinary.com/rashi/image/upload/v1404833168/Community_ohmyj0.png"
       @photo.save
       @community.photo = @photo 
     end
@@ -744,7 +744,7 @@ def search_app_user
     flash.clear
     @community = Community.find(params[:id])
     @selected_community = @community
-    @selected_community.req_pending_cnt = User.where(['id IN (?)' , @community.requested_uc.collect(&:user_id)]).count
+    @selected_community.req_pending_cnt = User.where(['id IN (?)' , @community.requested_uc.pluck(:user_id)]).count
   end
 
   def photos_com
@@ -756,8 +756,17 @@ def search_app_user
     @albums = @community.albums
     @selected_community = @community
     @selected_community.req_pending_cnt = User.where(['id IN (?)' , @community.requested_uc.collect(&:user_id)]).count
-    @group_ids = current_user.user_groups.where("invitation = ? AND community_id = ?", Uc_enum::JOINED, @selected_community).collect(&:group_id)
+    @group_ids = current_user.user_groups.where("invitation = ? AND community_id = ?", Uc_enum::JOINED, @selected_community).pluck(:group_id)
+    @evnt_ids = Event.where("community_id = ?",params[:id]).pluck(:id)
+    @events = Eventdetail.where("user_id = ? AND status = ? AND event_id IN (?)", current_user.id, 'yes', @evnt_ids).collect(&:event)
+    @activity_ids = []
+    @events.each do |event|
+     @a_ids = event.activities.where("is_admin = ?", true ).pluck(:id)
+     @a_ids.concat(Activitydetail.where("activity_id IN (?) AND user_id = ?",event.activities, current_user ).pluck(:activity_id))
+     @activity_ids.concat(@a_ids)
+    end
     @albums << Album.where("albumable_id IN (?) AND albumable_type = ?", @group_ids, Objecttypeenum::GROUP)      
+    @albums << Album.where("albumable_id IN (?) AND albumable_type = ?", @activity_ids, Objecttypeenum::ACTIVITY)      
     @albums = @albums.sort_by(&:created_at).reverse
     store_location
   end
@@ -890,7 +899,7 @@ def search_app_user
 
       if @event.photo.nil?
         @photo = Photo.new
-        @photo.remote_pic_url = "http://res.cloudinary.com/rashi/image/upload/v1378556932/events_medium_m4h4ww.jpg"
+        @photo.remote_pic_url = "http://res.cloudinary.com/rashi/image/upload/v1404833169/Event_s1xc7v.png"
         @photo.save
         @event.photo = @photo 
       end
@@ -1437,9 +1446,9 @@ def update_album
             @album.photos << @photo
         end
     end
+    @share = Share.new
     @album.update_attributes(params[:album])
    # flash[:success] = "Album updated successfully!"
-   redirect_to @album 
 end
 
   def delete_album

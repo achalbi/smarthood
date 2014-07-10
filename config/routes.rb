@@ -147,7 +147,7 @@ EMS::Application.routes.draw do
 
   resources :groups do
     member do
-      get :followers, :add_moderators, :invite_app_user, :search_app_user, :acceptrequest, :declinerequest, :unjoin_grp, :join_grp
+      get :followers, :add_moderators, :invite_app_user, :search_app_user, :acceptrequest, :declinerequest, :unjoin_grp, :join_grp, :show_group
     end
     collection do
       get :my, :public, :post_paginate, :group_post, :groups_post_paginate, :search_app_user

@@ -1,6 +1,6 @@
 class Group < ActiveRecord::Base
   belongs_to :User
-  belongs_to :photo
+  belongs_to :photo, dependent: :destroy
   attr_accessible :description, :name, :privacy, :photo_attributes, :user_tokens, :profile_pic
   accepts_nested_attributes_for :photo
 

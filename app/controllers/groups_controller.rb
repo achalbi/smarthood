@@ -18,7 +18,7 @@ class GroupsController < ApplicationController
   @group.User = current_user
   if @group.photo.nil?
     @photo = Photo.new
-    @photo.remote_pic_url = "http://res.cloudinary.com/rashi/image/upload/v1381586772/Group_td3iuo.png"
+    @photo.remote_pic_url = "http://res.cloudinary.com/rashi/image/upload/v1404833168/Group_uaqucv.png"
     @photo.save
     @group.photo = @photo 
   end

@@ -6,7 +6,7 @@
                     <!-- <li><a href="#" class="marginLeft10 marginRight10" style="line-height:21px;" id="album_bc">Albums</a><span class="divider" style="line-height:21px;" >></span> </li>
                     <li><a href="#" class="marginLeft5" style="line-height:21px;"  ><%= @album.title %></a></li> -->
                     <% if @album.user == current_user %>
-                      <%= link_to "Delete", "/communities/delete_album?id=#{@album.id}" , method: :get, class: "uibutton danger pull-left del-alb",
+                      <%= link_to "Delete", "/communities/delete_album?id=#{@album.id}" , method: :get, class: "uibutton danger pull-left del-alb", id: "delete_album", 
                                              data: { confirm: "You sure?" }, remote: true,
                                              title: "Delete album: " + @album.title %>
                       <%= link_to "edit", '#', id: "edit_album",  class: "uibutton icon edit pull-left" %>
@@ -222,6 +222,10 @@ $("#gen_download").click(function(){
 
            $("#clsX").click(function(){
              $('#modal_share').modal('hide');
+            });
+
+           $("#delete_album").click(function(){
+             //$('.loading_page').show();
             });
 
 
