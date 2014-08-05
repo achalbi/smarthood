@@ -70,7 +70,7 @@ class Group < ActiveRecord::Base
   end  
 
   def can_admin_unjoin?(user)
-     @usergroups = self.user_groups.where("is_admin = ?  AND invitation = ? ",true, Uc_enum::JOINED )
+     @usergroups = self.user_groups.where("invitation = ? AND is_admin = ?", Uc_enum::JOINED, true )
         if @usergroups.size > 1 && self.is_admin?(user)
           return true
         else

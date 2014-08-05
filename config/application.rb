@@ -63,5 +63,7 @@ module EMS
     config.assets.initialize_on_precompile = false
 
     config.active_record.whitelist_attributes = true
+
+    config.threadsafe!
   end
 end

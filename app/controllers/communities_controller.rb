@@ -753,7 +753,7 @@ def search_app_user
       params[:id] = active_community.id
     end
     @community = Community.find(params[:id])
-    @albums = @community.albums
+    @albums = []
     @selected_community = @community
     @selected_community.req_pending_cnt = User.where(['id IN (?)' , @community.requested_uc.collect(&:user_id)]).count
     @group_ids = current_user.user_groups.where("invitation = ? AND community_id = ?", Uc_enum::JOINED, @selected_community).pluck(:group_id)
@@ -765,8 +765,9 @@ def search_app_user
      @a_ids.concat(Activitydetail.where("activity_id IN (?) AND user_id = ?",event.activities, current_user ).pluck(:activity_id))
      @activity_ids.concat(@a_ids)
     end
-    @albums << Album.where("albumable_id IN (?) AND albumable_type = ?", @group_ids, Objecttypeenum::GROUP)      
-    @albums << Album.where("albumable_id IN (?) AND albumable_type = ?", @activity_ids, Objecttypeenum::ACTIVITY)      
+    @albums.concat(Album.where("albumable_id IN (?) AND albumable_type = ?", @group_ids, Objecttypeenum::GROUP))    
+    @albums.concat(Album.where("albumable_id IN (?) AND albumable_type = ?", @activity_ids, Objecttypeenum::ACTIVITY))   
+    @albums.concat(Album.where("albumable_id = ? AND albumable_type = ?", params[:id], Objecttypeenum::COMMUNITY))   
     @albums = @albums.sort_by(&:created_at).reverse
     store_location
   end
@@ -1345,11 +1346,10 @@ def search_app_user
           @photo = Photo.new
             @photo.pic = pic
             @album.photos << @photo
-          end
+        end
         @community.albums << @album
         @album.save
         @community.save
-        @albums = @community.albums
        
       if @album.privacy == Privacyenum::PUBLIC
         
@@ -1365,8 +1365,20 @@ def search_app_user
         end
       end
 
-    @group_ids = current_user.user_groups.where("invitation = ? AND community_id = ?", Uc_enum::JOINED, @community).collect(&:group_id)
-    @albums << Album.where("albumable_id IN (?) AND albumable_type = ?", @group_ids, Objecttypeenum::GROUP)      
+    @albums = []
+    @community.req_pending_cnt = User.where(['id IN (?)' , @community.requested_uc.collect(&:user_id)]).count
+    @group_ids = current_user.user_groups.where("invitation = ? AND community_id = ?", Uc_enum::JOINED, @community).pluck(:group_id)
+    @evnt_ids = Event.where("community_id = ?",params[:id]).pluck(:id)
+    @events = Eventdetail.where("user_id = ? AND status = ? AND event_id IN (?)", current_user.id, 'yes', @evnt_ids).collect(&:event)
+    @activity_ids = []
+    @events.each do |event|
+     @a_ids = event.activities.where("is_admin = ?", true ).pluck(:id)
+     @a_ids.concat(Activitydetail.where("activity_id IN (?) AND user_id = ?",event.activities, current_user ).pluck(:activity_id))
+     @activity_ids.concat(@a_ids)
+    end
+    @albums.concat(Album.where("albumable_id IN (?) AND albumable_type = ?", @group_ids, Objecttypeenum::GROUP))    
+    @albums.concat(Album.where("albumable_id IN (?) AND albumable_type = ?", @activity_ids, Objecttypeenum::ACTIVITY))   
+    @albums.concat(Album.where("albumable_id = ? AND albumable_type = ?", params[:id], Objecttypeenum::COMMUNITY))   
     @albums = @albums.sort_by(&:created_at).reverse
 
         body_text = "The Album '" + @album.title + "' was created by "+ current_user.name

@@ -31,7 +31,12 @@ gem 'jquery-tokeninput-rails'
 #gem 'jquery-lazy-images'
 gem 'koala'
 gem 'newrelic_rpm'
+gem "schema_plus"
 gem 'sanitize'
+gem 'puma'
+gem "rack-timeout"
+#gem 'schema_associations' #, '~> 1.2.2'
+#gem 'schema_validations' #, '~> 1.0.0'
 #gem 'bootstrap-multiselect-rails'
 #gem 'autogrow-textarea-rails'
 #gem 'node'

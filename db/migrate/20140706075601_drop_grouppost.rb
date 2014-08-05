@@ -1,3 +1,3 @@
 class DropGrouppost < ActiveRecord::Migration
-	drop_table :groupposts
+#	drop_table :groupposts
 end

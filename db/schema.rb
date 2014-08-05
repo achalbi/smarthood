@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140504152321) do
+ActiveRecord::Schema.define(:version => 20140804171829) do
 
   create_table "activities", :force => true do |t|
     t.string   "title"
@@ -27,6 +27,8 @@ ActiveRecord::Schema.define(:version => 20140504152321) do
     t.float    "longitude"
     t.integer  "privacy",     :limit => 255
     t.boolean  "is_admin"
+    t.index ["event_id"], :name => "index_activities_on_event_id"
+    t.index ["starts_at"], :name => "index_activities_on_starts_at"
   end
 
   create_table "activitydetails", :force => true do |t|
@@ -36,6 +38,9 @@ ActiveRecord::Schema.define(:version => 20140504152321) do
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
     t.boolean  "is_admin"
+    t.index ["activity_id", "group_id"], :name => "index_activitydetails_on_activity_id_and_group_id"
+    t.index ["activity_id", "user_id"], :name => "index_activitydetails_on_activity_id_and_user_id"
+    t.index ["activity_id"], :name => "index_activitydetails_on_activity_id"
   end
 
   create_table "activitynotifications", :force => true do |t|
@@ -51,6 +56,8 @@ ActiveRecord::Schema.define(:version => 20140504152321) do
     t.datetime "created_at",               :null => false
     t.datetime "updated_at",               :null => false
     t.string   "pic_url"
+    t.index ["recepient_id"], :name => "index_activitynotifications_on_recepient_id"
+    t.index ["sender_id"], :name => "index_activitynotifications_on_sender_id"
   end
 
   create_table "activitynotificationsettings", :force => true do |t|
@@ -65,6 +72,8 @@ ActiveRecord::Schema.define(:version => 20140504152321) do
     t.string   "new_joiners"
     t.datetime "created_at",         :null => false
     t.datetime "updated_at",         :null => false
+    t.index ["community_id"], :name => "index_activitynotificationsettings_on_community_id"
+    t.index ["user_id"], :name => "index_activitynotificationsettings_on_user_id"
   end
 
   create_table "activityposts", :force => true do |t|
@@ -73,11 +82,12 @@ ActiveRecord::Schema.define(:version => 20140504152321) do
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
     t.integer  "event_id"
+    t.index ["activity_id"], :name => "index_activityposts_on_activity_id"
+    t.index ["event_id"], :name => "index_activityposts_on_event_id"
+    t.index ["post_id", "activity_id"], :name => "index_activityposts_on_post_id_and_activity_id", :unique => true
+    t.index ["post_id", "event_id"], :name => "index_activityposts_on_post_id_and_event_id", :unique => true
+    t.index ["post_id"], :name => "index_activityposts_on_post_id"
   end
-
-  add_index "activityposts", ["activity_id"], :name => "index_activityposts_on_activity_id"
-  add_index "activityposts", ["post_id", "activity_id"], :name => "index_activityposts_on_post_id_and_activity_id", :unique => true
-  add_index "activityposts", ["post_id"], :name => "index_activityposts_on_post_id"
 
   create_table "addresses", :force => true do |t|
     t.string   "doorno"
@@ -110,6 +120,8 @@ ActiveRecord::Schema.define(:version => 20140504152321) do
     t.string   "albumable_type"
     t.string   "downloadlink"
     t.boolean  "downloadable"
+    t.index ["albumable_id", "albumable_type"], :name => "index_albums_on_albumable_id_and_albumable_type"
+    t.index ["user_id"], :name => "index_albums_on_user_id"
   end
 
   create_table "attachinary_files", :force => true do |t|
@@ -124,9 +136,8 @@ ActiveRecord::Schema.define(:version => 20140504152321) do
     t.string   "resource_type"
     t.datetime "created_at",           :null => false
     t.datetime "updated_at",           :null => false
+    t.index ["attachinariable_type", "attachinariable_id", "scope"], :name => "by_scoped_parent"
   end
-
-  add_index "attachinary_files", ["attachinariable_type", "attachinariable_id", "scope"], :name => "by_scoped_parent"
 
   create_table "authentications", :force => true do |t|
     t.integer  "user_id"
@@ -135,6 +146,8 @@ ActiveRecord::Schema.define(:version => 20140504152321) do
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
     t.string   "username"
+    t.index ["uid"], :name => "index_authentications_on_uid"
+    t.index ["user_id"], :name => "index_authentications_on_user_id"
   end
 
   create_table "buysell_item_categories", :force => true do |t|
@@ -149,6 +162,9 @@ ActiveRecord::Schema.define(:version => 20140504152321) do
     t.integer  "buysell_item_subcategory_id"
     t.datetime "created_at",                  :null => false
     t.datetime "updated_at",                  :null => false
+    t.index ["buysell_item_category_id", "buysell_item_subcategory_id"], :name => "index_b_i_c_b_i_s"
+    t.index ["buysell_item_category_id"], :name => "index_b_i_c"
+    t.index ["buysell_item_subcategory_id"], :name => "index_b_i_s"
   end
 
   create_table "buysell_item_comments", :force => true do |t|
@@ -156,6 +172,7 @@ ActiveRecord::Schema.define(:version => 20140504152321) do
     t.integer  "comment_id"
     t.datetime "created_at",      :null => false
     t.datetime "updated_at",      :null => false
+    t.index ["buysell_item_id", "comment_id"], :name => "index_buysell_item_comments_on_buysell_item_id_and_comment_id"
   end
 
   create_table "buysell_item_communities", :force => true do |t|
@@ -163,6 +180,7 @@ ActiveRecord::Schema.define(:version => 20140504152321) do
     t.integer  "community_id"
     t.datetime "created_at",      :null => false
     t.datetime "updated_at",      :null => false
+    t.index ["buysell_item_id", "community_id"], :name => "index_b_i_com"
   end
 
   create_table "buysell_item_photos", :force => true do |t|
@@ -170,6 +188,7 @@ ActiveRecord::Schema.define(:version => 20140504152321) do
     t.integer  "photo_id"
     t.datetime "created_at",      :null => false
     t.datetime "updated_at",      :null => false
+    t.index ["buysell_item_id", "photo_id"], :name => "index_buysell_item_photos_on_buysell_item_id_and_photo_id"
   end
 
   create_table "buysell_item_subcategories", :force => true do |t|
@@ -195,6 +214,9 @@ ActiveRecord::Schema.define(:version => 20140504152321) do
     t.string   "item_type"
     t.integer  "privacy"
     t.integer  "buysell_item_category_id"
+    t.index ["buysell_item_category_id", "buysell_item_subcategory_id"], :name => "index_b_i_cat_b_i_sub"
+    t.index ["buysell_item_category_id"], :name => "index_b_i_cat"
+    t.index ["buysell_item_subcategory_id"], :name => "index_b_i_subcat"
   end
 
   create_table "comments", :force => true do |t|
@@ -204,9 +226,11 @@ ActiveRecord::Schema.define(:version => 20140504152321) do
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
     t.integer  "photo_id"
+    t.index ["created_at"], :name => "index_comments_on_created_at"
+    t.index ["post_id"], :name => "index_comments_on_post_id"
+    t.index ["user_id", "created_at", "post_id"], :name => "index_comments_on_user_id_and_created_at_and_post_id"
+    t.index ["user_id"], :name => "index_comments_on_user_id"
   end
-
-  add_index "comments", ["user_id", "created_at", "post_id"], :name => "index_comments_on_user_id_and_created_at_and_post_id"
 
   create_table "communities", :force => true do |t|
     t.integer  "community_id"
@@ -221,6 +245,8 @@ ActiveRecord::Schema.define(:version => 20140504152321) do
     t.float    "latitude"
     t.float    "longitude"
     t.string   "comm_type"
+    t.index ["photo_id"], :name => "index_communities_on_photo_id"
+    t.index ["user_id"], :name => "index_communities_on_user_id"
   end
 
   create_table "communityposts", :force => true do |t|
@@ -228,6 +254,10 @@ ActiveRecord::Schema.define(:version => 20140504152321) do
     t.integer  "community_id"
     t.datetime "created_at",   :null => false
     t.datetime "updated_at",   :null => false
+    t.index ["community_id", "post_id"], :name => "index_communityposts_on_community_id_and_post_id", :unique => true
+    t.index ["community_id"], :name => "index_communityposts_on_community_id"
+    t.index ["post_id", "community_id"], :name => "index_communityposts_on_post_id_and_community_id", :unique => true
+    t.index ["post_id"], :name => "index_communityposts_on_post_id"
   end
 
   create_table "event_editor_groups", :force => true do |t|
@@ -235,55 +265,50 @@ ActiveRecord::Schema.define(:version => 20140504152321) do
     t.integer  "group_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.index ["event_id", "group_id"], :name => "index_event_editor_groups_on_event_id_and_group_id", :unique => true
+    t.index ["event_id"], :name => "index_event_editor_groups_on_event_id"
+    t.index ["group_id"], :name => "index_event_editor_groups_on_group_id"
   end
-
-  add_index "event_editor_groups", ["event_id", "group_id"], :name => "index_event_editor_groups_on_event_id_and_group_id", :unique => true
-  add_index "event_editor_groups", ["event_id"], :name => "index_event_editor_groups_on_event_id"
-  add_index "event_editor_groups", ["group_id"], :name => "index_event_editor_groups_on_group_id"
 
   create_table "event_editor_users", :force => true do |t|
     t.integer  "event_id"
     t.integer  "user_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.index ["event_id", "user_id"], :name => "index_event_editor_users_on_event_id_and_user_id", :unique => true
+    t.index ["event_id"], :name => "index_event_editor_users_on_event_id"
+    t.index ["user_id"], :name => "index_event_editor_users_on_user_id"
   end
-
-  add_index "event_editor_users", ["event_id", "user_id"], :name => "index_event_editor_users_on_event_id_and_user_id", :unique => true
-  add_index "event_editor_users", ["event_id"], :name => "index_event_editor_users_on_event_id"
-  add_index "event_editor_users", ["user_id"], :name => "index_event_editor_users_on_user_id"
 
   create_table "event_editors", :force => true do |t|
     t.integer  "event_id"
     t.integer  "user_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.index ["event_id", "user_id"], :name => "index_event_editors_on_event_id_and_user_id", :unique => true
+    t.index ["event_id"], :name => "index_event_editors_on_event_id"
+    t.index ["user_id"], :name => "index_event_editors_on_user_id"
   end
-
-  add_index "event_editors", ["event_id", "user_id"], :name => "index_event_editors_on_event_id_and_user_id", :unique => true
-  add_index "event_editors", ["event_id"], :name => "index_event_editors_on_event_id"
-  add_index "event_editors", ["user_id"], :name => "index_event_editors_on_user_id"
 
   create_table "event_invited_groups", :force => true do |t|
     t.integer  "event_id"
     t.integer  "group_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.index ["event_id", "group_id"], :name => "index_event_invited_groups_on_event_id_and_group_id", :unique => true
+    t.index ["event_id"], :name => "index_event_invited_groups_on_event_id"
+    t.index ["group_id"], :name => "index_event_invited_groups_on_group_id"
   end
-
-  add_index "event_invited_groups", ["event_id", "group_id"], :name => "index_event_invited_groups_on_event_id_and_group_id", :unique => true
-  add_index "event_invited_groups", ["event_id"], :name => "index_event_invited_groups_on_event_id"
-  add_index "event_invited_groups", ["group_id"], :name => "index_event_invited_groups_on_group_id"
 
   create_table "event_invited_users", :force => true do |t|
     t.integer  "event_id"
     t.integer  "user_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.index ["event_id", "user_id"], :name => "index_event_invited_users_on_event_id_and_user_id", :unique => true
+    t.index ["event_id"], :name => "index_event_invited_users_on_event_id"
+    t.index ["user_id"], :name => "index_event_invited_users_on_user_id"
   end
-
-  add_index "event_invited_users", ["event_id", "user_id"], :name => "index_event_invited_users_on_event_id_and_user_id", :unique => true
-  add_index "event_invited_users", ["event_id"], :name => "index_event_invited_users_on_event_id"
-  add_index "event_invited_users", ["user_id"], :name => "index_event_invited_users_on_user_id"
 
   create_table "eventdetails", :force => true do |t|
     t.integer  "event_id"
@@ -293,6 +318,9 @@ ActiveRecord::Schema.define(:version => 20140504152321) do
     t.string   "status"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.index ["event_id", "group_id"], :name => "index_eventdetails_on_event_id_and_group_id"
+    t.index ["event_id", "user_id"], :name => "index_eventdetails_on_event_id_and_user_id"
+    t.index ["event_id"], :name => "index_eventdetails_on_event_id"
   end
 
   create_table "events", :force => true do |t|
@@ -312,20 +340,20 @@ ActiveRecord::Schema.define(:version => 20140504152321) do
     t.float    "longitude"
     t.integer  "photo_id"
     t.boolean  "GuestsCanInvite"
+    t.index ["community_id"], :name => "index_events_on_community_id"
+    t.index ["creator", "created_at", "starts_at", "ends_at"], :name => "inx_evnts"
+    t.index ["starts_at"], :name => "index_events_on_starts_at"
   end
-
-  add_index "events", ["creator", "created_at", "starts_at", "ends_at"], :name => "inx_evnts"
 
   create_table "groupposts", :force => true do |t|
     t.integer  "post_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
     t.string   "group_id"
+    t.index ["group_id"], :name => "index_groupposts_on_group_id"
+    t.index ["post_id", "group_id"], :name => "index_groupposts_on_post_id_and_group_id", :unique => true
+    t.index ["post_id"], :name => "index_groupposts_on_post_id"
   end
-
-  add_index "groupposts", ["group_id"], :name => "index_groupposts_on_group_id"
-  add_index "groupposts", ["post_id", "group_id"], :name => "index_groupposts_on_post_id_and_group_id", :unique => true
-  add_index "groupposts", ["post_id"], :name => "index_groupposts_on_post_id"
 
   create_table "groups", :force => true do |t|
     t.string   "name"
@@ -336,9 +364,9 @@ ActiveRecord::Schema.define(:version => 20140504152321) do
     t.datetime "updated_at",   :null => false
     t.integer  "photo_id"
     t.integer  "community_id"
+    t.index ["User_id"], :name => "index_groups_on_User_id"
+    t.index ["community_id"], :name => "index_groups_on_community_id"
   end
-
-  add_index "groups", ["User_id"], :name => "index_groups_on_User_id"
 
   create_table "identities", :force => true do |t|
     t.string   "name"
@@ -394,15 +422,17 @@ ActiveRecord::Schema.define(:version => 20140504152321) do
     t.integer  "user_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.index ["user_id", "created_at"], :name => "index_microposts_on_user_id_and_created_at"
   end
-
-  add_index "microposts", ["user_id", "created_at"], :name => "index_microposts_on_user_id_and_created_at"
 
   create_table "photoalbums", :force => true do |t|
     t.integer  "photo_id"
     t.integer  "album_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.index ["album_id", "photo_id"], :name => "index_photoalbums_on_album_id_and_photo_id"
+    t.index ["album_id"], :name => "index_photoalbums_on_album_id"
+    t.index ["photo_id"], :name => "index_photoalbums_on_photo_id"
   end
 
   create_table "photos", :force => true do |t|
@@ -417,6 +447,8 @@ ActiveRecord::Schema.define(:version => 20140504152321) do
     t.integer  "user_id"
     t.string   "title"
     t.text     "description"
+    t.index ["post_id"], :name => "index_photos_on_post_id"
+    t.index ["user_id"], :name => "index_photos_on_user_id"
   end
 
   create_table "posts", :force => true do |t|
@@ -431,20 +463,20 @@ ActiveRecord::Schema.define(:version => 20140504152321) do
     t.integer  "postable_id"
     t.string   "postable_type"
     t.text     "title"
+    t.index ["postable_id", "postable_type"], :name => "index_posts_on_postable_id_and_postable_type"
+    t.index ["user_id", "created_at"], :name => "index_posts_on_user_id_and_created_at"
+    t.index ["user_id"], :name => "index_posts_on_user_id"
   end
-
-  add_index "posts", ["user_id", "created_at"], :name => "index_posts_on_user_id_and_created_at"
 
   create_table "relationships", :force => true do |t|
     t.integer  "follower_id"
     t.integer  "followed_id"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
+    t.index ["followed_id"], :name => "index_relationships_on_followed_id"
+    t.index ["follower_id", "followed_id"], :name => "index_relationships_on_follower_id_and_followed_id", :unique => true
+    t.index ["follower_id"], :name => "index_relationships_on_follower_id"
   end
-
-  add_index "relationships", ["followed_id"], :name => "index_relationships_on_followed_id"
-  add_index "relationships", ["follower_id", "followed_id"], :name => "index_relationships_on_follower_id_and_followed_id", :unique => true
-  add_index "relationships", ["follower_id"], :name => "index_relationships_on_follower_id"
 
   create_table "shares", :force => true do |t|
     t.integer  "share_id"
@@ -468,6 +500,7 @@ ActiveRecord::Schema.define(:version => 20140504152321) do
     t.string   "description"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
+    t.index ["description"], :name => "index_ticket_actions_on_description"
   end
 
   create_table "user_groups", :force => true do |t|
@@ -478,11 +511,11 @@ ActiveRecord::Schema.define(:version => 20140504152321) do
     t.integer  "community_id"
     t.string   "invitation"
     t.boolean  "is_admin"
+    t.index ["group_id"], :name => "index_user_groups_on_group_id"
+    t.index ["invitation", "is_admin"], :name => "index_user_groups_on_invitation_and_is_admin"
+    t.index ["user_id", "group_id"], :name => "index_user_groups_on_user_id_and_group_id", :unique => true
+    t.index ["user_id"], :name => "index_user_groups_on_user_id"
   end
-
-  add_index "user_groups", ["group_id"], :name => "index_user_groups_on_group_id"
-  add_index "user_groups", ["user_id", "group_id"], :name => "index_user_groups_on_user_id_and_group_id", :unique => true
-  add_index "user_groups", ["user_id"], :name => "index_user_groups_on_user_id"
 
   create_table "user_infos", :force => true do |t|
     t.string   "first_name"
@@ -502,6 +535,8 @@ ActiveRecord::Schema.define(:version => 20140504152321) do
     t.datetime "updated_at",          :null => false
     t.integer  "sn_link_id"
     t.integer  "user_id"
+    t.index ["sn_link_id"], :name => "index_user_infos_on_sn_link_id"
+    t.index ["user_id"], :name => "index_user_infos_on_user_id"
   end
 
   create_table "usercommunities", :force => true do |t|
@@ -512,6 +547,10 @@ ActiveRecord::Schema.define(:version => 20140504152321) do
     t.datetime "updated_at",   :null => false
     t.boolean  "is_admin"
     t.string   "invitation"
+    t.index ["community_id", "invitation"], :name => "index_usercommunities_on_community_id_and_invitation"
+    t.index ["community_id"], :name => "index_usercommunities_on_community_id"
+    t.index ["user_id", "invitation"], :name => "index_usercommunities_on_user_id_and_invitation"
+    t.index ["user_id"], :name => "index_usercommunities_on_user_id"
   end
 
   create_table "userlikes", :force => true do |t|
@@ -520,6 +559,8 @@ ActiveRecord::Schema.define(:version => 20140504152321) do
     t.string   "likeable_type"
     t.datetime "created_at",    :null => false
     t.datetime "updated_at",    :null => false
+    t.index ["likeable_id", "likeable_type"], :name => "index_userlikes_on_likeable_id_and_likeable_type"
+    t.index ["user_id"], :name => "index_userlikes_on_user_id"
   end
 
   create_table "users", :force => true do |t|
@@ -536,9 +577,8 @@ ActiveRecord::Schema.define(:version => 20140504152321) do
     t.string   "token"
     t.string   "fb_uid"
     t.integer  "address_id"
+    t.index ["email"], :name => "index_users_on_email", :unique => true
+    t.index ["remember_token"], :name => "index_users_on_remember_token"
   end
-
-  add_index "users", ["email"], :name => "index_users_on_email", :unique => true
-  add_index "users", ["remember_token"], :name => "index_users_on_remember_token"
 
 end
