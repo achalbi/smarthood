@@ -48,8 +48,8 @@ sbindir = $(exec_prefix)/sbin
 bindir = $(exec_prefix)/bin
 rubylibdir = $(rubylibprefix)/$(ruby_version)
 archdir = $(rubylibdir)/$(arch)
-sitelibdir = $(DESTDIR)/Sites/rails_project/EMS/development/ruby/1.9.1/gems/puma-2.9.0/ext/puma_http11/.gem.20140805-4280-1ha99qu
-sitearchdir = $(DESTDIR)/Sites/rails_project/EMS/development/ruby/1.9.1/gems/puma-2.9.0/ext/puma_http11/.gem.20140805-4280-1ha99qu
+sitelibdir = $(DESTDIR)/Sites/rails_project/EMS/development/ruby/1.9.1/gems/puma-2.9.0/ext/puma_http11/.gem.20140805-7904-1ygk4zc
+sitearchdir = $(DESTDIR)/Sites/rails_project/EMS/development/ruby/1.9.1/gems/puma-2.9.0/ext/puma_http11/.gem.20140805-7904-1ygk4zc
 vendorlibdir = $(vendordir)/$(ruby_version)
 vendorarchdir = $(vendorlibdir)/$(sitearch)
 
