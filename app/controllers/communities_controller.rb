@@ -96,7 +96,7 @@ class CommunitiesController < ApplicationController
    if @community.save
     if @community.photo.nil?
       @photo = Photo.new
-      @photo.remote_pic_url = "http://res.cloudinary.com/rashi/image/upload/v1404833168/Community_ohmyj0.png"
+      @photo.remote_pic_url = "http://res.cloudinary.com/rashi/image/upload/v1407379268/Community_jfiomx.png"
       @photo.save
       @community.photo = @photo 
     end
@@ -900,7 +900,7 @@ def search_app_user
 
       if @event.photo.nil?
         @photo = Photo.new
-        @photo.remote_pic_url = "http://res.cloudinary.com/rashi/image/upload/v1404833169/Event_s1xc7v.png"
+        @photo.remote_pic_url = "http://res.cloudinary.com/rashi/image/upload/v1407379267/Event_dcxifv.png"
         @photo.save
         @event.photo = @photo 
       end

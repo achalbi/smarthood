@@ -64,6 +64,5 @@ module EMS
 
     config.active_record.whitelist_attributes = true
 
-    config.threadsafe!
   end
 end

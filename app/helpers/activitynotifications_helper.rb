@@ -141,7 +141,7 @@ module ActivitynotificationsHelper
 			object = active_community
 		end
 		if(activityLevel==Privacyenum::PUBLIC)
-			@act_notif_sett = Activitynotificationsetting.where("user_id IN (?) AND community_id = ? AND comm_mem_act = 'all'",users, object.id ) 
+			@act_notif_sett = Activitynotificationsetting.where("user_id IN (?) AND community_id = ? AND cu_mem_act = 'all'",users, object.id ) 
 		elsif (activityLevel==Privacyenum::PRIVATE)
 			@act_notif_sett = Activitynotificationsetting.where("user_id IN (?) AND community_id = ? AND act_inv_me = 'all'",users, object.id ) 		
 		end
@@ -154,7 +154,7 @@ module ActivitynotificationsHelper
         @notifications_settings.app = true
         @notifications_settings.email = true
         @notifications_settings.phone = true
-        @notifications_settings.comm_mem_act = 'all'
+        @notifications_settings.cu_mem_act = 'all'
         @notifications_settings.act_inv_me = 'all'
         @notifications_settings.following_user_act = 'all'
         @notifications_settings.new_joiners = 'all'
