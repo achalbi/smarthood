@@ -33,7 +33,6 @@ gem 'koala'
 gem 'newrelic_rpm'
 gem "schema_plus"
 gem 'sanitize'
-gem 'puma'
 gem "rack-timeout"
 #gem 'schema_associations' #, '~> 1.2.2'
 #gem 'schema_validations' #, '~> 1.0.0'
@@ -74,6 +73,7 @@ end
 
 group :production do
   gem 'pg', '0.12.2'
+  gem 'puma'
 end
 
 # To use ActiveModel has_secure_password

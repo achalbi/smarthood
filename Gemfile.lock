@@ -139,6 +139,8 @@ GEM
       omniauth-oauth (~> 1.0)
     pg (0.12.2-x86-mingw32)
     polyglot (0.3.5)
+    puma (2.9.0)
+      rack (>= 1.1, < 2.0)
     rack (1.4.5)
     rack-cache (1.2)
       rack (>= 0.4)
@@ -253,6 +255,7 @@ DEPENDENCIES
   omniauth-identity
   omniauth-twitter
   pg (= 0.12.2)
+  puma
   rack-timeout
   rails (= 3.2.13)
   rails3-jquery-autocomplete
