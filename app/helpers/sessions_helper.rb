@@ -94,7 +94,7 @@ module SessionsHelper
   def fb_friends
       @friends = Array.new
     if session["fb_access_token"].present?
-      graph = Koala::Facebook::GraphAPI.new(session["fb_access_token"]) # Note that i'm using session here
+      graph = Koala::Facebook::API.new(session["fb_access_token"]) # Note that i'm using session here
       # @profile_image = graph.get_picture("me")
       # @fbprofile = graph.get_object("me")
       @friends = graph.get_connections("me", "friends")
@@ -108,7 +108,7 @@ module SessionsHelper
       @user = User.find_by_fb_uid(uid)
       if @user.blank?
         @user = User.create(fb_uid: uid)
-        graph = Koala::Facebook::GraphAPI.new(session["fb_access_token"]) # Note that i'm using session here
+        graph = Koala::Facebook::API.new(session["fb_access_token"]) # Note that i'm using session here
         @user.name = graph.get_object(uid)["name"]
         #@user.valid = false
         @user.save(validate: false)
