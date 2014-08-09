@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140807150125) do
+ActiveRecord::Schema.define(:version => 20140809052118) do
 
   create_table "activities", :force => true do |t|
     t.string   "title"
@@ -258,6 +258,21 @@ ActiveRecord::Schema.define(:version => 20140807150125) do
     t.index ["community_id"], :name => "index_communityposts_on_community_id"
     t.index ["post_id", "community_id"], :name => "index_communityposts_on_post_id_and_community_id", :unique => true
     t.index ["post_id"], :name => "index_communityposts_on_post_id"
+  end
+
+  create_table "delayed_jobs", :force => true do |t|
+    t.integer  "priority",   :default => 0, :null => false
+    t.integer  "attempts",   :default => 0, :null => false
+    t.text     "handler",                   :null => false
+    t.text     "last_error"
+    t.datetime "run_at"
+    t.datetime "locked_at"
+    t.datetime "failed_at"
+    t.string   "locked_by"
+    t.string   "queue"
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
+    t.index ["priority", "run_at"], :name => "delayed_jobs_priority"
   end
 
   create_table "event_editor_groups", :force => true do |t|

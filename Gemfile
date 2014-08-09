@@ -34,6 +34,8 @@ gem 'newrelic_rpm'
 gem "schema_plus"
 gem 'sanitize'
 gem "rack-timeout"
+gem 'delayed_job_active_record'
+gem 'daemons'
 #gem 'schema_associations' #, '~> 1.2.2'
 #gem 'schema_validations' #, '~> 1.0.0'
 #gem 'bootstrap-multiselect-rails'

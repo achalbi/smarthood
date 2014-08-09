@@ -66,7 +66,7 @@ class AuthenticationController < ApplicationController
           # flash[:notice] = "Signed up successfully."
            # Tell the UserMailer to send a welcome Email after save
           begin
-            UserMailer.welcome_email(user).deliver
+            UserMailer.delay.welcome_email(user)
           rescue Exception => e
             
           end
@@ -96,7 +96,7 @@ class AuthenticationController < ApplicationController
       #sign_in_and_redirect(:user, user)
       # Tell the UserMailer to send a welcome Email after save
       begin
-        UserMailer.welcome_email(user).deliver
+        UserMailer.delay.welcome_email(user)
       rescue Exception => e
         
       end
