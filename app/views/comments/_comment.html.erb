@@ -3,7 +3,7 @@
 <% if post.comments.count > 3 %>
 <a class="pull-right" id="cmnts_<%= post.id %>" style="cursor:pointer;margin-right:5px;font-size:13px;" >View more comments</a><br>
 <% end %>
-<% post.comments.reverse_each do |comment| %>
+<% post.comments.each do |comment| %>
 <% unless comment.id.nil? %>
   
 <ol style="padding:5px;margin:0;" class="comments_ol_<%= post.id %>" id="comments_ol_<%= comment.id %>">

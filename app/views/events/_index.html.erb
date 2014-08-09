@@ -3,7 +3,7 @@
 <div class="center loading_page active_hide" ><img src="/assets/loading.gif"></div>
 <%= link_to "List view", '#', id: "list_view",  class: "uibutton pull-left marginRight15" %>
 <%= link_to "Calendar view", '#', id: "fullCalendar_view",  class: "uibutton pull-left marginRight15 " %>
-  <%= link_to "Create Event", '#', id: "create_event",  class: " pull-left uibutton icon add" %>
+<!--   <%= link_to "Create Event", '#', id: "create_event",  class: " pull-left uibutton icon add" %> -->
 <span class="pull-right marginRight15">
 <%= select_tag :events_scope, options_for_select([["All Events", "all"], ["Active Community events", "active"], ["Events I created", "my"]], session['events_scope']), :onchange => "$.get('#{events_path}', {'events_scope':this.value}, null, 'script' );", class: "large pull-right"  %>
 </span>
@@ -64,7 +64,7 @@
       <%= render :partial => 'events/event', :locals => {:event => upcoming_event} %>
     <% end %>
       </div>  
-      <!-- <div id="loading_upcoming_events_paginate" class="center" ><img src="http://res.cloudinary.com/rashi/image/upload/v1377924529/loading7_gvb06y.gif"></div> -->
+      <!-- <div id="loading_upcoming_events_paginate" class="center" ><img src="http://res.cloudinary.com/rashi/image/upload/v1407379601/loading_ddb4yo.gif"></div> -->
   <% end %>  
 </ul>
 
@@ -79,7 +79,7 @@
     <% end %>
 
   </div>  
-    <!-- <div id="loading_past_events_paginate" class="center" ><img src="http://res.cloudinary.com/rashi/image/upload/v1377924529/loading7_gvb06y.gif"></div> -->
+    <!-- <div id="loading_past_events_paginate" class="center" ><img src="http://res.cloudinary.com/rashi/image/upload/v1407379601/loading_ddb4yo.gif"></div> -->
   <% end %>
 </ul>
 <br>
@@ -95,7 +95,7 @@
       <%= render :partial => 'events/event', :locals => {:event => today_event} %> 
     <% end %>
     </div>    
-    <div id="loading_today_events_paginate" class="center" ><img src="http://res.cloudinary.com/rashi/image/upload/v1377924529/loading7_gvb06y.gif"></div>
+    <div id="loading_today_events_paginate" class="center" ><img src="http://res.cloudinary.com/rashi/image/upload/v1407379601/loading_ddb4yo.gif"></div>
   <% end %>
 </ul>
 <br>
