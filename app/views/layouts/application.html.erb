@@ -212,7 +212,25 @@ function restartInterval(){
       }, 10000);
 }
 
-
+      function checkBrowser(){
+          c=navigator.userAgent.search("Chrome");
+          f=navigator.userAgent.search("Firefox");
+          if (c>-1){
+              brwsr = true;
+          }
+          else if(f>-1){
+              brwsr = true;
+          }
+          return brwsr;
+      }
+      
+       $(function(){
+         if(checkBrowser){
+           $("#login-page-check-compatibility").show();
+           $(".menu_login_container").show();
+           $("#browser-compatibility-div").hide();
+         }
+       });
 
 
 </script>

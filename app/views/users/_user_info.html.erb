@@ -73,7 +73,7 @@
                <div class="center_block clearfix">
                   <%= ui.label "Birthday" %>
                   <div id="dob_date" class="input">
-                  <%= ui.date_select :dob, :placeholder=>"Birthday" %>
+                  <%= ui.date_select :dob, :placeholder=>"Birthday",  start_year: 10.years.ago.year, end_year: 100.years.ago.year, prompt: { day: 'Select day', month: 'Select month', year: 'Select year' } %>
                   </div>
                </div>
                <div class="center_block clearfix">

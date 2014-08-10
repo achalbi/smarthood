@@ -266,7 +266,7 @@ end
 
 def declinerequest
  @usercommunity = Usercommunity.where(['community_id=? and user_id=?',params[:id],params[:user_id]])[0]
- if current_user.id = params[:user_id]
+ if current_user.id == params[:user_id]
    @usercommunity.invitation = Uc_enum::USER_DECLINED
  else
    @usercommunity.invitation = Uc_enum::MODERATOR_DECLINED
@@ -644,24 +644,26 @@ def search_app_user
   end
 
  def invite_fb_friends
-    @fb_uids = params[:ids].split(",")
-    @fb_uids.each do |uid|
-      @user = create_user_to_invite(uid[0],nil)
-      @usercommunity = Usercommunity.where('community_id=? and user_id=?',params[:id],@user.id)[0]
-      if @usercommunity.blank?
-       @usercommunity = Usercommunity.new 
-       @usercommunity.community_id = params[:id]
-       @usercommunity.user_id = @user.id
-       @usercommunity.is_admin = false
-       @usercommunity.status=""
-       @usercommunity.invitation = Uc_enum::INVITED
-     elsif (@usercommunity.invitation==Uc_enum::REQUESTED || @usercommunity.invitation==Uc_enum::MODERATOR_DECLINED)
-       @usercommunity.invitation = Uc_enum::JOINED
-     elsif  (@usercommunity.invitation == Uc_enum::USER_DECLINED || @usercommunity.invitation == Uc_enum::UNJOINED)
-       @usercommunity.invitation = Uc_enum::INVITED
-     end
-       @usercommunity.save
-   end
+    unless params[:ids].nil?
+        @fb_uids = params[:ids].split(",")
+        @fb_uids[0].each do |uid|
+          @user = create_user_to_invite(uid,nil)
+          @usercommunity = Usercommunity.where('community_id=? and user_id=?',params[:id],@user.id)[0]
+          if @usercommunity.blank?
+           @usercommunity = Usercommunity.new 
+           @usercommunity.community_id = params[:id]
+           @usercommunity.user_id = @user.id
+           @usercommunity.is_admin = false
+           @usercommunity.status=""
+           @usercommunity.invitation = Uc_enum::INVITED
+         elsif (@usercommunity.invitation==Uc_enum::REQUESTED)
+           @usercommunity.invitation = Uc_enum::JOINED
+         elsif  (@usercommunity.invitation == Uc_enum::USER_DECLINED || @usercommunity.invitation == Uc_enum::UNJOINED || @usercommunity.invitation==Uc_enum::MODERATOR_DECLINED)
+           @usercommunity.invitation = Uc_enum::INVITED
+         end
+           @usercommunity.save
+       end
+    end
  end
 
  def invite_by_email
@@ -784,10 +786,10 @@ def search_app_user
     @requested_users = nil
     @ucs = @community.usercommunities.where("user_id = ?  AND is_admin=?",current_user.id, true )
     if @ucs.count > 0
-      @requested_users = User.where(['id IN (?)' , @community.requested_uc.collect(&:user_id)])
+      @requested_users = User.where(['id IN (?)' , @community.requested_uc.pluck(:user_id)])
       @community.req_pending_cnt = @requested_users.count
     end
-    @inv_pending_users = User.where(['id IN (?)' , @community.invited_uc.collect(&:user_id)])
+    @inv_pending_users = User.where(['id IN (?)' , @community.invited_uc.pluck(:user_id)])
     @ucs = @community.usercommunities.where('invitation = ?',Uc_enum::JOINED)
  end
 
@@ -1030,8 +1032,8 @@ def search_app_user
     @ad_users = @event.eventdetails.where(" is_admin=?", true)
     @inv_users = @event.eventdetails.where(" is_admin=?", false)
     @fb_uids = params[:ids].split(",")
-    @fb_uids.each do |uid|
-      @user = create_user_to_invite(uid[0],nil)
+    @fb_uids[0].each do |uid|
+      @user = create_user_to_invite(uid,nil)
       if @ed_user.include?(@user.id)
         next
       end

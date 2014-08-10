@@ -1,6 +1,7 @@
                   <address>
                     <p><strong>Name : &nbsp;</strong><%= obj.name %></p>
                     <p><strong>Description : &nbsp;</strong><%= obj.description %></p>
+                    <p><strong>Type : &nbsp;</strong><%= obj.comm_type %></p>
                     <p><strong>Privacy : &nbsp;</strong><%= privacy_str(obj) %></p>
 
                     <p><strong><%= "Member".pluralize(obj.users_count) %> : &nbsp;</strong><%= pluralize(obj.users_count, "person") %>

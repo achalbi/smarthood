@@ -1,6 +1,7 @@
 <% provide(:title, 'Home') %>
 <% if signed_in? %>
   <% if is_community_active? %>
+<% provide(:page_image, active_community.photo.pic_url) %>
   <div class="row">
       <aside class="span6">
         <section>
@@ -20,7 +21,11 @@
 
 <% else %>
 <div class="hero-unit container-fluid " style="margin-top:70px;">
-  <div class="active_hide" style="width: 980px; margin: 0 auto" id="login-page-check-compatibility">
+  <div id="browser-compatibility-div" class="active_hide" ><h1 class="inlineBlock" style="padding: 42px 0 24px; font-size: 28px; line-height: 36px">Please use latest <a href="https://www.google.com/intl/en_in/chrome/browser/">Google Chrome</a> or <a href="http://www.mozilla.org/en-US/firefox/new/">Mozilla Firefox</a> Browser</h1>
+    <h1 class="center">-OR-</h1>
+    <h1>Firewall might have blocked this site, click <a href="https://www.smarthood.in/">here</a>  for secure site</h1>
+  </div>
+  <div class="" style="width: 980px; margin: 0 auto" id="login-page-check-compatibility">
     <aside>
       <section class="span8 center">
         <div >

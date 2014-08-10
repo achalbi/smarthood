@@ -34,7 +34,7 @@ gem 'newrelic_rpm'
 gem "schema_plus"
 gem 'sanitize'
 #gem "rack-timeout"
-gem 'delayed_job_active_record'
+#gem 'delayed_job_active_record'
 gem 'daemons'
 #gem 'sidekiq'
 #gem 'schema_associations' #, '~> 1.2.2'
@@ -53,7 +53,7 @@ group :development, :test do
   #gem 'redis'
   gem 'sqlite3', '1.3.5'
   gem 'rspec-rails', '2.11.0'
-  #gem 'debugger'
+  gem 'debugger'
 end
 
 group :development do
