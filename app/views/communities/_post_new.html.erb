@@ -22,7 +22,7 @@
                                    <li style="margin-left:5px;font-size:14px;line-height:1.5;padding: 2px 0 2px 0;" class="sel_grp_head timestamp hfive">Post to group</li>
                      <% unless @groups.blank? %>
                       <% @groups.each do |grp| %>
-                       <li id="grp_label_<%= grp.id %>" style="margin-left:5px;position:relative;width:180px;" class=" active_hide group pull-left" >
+                       <li id="grp_label_<%= grp.id %>" style="margin-left:5px;position:relative;width:180px;" class=" hide group pull-left" >
                         <%= link_to cl_image_tag(grp.photo.pic_url(:smallest), class:"image_al_c1 thumbnail pull-left ", id:"#{grp.photo.id}"), "#" %>
                                    <div style="margin-left:65px;margin-top:5px;">
                                     <address>

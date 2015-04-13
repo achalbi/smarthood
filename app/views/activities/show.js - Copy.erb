@@ -1,4 +1,4 @@
-$("#posts").html("<%= escape_javascript(render( :partial => 'posts/activity_post', :locals => {:post => @post}, :activity => @activity )) %><br><br><div id='div_post' class='resources'><%= escape_javascript(render( partial: 'posts/post', locals: {posts: @posts, activity: @activity} )) %> </div><p id='activity_id' class='active_hide'><%= @activity.id %></p>");
+$("#posts").html("<%= escape_javascript(render( :partial => 'posts/activity_post', :locals => {:post => @post}, :activity => @activity )) %><br><br><div id='div_post' class='resources'><%= escape_javascript(render( partial: 'posts/post', locals: {posts: @posts, activity: @activity} )) %> </div><p id='activity_id' class='hide'><%= @activity.id %></p>");
 $("#activity_events").html("<%= escape_javascript(render partial: 'events/about_activity', locals: {ad_users: @ad_users, inv_users: @inv_users, ad_groups: @ad_groups, inv_groups: @inv_groups, event: @event}) %>")
 $("#photos_events").html("<%= escape_javascript(render partial: 'events/albums', locals: {activity: @activity, albums: @albums, album: @album}) %> ");
 $(document).ready(function(){ $('#upload_pics').show();});

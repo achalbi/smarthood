@@ -10,7 +10,7 @@
 			<div id="div_post_<%= @group.id.to_s %>" class="resources">
 				<%= render partial: 'posts/post', locals: {posts: @posts, group: @group}  %>
 			</div>
-			<p id="group_id" class='active_hide'><%= @group.id %></p>
+			<p id="group_id" class='hide'><%= @group.id %></p>
     </div>
 			<div id="loading_page" class="center " ><img src="/assets/loading-sub.gif"></div>
 

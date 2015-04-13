@@ -1,5 +1,8 @@
 class SessionsController < ApplicationController
   def new
+      @user = env['omniauth.identity'] ||= User.new
+      @user.user_info = UserInfo.new
+      @user.address = Address.new
   end
 
   def create

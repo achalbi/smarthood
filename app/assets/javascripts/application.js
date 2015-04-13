@@ -10,16 +10,16 @@
 // WARNING: THE FIRST BLANK LINE MARKS THE END OF WHAT'S TO BE PROCESSED, ANY BLANK LINE SHOULD
 // GO AFTER THE REQUIRES BELOW.
 //
-
 //= require jquery
 //= require jquery_ujs
 //= require jquery.ui.all
-//= require bootstrap
 //= require jquery.remotipart
 //= require autocomplete-rails
 //= require jquery.tokeninput
-//= require fullcalendar
-
+//= require_tree ./adminre/a/.
+//= require ./adminre/vendor
+//= require ./adminre/core
+//= require_tree ./adminre/.
 //= require_tree .
 //= require_tree ../../../vendor/assets/javascripts/lightview/.
 //= require_tree ../../../vendor/assets/javascripts/spinners/.
@@ -27,6 +27,8 @@
 //= require_tree ../../../vendor/assets/javascripts/datetime/.
 //= require_tree ../../../vendor/assets/javascripts/sidemenu/.
 //= require_tree ../../../vendor/assets/javascripts/fancybox/.
+
+// fullcalendar
 
 // jquery.lazy-images
 // bootstrap-multiselect

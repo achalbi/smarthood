@@ -9,7 +9,7 @@
 <ol style="padding:5px;margin:0;" class="comments_ol_<%= post.id %>" id="comments_ol_<%= comment.id %>">
 <a href="/users/<%=comment.user.id %>/" data-remote="true" style="cursor:pointer;border:0px;padding:0px;" class="pop_up" rel="popover" data-content='<%= gravatar_for comment.user, size: 100 %>' data-original-title="<%= comment.user.name %>" ><%= gravatar_for comment.user, size: 40 %></a>
     <% if current_user?(comment.user) %>
-    <div class="pull-right active_hide" style="padding:5px 0 0 5px;margin:1px 0 0 0;" id="comments_del_<%= comment.id %>">
+    <div class="pull-right hide" style="padding:5px 0 0 5px;margin:1px 0 0 0;" id="comments_del_<%= comment.id %>">
              <strong style="font-size:11px;margin-right:3px;"> <%= link_to "×", comment, method: :delete, remote: true, style: "color:#99A7C3 !important;",
                                                data: { confirm: "You sure?" },
                                                title: "delete the comment" %></strong>
@@ -44,9 +44,9 @@ $("#comments_del_<%= comment.id %>").click(function(){
 <%= gravatar_for(current_user, size: 38) %>
 <%= form_for [post.comments.build], remote: true, html: {style: "margin-bottom: 0px;", id: "comment_#{post.id}"}  do |f| %>
     <%= f.text_field :content, :placeholder=>"Comment...", style: 'width:465px;', :title => "Comment", 'data-validation' => "required", 'data-validation-error-msg' => "Comment can't be blank"  %>
-    <div class="center loading_page_<%= post.id %> pull-right active_hide" style="padding:0 5px;margin:0 8px;"><img src="/assets/loading.gif"></div>
+    <div class="center loading_page_<%= post.id %> pull-right hide" style="padding:0 5px;margin:0 8px;"><img src="/assets/loading.gif"></div>
     <%= f.hidden_field :post_id %>
-    <div class="active_hide pull-left">
+    <div class="hide pull-left">
       <%= f.submit "Post", class: "btn primary" %>
     </div>
 <% end %>

@@ -1,39 +1,29 @@
 <% provide(:title, "Reset password") %>
-
-
-<div class="container  center-signin uiBoxWhite">
-  <div class="span14 signin-name-div"><h3 class="signin-name">Reset password</h3><br>
-      <div class="alert-message block-message error">    
+<div class="col-md-6 col-md-offset-3">
+  <div class="signin-name-div"><h3 class="signin-name">Reset password</h3><br>
+      <div class="alert-message block-message error primary">    
         <p><strong>Forgot your password?</strong></p><br>
         <ul class="post_grid">
-          <li>Please enter the correct email address below.</li><br>
-          <li>A link will be sent to your email, please click on it within 2 hours to reset your password.</li><br>
+          <li>Please enter the correct email address below.</li>
+          <li>A link will be sent to your email, please click on it within 2 hours to reset your password.</li>
           <li>To reset your Facebook account password click <a href="https://www.facebook.com/recover/initiate" target="_blank">here</a>.</li>
         </ul>
       </div>
   </div>
-  <div class="row">
-
+  <div>
     <%= form_tag password_resets_path, :method => :post do %>
-  
-    <div class="center_block clearfix signin-maginleft">
-      <%= label_tag :email, "Email: " %>
-      <div class="input">
-    	<%= text_field_tag :email, params[:email] %>
-      </div>
-    </div>
-
-    <div class="center_block clearfix signin-maginleft">
-      <div class="input">
-        <%= submit_tag "Reset Password", :class=>"btn primary"%> or <%= link_to "Sign up for Smarthood", root_path , class: "font_strong" %>
-      </div>
-    </div>
-    
-
-  <% end %>
-
-
-
+             <div class = "form-group">
+                <%= label_tag :email, "Email: ", class: "control-label col-xs-12 pull-left mt5" %>
+              <div class = "col-xs-12">
+                  <%= text_field_tag :email, params[:email], class: "form-control" %>
+              </div>
+            </div>
+            <div class = "col-xs-12 form-group mt15"> 
+                <%= submit_tag "Reset", class: "btn btn-info col-xs-4 col-xs-offset-1 pull-right"%>
+                <%= link_to "Sign up", root_path(:page => "signup") , class: "btn btn-success col-xs-4" %>
+            </div>
+    <% end %>
   </div>
 </div>
+
 

@@ -7,7 +7,7 @@ $(document).ready(function(){
 </script>
 <div class="row">
   <aside class="span6">
-    <section id="cu_pic" class="active_hide">
+    <section id="cu_pic" class="hide">
     <% unless @selected_community.nil? %>
       <%= render partial: 'communities/cu_pic', locals: {community: @selected_community} %>
     <% end %>

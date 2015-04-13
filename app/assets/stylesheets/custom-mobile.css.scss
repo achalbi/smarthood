@@ -1,0 +1,19 @@
+/* mobile styles */
+
+@media (max-width: 767px) {
+    .center-xs {
+        text-align: center!important;
+        margin-left: auto!important;
+        margin-right: auto!important;    
+    }
+    .mt5-xs{
+        margin-top: 5px;
+    }
+    
+    
+}
+@media (min-width: 992px) {
+    .pt30-percent{
+        padding-top: 30%;
+    }
+}

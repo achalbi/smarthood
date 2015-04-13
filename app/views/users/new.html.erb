@@ -1,33 +1,33 @@
 <% provide(:title, 'Home') %>
-<div class="hero-unit container-fluid " style="margin-top:70px;">
-  <div class="" style="width: 980px; margin: 0 auto">
-    <aside>
-      <section class="span8 center">
-        <div >
-          <h1 class="inlineBlock" style="padding: 42px 0 24px; font-size: 28px; line-height: 36px">
-            Come unite with friends, neighbours and the
-            <br>
-            world around you on Smarthood. 
-          </h1>
+ <div class = "">
+    <div class = "col-md-4 col-xs-12">
+        <div class = "pt30-percent">
+          <h3 class=" hidden-xs color-dark-blue ">
+             Come unite with friends, neighbours and the world around you on Smarthood. 
+          </h3>
+            <h5 class="text-muted visible-md">
+              It’s free. If you have Facebook account, just login with it.
+            </h5>
         </div>
-      </section>
-    </aside>
-  <div class="span13">
-  <h1 style="font-size: 36px">
+          <a href="#" id="sign_in_fb" class="btn btn-primary col-xs-6 sign_in_fb ml40 mt25 hidden-xs hidden-sm">Log In with <i class="fa fa-facebook"></i> </a>
+   </div>
+  <div class="col-md-8 col-xs-12 text-color">
+     <div>
+    <h3 id  = "sign_up_header" class = "hidden-xs center">
       Sign Up
-    </h1>
-    <h5 class="center">
-      It’s free. If you have Facebook account, just login with it.
-    </h5>
-    <br>
-    <div>
+    </h3>
+    <h3 id  = "log_in_header" class = "hidden-sm hidden-md hidden-lg center">
+      Log in
+    </h3>
+     <h5 class="text-muted center visible-xs">
+              It’s free. If you have Facebook account, just login with it.
+            </h5>
       <div>
         <noscript>
           &lt;div id="no_js_box"&gt;&lt;h2&gt;JavaScript is disabled on your browser.&lt;/h2&gt;&lt;p&gt;Please enable JavaScript on your browser or upgrade to a JavaScript-capable browser to register for Facebook.&lt;/p&gt;&lt;/div&gt;
         </noscript>
+      </div>
     </div>
-    <%= render 'static_pages/user_info_login' %>
+      <%= render 'static_pages/user_info_login' %>
   </div>
-  </div>
-</div>
 </div>

@@ -103,7 +103,7 @@
                   <%= link_to cu.name, cu, remote:true, style: "font-size:12px;line-height:2;margin-left:10px; word-wrap:break-word;pull-left"  %><%= "," if post.communities.count != j %> 
                   </strong>
                   </div>
-                  <div  class="showmore active_hide com_show_more<%= post.id %> pull-left">
+                  <div  class="showmore hide com_show_more<%= post.id %> pull-left">
                   <li style="margin-left:5px;position:relative;width:180px;" class="pull-left">
                     <%= link_to cl_image_tag(cu.photo.pic_url(:smallest), class:"image_al_c1 thumbnail pull-left ", id:"#{cu.photo.id}"), "#" %>
                     <div style="margin-left:65px;margin-top:5px;">
@@ -137,7 +137,7 @@
                   <%= link_to group.name, group, remote:true, style: "font-size:12px;line-height:2;margin-left:10px; word-wrap:break-word;pull-left"  %><%= "," if post.groups.count != i %> 
                   </strong>
                   </div>
-                  <div  class="showmore active_hide com_show_more<%= post.id %> pull-left">
+                  <div  class="showmore hide com_show_more<%= post.id %> pull-left">
                     <li style="margin-left:5px;position:relative;width:180px;" class="pull-left">
                     <%= link_to cl_image_tag(group.photo.pic_url(:smallest), class:"image_al_c1 thumbnail pull-left ", id:"#{group.photo.id}"), "#" %>
                     <div style="margin-left:65px;margin-top:5px;">

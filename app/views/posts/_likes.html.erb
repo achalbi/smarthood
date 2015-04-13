@@ -9,11 +9,11 @@
         <% end %>
         <span style="font-size:13px;">
         <% if @Ulikes %>
-            <%= link_to "Unlike", userUnlike_posts_path(post_id: post.id), remote:true %><span class="timestamp active_hide" >&nbsp; - &nbsp;</span><a class="disabled active_hide" id="share_<%= post.id %>">Share</a><br> 
+            <%= link_to "Unlike", userUnlike_posts_path(post_id: post.id), remote:true %><span class="timestamp hide" >&nbsp; - &nbsp;</span><a class="disabled hide" id="share_<%= post.id %>">Share</a><br> 
             <div>You <% if post.userlikes.count>1 %> and <abbr id="<%= post.id %>_hover"  title="<% post.userlikes.each do |likes| %><div><%= likes.user.name %></div><% end %>"><a class="disabled"  id="show_like_<%= post.id %>" title="" title=""><%= post.userlikes.count-1 %> <%= "other".pluralize(post.userlikes.count) %></a></abbr> <% end %> like this</div>
              
         <% else %>
-            <%= link_to "Like", userLike_posts_path(post_id: post.id), remote:true %><span class="timestamp active_hide" >&nbsp; - &nbsp;</span><a class="disabled active_hide" id="share_<%= post.id %>">Share</a><br> 
+            <%= link_to "Like", userLike_posts_path(post_id: post.id), remote:true %><span class="timestamp hide" >&nbsp; - &nbsp;</span><a class="disabled hide" id="share_<%= post.id %>">Share</a><br> 
             <% if post.userlikes.count>0 %>
               <% if post.userlikes.count==1 %>
                 <div><%= post.userlikes[0].user.name  %> likes this</div>

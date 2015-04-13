@@ -31,7 +31,7 @@ class UsersController < ApplicationController
       authentication = Authentication.create(:provider => 'identity', :uid => @user.id, :user_id => @user.id)
   		#flash[:success] = "User Created successfully!!!"
       # Tell the UserMailer to send a welcome Email after save
-        UserMailer.welcome_email(@user).deliver
+      #  UserMailer.welcome_email(@user).deliver
         sign_in @user
   		  redirect_to root_path
   	else 

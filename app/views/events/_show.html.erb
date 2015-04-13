@@ -80,7 +80,7 @@
     </section>
       
    </aside>
-<div class="center loading_page active_hide" ><img src="/assets/loading.gif"></div>
+<div class="center loading_page hide" ><img src="/assets/loading.gif"></div>
 
 <div class="span13" style="margin-top:10px;">
 <div id="event_list">
@@ -204,7 +204,7 @@
                   <%= f.text_field :address, :placeholder => :location, :size => 43, class: 'events_with_autocomplete inherit_width', 'data-autocompleteUrl' => search_address_events_path , 'data-validation' => "length",
      'data-validation-length' =>"3-250", 'data-validation-error-msg' => "The event address has to be a value between 3-250 characters" %>&nbsp;&nbsp;&nbsp;
                 
-                  <%= link_to "View map", '#', id: "view_map_link_event",  class: "uibutton icon prev active_hide" %>
+                  <%= link_to "View map", '#', id: "view_map_link_event",  class: "uibutton icon prev hide" %>
                 </div>
                 <div class="input" id="view_map">
                 

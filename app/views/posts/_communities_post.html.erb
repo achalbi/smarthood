@@ -1,4 +1,4 @@
-<div class="center loading_page active_hide" ><img src="/assets/loading.gif"></div>
+<div class="center loading_page hide" ><img src="/assets/loading.gif"></div>
 <div id="image" style="display:block;width:585px;">
   <%= form_for(@post, remote: true,  :html => {:multipart => true, id: "communities_post"}) do |f| %>
   <div id="textarea_div" style="border: 1px solid #d4dae8;overflow: hidden;background-color:#f2f2f2;">
@@ -22,7 +22,7 @@
       <li style="margin-left:5px;font-size:14px;line-height:1.5;padding: 2px 0 2px 0;" class="sel_com_head timestamp hfive">Post to community</li>
   <% @communities.each do |cu| %>
       <!--     <div id="cu_label_<%= cu.id %>" style="display:none;margin:5px;" class="pull-left"><%=link_to cu.name, cu, remote: true %> </div> -->
-       <li id="cu_label_<%= cu.id %>" style="margin-left:5px;position:relative;width:180px;" class=" active_hide community pull-left" >
+       <li id="cu_label_<%= cu.id %>" style="margin-left:5px;position:relative;width:180px;" class=" hide community pull-left" >
         <%= link_to cl_image_tag(cu.photo.pic_url(:smallest), class:"image_al_c1 thumbnail pull-left ", id:"#{cu.photo.id}"), "#" %>
         <div style="margin-left:65px;margin-top:5px;">
            <address>

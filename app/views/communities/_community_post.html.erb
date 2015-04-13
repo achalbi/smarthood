@@ -13,7 +13,7 @@
                   <%= render 'posts/post' %>
                
               </div>
-               <div id="loading_page" class="center active_hide loading_page" ><img src="/assets/loading-sub.gif"></div>
+               <div id="loading_page" class="center hide loading_page" ><img src="/assets/loading-sub.gif"></div>
             </div>
 
 </div>
@@ -167,7 +167,7 @@ $('#posts_community_li').click(function(){
 <% else %>
   
 <!-- 
-<div class="center loading_page active_hide" ><img src="/assets/loading.gif"></div>
+<div class="center loading_page hide" ><img src="/assets/loading.gif"></div>
 <div id="aboutDiv">
  <% if @selected_community.is_private?(current_user) %>
      <% unless @selected_community.is_requested?(current_user) %>

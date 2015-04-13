@@ -50,7 +50,7 @@
       <%= render partial: 'shared/event_stats', locals: {ad_users: @ad_users, inv_users: @inv_users, ad_groups: @ad_groups, inv_groups: @inv_groups} %>
     </div>
     </aside> -->
-<div class="center loading_page active_hide" ><img src="/assets/loading.gif"></div>
+<div class="center loading_page hide" ><img src="/assets/loading.gif"></div>
 
 <div id="event_list" class="span13" style="margin-top:10px;">
   <%= render partial: "events/event_links", locals: { event: @event } %>
@@ -72,7 +72,7 @@
               <div id="div_post" class="resources<%= @activity.id %>">
                 <%= render partial: 'posts/post', locals: {posts: @posts, activity: @activity}  %>
               </div>
-              <p id="activity_id" class='active_hide'><%= @activity.id %></p>
+              <p id="activity_id" class='hide'><%= @activity.id %></p>
                <div id="loading_page" class="center" ><img src="http://res.cloudinary.com/rashi/image/upload/v1377924529/loading7_gvb06y.gif"></div>
             </div>
 			</ul>

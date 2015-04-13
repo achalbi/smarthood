@@ -8,7 +8,7 @@ class PasswordResetsController < ApplicationController
     	user.send_password_reset
     	redirect_to root_url, :notice => "Email sent with password reset instructions."
     else
-    	render 'new' 
+    	render 'new'
     end
   end
 

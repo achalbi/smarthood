@@ -47,7 +47,7 @@
 				</span> 
 			</h4>
 		</div>
-		<div class="active_hide">
+		<div class="hide">
 			<%= submit_tag "Search", class: "uibutton pull-right ", id: "search_submit" %>  
 		</div>
 		<% end %>
@@ -159,7 +159,7 @@
            </div>
             <div class="modal-footer" >
               <%= f.submit "Create", class: "btn primary pull-right ", id: "create_issue_submit" %> 
-                    <%= f.submit "", :class => 'active_hide reset_form', :type => 'reset' %> 
+                    <%= f.submit "", :class => 'hide reset_form', :type => 'reset' %> 
  
             </div>
           </div>          

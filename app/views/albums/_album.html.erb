@@ -85,7 +85,7 @@
                   </a> 
                   
         <% if @album.user == current_user  && @album.photos.count > 1 %>
-                  <div class="btn_overlay_cu_cover_pic active_hide">
+                  <div class="btn_overlay_cu_cover_pic hide">
                     <%= link_to "Delete", photo , method: :delete, class: "uibutton danger pull-right photo_del", remote: true, title: "Delete photo" %>
                   </div>
         <% end %>
@@ -155,7 +155,7 @@
  </div>
  <div class="modal-footer" >
   <%= f.submit "Update", class: "btn primary pull-right busy", id: "updAlb_com" %> 
-  <%= f.submit "", :class => 'active_hide reset_form', :type => 'reset' %> 
+  <%= f.submit "", :class => 'hide reset_form', :type => 'reset' %> 
 
 </div>
 </div>
