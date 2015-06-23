@@ -1,7 +1,7 @@
-    <ul class="tabs">
+    <!--<ul class="tabs dis-none">
         <%= render 'communities/links', locals: { community: @selected_community} %>
-  </ul>
-  <div id="image" style="display:block;width:565px;" >
+  </ul>-->
+  <div id="image" >
     <% if @selected_community.is_active?(current_user, @selected_community) %>
     <% unless (@selected_community.privacy == Privacyenum::PROTECTED && !current_user.is_cu_admin?(@selected_community)) %>
       <div id="div_new_post">
@@ -13,10 +13,9 @@
                   <%= render 'posts/post' %>
                
               </div>
-               <div id="loading_page" class="center hide loading_page" ><img src="/assets/loading-sub.gif"></div>
             </div>
+               <div id="loading_page" class="center loading_page_post"></div>
 
-</div>
 
 <script type="text/javascript">
 <% if @selected_community.is_active?(current_user, @selected_community) %>

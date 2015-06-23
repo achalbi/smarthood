@@ -1,5 +1,5 @@
 <%= form_for(current_user.user_groups.find_by_group_id(group.id),
              html: { method: :delete },
              remote: true) do |f| %>
-  <%= f.submit "Unfollow", class: "btn btn-large" %>
+  <%= f.submit "Unfollow", class: "btn btn-warning secure pull-right show_loading mr5" %>
 <% end %>

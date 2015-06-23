@@ -1,15 +1,12 @@
 <% unless activity.is_admin %>
-<li class="sidetabs" style="list-style-type: none;padding:5px; margin:5px;">
-
-      <h6><%= link_to  activity.title, activity, id: "act_#{activity.id}", remote: true %></h6>
-
-     <!-- <span class="content"><%= activity.description %><br></span>   -->
+<li class="sidetabs ml5">
+      <%= link_to  activity.title, activity, id: "act_#{activity.id}", remote: true %>
 </li>
 <%= link_to(activity, remote: true) do %>
 <% end %>
 <% end %>
 <script type="text/javascript">
-
+  
 $(".sidetabs").click(function(){
   $(".sidetabs").removeClass('sidetabs_selected');
   $(this).addClass('sidetabs_selected');

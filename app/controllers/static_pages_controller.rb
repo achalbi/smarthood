@@ -3,11 +3,13 @@ class StaticPagesController < ApplicationController
     if signed_in?
       #@comm_id = current_user.usercommunities.where("is_admin=? OR invitation != ?", true, Uc_enum::JOINED ).collect(&:community_id)
       #@comm_id << active_community.id
-      #@joined_communities = Community.where(['id IN (?) and id NOT IN (?)', current_user.joined_uc.collect(&:community_id), @comm_id]) 
+      #@joined_communities = Community.where(['id IN (?) and id NOT IN (?)', current_user.joined_uc.collect(&:community_id), @comm_id])
+      set_community_active('1')
       @joined_communities = Community.where(['id IN (?)', current_user.joined_uc.collect(&:community_id)]) 
       @selected_comm = []
       @selected_comm << active_community
-
+      @community = active_community
+      @community.name = "Home"
       @post = Post.new
       @cu_ids = current_user.joined_uc.pluck(:community_id)
       @communities = Community.where('id IN (?) ', @cu_ids)

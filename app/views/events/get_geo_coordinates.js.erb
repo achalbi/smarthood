@@ -1,2 +1,12 @@
+$('#hide_map_link_act').show();
+<!--$('#view_map_link_act').hide();-->
+$('#view_map_link').hide();
+$('#hide_map_link').show();
+$('#view_map_link_event').hide();
+$('#hide_map_link_event').show();
+$('#view_map_link_activity').hide();
+$('#hide_map_link_activity').show();
 $('#view_map').html('<%= escape_javascript(render :partial => "events/maps", :locals => { :location => @event }) %>');
+$('#view_map_act').html('<%= escape_javascript(render :partial => "events/maps", :locals => { :location => @event }) %>');
 $('#view_map').show();
+$('#view_map_act').show();

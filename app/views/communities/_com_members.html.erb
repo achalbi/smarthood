@@ -1,76 +1,84 @@
-<table class="span6">
-        <thead>
-          <tr class="tr-hover">
-            <th >
-             <%="Moderator".pluralize(ad_users.count) %>
+                               
+            <!-- <%="Moderator".pluralize(ad_users.count) %>
                 <% if current_user.is_cu_admin?(community) %>
                  <%= link_to "edit", '#', id: "moderator",  class: "uibutton icon edit pull-right button_toggle" %>
                 <% end %>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-            <% ad_users.each do |user|%>
-          <tr class="tr-hover">
-            <td>
-            <div  class="img_zoom" style="float:left;" >
-              <%= gravatar_for user, size: 52 %>
-            </div>
-                <address>
-                  <strong> <%= link_to user.name, user %></strong><br>
-                  <a mailto="<%= user.email %>"><%= user.email %></a>
-                </address>
-              <p>
-                <% if current_user.is_cu_admin?(community) && user.id != current_user.id %>
-                        <%= link_to "Remove", "/communities/#{community.id}/remove_user_cu?user_id=#{user.id}", class: "uibutton pull-right button_toggle remove_user", remote: true %>
-                    <% end %>
-              </p>               
-            </td>
-          </tr>
-          <% end %>
-            
-        </tbody>
-      </table>
+            -->
+                        
+                               <!-- <span class="">
+                                    <%="Moderator".pluralize(ad_users.count) %>
+                                    <% if current_user.is_cu_admin?(community) %>
+                                     <%= link_to "edit", '#', id: "moderator",  class: "uibutton icon edit pull-right button_toggle" %>
+                                    <% end %>
+                                </span>
+                            -->
+                                      
+                <div class="" id="show_com_moderators">
+                      <ul class="list-unstyled mb0">
+                       <% ad_users.each do |user|%>
+                            <li>
+                                <div class="col-sm-6 pl0 pr5 mb5">
+                                    <div class="panel widget nm">
+                                        <div class="table-layout nm">
+                                            <img src="<%= gravatar_for_url user, size: 82 %>" class="pull-left gravatar" ></img>
+                                            <span class="badge badge-success pull-right mr10 mt5">moderator</span>
+                                            <div class=" valign-middle">
+                                                <div class="panel-body mt5 pt10 pl95 pb0 pr0">
+                                                    <p class="semibold mt0 mb0 ellipsis"><%= link_to user.name, user, remote: true %></p>
+                                                    <p class="mb0 ellipsis"><a class=" text-muted mb0" mailto="<%= user.email %>"><%= user.email %></a></p>
+                                                    <p>
+                                                      <% if current_user.is_cu_admin?(community) && user.id != current_user.id %>
+                                                        <%= link_to "Remove", "/communities/#{community.id}/remove_user_cu?user_id=#{user.id}", class: "uibutton pull-right button_toggle remove_user", remote: true %>
+                                                      <% end %>
+                                                    </p>    
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        <% end %>
+                      </ul>
+                    </div>
+                   
 
-      <table class="span6">
-        <thead>
-          <tr class="tr-hover">
-            <th >
-              <%="Member".pluralize(inv_users.count) %>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
+        
+                       
+                               <!-- <span class=""><%="Member".pluralize(inv_users.count) %></span>-->
+                            
+        
+              <!--<%="Member".pluralize(inv_users.count) %>-->
+              
+          <div id="show_com_members">
+            <ul class="list-unstyled mb0">
           <% if inv_users.count > 0 %>
             <% inv_users.each do |user|%>
-              <tr class="tr-hover" >
-                <td >
-                <div  class="img_zoom" style="float:left;" >
-                  <%= gravatar_for user, size: 52 %>
-                </div>
-                    <address>
-                      <strong> <%= link_to user.name, user %></strong><br>
-                      <a mailto="<%= user.email %>"><%= user.email %></a>
-                    </address>
-                  <p>
-                    <% if current_user.is_cu_admin?(community) && user.id != current_user.id %>
-                        <%= link_to "Remove", "/communities/#{community.id}/remove_user_cu?user_id=#{user.id}", class: "uibutton pull-right button_toggle remove_user", remote: true %>
-                    <% end %>
-                  </p>               
-                </td>
-              </tr>
+               <div class="col-sm-6 pl0  pr5 mb5">
+                        <div class="panel widget nm">
+                            <div class="table-layout nm">
+                                <img src="<%= gravatar_for_url user, size: 82 %>" class="pull-left gravatar" ></img>
+                                <div class=" valign-middle">
+                                    <div class="panel-body mt5 pl95 pb0 pr0">
+                                        <p class=" ellipsis semibold text-muted mt0 mb0"><%= link_to user.name, user, remote: true %></h5>
+                                        <p class="mb0 ellipsis"><a class="text-muted" mailto="<%= user.email %>"><%= user.email %></a></p>
+                                        <p>
+                                          <% if current_user.is_cu_admin?(community) && user.id != current_user.id %>
+                                              <%= link_to "Remove", "/communities/#{community.id}/remove_user_cu?user_id=#{user.id}", class: "uibutton pull-right button_toggle remove_user", remote: true %>
+                                          <% end %>
+                                        </p>    
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
             <% end %>
+            </ul>
+         
           <% else %>
-          <tr>
-            <td>
               <address>No Members in the group</address>
-            </td>
-          </tr>
           <% end %>
-            
-        </tbody>
-      </table>
-
+        </div>
+       
 
 <script type="text/javascript">
 

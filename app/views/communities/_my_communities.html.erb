@@ -61,12 +61,15 @@
         </div>
       </div>
 <script type="text/javascript">
-$("li.community").click(function(){
+$("li.my-com").click(function(){
   $(this).next('a').click();
-  $('.loading_page').show();
+   $(this).next('a').click(function(){
+  alert($(this).length);
+     });
+//  $('.loading_page').show();
 });
-
 $(function(){
+
   $('#moderated_community_div').show();
   $('#member_community_div').hide();
   $('#active_community_div').hide();

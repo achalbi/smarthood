@@ -1,12 +1,11 @@
 <div id="posts_groups">  
-	<ul class="users" id="posts_groups_ul" >
-		<div id="posts" style="overflow:auto;">
+	<ul class="" id="posts_groups_ul" >
+		<div id="posts">
       <% if community.is_active?(current_user, community) %>
         <% if @group.is_joined?(current_user, @group) %>
 			   <%= render :partial => 'posts/group_post', :locals => {:post => @post, :group => @group} %>
         <% end %>
       <% end %>
-			<br>
 			<div id="div_post_<%= @group.id.to_s %>" class="resources">
 				<%= render partial: 'posts/post', locals: {posts: @posts, group: @group}  %>
 			</div>
@@ -15,7 +14,6 @@
 			<div id="loading_page" class="center " ><img src="/assets/loading-sub.gif"></div>
 
 	</ul>
-	<br>
 </div>
 <script type="text/javascript">
 
@@ -40,6 +38,7 @@ function checkScroll_grp_post() {
     jQuery.ajax('/groups/post_paginate?id=<%= @group.id.to_s %>&page=' + currentPage<%= @group.id.to_s %>  , {asynchronous:true, evalScripts:true, method:'get', success: function(data, textStatus, jqXHR) {
     $('#div_post_<%= @group.id.to_s %>').append($(data));
     $('#loading_page').hide();
+    console.log($(data).find('.paginate_do').html());
     if(typeof jQuery(data) == 'undefined' ||jQuery(data).html() == null || $(data).find('.paginate_do').html()==null){
       clearInterval(intervalID);
       for (var i = 1; i < 99999; i++){

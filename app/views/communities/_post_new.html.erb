@@ -1,62 +1,90 @@
-        <%= form_for(Post.new, remote: true,  :html => {:multipart => true}) do |f| %>
-            <div id="textarea_div" style="border: 1px solid #d4dae8;overflow: hidden;background-color:#f2f2f2;">
+        <%= form_for(Post.new, remote: true,  :html => {:multipart => true, class: "panel mb10"}) do |f| %>
+            <div id="textarea_div">
             <%= render 'shared/error_messages', object: f.object %>
                         <%= fields_for :photo, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
                          
                         <%= photo_form.file_field :pic, id: "pic1",style: "width:1px; height:1px; padding:0px;  left:0px;display:none;" %>  
 
                         <% end %>
-                         <div class=" pull-left">
-                            <%= f.text_area :content, placeholder: "Compose new post...", :rows=>6, class: "span10", 'data-validation' => "required", 'data-validation-error-msg' => "Post can't be blank" %>
-                         <canvas id="imageCanvas1" style = "border: 1px solid #ddd; padding:2px; align:center;cursor:pointer; background-color:#ffffff;" width="132px" height="88px">Add pictures</canvas>
-                        </div> 
-
-                      <% unless @groups.blank? %>
-                        <%= link_to  "Select groups","#", id: "group_post_select", class: "uibutton pull-left" %>
-                      <% end %>
-                     <%= f.submit "Post", id: "community_post_submit", class: "btn primary pull-right" %>
-                     <%= hidden_field_tag :type, "community" %> 
-                     <%= hidden_field_tag :id, @community.id %> 
-                     <div id="sel_grp_label"></div>
-                     <ul class="users"style="display: block;margin-top:120px;" >
-                                   <li style="margin-left:5px;font-size:14px;line-height:1.5;padding: 2px 0 2px 0;" class="sel_grp_head timestamp hfive">Post to group</li>
-                     <% unless @groups.blank? %>
-                      <% @groups.each do |grp| %>
-                       <li id="grp_label_<%= grp.id %>" style="margin-left:5px;position:relative;width:180px;" class=" hide group pull-left" >
-                        <%= link_to cl_image_tag(grp.photo.pic_url(:smallest), class:"image_al_c1 thumbnail pull-left ", id:"#{grp.photo.id}"), "#" %>
-                                   <div style="margin-left:65px;margin-top:5px;">
-                                    <address>
-                                       <strong><%= link_to grp.name, "#", style: "font-size:13px;word-wrap:break-word;" %></strong><br>
-                                       <span style="word-wrap:break-word;"><%= grp.description.length > 17 ? grp.description.slice(0..17) + "..." : grp.description %></span><br> 
-                                    </address>  
-                                  </div>
-                      </li>
-                          <div style="display:none;">
-                            <%= check_box_tag 'grp_ids[]', grp.id, nil, id:"grp_check_#{grp.id}" %>
-                         </div>
-                      <% end %>
-                    <% end %>
-                    </ul>
+                        
+                         <div class="">
+                          <%= f.text_area :content, placeholder: "Compose new post...", 'data-validation' => "required", 'data-validation-error-msg' => "Post can't be blank", 'rows' => "2", class: "form-control form-control-minimal" %>
+                        </div>
+                        <div class="thumbnail thumbnail-album">
+                        <!-- media -->
+                          <div class="media">
+                              <canvas id="imageCanvas1" width="100%" class="pull-left ml2 mb3 mr0" >Add pictures</canvas>
+                              <a href="#" id="img_close" class="close pull-left">×</a>
+                          </div>
+                      </div>
+                      
+                                     <div class="panel-footer">
+                      <div class="panel-toolbar-wrapper">
+                          <div class="panel-toolbar hide">
+                                  <ul class="media-list media-list-contact nm">
+                                    <% unless @groups.blank? %>
+                                        <%= link_to  "Select groups","#", id: "group_post_select", class: "uibutton pull-left" %>
+                                      <% end %>
+                                     <!--<%= f.submit "Post", id: "community_post_submit", class: "btn primary pull-right" %>-->
+                                     <%= hidden_field_tag :type, "community" %> 
+                                     <%= hidden_field_tag :id, @community.id %> 
+                                     <div id="sel_grp_label"></div>
+                                     <ul class="users" >
+                                                   <li class="sel_grp_head timestamp hfive">Post to group</li>
+                                     <% unless @groups.blank? %>
+                                      <% @groups.each do |grp| %>
+                                       <li id="grp_label_<%= grp.id %>"  class=" hide group pull-left" >
+                                        <%= link_to cl_image_tag(grp.photo.pic_url(:smallest), class:"image_al_c1 thumbnail pull-left ", id:"#{grp.photo.id}"), "#" %>
+                                                   <div>
+                                                    <address>
+                                                       <strong><%= link_to grp.name, "#" %></strong><br>
+                                                       <span><%= grp.description.length > 17 ? grp.description.slice(0..17) + "..." : grp.description %></span><br> 
+                                                    </address>  
+                                                  </div>
+                                      </li>
+                                          <div style="display:none;">
+                                            <%= check_box_tag 'grp_ids[]', grp.id, nil, id:"grp_check_#{grp.id}" %>
+                                         </div>
+                                      <% end %>
+                                    <% end %>
+                                    </ul>
+                                  </ul>
+                          </div>
+                          </div>
+                          <div class="panel-toolbar-wrapper">
+                          <div class="panel-toolbar">
+                              <div class="btn-group">
+                                <button type="button" class="btn btn-default" id="cam"><span class="glyphicon glyphicon-camera"></span></button>
+                                <button type="button" class="btn btn-default" id="modal_sel_grp_btn"  data-toggle="modal" data-target="#modal_sel_grp"><span class="glyphicon glyphicon-home"></span></button>
+                              </div>
+                            </div>
+                          <div class="panel-toolbar text-right">
+                             <%= f.submit "Post", id: "community_post_submit", class: "btn btn-primary btn-custom" %>
+                          </div>
+                        </div>
+                    </div>
+        
               </div>
         <% end %>
 
-<div id="modal_sel_grp" style="display:none;" >
-  <div id="modal-from-dom2" class="modal hide fade in" style="display: block;width:565px;">
-    <div class="modal-header">
-      <a href="#" id="closeX_sel_grp" class="close">×</a>
-      <h3>Select groups</h3>
+<div id="modal_sel_grp" class="modal fade" >
+  <div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header center">
+      <button type="button" class="close" data-dismiss="modal">×</button>
+      <h3 class="semibold modal-title text-primary">Select groups</h3>
+      <p class="text-muted mr10 mb0">Check to select groups for the post</p>
     </div>
-    <span style="font-size:11px;line-height: 3;margin-right:10px;" class="pull-right">(Check to select groups for the post)</span>
-    <div class="modal-body" style="max-height:400px;width:535px;padding-top:0;">
+    <div class="modal-body">
       <div class="row">
         <div class=" ui-front">
         <section id="groups_sec" style="">
             <div style="padding:5px;">
               <% unless @groups.blank? %>
-                  <ul class="users">
+                  <ul class="pl0">
               <% @groups.each do |group| %>
 
-                   <li style="margin-left:15px;" class="tr-hover select_unselect_group c-pointer">
+                   <li class="tr-hover pa10 li-none select_unselect_group c-pointer">
                     <p style="display:none;"><%= group.id %></p>
                     <div class="checkboxFive pull-right marginRight15" style="margin-top:12px;">
                         <%= check_box_tag 'grp_ids[]', group.id ,nil, id: "checkboxFiveInput#{group.id}" %>
@@ -95,14 +123,93 @@
         </div>
       </div>
     </div>
+    
     <div class="modal-footer" >
-      <%= link_to "Done","#", class: "btn primary pull-right", id: "selGroup" %>  
+      <%= link_to "Done","#", class: "btn btn-sm btn-success pull-right", id: "selGroup" %>  
     </div>
   </div>
+</div>
 </div>
 
 
 <script type="text/javascript">
+
+
+$("#remove_image").click(function(){
+    $("#pic1").val("");
+    $("#image").hide();
+    $("#image_upload1").show();
+
+  });
+  $("#img_close").hide();
+  $("#img_close").click(function(){
+    $("#img_close").hide();
+    $("#pic1").val("");
+    $("#imageCanvas1").hide();
+  });
+
+  var imageLoader = document.getElementById('pic1');
+  imageLoader.addEventListener('change', handleImage, false);
+  $("#cam").click(function(){
+    $("#pic1").click();
+  });
+  var canvas = document.getElementById('imageCanvas1');
+  var ctx = canvas.getContext('2d');
+  ctx.font="8pt tahoma ";
+  ctx.fillStyle = 'grey';
+  ctx.fillText("Add picture",35,46);
+  $("#imageCanvas1").hide();
+  function handleImage(e){
+    var canvas = document.getElementById('imageCanvas1');
+    var ctx = canvas.getContext('2d');
+    var iCnt=0;
+    var files = e.target.files;
+    if(files.length<1){
+     /* 
+     $('#pic1').val('');
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.clearRect(0, 0, 132, 88);
+      ctx.font="8pt tahoma ";
+      ctx.fillStyle = 'grey';
+      ctx.fillText("Add picture",35,46);
+      */
+      return;
+    }
+    $("#imageCanvas1").show();
+    $("#img_close").show();
+    canvas.width = 132;
+    canvas.height = 88*(Math.ceil(files.length/1));
+    for( var i = 0, len = files.length; i < len; i++) 
+    {
+      if(files[i])
+      {
+        var reader = new FileReader();
+        reader.onload = function(event){
+          var img = new Image();
+
+          img.onload = function(){
+            var ratioPx = 150;
+            var sWidth =ratioPx;
+            var ratio = img.width/sWidth;
+            var sHeight = img.height/ratio;   
+            if(sHeight>ratioPx){
+             sHeight =ratioPx;
+             ratio = img.height/sHeight;
+             sWidth = img.width/ratio;  
+           }
+           ctx.drawImage(img, 155*(iCnt%4),155*(Math.floor(iCnt/4)),sWidth,sHeight);
+                  //ctx.drawImage(img,0,0,sWidth,sHeight);
+                  iCnt++;
+                }
+                img.src = event.target.result;
+              }
+              reader.readAsDataURL(e.target.files[i]);     
+            }
+          }
+        }
+
+
+
 
 $(document).ready(function(){
   $.validate({
@@ -114,7 +221,15 @@ $(document).ready(function(){
       $('#community_post_submit').button('loading');
     },
   });
-
+  
+  
+  
+  
+  
+  
+  
+  
+  
 $("#group_post_select").click(function(){
   $('#modal_sel_grp').modal({
       backdrop: "static",

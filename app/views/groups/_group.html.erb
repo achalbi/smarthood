@@ -1,25 +1,25 @@
-<li style="width:130px;">
-<div  class="img_zoom"  style="margin:10px; float:left;">
-<% unless group.photo.nil? %>
-  <div  class="img_zoom" id="div-img_<%= group.photo.id %>">
-         <%= link_to cl_image_tag(group.photo.pic_url(:smaller), class:"image_al_c1 thumbnail", id:"#{group.photo.id}"), "/groups/#{group.id}", remote: true,   style:"cursor:pointer;"%>
-          </div>
-<% end %>
-
-  <span >
-    <%= link_to group.name, group %>  
-   
-	<% if group.privacy? %>
- 
-  <% end %>
-   
-</span>
-<span class="timestamp">
-  <% if group.description.length > 17 %>
-    <%= group.description.slice! 0..17 %>...
-    <% else %>
-    <%= group.description %>
+<li>
+    <div  class="img_zoom">
+    <% unless group.photo.nil? %>
+      <div  class="img_zoom" id="div-img_<%= group.photo.id %>">
+             <%= link_to cl_image_tag(group.photo.pic_url(:smaller), class:"image_al_c1 thumbnail", id:"#{group.photo.id}"), "/groups/#{group.id}", remote: true,   style:"cursor:pointer;"%>
+              </div>
     <% end %>
-  </span>
-  </div>
+    
+      <span >
+        <%= link_to group.name, group %>  
+       
+    	<% if group.privacy? %>
+     
+      <% end %>
+       
+    </span>
+    <span class="timestamp">
+      <% if group.description.length > 17 %>
+        <%= group.description.slice! 0..17 %>...
+        <% else %>
+        <%= group.description %>
+        <% end %>
+      </span>
+      </div>
   </li>

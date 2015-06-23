@@ -16,7 +16,7 @@ $('#menu_button').toggle(
 
  });
     
-$().ready(function() {
+/*$().ready(function() {
 
     var errors="";
     
@@ -59,4 +59,4 @@ $().ready(function() {
             }
         }
     });     
-})
+})*/

@@ -1,11 +1,11 @@
 $(".busy").button('reset');
 <% if @post_type == 'activity' %>
-$("#posts").html("<%= escape_javascript(render( :partial => 'posts/activity_post', :locals => {:post => @post}, :activity => @activity )) %><br><br><div id='div_post' class='resources'><%= escape_javascript(render( partial: 'posts/post', locals: {posts: @posts, activity: @activity} )) %></div><p id='activity_id' class='hide'><%= @activity.id %></p>");
+$("#posts").html("<%= escape_javascript(render( :partial => 'posts/activity_post', :locals => {:post => @post}, :activity => @activity )) %><div id='div_post' class='resources'><%= escape_javascript(render( partial: 'posts/post', locals: {posts: @posts, activity: @activity} )) %></div><p id='activity_id' class='hide'><%= @activity.id %></p>");
 <% end %>
 
 <% if @post_type == 'group' %>
 $('.loading_page').hide();
-$("#posts").html("<%= escape_javascript(render( :partial => 'posts/group_post', :locals => {:post => @post}, :group => @group )) %><br><br><div id='div_post_<%= @group.id.to_s %>' class='resources'><%= escape_javascript(render( partial: 'posts/post', locals: {posts: @posts, group: @group} )) %></div><p id='group_id' class='hide'><%= @group.id %></p>");
+$("#posts").html("<%= escape_javascript(render( :partial => 'posts/group_post', :locals => {:post => @post}, :group => @group )) %><div id='div_post_<%= @group.id.to_s %>' class='resources'><%= escape_javascript(render( partial: 'posts/post', locals: {posts: @posts, group: @group} )) %></div><p id='group_id' class='hide'><%= @group.id %></p>");
 <% end %>
 
 <% if @post_type == 'groups' %>

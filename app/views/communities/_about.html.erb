@@ -1,9 +1,8 @@
  <% unless community.nil? %>
-  <ul class="tabs">
+ <!-- <ul class="tabs">
     <%= render 'communities/links', locals: { community: community} %>
   </ul>
-
-
+-->
 <div id="aboutDiv">
 
 
@@ -44,7 +43,7 @@
 
 <%= form_for( community, remote: true, :html => {:multipart => true}) do |f| %>
 <div id="modal2" style="display:none;" >
-  <div id="modal-from-dom2" class="modal hide fade in" style="display: block;width:700px;">
+  <div id="modal-from-dom2" class="modal fade in" style="display: block;width:700px;">
     <div class="modal-header">
       <a href="#" id="close2X" class="close">×</a>
       <h3>Edit community</h3>
@@ -104,7 +103,7 @@
               <% unless community.photo.nil? %>
               <%= cl_image_tag(community.photo.pic_url(:small), class:" thumbnail albumLink", id:"community_pic", style: "cursor:pointer;") %>   
               <% end %>
-              <canvas id="imageCanvas2" style = "border: 1px solid #ddd; padding:5px; align:center; width:200px;display:none;cursor:pointer" >select new image</canvas>
+              <canvas id="imageCanvas_event" style = "border: 1px solid #ddd; padding:5px; align:center; width:200px;display:none;cursor:pointer" >select new image</canvas>
             </div>
           </div>
         </div>
@@ -203,7 +202,7 @@ $('a.ui-corner-all').on("click", function(){
 
 
 $(function() {
-  return $('.events_with_autocomplete').autocomplete({
+/*  return $('.events_with_autocomplete').autocomplete({
     minLength: 2,
     source: function(request, response) {
       return $.ajax({
@@ -215,22 +214,22 @@ $(function() {
         }
       });
     }
-  });
+  });*/
 });
 
 
 var imageLoader = document.getElementById('pic2');
 imageLoader.addEventListener('change', handleImage, false);
-$("#imageCanvas2").click(function(){
+$("#imageCanvas_event").click(function(){
   $("#pic2").click();
 });
-var canvas = document.getElementById('imageCanvas2');
+var canvas = document.getElementById('imageCanvas_event');
 var ctx = canvas.getContext('2d');
 ctx.font="30px Arial";
 ctx.fillText("Change picture",10,50);
 
 function handleImage(e){
-  var canvas = document.getElementById('imageCanvas2');
+  var canvas = document.getElementById('imageCanvas_event');
   var ctx = canvas.getContext('2d');
   var iCnt=0;
   var files = e.target.files;
@@ -239,13 +238,13 @@ function handleImage(e){
      if(files.length<1){
       $('#pic2').val('');
       $('#community_pic').show();
-      $('#imageCanvas2').hide();
+      $('#imageCanvas_event').hide();
       return;
     }
   for( var i = 0, len = files.length; i < len; i++) 
   {
           $('#community_pic').hide();
-          $('#imageCanvas2').show();
+          $('#imageCanvas_event').show();
     if(files[i])
     {
       var reader = new FileReader();

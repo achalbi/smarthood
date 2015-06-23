@@ -31,12 +31,15 @@ $(function() {
 });
 /* ]]> */
 
-$(document).ready(function(){
+/*$(document).ready(function(){
+});*/
+
+
             $("a.fancybox-album").fancybox({
             padding    : 0,
             autoCenter :true,
             afterShow: function() { 
-                    $(".header").hide();
+                 //   $(".header").hide();
                 $('<div class="expander"></div>').appendTo(this.inner).click(function() {
                     $(document).toggleFullScreen();
                     $.fancybox.play( true );
@@ -50,12 +53,12 @@ $(document).ready(function(){
                     $(".fancybox-title").hide();
                 });
             },
-            afterClose: function() {
+            /*afterClose: function() {
              $(document).toggleFullScreen();
                 $(document).fullScreen(false);
                 $(".header").show();
                 $.fancybox.play( false );
-            },
+            },*/
              helpers : {
                   title: {
                       type: 'over'
@@ -69,4 +72,3 @@ $(document).ready(function(){
           });
 
   
-});

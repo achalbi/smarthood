@@ -1,4 +1,3 @@
-
 <div class="row">
         <div class="marginLeft15 ui-front">
           <ul id="group_list" class="users">
@@ -65,7 +64,7 @@
 
 <%= form_for( @group, remote: true, :html => {:multipart => true}) do |f| %>
 <div id="modal_edit_grp" style="display:none;" >
-  <div id="modal-from-dom2" class="modal hide fade in" style="display: block;width:700px;">
+  <div id="modal-from-dom2" class="modal fade in" style="display: block;width:700px;">
     <div class="modal-header">
       <a href="#" id="closeX_edit_grp" class="close">×</a>
       <h3> Edit group</h3>
@@ -107,7 +106,7 @@
               <% unless @group.photo.nil? %>
               <%= cl_image_tag(@group.photo.pic_url(:small), class:" thumbnail albumLink", id:"group_edit_pic", style: "cursor:pointer;") %>   
               <% end %>
-              <canvas id="imageCanvas2" style = "border: 1px solid #ddd; padding:5px; align:center; width:200px;display:none;cursor:pointer" >select new image</canvas>
+              <canvas id="imageCanvas_event" style = "border: 1px solid #ddd; padding:5px; align:center; width:200px;display:none;cursor:pointer" >select new image</canvas>
             </div>
           </div>  
 
@@ -125,7 +124,7 @@
 
 <%= form_for( group, url: add_moderators_group_path(group), method: :get, remote: true) do |f| %>
 <div id="modal_add_mod" style="display:none;" >
-  <div id="modal-from-dom__add_mod" class="modal hide fade in" style="display: block;">
+  <div id="modal-from-dom__add_mod" class="modal fade in" style="display: block;">
     <div class="modal-header">
       <a href="#" id="close_add_mod" class="close">×</a>
       <span style="font-size:20px;line-height: 2;">Edit Moderators</span>
@@ -169,7 +168,7 @@
 
 <%= form_for( group, url: invite_app_user_group_path(group), method: :get, remote: true) do |f| %>
 <div id="modal_invite" style="display:none;" >
-  <div id="modal-from-dom2" class="modal hide fade in" style="display: block;width:700px;">
+  <div id="modal-from-dom2" class="modal fade in" style="display: block;width:700px;">
     <div class="modal-header">
       <a href="#" id="close_invite" class="close">×</a>
       <span style="font-size:20px;line-height: 2;">Invite</span>
@@ -243,16 +242,16 @@ $("#edit_group").click(function(){
 
 var imageLoader = document.getElementById('pic2');
 imageLoader.addEventListener('change', handleImage, false);
-$("#imageCanvas2").click(function(){
+$("#imageCanvas_event").click(function(){
   $("#pic2").click();
 });
-var canvas = document.getElementById('imageCanvas2');
+var canvas = document.getElementById('imageCanvas_event');
 var ctx = canvas.getContext('2d');
 ctx.font="30px Arial";
 ctx.fillText("Change picture",10,50);
 
 function handleImage(e){
-  var canvas = document.getElementById('imageCanvas2');
+  var canvas = document.getElementById('imageCanvas_event');
   var ctx = canvas.getContext('2d');
   var iCnt=0;
   var files = e.target.files;
@@ -261,13 +260,13 @@ function handleImage(e){
      if(files.length<1){
       $('#pic2').val('');
       $('#group_edit_pic').show();
-      $('#imageCanvas2').hide();
+      $('#imageCanvas_event').hide();
       return;
     }
   for( var i = 0, len = files.length; i < len; i++) 
   {
           $('#group_edit_pic').hide();
-          $('#imageCanvas2').show();
+          $('#imageCanvas_event').show();
     if(files[i])
     {
       var reader = new FileReader();

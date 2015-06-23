@@ -1,44 +1,41 @@
 <% provide(:title, 'Buy/Sell/Rent') %>
-<div class="row">
+<div class="col-md-9 pl5 pt5">
 <%= form_tag( '/buysell/search_items' , remote: true) do  %>	
   <%= hidden_field_tag :page, params[:page] %>
-  <aside class="span5 well " style="margin: 0px 15px; 15px 15px; position: fixed;">
-    <section>
-      <%= link_to "Category ",  "#", id: "add_category",  class: "icon add uibutton" , style:"margin-left:5px;"%>
-      <%= link_to "Sub-Category ",  "#", id: "add_subcategory",  class: "icon add uibutton" , style:"margin-left:5px;"%>
-
-
-    </section>
-    <section>
-      <h4>Search for <%= link_to "Sell/Rent ",  "#", id: "sell_rent",  class: "pull-right uibutton" , style:"margin-left:5px;"%></h4>
+    <div class="row">
+      <a href="#" class="btn btn-primary pull-right btn-custom mr15" id="sell_rent" data-toggle="modal" data-target="#modal_create_item">Sell/Rent</a>
+      <a href="#" class="btn btn-success pull-right mr10 btn-custom" data-toggle="modal" data-target="#modal_category">Category</a>
+      <a href="#" class="btn btn-success pull-right mr10 btn-custom" data-toggle="modal" data-target="#modal_subcategory">Sub-Category</a>
+    </div>
+    <span class="font-20">Search</span>
+  <div class=" ">
+    <div class="row pr15">
+      <div class="col-sm-3pt5 pr0 mr2">
+        
       <h6>Buy/Rent</h6>
-        <ul class="inputs-list ">
-                <li>
-                    <%= select_tag "item_type", options_for_select([["I want to Buy / Rent", "all"],["I want to Buy only", "sell"], ["I want for Rent only", "rent"]]), class: "span5 quick_filter", id: "type_search" %>
-                </li>
-        </ul>
+        <div class="inputs-list ">
+                    <%= select_tag "item_type", options_for_select([["I want to Buy / Rent", "all"],["I want to Buy only", "sell"], ["I want for Rent only", "rent"]]), class: "plr0 quick_filter", id: "type_search" %>
+        </div>
+      </div>
+      <div class="col-sm-2pt5 pr0 mr2">
         <h6>Condition</h6>
-        <ul class="inputs-list ">
-                <li>
-                    <%= select_tag "condition", options_for_select([["New / Used", "all"],["New", "new"], ["Used", "used"]]), class: "span5 quick_filter", id: "type_search" %>
-                </li>
-        </ul>
-
+        <div class="inputs-list ">
+                    <%= select_tag "condition", options_for_select([["New / Used", "all"],["New", "new"], ["Used", "used"]]), class: "plr0 quick_filter", id: "type_search_con" %>
+        </div>
+      </div>
+      <div class="col-sm-2pt5 pr0 mr2">
       <h6>Community</h6>
-      <ul class="inputs-list">
-                <li>
-                    <%= select_tag "comm_type", options_for_select([["All community", "all"], ["My communities", "my"]]), class: "span5 quick_filter", id: "comm_type_search" %>
-                </li>
+      <div class="inputs-list">
+                    <%= select_tag "comm_type", options_for_select([["All community", "all"], ["My communities", "my"]]), class: "plr0 quick_filter", id: "comm_type_search" %>
                 <div id="comm_list">
-                <br>
-                  <li>
+                  <li class="li-none">
                     <label>
                   <%= check_box_tag( "search[community_id][]", active_community.id, @selected_comm.include?(active_community), class: " quick_filter") %>
                       <span><%= active_community.name %></span>
                     </label>
                   </li>
                   <% @joined_communities.each do |cu| %>
-                    <li>
+                    <li class="li-none">
                       <label>
                         <%= check_box_tag("search[community_id][]", cu.id, @selected_comm.include?(cu), class: " quick_filter") %>
                         <span><%= cu.name %></span>
@@ -46,262 +43,343 @@
                     </li>
                   <% end %>
                 </div>
-      </ul>
-      
+      </div>
+    </div>
+    <div class="col-sm-3pt5 pr0">  
       <h6>Catgories</h6>
-        <ul class="inputs-list ">
-                <li>
-                  <%= collection_select(:buysell_item_category, :id1, BuysellItemCategory.all, :id, :name, {:prompt => 'Select'}, class: "span5 quick_filter" )%>
-                </li>
-        </ul>
-      <h6>Sub-Catgories</h6>
-        <ul class="inputs-list ">
-                <li class="item_subcategory">
-                  <%= collection_select(:buysell_item_subcategory, :id, @subcategories, :id, :name, {:prompt => 'Select'}, class: "span5 quick_filter" )%>
-                </li>
-        </ul>
-
-
-      <h6>Price Range</h6>
-        <ul class="inputs-list ">
+        <div class="inputs-list ">
+                  <%= collection_select(:buysell_item_category, :id1, BuysellItemCategory.all, :id, :name, {:prompt => 'Select'}, class: "plr0 quick_filter" )%>
+        </div>
+      </div>
+      </div>
+      
+    <div class="row pr15">
+        <div class="col-sm-3 pr0">
+          <h6>Sub-Catgories</h6>
+            <div class="item_subcategory">
+                <%= collection_select(:buysell_item_subcategory, :id, @subcategories, :id, :name, {:prompt => 'Select'}, class: "span5 quick_filter" )%>
+            </div>
+        </div>
+        <div class="col-sm-9">
+          <div class="row">
+            <div class="col-md-1 plr0">
+            </div>
+            <div class="col-sm-3 col-xs-2 pr0">
+              <h6 class="">Price Range:</h6>
+            </div>
+            <div class="col-sm-4 col-xs-5 col-md-4 pr0">
+                <h6>From</h6>
+                <%= text_field_tag :price_from, nil,  :placeholder=>"0", class: ' span4 quick_filter_price' %><br>
+            </div>
+            <div class="col-sm-4 col-xs-5 col-md-4 pr0">
+                  <h6>To</h6>
+                  <%= text_field_tag :price_to, nil,  :placeholder=>"Maximum", class: ' span4 quick_filter_price' %> 
+            </div>
+          </div>
+        </div>
                <!--  <li>
                  <input type="text" id="amount" style="border:0; color:#f6931f; font-weight:bold;">
                 </li>
                 <div id="slider-range"></div> -->
-                <li>
-                      From &nbsp;
-                      <%= text_field_tag :price_from, nil,  :placeholder=>"0", class: ' span4 quick_filter_price' %><br>
-                      To &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                      <%= text_field_tag :price_to, nil,  :placeholder=>"Maximum", class: ' span4 quick_filter_price' %> 
-                </li>
-        </ul>
-    </section>
-  </aside>
+  </div>
+  </div>
 
       <%= submit_tag "Search", class: "hide", id: "search_submit" %>  
 
 <% end %>
-<div id="aboutDiv" style="margin-left: 300px;">  
-    <ul class="users span14">
+<div id="aboutDiv" >  
         <div id="div_buysell_post" class="resources">
-              <%= render :partial => 'buysell/post' %>
+              <%= render :partial => 'posts/post' %>
         </div>
     <!--
         <div class="center loading_sub hide" id="loading_page"  ><img src="/assets/loading-sub.gif"></div>
-     <div id="loading_page" class="center" ><img src="http://res.cloudinary.com/rashi/image/upload/v1377924529/loading7_gvb06y.gif"></div> -->
-  </ul>
+     <div id="loading_page" class="center" ><img src="https://res.cloudinary.com/rashi/image/upload/v1377924529/loading7_gvb06y.gif"></div> -->
 </div>
 </div>
 
 
 <%= form_for( @category, url: add_category_buysell_index_path , remote: true,  :html => {:multipart => true}) do |f| %>
-  <div id="modal_category" style="display:none" >
-          <div id="modal-from-dom" class="modal hide fade in" style="display: block;width:700px;">
+  <div id="modal_category" class="modal fade" >
+          <div class="modal-dialog">
+          <div class="modal-content">
             <div class="modal-header">
-              <a href="#" id="close_category" class="close">×</a>
-              <h3>Create category</h3>
+              <button type="button" class="close" data-dismiss="modal">×</button>
+              <sapn class="font-15 semibold">Create category</h3>
             </div>
-            <div class="modal-body" style="max-height:430px;">
+            <div class="modal-body">
               <div class="row">
-              <div class="span14 ui-front">
+              <div class="col-sm-offset-1">
                    <%= render 'shared/error_messages', object: f.object %>
+                   
                    <div class="center_block clearfix">
-                      <%= f.label :name %>
-                        <div class="input">
-                      <%= f.text_field :name, :placeholder=>"Name", class: ' inherit_width', :title => "Title" %> 
+                      <%= f.label :name, class: "control-label mt15 pl15" %>
+                      <div>
+                        
+                        <div class="col-sm-9">
+                      <%= f.text_field :name, :placeholder=>"Name", class: 'form-control inherit_width', :title => "Title" %> 
+                      </div>
                       </div>
                     </div>
                     <div class="center_block clearfix">
-                      <%= f.label :description %>
-                        <div class="input">
-                      <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title => "Description", rows: 3, cols: 75  %> 
+                      <%= f.label :description, class: "control-label mt15 pl15" %>
+                      <div>
+                        <div class="col-sm-9">
+                      <%= f.text_area :description, :placeholder=>"Description", class: 'form-control inherit_width', :title => "Description", rows: 3, cols: 75  %> 
                       </div>
                     </div>
+                  </div>
               </div>    
              </div>
            </div>
             <div class="modal-footer" >
-              <%= f.submit "Create", class: "btn primary pull-right ", id: "create_category" %>  
+              <%= f.submit "Create", class: "btn btn-success btn-custom pull-right ", id: "create_category" %>  
             </div>
           </div>          
+        </div>
         </div>
 <% end %>
 
 <%= form_for( @subcategory, url: add_subcategory_buysell_index_path , remote: true,  :html => {:multipart => true}) do |f| %>
-  <div id="modal_subcategory" style="display:none" >
-          <div id="modal-from-dom" class="modal hide fade in" style="display: block;width:700px;">
+  <div id="modal_subcategory" class="modal fade">
+          <div class="modal-dialog">
+          <div class="modal-content">
             <div class="modal-header">
-              <a href="#" id="close_subcategory" class="close">×</a>
-              <h3>Create category</h3>
+              <button type="button" class="close" data-dismiss="modal">×</button>
+              <span class="font-15 semibold">Create Sub-Category</span>
             </div>
-            <div class="modal-body" style="max-height:430px;">
+            <div class="modal-body">
               <div class="row">
-              <div class="span14 ui-front">
+              <div class="col-sm-offset-1">
                    <%= render 'shared/error_messages', object: f.object %>
                    <div class="center_block clearfix">
-                        <%= f.label :category, "Category" %>
-                        <div class="input">
+                        <%= f.label :category, class: "control-label pl15 mt15" %>
+                        <div>
+                        <div class="col-sm-9">
                         <%= f.select(:buysell_item_category_id, BuysellItemCategory.all.collect {|a| [a.name, a.id]}) %>
                         </div>
                         
                      </div>
+                    </div>
+                    
                    <div class="center_block clearfix">
-                      <%= f.label :name %>
-                        <div class="input">
-                      <%= f.text_field :name, :placeholder=>"Name", class: ' inherit_width', :title => "Title" %> 
+                      <%= f.label :name, class: "control-label pl15 mt15" %>
+                      <div>
+                        
+                        <div class="col-sm-9">
+                      <%= f.text_field :name, :placeholder=>"Name", class: 'form-control inherit_width', :title => "Title" %> 
                       </div>
                     </div>
+                  </div>
                     <div class="center_block clearfix">
-                      <%= f.label :description %>
-                        <div class="input">
-                      <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title => "Description", rows: 3, cols: 75  %> 
+                      <%= f.label :description, class: "control-label mt15 pl15" %>
+                      <div>
+                        <div class="col-sm-9">
+                      <%= f.text_area :description, :placeholder=>"Description", class: 'form-control inherit_width', :title => "Description", rows: 3, cols: 75  %> 
                       </div>
                     </div>
+                  </div>
               </div>    
              </div>
            </div>
             <div class="modal-footer" >
-              <%= f.submit "Create", class: "btn primary pull-right ", id: "create_subcategory" %>  
+              <%= f.submit "Create", class: " btn btn-custom btn-primary pull-right ", id: "create_subcategory" %>  
             </div>
           </div>          
         </div>
+        </div>
 <% end %>
 <%= form_for( @buysellitem, url: {action: "create"}, remote: true,  :html => {:multipart => true}) do |f| %>
-  <div id="modal_create_item" style="display:none" >
-          <div id="modal-from-dom" class="modal hide fade in" style="display: block;width:700px;">
+  <div id="modal_create_item" class="modal fade">
+          <div class="modal-dialog">
+          <div class="modal-content">
             <div class="modal-header">
-              <a href="#" id="close_create_item" class="close">×</a>
-              <h3>Create category</h3>
+              <button type-"button" class="close" data-dismiss="modal">×</button>
+              <span class="font-15 semibold">Sell/Rent</span>
             </div>
-            <div class="modal-body" style="max-height:430px;">
+            <div class="modal-body">
               <div class="row">
-              <div class="span14 ui-front">
+              <div class="mrp8 mlp8">
                    <%= render 'shared/error_messages', object: f.object %>
                    <div class="center_block clearfix">
-                      <%= f.label :name %>
-                        <div class="input">
-                      <%= f.text_field :name, :placeholder=>"Name", class: ' inherit_width', :title => "Title" %> 
+                      <%= f.label :name, class: "control-label pl15 mt15" %>
+                      <div>
+                        <div class="col-xs-12">
+                      <%= f.text_field :name, :placeholder=>"Name", class: 'form-control inherit_width', :title => "Title" %> 
                       </div>
                     </div>
+                  </div>
+                  
                     <div class="center_block clearfix">
-                      <%= f.label :description %>
-                        <div class="input">
-                      <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title => "Description", rows: 3, cols: 75  %> 
+                      <%= f.label :description, class: "control-label pl15 mt15" %>
+                      <div>
+                        <div class="col-xs-12">
+                      <%= f.text_area :description, :placeholder=>"Description", class: 'form-control inherit_width', :title => "Description", rows: 3, cols: 75  %> 
                       </div>
                     </div>
-                   <div class="center_block clearfix">
-                        <%= f.label :category, "Category" %>
-                        <div class="input">
-                        <%= collection_select(:buysell_item_category, :id2, BuysellItemCategory.all, :id, :name, {:prompt => 'Select'}, class: "span5" )%>
-                        </div>
+                  </div>
+                  
+                  <div class="row">
+                    <div class="col-xs-6">
                         
-                     </div>
-                   <div class="center_block clearfix">
-                      <%= f.label :subcategory, "Sub-Category" %>
-                        <div class="input item_subcategory">
-                        <%= collection_select(:buysell_item_subcategory, :id, @subcategories, :id, :name, {:prompt => 'Select'}, class: "span5" )%>
+                       <div class="center_block clearfix">
+                            <%= f.label :category, "Category", class: "control-label pl15 mt15" %>
+                            <div>
+                            <div class="col-xs-12">
+                            <%= collection_select(:buysell_item_category, :id2, BuysellItemCategory.all, :id, :name, {:prompt => 'Select'}, class: "form-control" )%>
+                            </div>
+                            
+                         </div>
                       </div>
                     </div>
-                    <div class="center_block clearfix">
-                      <%= f.label :item_type, "Sell/Rent" %>
-                        <div class="input">
-                      <%= f.select :item_type, options_for_select([["I want to sell", "sell"], ["I want to Rent", "rent"]]), {}, id: "type" %>    
+                    <div class="col-xs-6">
+                        
+                       <div class="center_block clearfix">
+                          <%= f.label :subcategory, "Sub-Category", class: "control-label mt15 pl15" %>
+                          <div>
+                            
+                            <div class="col-xs-12 item_subcategory">
+                            <%= collection_select(:buysell_item_subcategory, :id, @subcategories, :id, :name, {:prompt => 'Select'}, class: "form-control" )%>
+                          </div>
+                        </div>
                       </div>
                     </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-xs-6"> 
+                        <div class="center_block clearfix">
+                            <%= f.label :item_type, "Sell/Rent", class: "control-label pl15 mt15" %>
+                            <div>
+                              <div class="col-xs-12">
+                            <%= f.select :item_type, options_for_select([["I want to sell", "sell"], ["I want to Rent", "rent"]]), {}, id: "type", class: "form-control" %>    
+                            </div>
+                          </div>
+                          </div>
+                  </div>
+                        <div class="col-xs-6"> 
+                            <div class="center_block clearfix">
+                              <%= f.label :condition, class: "control-label pl15 mt15" %>
+                              <div>
+                                <div class="col-xs-12">
+                              <%= f.select :condition, options_for_select([["New", "new"], ["Used", "used"]]), {}, id: "condition", class: "form-control" %>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                  </div>
+                    
                     <div class="center_block clearfix">
-                      <%= f.label :price %>
-                        <div class="input">
-                      <%= f.select :currency, options_for_select([["Rs", "Rs"], ["$", "$"]]), {}, id: "currency", class: "span2" %>    
-                      <%= f.text_field :price, :placeholder=>"Price", class: ' inherit_width', :title => "Price" %> 
+                      <div class="row ml5">
+                        <%= f.label :price, class: "control-label pl15 mt15" %>
+                      </div>
+                      <div class="row ml5">
+                          <div class="col-sm-3">
+                              <%= f.select :currency, options_for_select([["Rs", "Rs"], ["$", "$"]]), {}, id: "currency", class: "form-control" %>    
+                          </div>
+                          <div class="col-xs-8 ml30">
+                              <%= f.text_field :price, :placeholder=>"Price", class: 'form-control inherit_width', :title => "Price" %> 
+                          </div>
+                        </div>
+                      </div>
+                   
+                    <div class="center_block clearfix">
+                      <%= f.label :notes, class: "control-label pl15 mt15" %>
+                      <div>
+                        <div class="col-xs-12">
+                      <%= f.text_area :notes, :placeholder=>"More details", class: 'form-control inherit_width', :title => "More details", rows: 3, cols: 75  %> 
                       </div>
                     </div>
+                  </div>
                     <div class="center_block clearfix">
-                      <%= f.label :condition %>
-                        <div class="input">
-                      <%= f.select :condition, options_for_select([["New", "new"], ["Used", "used"]]), {}, id: "condition", class: "span2" %>
+                      <%= f.label "Contact No.", class: "control-label pl15 mt15" %>
+                      <div>
+                        <div class="col-xs-12">
+                      <%= f.text_field :contact_no, :placeholder=>"Mobile / Phone no.", class: 'form-control inherit_width', :title => "Contact No." %> 
                       </div>
                     </div>
-                    <div class="center_block clearfix">
-                      <%= f.label :notes %>
-                        <div class="input">
-                      <%= f.text_area :notes, :placeholder=>"More details", class: ' inherit_width', :title => "More details", rows: 3, cols: 75  %> 
-                      </div>
                     </div>
                     <div class="center_block clearfix">
-                      <%= f.label "Contact No." %>
-                        <div class="input">
-                      <%= f.text_field :contact_no, :placeholder=>"Mobile / Phone no.", class: ' inherit_width', :title => "Contact No." %> 
+                      <div class="control-label mt15 pl15">
+                        <%= label_tag "Add picture:" %>
                       </div>
-                    </div> <br>
-                    <div class="center_block clearfix">
-                      <%= label_tag "Add picture:" %>
-                      <div class="input">
+                      <div>
+                      <div class="col-xs-12">
                           <%= fields_for :photos, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
                      
                             <%= photo_form.file_field :pic, id: "pic_buysell", :multiple => true,style: "width:1px; height:1px; padding:0px;  left:0px;" %>       
 
                           <% end %>
-                          <canvas id="imageCanvas_buysell" style = "border: 1px solid #ddd; padding:5px; align:center;cursor:pointer" >select photos</canvas>
-
+                          <canvas id="imageCanvas_buysell" style = "border: 1px solid #ddd; padding:5px; align:center;cursor:pointer" >Add Picture</canvas>
                       </div>
                     </div>
-                    <div id="address_details">
-                        <%= link_to "Change Address",  "#", id: "change_address_link",  class: "icon edit uibutton pull-right" , style:"margin-left:5px;"%>
+                  </div>
+                  <div id="address_details">
                       <div class="center_block clearfix">
-                                <%= f.label "Address" %>
-                                <div  class="input">
-                                <p><%= @buysellitem.address.doorno  %></p>
-                                <p><%= @buysellitem.address.street  %></p>
-                                <p><%= @buysellitem.address.city  %></p>
-                                <p><%= @buysellitem.address.country  %> - <%= @buysellitem.address.postalcode  %></p>
+                                <%= f.label "Address", class: "control-label mt15 pl15" %>
+                                  <%= link_to "Change Address",  "#", id: "change_address_link",  class: "btn btn-custom btn-warning uibutton pull-right" , style:"margin-left:5px;"%>
+                                <div  class="input ml15">
+                                  <p class="ellipsis"><%= @buysellitem.address.doorno  %></p>
+                                  <p class="ellipsis"><%= @buysellitem.address.street  %></p>
+                                  <p class="ellipsis"><%= @buysellitem.address.city  %></p>
+                                  <p class="ellipsis"><%= @buysellitem.address.country  %> - <%= @buysellitem.address.postalcode  %></p>
                                 </div>
                       </div>
-                      
-                    </div>
+                  </div>
                     <div id="change_address">
                         <%= f.fields_for :address do |f| %>
                              <div class="center_block clearfix">
-                                <%= f.label "Door no." %>
-                                <div class="input">
-                                <%= f.text_field :doorno, :placeholder=>"Door no." %>
+                                <%= f.label "Door no.", class: "control-label mt15 pl15" %>
+                                <div>
+                                  
+                                <div class="col-xs-9">
+                                <%= f.text_field :doorno, :placeholder=>"Door no.", :class=>"form-control" %>
                                 </div>
                              </div>
+                            </div>
                              <div class="center_block clearfix">
-                                  <%= f.label :street %>
-                                <div class="input">
-                                  <%= f.text_field :street, :placeholder=>"Street" %>
+                                  <%= f.label :street, class: "control-label mt15 pl15" %>
+                                <div>
+                                  
+                                <div class="col-xs-9">
+                                  <%= f.text_field :street, :placeholder=>"Street", :class=>"form-control" %>
                                 </div>
                              </div>
+                            </div>
                              <div class="center_block clearfix">
-                                  <%= f.label :city %>
-                                <div class="input">
-                                  <%= f.text_field :city, :placeholder=>"City" %>
+                                  <%= f.label :city, class: "control-label mt15 pl15" %>
+                                <div>
+                                  
+                                <div class="col-xs-9">
+                                  <%= f.text_field :city, :placeholder=>"City", :class=>"form-control" %>
                                 </div>
                              </div>
+                          </div>
                              <div class="center_block clearfix">
-                                  <%= f.label :country %>
-                                <div class="input">
-                                  <%= f.text_field :country, :placeholder=>"Country" %>
+                                  <%= f.label :country, class: "control-label mt15 pl15" %>
+                              <div>
+                                <div class="col-xs-9">
+                                  <%= f.text_field :country, :placeholder=>"Country", :class=>"form-control" %>
                                 </div>
                              </div>
+                            </div>
+                            
                              <div class="center_block clearfix">
-                                  <%= f.label :postalcode, "Postal Code" %>
-                                <div class="input">
-                                  <%= f.text_field :postalcode, :placeholder=>"Postal Code" %>
+                                  <%= f.label :postalcode, "Postal Code", class: "control-label mt15 pl15" %>
+                                <div>
+                                <div class="col-xs-9">
+                                  <%= f.text_field :postalcode, :placeholder=>"Postal Code", :class=>"form-control" %>
                                 </div>
                              </div>
+                            </div>
+                        <a class="btn btn-default btn-custom pull-right" id="cancel_edit">Cancel</a>        
 
                         <% end %>
                     </div>
-                    <div class="center_block clearfix">
-                     <%= f.label :privacy, "Advertise to" %>
-                       <div class="input">
-                          <ul class="inputs-list">
-                                <li>
+                    <div class="center_block clearfix ">
+                     <%= f.label :privacy, "Advertise to", class: "control-label mt15 pl15" %>
+                       <div class="input ml15">
+                          <div class="inputs-list">
                                     <%= f.select :privacy, options_for_select([["Active community", Privacyenum::PUBLIC], ["My communities", Privacyenum::PRIVATE]]), class: "span5 quick_filter" %>
-                                </li>
                                 <div id="comm_list2">
-                                <br>
                                   <li>
                                     <label>
                                   <%= check_box_tag( "search[community_id][]", active_community.id, @selected_comm.include?(active_community)) %>
@@ -317,7 +395,7 @@
                                     </li>
                                   <% end %>
                                 </div>
-                          </ul>
+                          </div>
                        </div>
                     </div>
 
@@ -325,7 +403,7 @@
              </div>
            </div>
             <div class="modal-footer" >
-              <%= f.submit "Create", class: "btn primary pull-right ", id: "create_item" %>  
+              <%= f.submit "Create", class: "btn btn-success btn-custom pull-right ", id: "create_item" %>  
             </div>
           </div>          
         </div>
@@ -389,7 +467,20 @@
 </script>
 
 <script type="text/javascript">
-
+    
+    $('#type_search').addClass('form-control');
+    $('#type_search_con').addClass('form-control');
+    $('#comm_type_search').addClass('form-control');
+    $('#buysell_item_category_id1').addClass('form-control');
+    $('#buysell_item_subcategory_id').addClass('form-control');
+    $('#price_from').addClass('form-control');
+    $('#price_to').addClass('form-control');
+    $('#buysell_item_subcategory_buysell_item_category_id').addClass('form-control');
+    $('#buysell_item_category_id2').addClass('form-control');
+    $('#type').addClass('form-control');
+    $('#currency').addClass('form-control');
+    $('#condition').addClass('form-control');
+    $('#buysell_item_privacy').addClass('form-control');
 
 
     $("#add_category").click(function(){
@@ -414,12 +505,12 @@
           $('#modal_subcategory').modal('hide');
         });
 
-    $("#sell_rent").click(function(){
+   /* $("#sell_rent").click(function(){
       $('#modal_create_item').modal('show');
     });
     $("#close_create_item").click(function(){
           $('#modal_create_item').modal('hide');
-        });
+        });*/
 
     $("#create_item").click(function(){
           //$('#modal_create_item').modal('hide');
@@ -429,6 +520,12 @@
       $("#change_address_link").click(function(){
           $('#change_address').show();
           $('#address_details').hide();
+          $("#cancel_edit").show();
+        });
+        
+        $("#cancel_edit").click(function(){
+          $('#change_address').hide();
+          $('#address_details').show();
         });
 
     $( "#buysell_item_category_id1" ).on("change", function() {

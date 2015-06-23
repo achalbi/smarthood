@@ -103,7 +103,7 @@ $(function () {
 */
     // Load images via flickr for demonstration purposes:
    /* $.ajax({
-        url: 'http://api.flickr.com/services/rest/',
+        url: 'https://api.flickr.com/services/rest/',
         data: {
             format: 'json',
             method: 'flickr.interestingness.getList',
@@ -115,7 +115,7 @@ $(function () {
         var gallery = $('#galleries'),
             url;
         $.each(data.photos.photo, function (index, photo) {
-            url = 'http://farm' + photo.farm + '.static.flickr.com/' +
+            url = 'https://farm' + photo.farm + '.static.flickr.com/' +
                 photo.server + '/' + photo.id + '_' + photo.secret;
             $('<a data-gallery="gallery"/>')
                 .append($('<img>').prop('src', url + '_s.jpg'))

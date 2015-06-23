@@ -1133,10 +1133,10 @@ input[type="checkbox"] {
  *
  * --------------------------- */
 /* anchor reset */
-a {
+/*a {
   color: #00b1e1;
   text-decoration: none;
-}
+}*/
 a:hover,
 a:focus,
 a:active {
@@ -1956,8 +1956,8 @@ fieldset[disabled] .btn-twitter.active {
 * --------------------------- */
 @font-face {
   font-family: 'iconfont';
-  src: url('fonts/iconfont.eot');
-  src: url('fonts/iconfont.eot?#iefix') format('embedded-opentype'), url('fonts/iconfont.svg#iconfont') format('svg'), url('fonts/iconfont.woff') format('woff'), url('fonts/iconfont.ttf') format('truetype');
+  src: url('iconfont.eot');
+  src: url('iconfont.eot?#iefix') format('embedded-opentype'), url('iconfont.svg#iconfont') format('svg'), url('iconfont.woff') format('woff'), url('iconfont.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
@@ -7184,12 +7184,13 @@ a.text-teal:hover {
 .indicator > .spinner {
   position: absolute;
   top: 50%;
-  left: 50%;
+  /*left: 50%;*/
+  left: 90%;
   margin-top: -9px;
   margin-left: -9px;
   width: 18px;
   height: 18px;
-  background-image: url("../image/loading/spinner.gif");
+  background-image: url("/assets/loading/spinner.gif");
   background-repeat: no-repeat;
 }
 .indicator > .spinner.spinner1 {
@@ -7242,7 +7243,7 @@ a.text-teal:hover {
 }
 @media only screen and (-Webkit-min-device-pixel-ratio: 1.5), only screen and (-moz-min-device-pixel-ratio: 1.5), only screen and (-o-min-device-pixel-ratio: 3/2), only screen and (min-device-pixel-ratio: 1.5) {
   .indicator .spinner {
-    background-image: url("../image/loading/spinner@2x.gif");
+    background-image: url("/assets/loading/spinner@2x.gif");
     -webkit-background-size: 18px 18px;
             background-size: 18px 18px;
     background-repeat: no-repeat;

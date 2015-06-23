@@ -1,84 +1,12 @@
- <ul class="users">
-  <li class="tr-hover" >
-  <h3 class="marginLeft15">Send invitation  
-    <% if session["fb_access_token"].present? %>
-       <a class=" uibutton pull-right" style="margin-right:5px;" id="invite_fb"> Facebook</a>
-    <% end %>
-         <a class="uibutton pull-right" style="margin-right:5px;" id="invite_cu" >Smarthood </a>
-     <a class="uibutton pull-right" style="margin-right:2px;" id="invite_email" > Email </a>
-  </h3>
-  </li>
- </ul>
-
-<% unless @community.nil? %>
-
-<%= form_for( @community, url: invite_app_user_community_path(@community), method: :get, remote: true) do |f| %>
-<div id="modal_invite" style="display:none;" >
-  <div id="modal-from-dom2" class="modal hide fade in" style="display: block;">
-    <div class="modal-header">
-      <a href="#" id="close_invite" class="close">×</a>
-      <span style="font-size:15px;line-height: 2;"><strong>Invite Smarthood users</strong></span>
-    </div>
-    <div class="modal-body" style="max-height:550px;">
-      <div class="row">
-        <div class="span8 ui-front">
-          <div class="center_block clearfix marginLeft50"><br>
-              <%= f.text_field :user_tokens, id: "search_user", 'data-validation' => "required", 'data-validation-error-msg' => "Please add users to invite" %>
-          </div>
-        </div>
-      </div>   
-    </div>
-    <div class="modal-footer" >
-      <%= f.submit "Invite", class: "btn primary pull-right busy", id: "invite_submit" %>  
-    </div>
-  </div>
-
-</div>
-<% end %>
-
-
-
-
-<%= form_for( @community, url: invite_by_email_community_path(@community), method: :get, remote: true) do |f| %>
-<div id="modal_invite_email" style="display:none;" >
-  <div id="modal-from-dom2" class="modal hide fade in" style="display: block;">
-    <div class="modal-header">
-      <a href="#" id="close_invite_email" class="close">×</a>
-      <span style="font-size:15px;line-height: 2;">Send invitation to email</span>
-    </div>
-    <div class="modal-body" style="max-height:550px;">
-      <div class="row">
-        <div class="span10 ui-front">
-          <div class="center_block clearfix"><br>
-              <div class="bs-example bs-email">
-                        <div class="form-group">
-                          <input type="text" class="form-control tokenfields" style="width:480px;" id="tokenfield-m1" name="community[user_tokens]" placeholder="Type email and hit tab/enter" data-validation="required" data-validation-error-msg="Please type email and hit tab/enter to add" />
-                        </div>
-                </div>
-          </div>
-        </div>
-      </div>   
-    </div>
-    <div class="modal-footer" >
-      <%= f.submit "Invite", class: "btn primary pull-right busy", id: "invite_email_submit" %>  
-    </div>
-  </div>
-
-</div>
-<% end %>
-
-<% end %>
-<script type="text/javascript">
-$(document).ready(function(){
-  $.validate({
-    onSuccess : function() {
-      $('.loading_page').show();
-      $("#invite_email_submit").attr('data-loading-text', 'Inviting...');
-      $("#invite_email_submit").button('loading');
-      $("#invite_submit").attr('data-loading-text', 'Inviting...');
-      $("#invite_submit").button('loading');
-
-    },
-  });
-  });
-</script>
+                               <div class="row">
+                               <div class="btn-group pull-right mr20 mb5">
+                                        <button type="button" class="btn btn-sm btn-info btn-custom dropdown-toggle " data-toggle="dropdown" aria-expanded="false">Invite <span class="caret"></span></button>
+                                        <ul class="dropdown-menu">
+                                            <% if session["fb_access_token"].present? %>
+                                               <li><a href="#"  id="invite_fb"> Facebook</a></li>
+                                            <% end %>
+                                             <li><a href="#modal_invite" id="invite_cu" >Smarthood </a></li>
+                                             <li><a href="#modal_invite_email" id="invite_email" >By Email </a></li>
+                                        </ul>
+                                    </div>
+                                </div>

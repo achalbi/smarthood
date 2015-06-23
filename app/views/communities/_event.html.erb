@@ -1,27 +1,28 @@
-<br>
-<% if event.starts_at.to_date == Time.zone.now.to_date %>
-<strong style="padding-left:15px;color:#5E5E5E"  >Today</strong>
+<!--<% if event.starts_at.to_date == Time.zone.now.to_date %>
+<strong>Today</strong>
 <% elsif event.starts_at.to_date == Time.zone.now.to_date - 1.day %>
-<strong style="padding-left:15px;color:#5E5E5E" class="timestamp" >Yesterday</strong>
+<strong class="timestamp" >Yesterday</strong>
 <% else %>
-<strong style="padding-left:15px;color:#5E5E5E" class="timestamp" ><%= event.starts_at.strftime("%A, %B %d, %Y") %></strong>
-<% end %>
-<li style="padding-left:15px;margin-top:5px;cursor:pointer;position:relative;" class="tr-hover event" >
-  <% unless event.photo.nil? %>
-  <%= link_to cl_image_tag(event.photo.pic_url(:cover_pic_smallest), class:"image_al_c1 thumbnail pull-left ", id:"#{event.photo.id}"), "#" %>
+<% end %>-->
+<li class="tr-hover event" >
 
-  <% end %>
-            <div style="margin-left:95px;margin-top:5px;">
-              <address>
-                <strong> <%= link_to event.title, "#", style: "font-size:13px;" %></strong> <br>
-                <strong>Description : &nbsp;</strong> <%= event.description %><br>
-                <strong>Location : &nbsp;</strong><%= event.address %><br>
-                <strong>Privacy : &nbsp;</strong><%= privacy_str(event) %><br>
-                  
-              </address>  
-            </div>
+  <div class="col-xs-6 pl0 pr5">
+    <div class="panel panel-default mb5 ">
+        <div class="media">
+            <% unless event.photo.nil? %>
+              <%= link_to cl_image_tag(event.photo.pic_url(:thumb_full_wide), class:"image_al_c1 wdp-100", id:"#{event.photo.id}"), event , remote: true %>
+            <% end %>
+      </div>
+    <section class="panel-body pt10 pb5">
+        <span class="semibold mt10 ellipsis"><%= link_to event.title, event, class:"albumLink font-15", remote: true, title: "#{event.title}" %></span>
+          <p class="timestamp mb0 text-muted" ><span class="ico-time"></span><%= event.starts_at.strftime("%A, %B %d, %Y") %></p>
+          <p class="mb5 ellipsis font-11 text-muted"><span class="ico-location"></span><%= event.address %></p>
+    </section>
+    </div>
+</div>
+                    
+            
 </li>
-
 <%= link_to "", "/communities/#{community.id}/show_event?event_id=#{event.id}", remote: true %>
 <script type="text/javascript">
 $(document).ready(function(){

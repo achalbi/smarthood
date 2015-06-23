@@ -1,2 +1,2 @@
-$('.item_subcategory').html('<%= escape_javascript(collection_select(:buysell_item_subcategory, :id, @subcategories, :id, :name, {:prompt => "Select"}, class: "span5 quick_filter_sub" )) %>');
+$('.item_subcategory').html('<%= escape_javascript(collection_select(:buysell_item_subcategory, :id, @subcategories, :id, :name, {:prompt => "Select"}, class: "form-control quick_filter_sub" )) %>');
 $(".quick_filter_sub").on("change", function(){$("#search_submit").click()});

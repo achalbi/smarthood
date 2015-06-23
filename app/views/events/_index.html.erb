@@ -1,90 +1,97 @@
 <% provide(:title, 'Events') %>
-<div class="span20 ui-front" style="margin:0px;">
+
+<div class="row">
+
+<div class="col-md-9 pl5 pt5 " id="community_tabs">
+  
 <div class="center loading_page hide" ><img src="/assets/loading.gif"></div>
-<%= link_to "List view", '#', id: "list_view",  class: "uibutton pull-left marginRight15" %>
-<%= link_to "Calendar view", '#', id: "fullCalendar_view",  class: "uibutton pull-left marginRight15 " %>
-  <%= link_to "Create Event", '#', id: "create_event",  class: " pull-left uibutton icon add" %>
-<span class="pull-right marginRight15">
-<%= select_tag :events_scope, options_for_select([["All Events", "all"], ["Active Community events", "active"], ["Events I created", "my"]], session['events_scope']), :onchange => "$.get('#{events_path}', {'events_scope':this.value}, null, 'script' );", class: "large pull-right"  %>
-</span>
-<aside class="span6 pull-right" style="width:300px;">
-  <section  class="span6">
-  </section>
-</aside>
-<br>  
-<br>
-<br>
- <ul class="users">
-  <% if @invited_events.count > 0 %>
-      <span style="font-size:13px;line-height: 2;margin-left:15px;"><strong>Invitation from events </strong></span>
-    <br>
+<div class="hide">
+  <%= link_to "List view", '#', id: "list_view",  class: "uibutton pull-left marginRight15" %>
+  <%= link_to "Calendar view", '#', id: "fullCalendar_view",  class: "uibutton pull-left marginRight15 " %>
+  <!--   <%= link_to "Create Event", '#', id: "create_event",  class: " pull-left uibutton icon add" %> -->
+</div>
 
-  <% @invited_events.each do |event| %>
-      <li style="padding-left:15px;margin-top:5px;cursor:pointer;position:relative;" class="tr-hover event" >
-        <% unless event.photo.nil? %>
-        <%= link_to cl_image_tag(event.photo.pic_url(:cover_pic_smallest), class:"image_al_c1 thumbnail pull-left ", id:"#{event.photo.id}"), "#" %>
-
-        <% end %>
-                  <div style="margin:5px 10px 0px 95px;">
-                    <!--
-                    <%= link_to "May be", "/events/#{event.id}/event_invitation?status=maybe", class: "uibutton pull-right button_toggle event_inv", remote: true %>
-                    <span class="pull-right "> &nbsp;</span>
-                    <%= link_to "No", "/events/#{event.id}/event_invitation?status=no", class: "uibutton pull-right button_toggle event_inv marginRight5", remote: true %>
-                    <span class="pull-right "> &nbsp;</span>
-                    <%= link_to "Yes", "/events/#{event.id}/event_invitation?status=yes", class: "uibutton pull-right button_toggle event_inv ", remote: true %>
-                  -->
-                    <address>
-                      <strong> <%= link_to event.title, "#", style: "font-size:13px;" %></strong> <br>
-                      <strong>Description : &nbsp;</strong> <%= event.description %><br>
-                      <strong>Location : &nbsp;</strong><%= event.address %><br>
-                      <strong>Privacy : &nbsp;</strong><%= privacy_str(event) %><br>
-                        
-                    </address>  
-                  </div>
-      </li>
-      <%= link_to "", event, remote: true %>  
+<div class=row>
+  <span class="pull-right mr5">
+    <%= select_tag :events_scope, options_for_select([["All Events", "all"], ["Active Community events", "active"], ["Events I created", "my"]], session['events_scope']), :onchange => "$.get('#{events_path}', {'events_scope':this.value}, null, 'script' );", class: "large pull-right"  %>
+  </span>
+</div>
+  
+<div class="row pl30">
+  
+    <% if @invited_events.count > 0 %>
+        <!--<span class="semibold font-15 ml15">Invitations</span>-->
+   <ul class="list-unstyled mt5">
+  
+    <% @invited_events.each do |event| %>
       
+       <div class="col-xs-6 pl0 pr5">
+                  <li class="tr-hover event" >
+                        <div class="panel  panel-default mb5">
+                            <div class="media">
+                                <% unless event.photo.nil? %>
+                                  <%= link_to cl_image_tag(event.photo.pic_url(:thumb_full_wide), class:"image_al_c1 wdp-100", id:"#{event.photo.id}"), event, remote: true  %>
+                                <% end %>
+                          </div>
+                        <section class="panel-body pt10 pb5">
+                            <span class="badge badge-default pull-right">Invitation pending</span>
+                            <span class="semibold mt10 ellipsis"><%= link_to event.title , event, class:"albumLink font-15", remote: true, title: "#{event.title}" %></span>
+                              <p class="ellipsis timestamp mb0 text-muted" ><span class="ico-time"></span><%= event.starts_at.strftime("%A, %B %d, %Y") %></p>
+                              <p class="ellipsis mb5 ellipsis font-11 text-muted"><span class="ico-location"></span><%= event.address %></p>
+                        </section>
+                        </div>
+                  </li>
+            </div>
+      
+      
+      
+        <%= link_to "", event, remote: true %>  
+        
+      <% end %>
     <% end %>
-    <br>
-  <% end %>
- </ul>
-<div id="event_list">
+    
+   </ul>
 
-<ul class="tabs">
-  <!-- <li class="active" id="today_events_li"><a ><h4>Events Today</h4></a></li> -->
-  <li class="active" id="upcoming_events_li"><a ><h4>Upcoming Events</h4></a></li>
-  <li id="past_events_li"><a ><h4>Past Events</h4></a></li>
-</ul>
-
-<div id="upcoming_events">  
-<ul class="users" id="upcoming_events_ul" >
-  <% unless @upcoming_events.blank? %>
-    <div id="upcoming_events_page" class="upcoming_events_paginate">
-    <% @upcoming_events.each do |upcoming_event| %>
-      <%= render :partial => 'events/event', :locals => {:event => upcoming_event} %>
-    <% end %>
-      </div>  
-      <!-- <div id="loading_upcoming_events_paginate" class="center" ><img src="http://res.cloudinary.com/rashi/image/upload/v1377924529/loading7_gvb06y.gif"></div> -->
-  <% end %>  
-</ul>
-
-<br>
 </div>
+
+
+<div id="event_list" class="row pl30">
+
+<div class="row">
+ <!-- <ul class="nav nav-pills mt5 mb10 ml20 list-unstyled" id="event_list"  >
+    <li class="active" id="upcoming_events_li"><a class="p7" href="#" aria-expanded="true" data-toggle="tab">Upcoming events</a></li>
+    <li id="past_events_li"><a class="p7" href="#" data-toggle="tab">Past events</a></li>
+  </ul>-->
+  
+</div>
+
+  
+<div id="upcoming_events" >  
+  <ul class="list-unstyled" id="upcoming_events_ul" >
+    <% unless @upcoming_events.blank? %>
+      <div id="upcoming_events_page" class="upcoming_events_paginate">
+      <% @upcoming_events.each do |upcoming_event| %>
+        <%= render :partial => 'events/event', :locals => {:event => upcoming_event} %>
+      <% end %>
+        </div>  
+        <!-- <div id="loading_upcoming_events_paginate" class="center" ><img src="https://res.cloudinary.com/rashi/image/upload/v1407379601/loading_ddb4yo.gif"></div> -->
+    <% end %>  
+  </ul>
+</div>
+
 <div id="past_events">
-<ul class="users" id="past_events_ul">
-  <% unless @past_events.blank? %>
-  <div id="past_events_page" class="past_events_paginate">
-    <% @past_events.each do |past_event| %>
-      <%= render :partial => 'events/event', :locals => {:event => past_event} %> 
-    <% end %>
-
-  </div>  
-    <!-- <div id="loading_past_events_paginate" class="center" ><img src="http://res.cloudinary.com/rashi/image/upload/v1377924529/loading7_gvb06y.gif"></div> -->
-  <% end %>
-</ul>
-<br>
+    <ul class="list-unstyled" id="past_events_ul">
+      <% unless @past_events.blank? %>
+      <div id="past_events_page" class="past_events_paginate">
+        <% @past_events.each do |past_event| %>
+          <%= render :partial => 'events/event', :locals => {:event => past_event} %> 
+        <% end %>
+      </div>  
+        <!-- <div id="loading_past_events_paginate" class="center" ><img src="https://res.cloudinary.com/rashi/image/upload/v1407379601/loading_ddb4yo.gif"></div> -->
+      <% end %>
+    </ul>
 </div>
-      <div class="center loading_page hide" ><img src="/assets/loading.gif"></div>
+<div class="center loading_page hide" ><img src="/assets/loading.gif"></div>
 
 <!-- 
 <div id="today_events">
@@ -95,7 +102,7 @@
       <%= render :partial => 'events/event', :locals => {:event => today_event} %> 
     <% end %>
     </div>    
-    <div id="loading_today_events_paginate" class="center" ><img src="http://res.cloudinary.com/rashi/image/upload/v1377924529/loading7_gvb06y.gif"></div>
+    <div id="loading_today_events_paginate" class="center" ><img src="https://res.cloudinary.com/rashi/image/upload/v1407379601/loading_ddb4yo.gif"></div>
   <% end %>
 </ul>
 <br>
@@ -106,11 +113,13 @@
 <div id='calendar_upper' class="marginRight15">
   <div id='calendar_events'><br></div>
 </div>
+</div>
+</div>
 
 
 <%= form_for( @event, remote: true, :html => {:multipart => true, id: 'create_event_form'}) do |f| %>
 <div id="modal_create_event" style="display:none;" >
-          <div id="modal-from-dom" class="modal hide fade in" style="display: block;width:700px;">
+          <div id="modal-from-dom" class="modal fade in" style="display: block;width:700px;">
             <div class="modal-header">
               <a href="#" id="closeX" class="close">×</a>
               <h3>Create Event</h3>
@@ -195,14 +204,15 @@
           </div> 
         </div>
   <% end %>
-</div>
 
-</div>
 <script type="text/javascript">
 
-$(function(){
+/*$(function(){
   $('.loading_menu').hide();
-});
+});*/
+
+
+$('#events_scope').addClass('form-control');
 
 var same_page = true;
 
@@ -425,7 +435,7 @@ restartInterval();
   $('#view_map_link').hide();
 
     $(function() {
-      return $('.events_with_autocomplete').autocomplete({
+      /*return $('.events_with_autocomplete').autocomplete({
         minLength: 2,
         source: function(request, response) {
           return $.ajax({
@@ -439,7 +449,7 @@ restartInterval();
             }
           });
         }
-      });
+      });*/
     });
 
     $(function() {

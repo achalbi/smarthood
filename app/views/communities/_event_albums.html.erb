@@ -37,7 +37,7 @@
 
 <%= form_for(Album.new, url: create_event_album_community_path(@community), remote: true, :html => {:multipart => true}) do  |f| %> 
 <div id="modal_com_<%= activity.id.to_s %>" class="modal_com" style="display:none" >
-  <div id="modal-from-dom_com" class="modal hide fade in" style="display: block;width:700px;">
+  <div id="modal-from-dom_com" class="modal fade in" style="display: block;width:700px;">
     <div class="modal-header">
       <a href="#" id="closeX_com_<%= activity.id.to_s %>" class="close">×</a>
       <h3>Create album</h3>

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140804171829) do
+ActiveRecord::Schema.define(:version => 20140809052118) do
 
   create_table "activities", :force => true do |t|
     t.string   "title"
@@ -260,6 +260,21 @@ ActiveRecord::Schema.define(:version => 20140804171829) do
     t.index ["post_id"], :name => "index_communityposts_on_post_id"
   end
 
+  create_table "delayed_jobs", :force => true do |t|
+    t.integer  "priority",   :default => 0, :null => false
+    t.integer  "attempts",   :default => 0, :null => false
+    t.text     "handler",                   :null => false
+    t.text     "last_error"
+    t.datetime "run_at"
+    t.datetime "locked_at"
+    t.datetime "failed_at"
+    t.string   "locked_by"
+    t.string   "queue"
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
+    t.index ["priority", "run_at"], :name => "delayed_jobs_priority"
+  end
+
   create_table "event_editor_groups", :force => true do |t|
     t.integer  "event_id"
     t.integer  "group_id"
@@ -345,16 +360,6 @@ ActiveRecord::Schema.define(:version => 20140804171829) do
     t.index ["starts_at"], :name => "index_events_on_starts_at"
   end
 
-  create_table "groupposts", :force => true do |t|
-    t.integer  "post_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-    t.string   "group_id"
-    t.index ["group_id"], :name => "index_groupposts_on_group_id"
-    t.index ["post_id", "group_id"], :name => "index_groupposts_on_post_id_and_group_id", :unique => true
-    t.index ["post_id"], :name => "index_groupposts_on_post_id"
-  end
-
   create_table "groups", :force => true do |t|
     t.string   "name"
     t.text     "description"
@@ -366,6 +371,35 @@ ActiveRecord::Schema.define(:version => 20140804171829) do
     t.integer  "community_id"
     t.index ["User_id"], :name => "index_groups_on_User_id"
     t.index ["community_id"], :name => "index_groups_on_community_id"
+  end
+
+  create_table "posts", :force => true do |t|
+    t.text     "content",            :limit => 255
+    t.integer  "user_id"
+    t.datetime "created_at",                        :null => false
+    t.datetime "updated_at",                        :null => false
+    t.string   "photo_file_name"
+    t.string   "photo_content_type"
+    t.integer  "photo_file_size"
+    t.datetime "photo_updated_at"
+    t.integer  "postable_id"
+    t.string   "postable_type"
+    t.text     "title"
+    t.index ["postable_id", "postable_type"], :name => "index_posts_on_postable_id_and_postable_type"
+    t.index ["user_id", "created_at"], :name => "index_posts_on_user_id_and_created_at"
+    t.index ["user_id"], :name => "index_posts_on_user_id"
+  end
+
+  create_table "groupposts", :force => true do |t|
+    t.integer  "post_id"
+    t.integer  "group_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.index ["group_id"], :name => "fk__groupposts_group_id"
+    t.index ["post_id", "group_id"], :name => "index_groupposts_on_post_id_and_group_id", :unique => true
+    t.index ["post_id"], :name => "fk__groupposts_post_id"
+    t.foreign_key ["group_id"], "groups", ["id"], :on_update => :no_action, :on_delete => :no_action, :name => "fk_groupposts_group_id"
+    t.foreign_key ["post_id"], "posts", ["id"], :on_update => :no_action, :on_delete => :no_action, :name => "fk_groupposts_post_id"
   end
 
   create_table "identities", :force => true do |t|
@@ -449,23 +483,6 @@ ActiveRecord::Schema.define(:version => 20140804171829) do
     t.text     "description"
     t.index ["post_id"], :name => "index_photos_on_post_id"
     t.index ["user_id"], :name => "index_photos_on_user_id"
-  end
-
-  create_table "posts", :force => true do |t|
-    t.text     "content",            :limit => 255
-    t.integer  "user_id"
-    t.datetime "created_at",                        :null => false
-    t.datetime "updated_at",                        :null => false
-    t.string   "photo_file_name"
-    t.string   "photo_content_type"
-    t.integer  "photo_file_size"
-    t.datetime "photo_updated_at"
-    t.integer  "postable_id"
-    t.string   "postable_type"
-    t.text     "title"
-    t.index ["postable_id", "postable_type"], :name => "index_posts_on_postable_id_and_postable_type"
-    t.index ["user_id", "created_at"], :name => "index_posts_on_user_id_and_created_at"
-    t.index ["user_id"], :name => "index_posts_on_user_id"
   end
 
   create_table "relationships", :force => true do |t|

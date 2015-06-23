@@ -1,59 +1,71 @@
 <% provide(:title, @selected_community.name) %>
-  <div class="">
-     <div  class="image_overlay tr-hover-btn" >
-      <div id="CU-pic">
-    <%= link_to cl_image_tag(@selected_community.photo.pic_url(:largest), class:"padding1",rel: "#{@selected_community.id}", id:"#{@selected_community.photo.id}") , @selected_community.photo.pic_url, class: "fancybox-album", rel: "#{@selected_community.id}" , title: "#{@selected_community.name}"    %>
-      </div>
-
-            <div class="btn_overlay_cu_cover_pic">
-              <div>
-                  <% if @community.is_requested?(current_user) %>
-                    <span class=" padding5 label warning pull-right" style="font-size:small;"><strong>Request pending to join the community</strong></span><br>
+<% provide(:page_image, @selected_community.photo.pic_url) %>
+ 
+<div class="row">
+    <div class="col-md-9 pl20 pt5"  id="community_tabs">
+        
+    
+    <article class="panel overflow-hidden mb5">
+            <header class="thumbnail">
+            <div class="media wallpaper-container">
+            <div class="image_overlay wallpaper">
+            <div class="huge-title">
+                <%= link_to cl_image_tag(@selected_community.photo.pic_url(:largest),rel: "#{@selected_community.id}", id:"#{@selected_community.photo.id}", width: "100%" ) , @selected_community.photo.pic_url, class: "fancybox-album albumLink roundCorner wallpaper-media wallpaper-image native" , title: "#{@selected_community.name}", remote: true  %>
+               <h3 class="  meta bottom bottom-gardient ht55 mb0 animated color-white" data-wow-offset="80" data-wow-duration="3s" style="visibility: visible;-webkit-animation-duration: 3s; -moz-animation-duration: 3s; animation-duration: 3s;  text-shadow: 2px 2px #6A6A6A;"></h3>
+               <h3 class="  meta bottom mb0 wow bounceInDown animated color-white" data-wow-offset="80" data-wow-duration="3s" style="visibility: visible;-webkit-animation-duration: 3s; -moz-animation-duration: 3s; animation-duration: 3s;  text-shadow: 2px 2px #6A6A6A;"><%= @selected_community.name %></h3>
+            </div>
+            </div>
+            </div>
+            </header>
+            <section class="panel-body pt5 pb0">
+                <aside class="">
+                                <div class="btn_overlay_cu_cover_pic mt5">
+                  <% if   @community.is_requested?(current_user) %>
+                    <!--<span class=" padding5 label warning text-muted pull-right" style="font-size:small;"><strong>Request pending to join the community</strong></span><br>-->
                   <% end %>         
-                 <% if @selected_community.is_private?(current_user) %>
-                     <% unless @selected_community.is_requested?(current_user) %>
-                       <%= link_to "Send request", sendrequest_community_path(@selected_community), class: "uibutton icon secure pull-right show_loading", style:"margin-right:5px;", remote: true, id: "send_req" %>
+                 <% if  @selected_community.is_private?(current_user) %>
+                     <% unless  @selected_community.is_requested?(current_user)  %>
+                       <%= link_to "Send request", sendrequest_community_path(@selected_community), class: " icon btn btn-success btn-custom secure pull-right show_loading", style:"margin-right:5px;", remote: true, id: "send_req" %>
                      <% end %>
                  <% elsif @selected_community.is_public?(current_user) %>
-                   <%= link_to "Join", join_cu_community_path(@selected_community), class: "uibutton icon prev pull-right show_loading", remote: true, id: "join_com", style:"margin-right:5px;" %>
+                   <%= link_to "Join", join_cu_community_path(@selected_community), class: " icon prev pull-right show_loading btn btn-custom btn-success", remote: true, id: "join_com", style:"margin-right:5px;" %>
                  <% end %>
                   <% if @selected_community.is_joined?(current_user, @selected_community) && @selected_community.can_admin_unjoin?(current_user) %>
-                   <%= link_to "Unjoin", unjoin_cu_community_path(@selected_community), class: "uibutton icon prev pull-right marginLeft10 show_loading", remote: true, id: "unjoin_com", style:"margin-right:5px;" %>
+                   <%= link_to "Unjoin", unjoin_cu_community_path(@selected_community), class: " btn btn-danger btn-custom icon prev pull-right marginLeft10 show_loading", remote: true, id: "unjoin_com", style:"margin-right:5px;" %>
+                 <% end %>
+
+                 <% if  current_user.is_cu_admin?(@selected_community) %>
+                    <%= link_to "edit", '#', id: "edit_comUnity",  class: "marginRight10 pull-right btn-custom btn btn-warning icon edit",:title => "Edit", style:"margin-right:5px;" %>
                  <% end %>
 
                  <% if current_user.is_cu_admin?(@selected_community) %>
-                    <%= link_to "edit", '#', id: "edit_comUnity",  class: "marginRight10 pull-right uibutton icon edit",:title => "Edit", style:"margin-right:5px;" %>
+                    <%= link_to "delete", @selected_community, method: :delete, remote: true, data: { confirm: "Do you really want to delete this community?" }, class: "pull-right btn-custom btn btn-danger", title: @selected_community.name, style:"margin-right:5px;" %>
                  <% end %>
-
-                 <% if current_user.is_cu_admin?(@selected_community) %>
-                    <%= link_to "delete", @selected_community, method: :delete, remote: true, data: { confirm: "Do you really want to delete this community?" }, class: "pull-right uibutton ", title: @selected_community.name, style:"margin-right:5px;" %>
-                 <% end %>
-
-              </div>
             </div>
-            <!-- <h2 class="text_overlay_cover_pic ">
-              <%= render partial: "communities/text_overlay", locals: {obj: @selected_community} %>
-            </h2> -->
-        </div>
-  </div><br>
-<div class="row">
-    <aside class="span7">
-        <section id="about_sec">
-         <%= render partial: 'communities/about_main', locals: { community: @selected_community} %>
-        </section>
-    </aside>
-
-  <aside id="right" style="float: right;width:220px;margin-right:10px;">
-    <div id="invited_ComUnity">
-      
-    </div>
-  </aside>
-  <div id="community_list" class="span13" style="margin-top:5px;">
-    <div id="community_tabs" >  
+                <aside class="">
+                    <section id="about_sec">
+                     <%= render partial: 'communities/about_main', locals: { community: @selected_community} %>
+                    </section>
+                </aside>
+                </aside>
+          </section>
+        </article>
+    
+    
+    
+    
+    
+    
+    
+    <div id="community_list" >
+    <div>  
       <%= render partial: 'communities/community_post', locals: {posts: @posts, community: @selected_community} %>
    </div>
+     </div>
+    </div>  
+</div>
+                        <!--/ Blog post #2 --> 
 
- </div>
 
 <script type="text/javascript">
 

@@ -11,6 +11,7 @@ class IssueTrackersController < ApplicationController
     TicketAction.create(description: "Not Reproducible")
     TicketAction.create(description: "Closed")
     TicketAction.create(description: "Comment")
+    @community = active_community
     @issue = IssueTracker.new
     @issues = IssueTracker.all
     @ticket_actions = TicketAction.all

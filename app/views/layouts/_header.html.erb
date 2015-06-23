@@ -1,39 +1,47 @@
           <% if signed_in? %>
-              
-              <nav class="navbar header-bg-color min-ht40  navbar-fixed-top ">
+              <nav class="navbar header-bg-color min-ht50  navbar-fixed-top ">
                 <div class="">
-                  <div class="navbar-header pt5 pl20">
+                  <div class="container pt10 pl20 center-xs">
                     <span class="a-white font-20">
-                     <%= link_to "Smarthood", home_page, id: "logo1", class: "color-white" %>
-                    </span>
-                  </div>
-                  <div>
-                    <ul class="nav pull-right">            
-                       <li class="dropdown header_dropdown"><a class="dropdown-toggle mr75 pt5 pb0 dropdown-bg-none color-white" data-toggle="dropdown" href="#"><span class = "mr5"><%= gravatar_for current_user, size: 30 %></span> <span><%= current_user.user_info.first_name %></span> <span><%= current_user.user_info.middle_name %></span> <span><%= current_user.user_info.last_name %></span><span class="caret ml5"></span></a>
-                          <ul class="dropdown-menu min-wd130 wd130 font-12" id="header_dropdown_list">
-                          <li><%= link_to "Profile", current_user, remote: true %></li>
-                          <li><%= link_to "Report issues", issue_trackers_path, id: "issues_home" %></li>
-                          <!-- <li><%= link_to "Settings", edit_user_path(current_user) %></li> -->
-                          <li class="divider"></li>
-                          <li>
-                            <%= link_to "Sign out", signout_path, class: "sign_out_fb" %> <!-- , method: "delete" %> -->
-                          </li>
-                        </ul>
-                      </li>
-                      
-                         <!--<li>
-                            <div class="hide fb_logout">
-                              <div class="fb-login-button" data-max-rows="1" data-size="large" data-show-faces="false" data-auto-logout-link="true"></div>                        
-                            </div>-->
-          
-                            <!--<%= link_to "Sign out", signout_path, class: "sign_out_fb" , id: "sign_out_fb" %>--> <!-- , method: "delete" %> -->
+
+                    <!-- Offcanvas left: This menu will take position at the top of template header (mobile only). Make sure that only #header have the `position: relative`, or it may cause unwanted behavior -->
+                    <li class="pull-left li-none navbar-main hidden-lg hidden-md hidden-sm">
+                        <a id="ico-paragraph" href="javascript:void(0);" data-toggle="sidebar" data-direction="ltr" rel="tooltip" title="Menu sidebar">
+                            <span class="meta">
+                                <span class="icon"><i class="ico-paragraph-justify3 color-white"></i></span>
+                            </span>
+                        </a>
+                    </li>
+                    <!--/ Offcanvas left -->
+                    <!--<a href="#" id="logo1"><span class="color-white">Smarthood</span></a>-->
+                    <span class="default dropdown-toggle" id="menu1" data-toggle="dropdown"><a href="#" id="logo1"><span class="color-white"><%= @community.name %></span></a>
+                    <span class="caret color-white"></span></span>
+                    <ul class="dropdown-menu dropdown-transparent dropdown-transparent-xs" role="menu" aria-labelledby="menu1">
+                      <li role="presentation"><a role="menuitem" class="presentation" tabindex="-1" href="/"><span>Home</span></a></li>
+                      <li class="divider"></li>
+                      <% current_user.communities.each do |community| %>
+                        <li role="presentation"><a role="menuitem" class="presentation" tabindex="-1" href="/communities/<%= community.id %>"><span><%= community.name %></span></a></li>
+                      <% end %>
                     </ul>
+                    </span>
+                        <!--<ul class="nav np pull-right">            
+                           <li class="dropdown header_dropdown"><a class="dropdown-toggle np dropdown-bg-none color-white" data-toggle="dropdown" href="#"><span class = "mr5-md"><%= gravatar_for current_user, size: 30 %></span> <span class="hidden-xs"><%= current_user.user_info.first_name %></span> <span class="hidden-xs"><%= current_user.user_info.middle_name %></span> <span class="hidden-xs"><%= current_user.user_info.last_name %></span><span class="caret ml5"></span></a>
+                              <ul class="dropdown-menu l-25-imp l-70-imp min-wd130 wd130 font-12" id="header_dropdown_list">
+                              <li><%= link_to "Profile", current_user, remote: true %></li>
+                              <li><%= link_to "Report issues", issue_trackers_path, id: "issues_home" %></li>
+                              <li><%= link_to "Settings", edit_user_path(current_user), remote: "true" %>
+                              <li class="divider"></li>
+                              <li>
+                                <%= link_to "Sign out", signout_path, class: "sign_out_fb" %>
+                              </li>
+                            </ul>
+                          </li>
+                      </ul>-->
                   </div>
                 </div>
               </nav>
+             
                     
-                    
-              
          <!-- <nav>
            <ul class="nav pull-left">            
             <li id="fat-menu">
@@ -53,6 +61,7 @@
        </nav>-->
         
           <% else %>
+          <div class="header">
           <header class="container-fluid center-xs ht75 header-bg-color pt20 topbar-fixed">
           <span class="a-white">
              <%= link_to "Smarthood", home_page, id: "logo1", class: "color-white header-text" %>
@@ -78,7 +87,8 @@
                     </div>
               <% end %>
                 </div>
-</header>
+                </header>
+            </div>
         <% end %>
            
 
@@ -148,5 +158,27 @@ window.fbAsyncInit = function() {
 $('#fat-menu').click(function(){
   $('.loading_header_page').show();
 });
+
+
+
+</script>
+
+<script>
+
+/*$("#ico-paragraph").click(function() {
+  $('<div class="modal-backdrop fade in" style="height: 923px;"></div>').appendTo(document.body).hide();
+  $('.modal-backdrop').toggle();
+});*/
+
+
+$("#ico-paragraph").click(function() {
+    if($(".modal-backdrop").length > 0){
+      $('.modal-backdrop').remove();
+    }else{
+      $('<div class="modal-backdrop fade in" style="height: 100%;"></div>').appendTo(document.body);
+    }
+});
+
+
 
 </script>

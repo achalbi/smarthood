@@ -53,7 +53,7 @@
 
 <%= form_for( Activity.new, url: create_activity_community_path(community), remote: true,  :html => {id: "create_activity_form"}) do |f| %>
   <div id="modal_create_activity" style="display:none" >
-          <div id="modal-from-dom" class="modal hide fade in" style="display: block;width:700px;">
+          <div id="modal-from-dom" class="modal fade in" style="display: block;width:700px;">
             <div class="modal-header">
               <a href="#" id="closeX_create_activity" class="close">×</a>
               <h3>Create Sub-event</h3>
@@ -181,7 +181,7 @@
                   });
 
     $(function() {
-      return $('.events_with_autocomplete').autocomplete({
+     /* return $('.events_with_autocomplete').autocomplete({
         minLength: 2,
         source: function(request, response) {
           return $.ajax({
@@ -195,7 +195,7 @@
             }
           });
         }
-      });
+      });*/
     });
 
 </script>

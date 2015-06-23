@@ -1,6 +1,19 @@
-                        <li style="margin:0 0 10px 5px;">
-                        <div  class="img_zoom" >
-                         <%= link_to cl_image_tag(album.photos[0].pic_url(:small_mid), class:"image_al_c thumbnail") , album, class:"albumLink", remote: true %>
-                           <span style="font-size:13px;" class="center"><%= link_to album.title.length > 17 ? album.title.slice(0..17) + "..." : album.title , album, class:"albumLink", remote: true, title: "#{album.title}" %></span>
-                      </div>
-                      </li>
+<li>
+    <div class="col-xs-6 pl0 pr5">
+        <div class="thumbnail mb5">
+            <div class="media bd-rad5">
+                <span class="meta bottom bottom-gardient pb0">
+                    <p class="mb0  semibold mt10"><%= link_to album.title, album, class:"color-white font-15", remote: true, title: "#{album.title}" %></p>
+                    <p class="mb5 ellipsis color-white font-11">
+                        <%if album.photos.count == 1 %>
+                            <%= album.photos.count %> photo
+                        <% else %>    
+                            <%= album.photos.count %> photos
+                        <% end %>
+                    </p>
+                </span>
+                <%= link_to cl_image_tag(album.photos[0].pic_url(:medium), class:"image_al_c") , album, class: "unveiled", remote: true %>
+            </div>
+        </div>
+    </div>
+</li> 

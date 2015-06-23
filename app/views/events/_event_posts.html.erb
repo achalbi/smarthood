@@ -1,10 +1,9 @@
-<ul class="users" id="posts_events_ul" >
+      <ul class="users list-unstyled" id="posts_events_ul" >
             <div id="posts" style="overflow:auto;">
               <% if event.responded?(current_user) %>
                 <%= render :partial => 'events/activity_post', :locals => {:post => @post, :activity => @activity, event: @event} %>
               <% end %>
             </div>
-            <br><br>
               <div id="div_event_post" class="resources<%= @activity.id %>">
               <% unless @posts.count < 1  %>
                 <%= render partial: 'posts/post', locals: {posts: @posts, activity: @activity}  %>
@@ -39,7 +38,7 @@
         $('.resources<%= @activity.id.to_s %>').append($(data));
         $('#loading_page').hide();
         console.log($.trim(jQuery(data).html()));
-        if(typeof jQuery(data) == 'undefined' || jQuery(data).html() == null || $.trim(jQuery(data).html()) == "" ||  $.trim($("#posts_one_div").html()) == "" ){
+        if(typeof jQuery(data) == 'undefined' || jQuery(data).html() == null || $.trim(jQuery(data).html()) == "" ||  $.trim($(".posts_one_div").html()) == "" ){
           clearInterval(intervalID_post);
           for (var i = 1; i < 99999; i++){
            window.clearInterval(i);

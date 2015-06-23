@@ -1,2 +1,11 @@
 $("#postId_"+<%= post.id %>).html("<%= escape_javascript(render :partial => 'comments/comment', :locals => { :post => post}) %>")
 $('.loading_page').hide();
+
+$("#cmnts_<%= post.id %>").html("Comment  <span>(<%= post.comments.count %>)</span>")
+
+$("#cmnts_<%= post.id %>").click(function(){
+  $(".comments_ol_<%= post.id %>").toggle();
+  $(".comments_ol_<%= post.id %>:lt(3)").toggle();
+  $("#cmnts_<%= post.id %> > span").toggle();
+  $("#comment_form_<%= post.id %>").toggle();
+});

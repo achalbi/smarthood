@@ -1,3 +1,3 @@
-$(".busy").button('reset');
-$('#modal_create_group').modal('hide');
 $("#community_tabs").html("<%= escape_javascript(render partial: 'communities/groups', locals: { groups: @groups, other_groups: @other_groups, community: @community, inv_groups: @inv_groups } ) %>")
+$(document).click();
+$(".topmenu > li.active > a > span.loading_menu").addClass('hide');

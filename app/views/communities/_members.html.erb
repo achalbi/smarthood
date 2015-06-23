@@ -1,20 +1,17 @@
 <% unless community.nil? %>
-  <ul class="tabs">
+  <!--<ul class="tabs">
     <%= render 'communities/links' %>
-  </ul>
+  </ul>-->
+  
   <% unless (community.privacy == Privacyenum::PROTECTED && !current_user.is_cu_admin?(community)) %>
-
-  <% if community.is_active?(current_user, community) %>
-    <%= render 'communities/invite_members', :locals => { :community => community }  %>
-  <% end %>
 
     <% unless requested_users.nil?  %>
     <% if requested_users.count > 0 %>
-    <div style="background-color: lemonchiffon">
-      <h3 class="marginLeft15">Join <%="request".pluralize(requested_users.count) %></h3>
+    <div style="">
+      <h3 class="">Join <%="request".pluralize(requested_users.count) %></h3>
       <ul class="users">
         <% requested_users.each do |user| %>
-        <li style="padding-left:15px;" class="tr-hover">
+        <li style="" class="">
           <div  class="img_zoom" style="float:left;" >
                   <%= gravatar_for user, size: 52 %>
                 </div>
@@ -28,49 +25,63 @@
         <% end %>
       </ul>
     </div>
-    <br>
     <% end %>
     <% end %> 
   
   <% end %>
+              <!--<div>
+                        <ul class="nav nav-pills mt15 mb10">
+                            <li class="active"><a class="p7" href="#show_com_moderators" data-toggle="tab" aria-expanded="true">Moderators</a><li>
+                            <li><a class="p7" href="#show_com_members" data-toggle="tab" aria-expanded="true">Members</a><li>
+                            <li><a class="p7" href="#show_com_invites" data-toggle="tab" aria-expanded="true">Invites</a><li>
+                        </ul>
+              </div>-->
+                        
+                                     <% if community.is_active?(current_user, community) %>
+                                        <%= render 'communities/invite_members', :locals => { :community => community }  %>
+                                    <% end %>
+                                
+                                    <% unless inv_pending_users.nil?  %>
+                                    <% if inv_pending_users.count > 0 %>
+                                    <div id="show_com_invites">
+                                      <ul class="list-unstyled mb0">
+                                        <% inv_pending_users.each do |user| %>
+                                        <li>
+                                               <div class="col-sm-6 pl0 pr5 mb5">
+                                                        <div class="panel widget nm">
+                                                            <div class="table-layout nm">
+                                                              <img src="<%= gravatar_for_url user, size: 82 %>" class="pull-left gravatar" ></img>
+                                                                <span class="badge badge-default pull-right mr10 mt5">invited</span>
+                                                                <div class=" valign-middle">
+                                                                    <div class="panel-body pl95 pb0 pr0">
+                                                                        <p class="semibold ellipsis mt0 mb0"><%= link_to user.name, user ,remote: true %></p>
+                                                                        <p class=" ellipsis mb0"><a class="ellipsis text-muted" mailto="<%= user.email %>"><%= user.email %></a></p>
+                                                                        <p>
+                                                                           <% if current_user.is_cu_admin?(community) %>
+                                                                              <a href="<%= declinerequest_community_path(community) << '?user_id='%><%= user.id %>"class="uibutton pull-right button-toggle decline_user" data-remote="true" id="decline" style="margin-right:5px;"> Uninvite <i class="icon-remove"></i></a>
+                                                                          <% end %>
+                                                                        </p>    
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                        </li>
+                                    <% end %>
+                              </ul>
+                            </div>
+                            <% end %>
+                            <% end %> 
+                   
+          <%= render partial: 'communities/com_members', locals: {ad_users: @ad_users, inv_users: @inv_users, community: @community} %>
 
-
-    <% unless inv_pending_users.nil?  %>
-    <% if inv_pending_users.count > 0 %>
-    <div style="background-color: lemonchiffon">
-      <h3 class="marginLeft15">Invitation pending with <%="user".pluralize(inv_pending_users.count) %></h3>
-      <ul class="users">
-        <% inv_pending_users.each do |user| %>
-        <li style="padding-left:15px;" class="tr-hover">
-          <div  class="img_zoom" style="float:left;" >
-                  <%= gravatar_for user, size: 52 %>
-                </div>
-                <% if current_user.is_cu_admin?(community) %>
-                    <a href="<%= declinerequest_community_path(community) << '?user_id='%><%= user.id %>"class="uibutton pull-right button-toggle decline_user" data-remote="true" id="decline" style="margin-right:5px;"> Uninvite <i class="icon-remove"></i></a>
-                <% end %>
-                    <address>
-                     <% unless user.name.nil? %> <strong> <%= link_to user.name, user %></strong><br><% end %>
-                      <a mailto="<%= user.email %>"><%= user.email %></a>
-                    </address>
-        </li>
-        <% end %>
-      </ul>
-    </div>
-    <br>
-    <% end %>
-    <% end %> 
-
-
-<div id="show_com_members">
-  <%= render partial: 'communities/com_members', locals: {ad_users: @ad_users, inv_users: @inv_users, community: @community} %>
-
-</div>
+ 
 
 <!-- 
 
 <%= form_for( community, url: invite_app_user_community_path(community), method: :get, remote: true) do |f| %>
 <div id="modal_invite" style="display:none;" >
-  <div id="modal-from-dom2" class="modal hide fade in" style="display: block;width:700px;">
+  <div id="modal-from-dom2" class="modal fade in" style="display: block;width:700px;">
     <div class="modal-header">
       <a href="#" id="close_invite" class="close">×</a>
       <span style="font-size:20px;line-height: 2;">Invite</span>
@@ -100,7 +111,7 @@
 
 <%= form_for( community, url: invite_by_email_community_path(community), method: :get, remote: true) do |f| %>
 <div id="modal_invite_email" style="display:none;" >
-  <div id="modal-from-dom2" class="modal hide fade in" style="display: block;width:700px;">
+  <div id="modal-from-dom2" class="modal fade in" style="display: block;width:700px;">
     <div class="modal-header">
       <a href="#" id="close_invite_email" class="close">×</a>
       <span style="font-size:20px;line-height: 2;">Invite</span>
@@ -128,7 +139,7 @@
 
 <%= form_for( community, url: add_moderators_community_path(community), method: :get, remote: true) do |f| %>
 <div id="modal_add_mod" style="display:none;" >
-  <div id="modal-from-dom__add_mod" class="modal hide fade in" style="display: block;">
+  <div id="modal-from-dom__add_mod" class="modal fade in" style="display: block;">
     <div class="modal-header">
       <a href="#" id="close_add_mod" class="close">×</a>
       <span style="font-size:15px;line-height: 2;"><strong>Set moderators</strong></span>
@@ -174,8 +185,89 @@
 
 
 
+<% unless @community.nil? %>
+
+<%= form_for( @community, url: invite_app_user_community_path(@community), method: :get, remote: true) do |f| %>
+<div id="modal_invite" class="modal fade" >
+  <div class="modal-dialog modal-sm">
+  <div class="modal-content">
+    <div class="modal-header clearfix">
+      <a href="#" id="close_invite" class="close">×</a>
+      <span class="">Invite Smarthood users</span>
+    </div>
+    <div class="modal-body center">
+      <div class="center">
+          <div class="center_block clearfix ">
+              <%= f.text_field :user_tokens, id: "search_user", 'data-validation' => "required", 'data-validation-error-msg' => "Please add users to invite" %>
+          </div>
+      </div>   
+    </div>
+    <div class="modal-footer" >
+      <%= f.submit "Invite", class: "btn btn-success btn-custom pull-right busy", id: "invite_submit" %>  
+    </div>
+  </div>
+  </div>
+  </div>
+<% end %>
+
+
+
+
+<%= form_for( @community, url: invite_by_email_community_path(@community), method: :get, remote: true) do |f| %>
+<div id="modal_invite_email" class="modal fade" >
+  <div id="modal-from-dom2" class="">
+    <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+    <div class="modal-header">
+      <a href="#" id="close_invite_email" class="close">×</a>
+      <span style="">Send invitation to email</span>
+    </div>
+    <div class="modal-body pt0">
+      <div class="">
+        <div class="">
+          <div class="center_block clearfix"><br>
+              <div class="bs-example bs-email">
+                        <div class="">
+                          <input type="text" class="form-control tokenfields" id="tokenfield-m1" name="community[user_tokens]" placeholder="Type email and hit tab/enter" data-validation="required" data-validation-error-msg="Please type email and hit tab/enter to add" />
+                        </div>
+                </div>
+          </div>
+        </div>
+      </div>   
+    </div>
+    <div class="modal-footer" >
+      <%= f.submit "Invite", class: "btn btn-success btn-custom pull-right busy", id: "invite_email_submit" %>  
+    </div>
+  </div>
+
+</div>
+</div>
+</div>
+<% end %>
+
+<% end %>
+<script type="text/javascript">
+$(document).ready(function(){
+  $.validate({
+    onSuccess : function() {
+      $('.loading_page').show();
+      $("#invite_email_submit").attr('data-loading-text', 'Inviting...');
+      $("#invite_email_submit").button('loading');
+      $("#invite_submit").attr('data-loading-text', 'Inviting...');
+      $("#invite_submit").button('loading');
+
+    },
+  });
+  });
+</script>
+
+
 
 <script type="text/javascript">
+
+
+
+
 
 $(function(){
   $('.button-toggle').hide();
@@ -205,11 +297,7 @@ $(document).ready(function(){
 });
 
 
-$(document).ready(function(){
-//  $('.gravatar').addClass('thumbnail');  
-
-  });
-
+ /* $("#show_com_members, #show_com_invites, #show_com_moderators").find('.gravatar').removeClass('img-circle');*/
 
 
 
@@ -228,7 +316,7 @@ function requestCallback(response)
         FB.ui({
           method: 'send',
           to: response.to[i],
-          link: 'http://www.smarthood.in/',
+          link: 'https://www.smarthood.in/',
         });
   }
 
@@ -284,18 +372,20 @@ $("#submit_add_mod").click(function(){
   $(this).button('loading');
 });
 
-$(function() {
+
   $("#search_user").tokenInput("/communities/<%= community.id %>/search_app_user", {
     crossDomain: false,
     theme: "facebook",
     resultsFormatter: function(item){ return "<li>" + "<img src='" + item.profile_pic + "' title='" + item.name + "' height='30px' width='30px' />" + "<div style='display: inline-block; padding-left: 10px;'><div class='full_name'>" + item.name + " " + ""+ "</div><div class='full_name'>" + item.email + " " + ""+ "</div></div></li>" },
-    tokenFormatter: function(item) { return  "<li>" + "<img src='" + item.profile_pic + "' title='" + item.name + "' height='30px' width='30px' />" + "<div style='display: inline-block; padding-left: 10px;'><div class='full_name'>" + item.name +"</div><div class='full_name'>" + item.email + " " + ""+ "</div></div></li>" },
+    tokenFormatter: function(item) { return  "<li>" +  item.name +  "</li>" },
     preventDuplicates: true ,
     zindex: 11001,
+    searchDelay: 1000,
+    minChars: 2,
     hintText: "Type in a user name",
   });
-});
 
+$(".token-input-list-facebook").addClass("form-control wd100 font-15 autocomplete-border");
 
          $('.tokenfields').on('beforeCreateToken', function (e) {
             var token = e.token.value.split('|')

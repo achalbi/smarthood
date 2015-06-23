@@ -1,0 +1,96 @@
+<a href="/communities/<%= active_community.id %>" data-remote="true" id="active_community_link">
+<div class=" loading_menu pull-right hide" ><img src="/assets/loading-sub.gif"></div>
+<span class="text"><%= community.name %></span>
+</a>
+  <script type="text/javascript">
+/*
+  $(function() {
+  $('#cssmenu > ul > li:has(ul)').addClass("has-sub");
+ // $('#cssmenu ul ul:visible').slideUp('normal');
+    $('#cssmenu a').on('click', function() {
+        $('#content').load(this.href);
+        var p = $(this).parent();
+        if ($(p).hasClass('active')) {
+            $("#cssmenu li").removeClass('active');
+            $(p).addClass('active');
+        } else {
+            $("#cssmenu li").removeClass('active');
+            $(p).addClass('active');
+        }
+        return false;
+    });
+//------------------
+$('#cssmenu > ul > li > a').click(function() {
+
+  var checkElement = $(this).next();
+
+  $('#cssmenu li').removeClass('active');
+  $(this).closest('li').addClass('active'); 
+
+  if((checkElement.is('ul')) && (checkElement.is(':visible'))) {
+    $(this).closest('li').removeClass('active');
+    checkElement.slideUp('normal');
+  }
+
+  if((checkElement.is('ul')) && (!checkElement.is(':visible'))) {
+    $('#cssmenu ul ul:visible').slideUp('normal');
+    checkElement.slideDown('normal');
+  }
+
+  if (checkElement.is('ul')) {
+    return false;
+  } else {
+    return true;  
+  }
+});
+  });
+*/
+
+
+
+$(document).ready(function(){
+
+  cssmenuSidebar();
+
+});
+
+function cssmenuSidebar(){
+  /*
+$('#cssmenu > ul > li ul').each(function(index, e){
+  var count = $(e).find('li').length;
+  var content = '<span class="cnt">' + count + '</span>';
+  $(e).closest('li').children('a').append(content);
+});
+*/
+//$('#cssmenu ul ul li:odd').addClass('odd');
+//$('#cssmenu ul ul li:even').addClass('even');
+$('#cssmenu > ul > li > a').click(function() {
+  $('#cssmenu ul ul:visible').hide();
+  $('#cssmenu ul ul li').removeClass('active-sub');
+  $('#cssmenu li').removeClass('active');
+  $(this).find('.loading_menu').show();
+  $(this).closest('li').addClass('active'); 
+  var checkElement = $(this).next();
+ // if((checkElement.is('ul')) && (checkElement.is(':visible'))) {
+  //  $(this).closest('li').removeClass('active');
+   // checkElement.slideUp('normal');
+ // }
+  if((checkElement.is('ul')) && (!checkElement.is(':visible'))) {
+    $('#cssmenu ul ul:visible').hide();
+    checkElement.show();
+  }
+  /*if($(this).closest('li').find('ul').children().length == 0) {
+    return true;
+  } else {
+    return false; 
+  }  */ 
+});
+
+$('#cssmenu > ul > li > ul > li > a').click(function() {
+  $(this).find('.loading_menu').show();
+  $('#cssmenu li').removeClass('active-sub');
+  $(this).closest('li').addClass('active-sub');  
+});
+
+}
+  </script>

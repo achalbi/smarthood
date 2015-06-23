@@ -8,6 +8,7 @@ class CommunitiesController < ApplicationController
 
   def index
     @selected_community = nil
+    @user = current_user
     @my_communities = Community.where(['id IN (?)', current_user.communities.collect(&:id)]) 
     unless Usercommunity.where(['status=? and user_id=?','active',current_user.id])[0].nil?
       @selected_community = Community.find(Usercommunity.where(['status=? and user_id=?','active',current_user.id])[0].community_id)
@@ -96,7 +97,7 @@ class CommunitiesController < ApplicationController
    if @community.save
     if @community.photo.nil?
       @photo = Photo.new
-      @photo.remote_pic_url = "http://res.cloudinary.com/rashi/image/upload/v1407379268/Community_jfiomx.png"
+      @photo.remote_pic_url = "https://res.cloudinary.com/rashi/image/upload/v1407379268/Community_jfiomx.png"
       @photo.save
       @community.photo = @photo 
     end
@@ -133,7 +134,7 @@ class CommunitiesController < ApplicationController
     #	flash[:error] = "community: " + @community.name + " not created!"
   end 
   respond_to do |format|
-   format.html { redirect_to :action => :index   }
+   format.html { redirect_to  @community  }
    format.js { }
  end
 
@@ -266,7 +267,7 @@ end
 
 def declinerequest
  @usercommunity = Usercommunity.where(['community_id=? and user_id=?',params[:id],params[:user_id]])[0]
- if current_user.id = params[:user_id]
+ if current_user.id == params[:user_id]
    @usercommunity.invitation = Uc_enum::USER_DECLINED
  else
    @usercommunity.invitation = Uc_enum::MODERATOR_DECLINED
@@ -644,24 +645,26 @@ def search_app_user
   end
 
  def invite_fb_friends
-    @fb_uids = params[:ids].split(",")
-    @fb_uids.each do |uid|
-      @user = create_user_to_invite(uid[0],nil)
-      @usercommunity = Usercommunity.where('community_id=? and user_id=?',params[:id],@user.id)[0]
-      if @usercommunity.blank?
-       @usercommunity = Usercommunity.new 
-       @usercommunity.community_id = params[:id]
-       @usercommunity.user_id = @user.id
-       @usercommunity.is_admin = false
-       @usercommunity.status=""
-       @usercommunity.invitation = Uc_enum::INVITED
-     elsif (@usercommunity.invitation==Uc_enum::REQUESTED || @usercommunity.invitation==Uc_enum::MODERATOR_DECLINED)
-       @usercommunity.invitation = Uc_enum::JOINED
-     elsif  (@usercommunity.invitation == Uc_enum::USER_DECLINED || @usercommunity.invitation == Uc_enum::UNJOINED)
-       @usercommunity.invitation = Uc_enum::INVITED
-     end
-       @usercommunity.save
-   end
+    unless params[:ids].nil?
+        @fb_uids = params[:ids].split(",")
+        @fb_uids[0].each do |uid|
+          @user = create_user_to_invite(uid,nil)
+          @usercommunity = Usercommunity.where('community_id=? and user_id=?',params[:id],@user.id)[0]
+          if @usercommunity.blank?
+           @usercommunity = Usercommunity.new 
+           @usercommunity.community_id = params[:id]
+           @usercommunity.user_id = @user.id
+           @usercommunity.is_admin = false
+           @usercommunity.status=""
+           @usercommunity.invitation = Uc_enum::INVITED
+         elsif (@usercommunity.invitation==Uc_enum::REQUESTED)
+           @usercommunity.invitation = Uc_enum::JOINED
+         elsif  (@usercommunity.invitation == Uc_enum::USER_DECLINED || @usercommunity.invitation == Uc_enum::UNJOINED || @usercommunity.invitation==Uc_enum::MODERATOR_DECLINED)
+           @usercommunity.invitation = Uc_enum::INVITED
+         end
+           @usercommunity.save
+       end
+    end
  end
 
  def invite_by_email
@@ -784,10 +787,10 @@ def search_app_user
     @requested_users = nil
     @ucs = @community.usercommunities.where("user_id = ?  AND is_admin=?",current_user.id, true )
     if @ucs.count > 0
-      @requested_users = User.where(['id IN (?)' , @community.requested_uc.collect(&:user_id)])
+      @requested_users = User.where(['id IN (?)' , @community.requested_uc.pluck(:user_id)])
       @community.req_pending_cnt = @requested_users.count
     end
-    @inv_pending_users = User.where(['id IN (?)' , @community.invited_uc.collect(&:user_id)])
+    @inv_pending_users = User.where(['id IN (?)' , @community.invited_uc.pluck(:user_id)])
     @ucs = @community.usercommunities.where('invitation = ?',Uc_enum::JOINED)
  end
 
@@ -816,7 +819,8 @@ def search_app_user
       @event.starts_at = Time.zone.now.beginning_of_day
       @event.ends_at = Time.zone.now.end_of_day
       @event.address = @community.address
-      @events = Event.where("starts_at > ? AND community_id = ?",Time.zone.now.beginning_of_day- 1.second, @community).order("starts_at ASC")
+     # @events = Event.where("starts_at > ? AND community_id = ?",Time.zone.now.beginning_of_day- 1.second, @community).order("starts_at ASC")
+      @events = Event.where("community_id = ?", @community).order("starts_at DESC")
       @events = @events.paginate(page: params[:page], :per_page => 5)
       @invited_events = []
       Eventdetail.where("user_id = ? AND status = ?", current_user.id, 'invited' ).find_each do |ed|
@@ -849,6 +853,13 @@ def search_app_user
       @events = Event.where("starts_at < ? AND community_id = ?",Time.zone.now.beginning_of_day, @community).order("starts_at DESC")
       @events = @events.paginate(page: params[:page], :per_page => 5)
       @period = 'past'
+ end
+ 
+  def events_page
+      @community = Community.find(params[:id])
+      @events = Event.where("community_id = ?", @community).order("starts_at DESC")
+      @events = @events.paginate(page: params[:page], :per_page => 5)
+      @period = 'up'
  end
 
  def up_events_page
@@ -900,7 +911,7 @@ def search_app_user
 
       if @event.photo.nil?
         @photo = Photo.new
-        @photo.remote_pic_url = "http://res.cloudinary.com/rashi/image/upload/v1407379267/Event_dcxifv.png"
+        @photo.remote_pic_url = "https://res.cloudinary.com/rashi/image/upload/v1407379267/Event_dcxifv.png"
         @photo.save
         @event.photo = @photo 
       end
@@ -935,6 +946,8 @@ def search_app_user
     @eds = @event.eventdetails
     @ad_users = @event.eventdetails.where(" is_admin=?", true)
     @inv_users = @event.eventdetails.where(" is_admin=?", false)
+    @activities =[]
+    @activity = @event
 =begin
     @ad_users = []
     @event.eventdetails.where(" is_admin=?", true).find_each do |ed|
@@ -1030,8 +1043,8 @@ def search_app_user
     @ad_users = @event.eventdetails.where(" is_admin=?", true)
     @inv_users = @event.eventdetails.where(" is_admin=?", false)
     @fb_uids = params[:ids].split(",")
-    @fb_uids.each do |uid|
-      @user = create_user_to_invite(uid[0],nil)
+    @fb_uids[0].each do |uid|
+      @user = create_user_to_invite(uid,nil)
       if @ed_user.include?(@user.id)
         next
       end

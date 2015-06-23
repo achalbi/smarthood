@@ -1,15 +1,13 @@
-   <div id="camera_rolls" style="margin-bottom:0px;" class="spam20">
-    <ul class="breadcrumb" style="line-height:2">
-      <li><a href="<%= list_albums_path %>" data-remote="true" class="marginLeft10">Albums</a> </li>
-      <li>
-      <span style="float:right;"><%= link_to "Create Album", '#', id: "addTo",  class: "uibutton icon add " %></span>
-      </li>
-    </ul>
-  </div>
+   <div id="camera_rolls" class="col-sm-9 pl5 pt5">
 
-  <%= form_for(@album, remote: true, :html => {:multipart => true}) do  |f| %> 
+      <div class="row"><a href="#" class="btn btn-sm btn-info pull-right mr20 hide" id="back" data-remote="true">Back to Albums</a></div>
+      <!-- <li>
+      <span style="float:right;"><%= link_to "Create Album", '#', id: "addTo",  class: "uibutton icon add " %></span>
+      </li> -->
+
+<%= form_for(@album, remote: true, :html => {:multipart => true}) do  |f| %> 
   <div id="modal" style="display:none" >
-    <div id="modal-from-dom" class="modal hide fade in" style="display: block;width:700px;">
+    <div id="modal-from-dom" class="modal fade in" style="display: block;width:700px;">
       <div class="modal-header">
         <a href="#" id="closeX" class="close">×</a>
         <h3>Create album</h3>
@@ -68,28 +66,55 @@
 </div>
 <% end %>
 
-<% unless @albums.nil? %>
+<% unless @albums.blank? %>
 
-<div id="gallery" style="margin:0px 0px 0px -5px;width:100%;">
- <ul id="grid"  style="width:100%;">
+<div id="gallery">
+ <ul id="grid" class="list-unstyled mb0">
 
    <% @albums.each do |album| %>
    <% unless album.photos[0].nil? %>
-   <li>
-    <div  class="img_zoom" >
-     <%= link_to cl_image_tag(album.photos[0].pic_url(:small), class:"image_al_c thumbnail") , album, class:"albumLink", remote: true %>
-     <h5 style="float:right;"><%= link_to album.title, album, class:"albumLink", remote: true %></h5>
-   </div>
- </li>
+   
+ 
+               <li>
+                    <div class="col-xs-6 pl0 pr4">
+                        <div class="thumbnail mb4">
+                            <div class="media bd-rad5">
+                                <span class="meta bottom bottom-gardient pb0">
+                                <span class="semibold mt10 ellipsis"><%= link_to album.title, album, class:"albumLink color-white font-15", remote: true, title: "#{album.title}" %></span>
+                                <p class="mb5 ellipsis color-white font-11">
+                                    <%if album.photos.count == 1 %>
+                                        <%= album.photos.count %> photo
+                                    <% else %>    
+                                        <%= album.photos.count %> photos
+                                    <% end %>
+                                    </p>
+                                </span>
+                                <%= link_to cl_image_tag(album.photos[0].pic_url(:medium), class:"image_al_c") , album, class:"albumLink unveiled", remote: true %>
+                            </div>
+                        </div>
+                    </div>
+                </li> 
+ 
  <% end %> 
  <% end %>
 </ul>
 </div>
+
+<% else %>  
+<h4 class="center"> No Albums added by you. </h4>
 <% end %>  
+</div>
 
 <script type="text/javascript">
-$(function(){
+/*$(function(){
   $('.loading_menu').hide();
+});*/
+
+$('.albumLink').click(function(){
+  $('#back').removeClass('hide');
+});
+$('#back').click(function(){
+  $('#back').addClass('show');
 });
 
 $(document).ready(function(){

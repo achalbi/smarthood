@@ -2,32 +2,35 @@
         <div class="c-pointer alert alert-<%= key %>"><%= value %></div>
       <% end %>
       <div class="center loading_page hide" ><img src="/assets/loading.gif"></div>
-    <li class="active" id="posts_community_li"><a ><h4>Posts</h4></a></li><%= link_to "", posts_com_community_path(@community) , id: "posts_community", remote: true %>
-    <!-- <li id="about_community_li"><a ><h4>About</h4></a></li><%= link_to "", about_com_community_path(@community) , id: "about_community", remote: true %> -->
-    <li id="photos_community_li" class="photos_tab"><a ><h4>Albums</h4></a></li><%= link_to "", photos_com_community_path(@community) , id: "photos_community", remote: true %>
-   <li id="members_community_li"><a ><h4>Members
-        <% if current_user.is_cu_admin?(@community)  %>
-        <% unless (@community.req_pending_cnt.nil? || @community.req_pending_cnt == 0)%>
-        <span class="pull-right label important" style="margin:5px;margin-right:10px;position:absolute;right:0;"><%= if @community.req_pending_cnt > 0 then @community.req_pending_cnt end %></span>
-        &nbsp;<% end %>
+            <li class="active nav nav-tabs" id="posts_community_li"><%= link_to "Posts", posts_com_community_path(@community) , id: "posts_community", remote: true %></li>
+             -->  <!-- <li id="about_community_li"><a ><h4>About</h4></a></li><%= link_to "", about_com_community_path(@community) , id: "about_community", remote: true %> --><!--
+            <li id="photos_community_li" class="photos_tab nav nav-tabs"><%= link_to "Albums", photos_com_community_path(@community) , id: "photos_community", remote: true %></li>
+           <li id="members_community_li" class="nav nav-tabs">
+                <% if current_user.is_cu_admin?(@community)  %>
+                <% unless (@community.req_pending_cnt.nil? || @community.req_pending_cnt == 0)%>
+                <span class="pull-right label important" style="margin:5px;margin-right:10px;position:absolute;right:0;"><%= if @community.req_pending_cnt > 0 then @community.req_pending_cnt end %></span>
+                &nbsp;<% end %>
+                <% end %>
+            <%= link_to "Members", members_com_community_path(@community) , id: "members_community", remote: true %></li>
+            <li id="groups_community_li" class="nav nav-tabs"><%= link_to "Groups", groups_com_community_path(@community) , id: "groups_community", remote: true %></li>
+            <li id="events_community_li" class="nav nav-tabs"><%= link_to "Events", events_com_community_path(@community) , id: "events_community", remote: true %></li>
+       --> <!--
+        <% unless @community.is_active?(current_user, @community) %>
+            <%= render 'setactive', :@community => @community %>
         <% end %>
-    </h4></a></li><%= link_to "", members_com_community_path(@community) , id: "members_community", remote: true %>
-    <li id="groups_community_li"><a ><h4>Groups</h4></a></li><%= link_to "", groups_com_community_path(@community) , id: "groups_community", remote: true %>
-    <li id="events_community_li"><a ><h4>Events</h4></a></li><%= link_to "", events_com_community_path(@community) , id: "events_community", remote: true %>
-<!--
-<% unless @community.is_active?(current_user, @community) %>
-    <%= render 'setactive', :@community => @community %>
-<% end %>
--->
+        --> <!--
 
 <script type="text/javascript">
 $(".alert").click(function(){
     $(this).hide('slow');
 });
 
-
-
-$(function(){
+ $(".center > li").click(function(){
+          $(".center > li").removeClass("active");
+          $(this).addClass("active");
+         });
+   
+/*$(function(){
 
 
 $('#posts_community_li').click(function(){
@@ -52,7 +55,7 @@ $('#posts_community_li').click(function(){
   $(this).next('a').click();
   $('.loading_page').show();
 });*/
-$('#photos_community_li').click(function(){
+/*$('#photos_community_li').click(function(){
   $('#posts_community_li').removeClass('active');
  // $('#about_community_li').removeClass('active');
   $('#photos_community_li').addClass('active');
@@ -96,5 +99,6 @@ $('#events_community_li').click(function(){
   $('.loading_page').show();
 });
 
-});
+}); 
+*/
 </script>

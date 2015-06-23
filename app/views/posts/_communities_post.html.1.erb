@@ -1,0 +1,313 @@
+<div class="center loading_page hide" ><img src="/assets/loading.gif"></div>
+<div id="image" class="">
+  <%= form_for(@post, remote: true,  :html => {:multipart => true, id: "communities_post", class: "panel"}) do |f| %>
+  <div id="textarea_div">
+    <%= render 'shared/error_messages', object: f.object %>
+    <%= fields_for :photo, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
+
+        <%= photo_form.file_field :pic, id: "pic1",style: "width:1px; height:1px; padding:0px;  left:0px;display:none;" %>  
+
+    <% end %>
+    <div class="">
+      <%= f.text_area :content, placeholder: "Compose new post...", 'data-validation' => "required", 'data-validation-error-msg' => "Post can't be blank", 'rows' => "2", class: "form-control form-control-minimal" %>
+    </div> 
+                  <div class="thumbnail thumbnail-album">
+                        <!-- media -->
+                      <div class="media">
+                          <canvas id="imageCanvas1" width="100%" class="pull-left ml2 mb3 mr0" >Add pictures</canvas>
+                          <a href="#" id="img_close" class="close pull-left">×</a>
+                      </div>
+                                      <!--/ media -->
+                  </div>
+                  <div class="panel-footer">
+                      <div class="panel-toolbar-wrapper">
+                          <div class="panel-toolbar">
+                              <div class="btn-group">
+                                <button type="button" class="btn btn-default" id="cam"><span class="glyphicon glyphicon-camera"></span></button>
+                                <button type="button" class="btn btn-default" id="community_post_select"><span class="glyphicon glyphicon-home"></span></button>
+                              </div>
+                            </div>
+                          <div class="panel-toolbar text-right">
+                             <%= f.submit "Post", id: "community_post_submit", class: "btn btn-primary btn-custom" %>
+                          </div>
+                        </div>
+                    </div>
+       <!-- <span style="margin-left:5px;font-size:14px;line-height:2;" class="sel_com_head timestamp hfive">Post to community</span>
+ -->
+    <%= hidden_field_tag :type, "communities" %> 
+    <div id="sel_comm_label"></div>
+      <ul class="media-list media-list-contact nm">
+        <li class="sel_com_head timestamp hfive hide">Post to community</li>
+  <% @communities.each do |cu| %>
+      <!--     <div id="cu_label_<%= cu.id %>" style="display:none;margin:5px;" class="pull-left"><%=link_to cu.name, cu, remote: true %> </div> -->
+       <li id="cu_label_<%= cu.id %>" style="margin-left:5px;position:relative;width:180px;" class=" hide community pull-left" >
+        <%= link_to cl_image_tag(cu.photo.pic_url(:smallest), class:"image_al_c1 thumbnail pull-left ", id:"#{cu.photo.id}"), "#" %>
+        <div style="margin-left:65px;margin-top:5px;">
+           <address>
+             <strong><%= link_to cu.name, "#", style: "font-size:13px;word-wrap:break-word;" %></strong><br>
+              <span style="word-wrap:break-word;"><%= cu.description.length > 17 ? cu.description.slice(0..17) + "..." : cu.description %></span><br>
+           </address>  
+        </div>
+       </li>      
+    <div style="display:none;">
+      <% if active_community.id == cu.id %>
+        <%= check_box_tag 'cu_ids[]', cu.id, active_community.id, id:"cu_check_#{cu.id}" %>
+      <% else %>
+        <%= check_box_tag 'cu_ids[]', cu.id, nil, id:"cu_check_#{cu.id}" %>
+      <% end %>
+    </div>
+    <% end %>
+    </ul>
+  </div>
+  <% end %>
+  <div id="div_post" class="home_page_post">
+    <%= render 'posts/post' %>
+  </div>
+  <div id="loading_page" class="center" ><img src="/assets/loading-sub.gif"></div>
+</div>
+
+            <div id="modal_sel_cu" style="display:none;" >
+              <div id="modal-from-dom2" class="modal fade in" style="display: block; width:100%;">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <a href="#" id="closeX_sel_cu" class="close">×</a>
+                      <h3>Select communities</h3>
+                    </div>
+                  <span style="font-size:11px;line-height: 3;margin-right:10px;" class="pull-right">(Check to select communities for the post)</span>
+                  <div class="modal-body" style="max-height:400px;width:525px;padding-top:0;">
+                    <div class="row">
+                      <div class=" ui-front">
+                        <section id="cus_sec" style="">
+                          <div style="padding:5px;">
+                            <% unless @communities.nil? %>
+                              <ul class="users">
+                              <% @communities.each do |cu| %>
+                                <li style="margin-left:15px;" class="tr-hover select_unselect_community c-pointer">
+                                  <p style="display:none;"><%= cu.id %></p>
+                                  <div class="checkboxFive pull-right marginRight15" style="margin-top:12px;">
+                                    <% if active_community.id == cu.id %>
+                                    <%= check_box_tag 'cu_ids[]', cu.id ,active_community.id, id: "checkboxFiveInput#{cu.id}" %>
+                                    <% else %>
+                                    <%= check_box_tag 'cu_ids[]', cu.id ,nil, id: "checkboxFiveInput#{cu.id}" %>
+                                    <% end %>
+                                    <label for="checkboxFiveInput<%= cu.id %>"></label>
+                                  </div>
+                                  <div  class="img_zoom" style="float:left;margin-left:15px;" >
+                                    <%= link_to cl_image_tag(cu.photo.pic_url(:smallest), class:"image_al_c1 thumbnail pull-left ", id:"#{cu.photo.id}"), "#" %>
+                                  </div>
+                                  <address style="margin-left:82px;margin-top:5px;">
+                                    <strong> <%= link_to cu.name, "#", style: "font-size:13px;" %></strong> <br>
+                                    <%= cu.description %><br>
+                                  </address> 
+                                </li>
+                              <% end %>
+                              </ul>
+                            <% end %>
+                          </div>
+              
+                        </section>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer" >
+                    <%= link_to "Done","#", class: "btn primary pull-right", id: "selCU" %>  
+                  </div>
+                </div>
+              </div>
+              </div>
+              </div>
+
+<script type="text/javascript">
+  $("#image_upload1").click(function(){
+
+  $("#image_upload1").before($("div#image").html().replace('NEW_RECORD', new Date().getTime()) );
+});
+$(document).ready(function(){
+    $("#cu_label_<%= active_community.id.to_s %>").show();
+  $.validate({
+    form : "#communities_post",
+    validateOnBlur : false,
+    onSuccess : function() {
+      $('.loading_page').show();
+      $('#community_post_submit').attr('data-loading-text', 'Posting...');
+      $('#community_post_submit').button('loading');
+    },
+  });
+  });
+
+  $("#remove_image").click(function(){
+    $("#pic1").val("");
+    $("#image").hide();
+    $("#image_upload1").show();
+
+  });
+  $("#img_close").hide();
+  $("#img_close").click(function(){
+    $("#img_close").hide();
+    $("#pic1").val("");
+    $("#imageCanvas1").hide();
+  });
+
+  var imageLoader = document.getElementById('pic1');
+  imageLoader.addEventListener('change', handleImage, false);
+  $("#cam").click(function(){
+    $("#pic1").click();
+  });
+  var canvas = document.getElementById('imageCanvas1');
+  var ctx = canvas.getContext('2d');
+  ctx.font="8pt tahoma ";
+  ctx.fillStyle = 'grey';
+  ctx.fillText("Add picture",35,46);
+  $("#imageCanvas1").hide();
+  function handleImage(e){
+    var canvas = document.getElementById('imageCanvas1');
+    var ctx = canvas.getContext('2d');
+    var iCnt=0;
+    var files = e.target.files;
+    if(files.length<1){
+     /* 
+     $('#pic1').val('');
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.clearRect(0, 0, 132, 88);
+      ctx.font="8pt tahoma ";
+      ctx.fillStyle = 'grey';
+      ctx.fillText("Add picture",35,46);
+      */
+      return;
+    }
+    $("#imageCanvas1").show();
+    $("#img_close").show();
+    canvas.width = 132;
+    canvas.height = 88*(Math.ceil(files.length/1));
+    for( var i = 0, len = files.length; i < len; i++) 
+    {
+      if(files[i])
+      {
+        var reader = new FileReader();
+        reader.onload = function(event){
+          var img = new Image();
+
+          img.onload = function(){
+            var ratioPx = 150;
+            var sWidth =ratioPx;
+            var ratio = img.width/sWidth;
+            var sHeight = img.height/ratio;   
+            if(sHeight>ratioPx){
+             sHeight =ratioPx;
+             ratio = img.height/sHeight;
+             sWidth = img.width/ratio;  
+           }
+           ctx.drawImage(img, 155*(iCnt%4),155*(Math.floor(iCnt/4)),sWidth,sHeight);
+                  //ctx.drawImage(img,0,0,sWidth,sHeight);
+                  iCnt++;
+                }
+                img.src = event.target.result;
+              }
+              reader.readAsDataURL(e.target.files[i]);     
+            }
+          }
+        }
+
+
+
+
+        var currentPage = 1;
+        var comms_post_intervalID = -1000;
+        var insideLoop ="false"; 
+
+        function checkScroll_comms_post() {
+          if (nearBottomOfPage() && insideLoop!="true") {
+            insideLoop="true";
+            currentPage++;
+            $('#loading_page').show();
+  //  console.log($('.home_page_post').length);
+  //  console.log(comms_post_intervalID);
+    if($('.home_page_post').length == 0){
+      clearInterval(comms_post_intervalID);
+     for (var i = comms_post_intervalID; i > 0; i--){
+       window.clearInterval(i);
+     }
+   insideLoop = "false";
+     return;
+   }
+   jQuery.ajax('/posts/cus_post_paginate?page=' + currentPage, {asynchronous:true, evalScripts:true, method:'get', success: function(data, textStatus, jqXHR) {
+    $('.home_page_post').append($(data));
+    $('#loading_page').hide();
+    if(typeof jQuery(data) == 'undefined' ||jQuery(data).html() == null || $(data).find('.paginate_do').html()==null){
+      clearInterval(comms_post_intervalID);
+      for (var i = 1; i < 99999; i++){
+       window.clearInterval(i);
+     }
+     restartInterval();
+   }
+   insideLoop ="false"; 
+ },});
+ }
+}
+
+function nearBottomOfPage() {
+  return scrollDistanceFromBottom() < 150;
+}
+
+function scrollDistanceFromBottom(argument) {
+  return pageHeight() - (window.pageYOffset + self.innerHeight);
+}
+
+function pageHeight() {
+  return Math.max(document.body.scrollHeight, document.body.offsetHeight);
+}
+
+$('document').ready(function(){
+  comms_post_intervalID = setInterval(checkScroll_comms_post, 500);
+})
+
+$("#community_post_select").click(function(){
+  $('#modal_sel_cu').modal({
+    backdrop: "static",
+  });
+});
+$("#closeX_sel_cu").click(function(){
+  $('#modal_sel_cu').modal('hide');
+});
+
+$("#selCU").click(function(){
+  $('#modal_sel_cu').modal('hide');
+});
+
+var j=1;
+$(".select_unselect_community").click( function() {
+  var id = $(this).find('p').html();
+  if($(this).find(':checkbox').is(':checked')){
+    $(this).find(':checkbox').prop("checked",false);
+    $("#cu_check_"+id).prop("checked",false);
+    $("#cu_label_"+id).hide();
+    j--;
+  }else{
+    $(this).find(':checkbox').prop("checked",true);
+    $("#cu_check_"+id).prop("checked",true);
+    $("#cu_label_"+id).show();
+    j++;
+  }
+
+ if(j>0){
+    $(".sel_com_head").show();
+  }else{
+    $(".sel_com_head").hide();
+  }
+
+});
+
+/*          $("a.fancybox-album").fancybox({
+            padding    : 0,
+            autoCenter :true,
+            'transitionIn'  : 'elastic',
+            'transitionOut' : 'elastic',
+            'speedIn'   : 600, 
+            'speedOut'    : 200, 
+            'overlayShow' : false
+          });*/
+
+
+
+</script>

@@ -1,3 +1,3 @@
-$(".busy").button('reset');
-$('#modal_create_event').modal('hide');
-$("#community_tabs").html("<%= escape_javascript(render partial: 'communities/events_index', locals: { events: @events, community: @community } ) %>")
+$(".topmenu > li.active > a > span.loading_menu").addClass('hide');
+$("#community_tabs").html("<%= escape_javascript(render partial: 'communities/events_index', locals: { events: @events, community: @community } ) %>");
+$(document).click();

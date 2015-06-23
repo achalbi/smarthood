@@ -1,6 +1,6 @@
 $(".busy").button('reset');
 $('#modal2').modal('hide');
-$('.modal-backdrop').remove();
+<!--$('.modal-backdrop').remove();-->
 $("#logo_community_name").html("<%= escape_javascript(  render partial: '/static_pages/community-name', locals: {community: active_community } ) %>");
 $("#about_sec").html("<%= escape_javascript(  render partial: 'communities/about_main', locals: { community: @selected_community}  ) %>");
 $("#CU-pic").html("<%= escape_javascript(  link_to cl_image_tag(@selected_community.photo.pic_url(:largest), class:'padding1',rel: '#{@selected_community.id}', id:'#{@selected_community.photo.id}') , @selected_community.photo.pic_url, class: 'fancybox-album', rel: '#{@selected_community.id}' , title: '#{@selected_community.name}'  ) %>");

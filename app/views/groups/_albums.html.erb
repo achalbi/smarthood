@@ -1,15 +1,16 @@
+    <% if community.is_active?(current_user, community) %>
+      <% if @group.is_joined?(current_user, @group) %> 
+    <div class="row"> 
+      <a  id="upload_pics_grp" class="btn btn-success pull-right btn-custom mr20 btn-sm"> Create Album</a>
+      <a  id="back_to_album" href="#photos_groups" class="btn btn-info pull-right mr20 btn-sm hide">Back to Album</a>
+    </div>
+    <% end %>  
+    <% end %>  
+          <div id="group_gallery"  ></div>
           <div id="gallery"  >
             <div id="grp_album">
-                    <div id="gallery1" class=" pull-left">
-                       <ul id="grid"  style="margin-left:0px;">
-                        <% if community.is_active?(current_user, community) %>
-                           <% if @group.is_joined?(current_user, @group) %>    
-                             <li style="background-color:#ffffff!important;margin-left:0px;">
-                             <div id="upload_pics_grp"  style = "border:2px dashed #ddd; width:110px; height:110px; padding:10px;  left:40px; text-align:middle; z-index: 1;  cursor:pointer;  float:left; margin-bottom:3px;" class="bgClrChg">  <h5 class="center" style="margin:38px 0 0 0 "> Create Album </h5>
-                            </div>
-                           </li>               
-                       <% end %>  
-                       <% end %>  
+                    <div id="gallery1">
+                       <ul id="grid" class="list-unstyled">
                       <% unless albums.nil? %>
                                <% albums.each do |album| %>
                                    <% unless album.photos[0].nil? %>
@@ -21,52 +22,62 @@
                     </div>
                      
           </div>
-      <ul class="users" id="photos_events_ul" >
-      </ul>
+      <!--<ul class="users" id="photos_events_ul" >
+      </ul>-->
+      </div>
+      
       <%= form_for(album, url: create_album_groups_path, remote: true, :html => {:multipart => true}) do  |f| %> 
-      <div id="modal5" style="display:none" >
-          <div id="modal-from-dom5" class="modal hide fade in" style="display: block;width:700px;">
-            <div class="modal-header">
-              <a href="#" id="close5X" class="close">×</a>
-              <h3>Create album</h3>
-            </div>
-                <div class="modal-body" style="max-height:450px;">
+<div id="modal5" class="modal fade" >
+  <div id="modal-from-dom_com">
+      <div class="modal-dialog">
+        <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal">×</button>
+      <span class="semibold font-15">Create album</h3>
+    </div>
+    <div class="modal-body">
+      
       <div class="row">
-        <div class="span14 ui-front "  >
-
+        <div class="col-sm-offset-1 "  >
          <%= render 'shared/error_messages', object: f.object %>
-         <div class="center_block clearfix pull-left">
-          <%= f.label :title %>
-          <div class="input">
-            <%= f.text_field :title, :placeholder=>"Title", 'data-validation' => "length",
+         <div class="center_block clearfix">
+          <%= f.label :title, class: "control-label pl15 mt15" %>
+          <div>
+          <div class="col-sm-9">
+            <%= f.text_field :title, class: "form-control", :placeholder=>"Title", 'data-validation' => "length",
      'data-validation-length' =>"3-25", 'data-validation-error-msg' => "The Album title has to be a value between 3-25 characters" %>
           </div>
+          </div>
         </div>
 
-        <div class="center_block clearfix pull-left">
-          <%= f.label :description %>
-          <div class="input">
-            <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title=>"Description", rows: 3, cols: 75, 'data-validation' => "length ",
-     'data-validation-length' =>"0-250", 'data-validation-error-msg' => "The community description has to be maximum of 250 characters"   %> 
+        <div class="center_block clearfix">
+          <%= f.label :description, class: "control-label pl15 mt15" %>
+          <div>
+          <div class="col-sm-9">
+            <%= f.text_area :description, class: "form-control inherit_width", :placeholder=>"Description", :title=>"Description", rows: 3, cols: 75, 'data-validation' => "length ",
+     'data-validation-length' =>"3-250", 'data-validation-error-msg' => "The album description has to be an alphanumeric value between 3-250 characters"   %> 
+          </div>
           </div>
         </div>
-        <span class="overrideClass">
-          <div class="center_block clearfix pull-left">
-            <%= f.label "privacy:" %>
-            <div class="input">
+          <div class="center_block clearfix">
+            <%= f.label "privacy:", class: "control-label pl15 mt15" %>
+            <div>
+            <div class="col-sm-9">
               <%= f.select :privacy, options_for_select([["Public", Privacyenum::PUBLIC], ["Private", Privacyenum::PRIVATE]]) %>
             </div>
-          </div>
-        </span>
-          <div class="center_block clearfix pull-left ">
-            <%= f.label  "Album downloadable: " %>
-            <div class="input">
-              <%= check_box_tag :downloadable %>
             </div>
           </div>
-        <br>
-        <div class="center_block clearfix pull-left clear">
-         <div class="input">    
+         <div class="center_block clearfix ">
+            <%= f.label  "Album downloadable: ", class: "control-label pl15 mt10 pull-left" %>
+            <div>
+            <div class="col-xs-1 ">
+              <%= f.check_box :downloadable, class: "mt14" %>
+            </div>
+            </div>
+          </div>
+  
+         <div class="center_block clearfix mt10">
+         <div class="col-sm-9">    
            <%= fields_for :photos, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
 
            <%= photo_form.file_field :pic, id: "pic_com", :multiple => true, style: "width:0px; height:0px; padding:0px;  left:0px;", 'data-validation' => "required", 'data-validation-error-msg' => "Please select atleast 1 photo" %>  
@@ -75,15 +86,21 @@
            <%= hidden_field_tag :id, @group.id %>
            <canvas id="imageCanvas_com" style = "border: 1px solid #ddd; padding:5px; align:center;cursor:pointer;" >click to add photos</canvas>
          </div>
+   
        </div>
      </div>
    </div>
  </div>
  <div class="modal-footer" >
-  <%= f.submit "Create Album", class: "btn primary pull-right busy", id: "crtAlb_com" %> 
+  <%= f.submit "Create Album", class: "btn btn-success btn-custom pull-right busy", id: "crtAlb_com" %> 
+  <%= f.submit "", :class => 'hide reset_form', :type => 'reset' %> 
+ 
 </div>
 </div>
 </div>
+</div>
+</div>
+
 <% end %>
           
 
@@ -99,7 +116,17 @@
                 $('#modal5').modal('hide');
               });
 
+$('#album_privacy').addClass('form-control');
 
+$('#grid').find('li').click(function(){
+  $('#upload_pics_grp').hide();
+  $('#back_to_album').removeClass('hide');
+});
+  $('#back_to_album').click(function(){
+    $('#upload_pics_grp').show();
+    $('#back_to_album').addClass('hide');
+    
+  });
 
 $(document).ready(function(){
   $.validate({

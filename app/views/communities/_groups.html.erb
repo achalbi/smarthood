@@ -1,87 +1,109 @@
 <% unless community.nil? %>
-  <ul class="tabs">
+  <!--<ul class="tabs">
     <%= render 'communities/links' %>
-  </ul>
+  </ul>-->
     <% unless (community.privacy == Privacyenum::PROTECTED && !current_user.is_cu_admin?(community)) %>
       <% if community.is_active?(current_user, community) %>
-        <a class="uibutton pull-right " id="create_group" > Create group </a>
+        <div class="row">
+          <a class=" btn-sm btn-success pull-right mr20 " href="#" id="create_group" data-toggle="modal" data-target="#modal_create_group" > Create group </a>
+        </div>
       <% end %>
   <% end %>
-<ul class="tabs span13" id="group_link">
-  <li class="active" id="my_groups_li"><a href="#">My groups</a></li>
-  <li id="other_groups_li"><a href="#">other groups</a></li>
-</ul>
-      <div class="row" >
-        <div class="span13 ui-front" id="comm_groups_list">
-              <section id="my_groups" style="">
+
+              <div>
+                        <ul class="nav nav-pills mb5 ml5">
+                            <li class="active"><a class="p7" href="#my_groups_li" data-toggle="tab" aria-expanded="true">My Groups</a><li>
+                            <li><a class="p7" href="#other_groups_li" data-toggle="tab" aria-expanded="true">Other groups</a><li>
+                        </ul>
+              </div>
+
+
+        <div class="tab-content">
+              <div  class="tab-pane np active " id="my_groups_li">
                 <% if @groups.count > 0 %>
-                       <ul class='users' id='group_list' style='margin-left:0px;'>
+                       <ul class='list-unstyled mb0'>
                       <% @groups.each do |group| %>
                           <%= render :partial => '/communities/group', :locals =>{:group => group, community: community} %>
                       <% end %>
                       </ul>
                  <% else %>
-                    <p class="marginLeft15">No groups to display</p>
+                    <p class="ml15 semibold font-15">No groups to display</p>
                 <% end %>
-              </section>
-            <section id="other_groups" style="">
+              </div>
+            <div  class="tab-pane np " id="other_groups_li" style="">
                 <% if @other_groups.count > 0 %>
-                     <ul class='users' id='group_list' style='margin-left:0px;'>
+                     <ul class='list-unstyled mb0'>
                     <% @other_groups.each do |group| %>
                       <%= render :partial => '/communities/group', :locals =>{:group => group, community: community} %>
                     <% end %>
                     </ul>
                 <% else %>
-                    <p class="marginLeft15">No groups to display</p>
+                    <p class="ml15 semibold font-15">No groups to display</p>
                 <% end %>
-            </section>
+            </div>
         </div>
-      </div>
 
 
 <%= form_for( Group.new, remote: true, :html => {:multipart => true, id: 'create_grp_form'}) do |f| %>
-<div id="modal_create_group" style="display:none;" >
-  <div id="modal-from-dom2" class="modal hide fade in" style="display: block;width:700px;">
+<div id="modal_create_group" class="modal fade" >
+    <div class="modal-dialog">
+    <div class="modal-content">
+      <div>
     <div class="modal-header">
-      <a href="#" id="closeX" class="close">×</a>
-      <h3>Create Group</h3>
+      <button type="button" class="close" data-dismiss="modal">×</button>
+      <span class="semibold font-15">Create Group</h3>
     </div>
-    <div class="modal-body" style="max-height:550px;">
+    <div class="modal-body">
       <div class="row">
-        <div class="span14 ui-front">
-
+        <div class="col-sm-offset-1">
          <%= render 'shared/error_messages', object: f.object %>
-
          <div class="center_block clearfix">
-          <%= f.label :name %>
-          <div class="input">
-            <%= f.text_field :name, :placeholder=>"Name", 'data-validation' => "length",
-     'data-validation-length' =>"3-25", 'data-validation-error-msg' => "The group name has to be a value between 3-25 characters" %></div>
+          <%= f.label :name, class: " control-label pl15 " %>
+          <div>
+          <div class="col-sm-9">
+            <%= f.text_field :name, :placeholder=>"Name", 'data-validation' => "length", class: ' form-control',
+           'data-validation-length' =>"3-25", 'data-validation-error-msg' => "The group name has to be a value between 3-25 characters" %>
+           </div>
+          </div>
           </div>
 
           <div class="center_block clearfix">
-            <%= f.label :description %>
-            <div class="input">
-              <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title=>"Description", rows: 3, cols: 75, 'data-validation' => "length ",
-     'data-validation-length' =>"3-250", 'data-validation-error-msg' => "The group description has to be a value between 3-250 characters"  %> 
+            <%= f.label :description, class: " control-label pl15 mt15 " %>
+            <div>
+            <div class="col-sm-9">
+                        <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width form-control', :title=>"Description", rows: 3, cols: 75, 'data-validation' => "length ",
+               'data-validation-length' =>"3-250", 'data-validation-error-msg' => "The group description has to be a value between 3-250 characters"  %> 
+            </div>
             </div>
           </div>
 
           <div class="center_block clearfix">
+            <div class="control-label pl15 mt15">
             <%= label_tag "Private group:" %>
-                  <div class="input">
+            </div>
+            <div>
+                  <div class="col-sm-9">
                     <%= f.select :privacy, options_for_select([["Public", Privacyenum::PUBLIC], ["Members", Privacyenum::MEMBERS], ["Private", Privacyenum::PRIVATE]], f.object.privacy) %>
                   </div>
           </div>
+          </div>
+          
+          
           <div class="center_block clearfix"><br>
-            <%= f.label "Invite members:" %>
-            <div class="input ui-front ">
-              <%= f.text_field :user_tokens, id: "search_users", 'data-validation' => "required", 'data-validation-error-msg' => "Please add members to the group" %>
+            <%= f.label "Invite members:", class: " control-label pl15 " %>
+            <div>
+            <div class="col-sm-9">
+              <%= f.text_field :user_tokens, id: "search_users", class: ' form-control', 'data-validation' => "required", 'data-validation-error-msg' => "Please add members to the group" %>
+            </div>
             </div>
           </div>
+          
           <%= hidden_field_tag :community_id, @community.id %>
           <div class="center_block clearfix">
+            <div class="control-label pl15 mt15">
             <%= label_tag "Add picture:" %>
+            </div>
+            <div class="col-sm-9"> 
             <%= f.fields_for :photo, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
 
             <%= photo_form.file_field :pic, id: "pic",style: "width:0px; height:0px; padding:0px;  left:0px;" %>  
@@ -93,12 +115,15 @@
               <canvas id="imageCanvas" style = "border: 1px solid #ddd; padding:5px; align:center;cursor:pointer" >select new image</canvas>
             </div>
           </div>
+          </div>
         </div>
       </div>
     </div>
     <div class="modal-footer" >
-      <%= f.submit "Create", class: "btn primary pull-right busy", id: "submit_group" %>  
+      <%= f.submit "Create", class: "btn btn-success btn-custom pull-right busy", id: "submit_group" %>  
     </div>
+  </div>
+  </div>
   </div>
 </div>
 <% end %>
@@ -109,6 +134,7 @@
 <script type="text/javascript">
 
 $(document).ready(function(){
+});
   $.validate({
     onSuccess : function() {
       $('#submit_group').attr('data-loading-text', 'Creating...');
@@ -116,29 +142,28 @@ $(document).ready(function(){
     },
   });
   $('.loading_page').hide();
-});
 
 
 
-$(document).ready(function(){
+/*$(document).ready(function(){
 
   $("li.group").click(function(){
     $(this).next('a').click();
     $('.loading_page').show();
   });
 
-  $("#other_groups").hide();
+  /*$("#other_groups").hide();*/
 
-
+/*
   $('#posts_community_li').removeClass('active');
   $('#about_community_li').removeClass('active');
   $('#photos_community_li').removeClass('active');
   $('#members_community_li').removeClass('active');
   $('#groups_community_li').addClass('active');
-});
+});*/
 
 
-$('#my_groups_li').click(function(){
+/*$('#my_groups_li').click(function(){
   $('#my_groups_li').addClass('active');
   $('#other_groups_li').removeClass('active');
   $("#my_groups").show();
@@ -151,7 +176,7 @@ $('#other_groups_li').click(function(){
   $("#my_groups").hide();
   $("#other_groups").show();
 });
-
+*/
 
 $(document).ready(function(){
 //  $('.gravatar').addClass('thumbnail');  
@@ -159,18 +184,18 @@ $(document).ready(function(){
   });
 
   $(document).ready(function(){
-    $("#create_group").click(function(){
+/*    $("#create_group").click(function(){
       $('#modal_create_group').modal({
       //keyboard: true,
       backdrop: "static",
     });
-    });
-    $("#closeX").click(function(){
-          $('#modal_create_group').modal('hide');
-        });
+    });*/
 
   });
 
+    $("#closeX").click(function(){
+          $('#modal_create_group').modal('hide');
+        });
 
 var imageLoader = document.getElementById('pic');
 imageLoader.addEventListener('change', handleImage, false);
@@ -230,6 +255,7 @@ function handleImage(e){
 
 
         $(function() {
+        });
           $("#search_users").tokenInput("/groups/search_app_user?comm_id=<%= community.id %>", {
             crossDomain: false,
             theme: "facebook",
@@ -239,8 +265,9 @@ function handleImage(e){
             zindex: 11001,
             hintText: "Type in a user name",
           });
-        });
 
+$("#group_privacy").addClass('form-control mt5-xs col-sm-4  mr10 pull-left pl6');
+$(".token-input-list-facebook").addClass('form-control');
 
 
 </script>

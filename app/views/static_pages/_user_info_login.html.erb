@@ -50,7 +50,7 @@
                 <div class="col-xs-12 col-sm-2">
                     <%= ui.label :gender, class: "control-label" %>
                 </div>
-                <div class="input col-xs-12 col-sm-5">
+                <div class="col-xs-12 col-sm-5 mt8">
                     <%= ui.radio_button :gender, "female" %> Female &nbsp;
                     <%= ui.radio_button :gender, "male", :checked => true  %> Male &nbsp;
                     <!--<%= ui.radio_button :gender, "other" %> Other-->
@@ -58,9 +58,9 @@
             </div>
          <% end %>
          <div class="form-group">        
-            <%= f.submit "Sign up", class: "btn btn-success btn-block hidden-sm visible-xs " %>  
-            <%= f.submit "Sign up", class: "btn btn-success hidden-xs visible-sm visible-md visible-lg pull-right mr15" %>  
-            <a href="#" id="sign_in_fb" class="btn btn-primary sign_in_fb hidden-xs hidden-md hidden-lg pull-right mr10">Log In with <i class="fa fa-facebook"></i> </a>
+            <%= f.submit "Sign up", class: "btn btn-success btn-sm btn-block hidden-sm visible-xs " %>  
+            <%= f.submit "Sign up", class: "btn btn-success btn-sm hidden-xs visible-sm visible-md visible-lg pull-right mr15" %>  
+            <a href="#" id="sign_in_fb" class="btn btn-facebook btn-sm sign_in_fb hidden-xs hidden-md hidden-lg pull-right mr10">Log In with <i class="fa fa-facebook"></i> </a>
          </div>
          <div class = "hidden-sm hidden-md hidden-lg">
             <span class = "color-black">Already have an account?</span><%= link_to " Log in here", '#', id: "log_in_smarthood" %>
@@ -79,7 +79,7 @@
             </div>
             <div class = "col-xs-12 form-group"> 
                 <!--<%= link_to image_tag("facebook.png", alt: "Log In with Facebook"), '#', id: "sign_in_fb", class: "ml10" %>-->
-                <a href="#" id="sign_in_fb" class="btn btn-primary col-xs-6 sign_in_fb">Log In with <i class="fa fa-facebook"></i> </a>
+                <a href="#" id="sign_in_fb" class="btn btn-facebook col-xs-6 sign_in_fb">Log In with&nbsp;&nbsp;<i class="fa fa-facebook"></i> </a>
                 <%= submit_tag "Log In", class: "btn btn-info col-xs-5  col-xs-offset-1"  %>
             </div>
                 <div class = "col-xs-12 small form-group text-muted">New Member?</div>

@@ -1,1 +1,4 @@
-$('#content').html('<%= escape_javascript(render("show")) %>');
+$('#community_tabs').html('<%= escape_javascript(render("show")) %>');
+$(".busy").button('reset');
+$('#modal_create_group').modal('hide');
+$('#create_grp_form')[0].reset();

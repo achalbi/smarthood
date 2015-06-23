@@ -70,7 +70,7 @@
 
 <%= form_for( activity, url: add_activity_moderators_community_path(community), method: :get, remote: true) do |f| %>
 <div id="modal_add_mod" style="display:none;" >
-  <div id="modal-from-dom__add_mod" class="modal hide fade in" style="display: block;">
+  <div id="modal-from-dom__add_mod" class="modal fade in" style="display: block;">
     <div class="modal-header">
       <a href="#" id="close_add_mod" class="close">×</a>
       <span style="font-size:15px;line-height: 2;"><strong>Set moderators</strong></span>
@@ -97,7 +97,7 @@
                       <li style="margin-left:15px;" class="tr-hover">
                         <div class="checkboxFive pull-right marginRight15" style="margin-top:5px;">
                             <%= check_box_tag 'user_ids[]', user.id, uc.is_admin?, id: "checkboxFiveInput#{uc.id}" %>
-                          <label for="checkboxFiveInput<%= uc.id %>"></label>
+                            <label for="checkboxFiveInput<%= uc.id %>"></label>
                         </div>
                         <div  class="img_zoom" style="float:left;margin-left:15px;" >
                           <%= gravatar_for user, size: 52 %>
@@ -133,7 +133,7 @@
 
 <%= form_for( activity, url: add_activity_guests_community_path(community), method: :get, remote: true) do |f| %>
 <div id="modal_add_mem" style="display:none;" >
-  <div id="modal-from-dom__add_mod" class="modal hide fade in" style="display: block;">
+  <div id="modal-from-dom__add_mod" class="modal fade in" style="display: block;">
     <div class="modal-header">
       <a href="#" id="close_add_mem" class="close">×</a>
       <span style="font-size:15px;line-height: 2;"><strong>Add guests from the event</strong></span>

@@ -1,84 +1,91 @@
-<table class="pull-left" style="width:230px;">
-        <thead>
-          <tr class="tr-hover">
-            <th >
-             <%="Moderator".pluralize(ad_users.count) %>
+<div class="row">
+  
+             <%="".pluralize(ad_users.count) %>
                 <% if activity.admin?(current_user) %>
-                 <%= link_to "edit", '#', id: "moderator",  class: "uibutton icon edit pull-right button_toggle" %>
+                 <%= link_to "edit", '#', id: "moderator",  class: "btn btn-warning btn-custom mr15 pull-right button_toggle" %>
                 <% end %>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-            <% ad_users.each do |ad|%>
-          <tr class="tr-hover">
-            <td>
-            <div  class="img_zoom" style="float:left;" >
-              <%= gravatar_for ad.user, size: 52 %>
-            </div>
-                <address>
-                  <strong> <a href="#"><%= ad.user.name %></a></strong><br>
-                  <a mailto="<%= ad.user.email %>"><%= ad.user.email %></a>
-                </address>             
-            </td>
-          </tr>
-          <% end %>
-            
-        </tbody>
-      </table>
-
-      <table class="marginLeft15 pull-left" style="width:320px;">
-        <thead>
-          <tr class="tr-hover">
-            <th >
-              <%="Guest".pluralize(inv_users.count) %>
+                
+              <%="".pluralize(inv_users.count) %>
                <% if activity.admin?(current_user) %>
-                 <%= link_to "add", '#', id: "guests",  class: "uibutton icon edit pull-right button_toggle" %>
+                 <%= link_to "add", '#', id: "guests",  class: "btn btn-success btn-custom pull-right button_toggle mr15" %>
                <% end %>
+</div>
+                
+                <div class="row ml0">
+     
+                                      <ul class="list-unstyled mb0">
+                                       <% ad_users.each do |user|%>
+                                        <li>
+                                            <div class="col-sm-6 pl0  pr5 mb5">
+                                                <div class="panel widget nm">
+                                                    <div class="table-layout nm">
+                                                        <img src="<%= gravatar_for_url user.user, size: 82 %>" class="pull-left gravatar" ></img>
+                                                        <span class="badge badge-success ml10 mt5">Moderator</span>
+                                                        <div class=" valign-middle">
+                                                            <div class="panel-body mt5 pt10 pl95 pb0 pr0">
+                                                                 <p class="semibold mt0 mb0 ellipsis"><%= link_to user.user.name, user.user, remote: true %></p>
+                                                                 <p class="mb0 ellipsis"><a class=" text-muted mb0" mailto="<%= user.user.email %>"><%= user.user.email %></a></p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    <% end %>
+                              </ul>
+      
+      
+   </div>
 
-            </th>
-          </tr>
-        </thead>
-        <tbody>
+
           <% if inv_users.count > 0 %>
-            <% inv_users.each do |ad|%>
-              <tr class="tr-hover" >
-                <td >
-                <div  class="img_zoom" style="float:left;" >
-                  <%= gravatar_for ad.user, size: 52 %>
-                </div>
-                <% if activity.admin?(current_user) && ad.user.id != current_user.id %>
-                   <%= link_to "Remove", "/events/#{event.id}/unjoin_activity?user_id=#{ad.user.id}&activity_id=#{activity.id}", class: "uibutton pull-right button_toggle remove_act", remote: true,  data: { confirm: "You want to remove the guest from the sub-event ?" } %>
-                <% end %>
-                    <address>
-                      <strong> <a href="#"><%= ad.user.name %></a></strong><br>
-                      <a mailto="<%= ad.user.email %>"><%= ad.user.email %></a>
-                    </address>
-                </td>
-              </tr>
-            <% end %>
-          <% else %>
-          <tr>
-            <td>
-              <address>No guests in the sub-event</address>
-            </td>
-          </tr>
-          <% end %>
             
-        </tbody>
-      </table>
+        <div class="row ml0">
+     
+          <ul class="list-unstyled mb0">
+            <% inv_users.each do |user|%>
+              <li>
+                  <div class="col-sm-6 pl0  pr5 mb5">
+                      <div class="panel widget nm">
+                          <div class="table-layout nm">
+                              <img src="<%= gravatar_for_url user.user, size: 82 %>" class="pull-left gravatar" ></img>
+                                <% if activity.admin?(current_user) && user.user.id != current_user.id %>
+                                   <%= link_to "x", "/events/#{event.id}/unjoin_activity?user_id=#{user.user.id}&activity_id=#{activity.id}", class: "text-default ml150 font-15 button_toggle remove_act", remote: true,  data: { confirm: "You want to remove the guest from the sub-event ?" } %>
+                                <% end %>
+                              <div class=" valign-middle">
+                                  <div class="panel-body mt5 pt0 pl95 pb0 pr0">
+                                      <p class="semibold mt0 mb0"><%= link_to user.user.name.length > 17 ? user.user.name.slice(0..17) + "..." : user.user.name, user.user %></p>
+                                      <p class="mb0"><a class="ellipsis text-muted mb0" mailto="<%= user.user.email %>"><%= user.user.email.length > 17 ? user.user.email.slice(0..17) + "..." : user.user.email %></a></p>
+                                        
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </li>
+          <% end %>
+          </ul>
+      
+   </div>
+          <% else %>
+         
+              <address>No guests in the sub-event</address>
+            
+          <% end %>
+      
 
 <%= form_for( activity, url: add_activity_moderators_event_path(event), method: :get, remote: true) do |f| %>
-<div id="modal_add_mod" style="display:none;" >
-  <div id="modal-from-dom__add_mod" class="modal hide fade in" style="display: block;">
+<div id="modal_add_mod" class="modal fade">
+  <div class="modal-dialog">
+  <div class="modal-content">
     <div class="modal-header">
-      <a href="#" id="close_add_mod" class="close">×</a>
-      <span style="font-size:15px;line-height: 2;"><strong>Set moderators</strong></span>
+      <button type="button" class="close" data-dismiss="modal">×</button>
+      <span class="semibold font-15">Set moderators</span>
     </div>
     <% if @ads.count > 1 %>
-      <span style="font-size:11px;line-height: 3;margin-right:10px;" class="pull-right">(Check to set member as a Moderator)</span>
+      <span class=" semibold font-12 pull-right">(Check to set member as a Moderator)</span>
     <% end %>
-    <div class="modal-body" style="max-height:350px;width:530px;">
+    <div class="modal-body">
       <div class="row">
         <div class=" ui-front">  
         <%= f.hidden_field :id %>
@@ -87,27 +94,30 @@
          <aside class="">
           <section>
             <!-- <h2 style="margin-left:65px;padding:3px;">Moderators</h2> -->
-            <ul class="users" style="overflow:auto;">
+             <ul class="list-unstyled pl0">
               <% if @ads.count > 1 %>
                   <% @ads.each do |uc| %>
                   <% user = User.find(uc.user_id) %>
                   <% if user == current_user  %>
                     <% next %>
                   <% end %>
-                      <li style="margin-left:15px;" class="tr-hover">
-                        <div class="checkboxFive pull-right marginRight15" style="margin-top:5px;">
-                            <%= check_box_tag 'user_ids[]', user.id, uc.is_admin?, id: "checkboxFiveInput#{uc.id}" %>
-                          <label for="checkboxFiveInput<%= uc.id %>"></label>
-                        </div>
-                        <div  class="img_zoom" style="float:left;margin-left:15px;" >
-                          <%= gravatar_for user, size: 52 %>
-                        </div>
-                          <strong><a href="#"><%= user.name %></a></strong>
-                          <p><%= user.email %></p>
-                      <div style="margin-right:10px;" class="pull-right">
-                        <%= hidden_field_tag 'user_all_ids[]', user.id %>
-                      </div>
-                      </li>
+                  <li class="tr-hover pa10 li-none select_unselect_community c-pointer">
+                    <div class="checkboxFive pull-right marginRight15" style="margin-top:12px;">
+                        <%= check_box_tag 'user_ids[]', user.id, uc.is_admin?, id: "checkboxFiveInput#{uc.id}" %>
+                      <label for="checkboxFiveInput<%= uc.id %>"></label>
+                    </div>
+                    <div  class="img_zoom" style="float:left;margin-left:15px;" >
+                      <%= gravatar_for user, size: 52 %>
+                    </div>
+                    
+                    <address style="margin-left:82px;margin-top:5px;">
+                      <strong> <a href="#"><%= user.name %></a></strong>
+                      <p><%= user.email %></p>
+                    </address> 
+                  <div class="pull-right">
+                    <%= hidden_field_tag 'user_all_ids[]', user.id %>
+                  </div>
+                  </li>
                   <% end %>
               <% else %>
                 <address class="center">No guests to set as moderator</address>
@@ -121,56 +131,73 @@
   </div>
   <% if @ads.count > 1 %>
   <div class="modal-footer" >
-    <%= f.submit "Update", class: "btn primary pull-right busy", id: "submit_add_mod" %>  
+    <%= f.submit "Update", class: "btn btn-primary pull-right busy", id: "submit_add_mod" %>  
   </div>
   <% end %>
 </div>
 </div>
+</div>
+
 <% end %>
 
 
 
 
 <%= form_for( activity, url: add_activity_guests_event_path(event), method: :get, remote: true) do |f| %>
-<div id="modal_add_mem" style="display:none;" >
-  <div id="modal-from-dom__add_mod" class="modal hide fade in" style="display: block;">
+<div id="modal_add_mem" class="modal fade">
+  <div class="modal-dialog">
+  <div class="modal-content">
     <div class="modal-header">
-      <a href="#" id="close_add_mem" class="close">×</a>
-      <span style="font-size:15px;line-height: 2;"><strong>Add guests from the event</strong></span>
+      <button type="button" class="close" data-dismiss="modal">×</button>
+      <span class="semibold font-15">Add guests from the event</span>
     </div>
-    <div class="modal-body" style="max-height:450px;width:530px;">
+    <div class="modal-body">
       <div class="row">
         <div class=" ui-front">  
         <%= f.hidden_field :id %>       
         <%= hidden_field_tag :event_id, event.id %>
          <%= render 'shared/error_messages', object: f.object %>
-         <ul class="users marginLeft20">
-          <li class="tr-hover">
-          <div class="center_block clearfix  marginLeft50">
-                    <div class="checkboxFive pull-left" style="margin-top:6px;">
-                  <%= check_box_tag 'invite_everyone' %>
-                    <label for="invite_everyone"> </label>
-                  </div>
-                    <label style="width:180px;line-height:2;">Add everyone from the event</label>
-                </div> <br>
-          </li>
-          <li class="tr-hover search_event_guests_li">
-            <label style="width:250px;line-height:2;margin-left:50px;">Add guests by name from the event</label>
-            <div class="center_block clearfix marginLeft50"><br>
-                <%= f.text_field :user_tokens, id: "search_event_guests" %>
+        
+          
+          <div class="tr-hover">
+          	
+            <li style="width:320px;padding:3px!important;" class="tr-hover li-none select_unselect_event c-pointer">
+                        <div class="checkboxFive pull-right marginRight15">
+                          <%= check_box_tag 'invite_everyone' %>
+                          <label class="" for="invite_everyone"></label>
+                        </div>
+                        <address style="margin-top:5px;">
+                          <span class="control-label pl15 mt15">Invite guests from all my communities</span>
+                        </address> 
+                       
+                      </li> 
+            
+         
+          </div>
+          
+          <div class="search_event_guests_li mb10">
+	           <div class="center_block clearfix">
+	            <span class="control-label pl15 mt15">Add guests by name from the event</span>
+              <div>
+              <div class="col-sm-6 mt10">
+  	               <%= f.text_field :user_tokens, class: "form-control", id: "search_event_guests" %>
+              </div>
+              </div>
             </div>
-          </li>
-          <li class="search_event_guests_li">
-            <label style="width:280px;line-height:2;margin-left:50px;">Add guests from the event</label>
+	          
+        	</div>
+        
+          <li class="search_event_guests_li li-none">
+            <label class="control-label ml15 ">Add guests from the event</label>
             <div class="center_block clearfix marginLeft50"><br>
-            <ul class="users" style="overflow:auto;">
+            <ul class="list-unstyled">
               <% if @urs.count > 1 %>
                   <% @urs.each do |uc| %>
                   <% user = User.find(uc) %>
                   <% if user == current_user  %>
                     <% next %>
                   <% end %>
-                      <li style="margin-left:15px;" class="tr-hover">
+                      <li class="tr-hover ml15">
                         <div class="checkboxFive pull-right marginRight15" style="margin-top:5px;">
                             <%= check_box_tag 'user_ids[]', user.id, nil, id: "checkboxFiveInput#{uc}" %>
                           <label for="checkboxFiveInput<%= uc %>"></label>
@@ -186,19 +213,18 @@
                       </li>
                   <% end %>
               <% else %>
-                <address class="center">No guests to set as moderator</address>
+                <span class="semibold ml20">No guests to set as moderator</span>
               <% end %>
-
             </ul>
             </div>
           </li>
-        </ul>
       </div>
     </div>   
   </div>
   <div class="modal-footer" >
-    <%= f.submit "Update", class: "btn primary pull-right busy", id: "submit_add_mem" %>  
+    <%= f.submit "Update", class: "btn btn-primary pull-right busy", id: "submit_add_mem" %>  
   </div>
+</div>
 </div>
 </div>
 <% end %>
@@ -206,7 +232,6 @@
 
 
 <script type="text/javascript">
-
 $("#invite_everyone").click( function() {
   if($(this).closest(':checkbox').is(':checked')){
       $('.search_event_guests_li').addClass('hide');

@@ -1,9 +1,9 @@
 <% unless group.nil? %>
 <% unless group.id.nil? %>
-<div >
+<div>
   <% unless ad_users.nil? %>
   <% if (ad_users.count > 0) %>
-  <div id="moderatorDiv" class="bgClrChg" style="mragin:10px;padding:10px;">
+  <div id="moderatorDiv" class="bgClrChg">
     <h5>Moderators<% if @is_admin %><%= link_to "edit", '#', id: "moderator",  class: "uibutton icon edit pull-right" %><% end %></h5> 
     <% if ad_users.count > 0  %>
     <section class="stats">
@@ -13,22 +13,25 @@
         </strong>
         <%="Member".pluralize(ad_users.count) %>
       </a>
-      <br><br>
       <div id="ad_users_div">
         <% ad_users.each do |ad_user| %>
-        <a style="cursor:pointer;border:0px;padding:0px;" class="pop_up" rel="popover" data-content='<%= gravatar_for ad_user, size: 100 %>' data-original-title="<%= ad_user.name %>" >
+        <a class="pop_up" rel="popover" data-content='<%= gravatar_for ad_user, size: 100 %>' data-original-title="<%= ad_user.name %>" >
          <%= gravatar_for ad_user, size: 25 %>
        </a>
        <% end %>
      </div>
    </section>
    <% end %>  
-
  </div>
+ 
+ 
+ 
+ 
+ 
  <% end %>
  <% end %> 
  <% unless inv_users.nil? %> 
- <div id="inviteDiv" class="bgClrChg" style="mragin:10px;padding:10px;">
+ <div id="inviteDiv" class="bgClrChg">
   <h5>Members<%= link_to "add", '#', id: "invite",  class: "uibutton icon add pull-right" %></h5>
   <section class="stats">
     <a href="#" id="inv_users_a">
@@ -37,10 +40,10 @@
       </strong>
       <%="Member".pluralize(inv_users.count) %>
     </a>
-    <br><br>
+    
     <div id="inv_users_div">
       <% inv_users.each do |inv_user| %>
-      <a style="cursor:pointer;border:0px;padding:0px;" class="pop_up" rel="popover" data-content='<%= gravatar_for inv_user, size: 100 %>' data-original-title="<%= inv_user.name %>" >
+      <a class="pop_up" rel="popover" data-content='<%= gravatar_for inv_user, size: 100 %>' data-original-title="<%= inv_user.name %>" >
        <%= gravatar_for inv_user, size: 25 %>
      </a>
      <% end %>
@@ -50,46 +53,42 @@
 </div>
 <% end %>
 </div>
-<br>
-
-
 <%= form_for( group, url: add_moderators_group_path(group), method: :get, remote: true) do |f| %>
-<div id="modal_add_mod" style="display:none;" >
-  <div id="modal-from-dom__add_mod" class="modal hide fade in" style="display: block;">
+<div id="modal_add_mod" class="modal fade">
+  <div class="modal-dialog modal-sm">
+  <div class="modal-content">
     <div class="modal-header">
       <a href="#" id="close_add_mod" class="close">×</a>
-      <span style="font-size:20px;line-height: 2;">Edit Moderators</span>
+      <span>Edit Moderators</span>
     </div>
-    <div class="modal-body" style="max-height:350px;">
-      <div class="row">
-        <div class=" ui-front">         
+    <div class="modal-body">
+        <div class="">         
          <%= render 'shared/error_messages', object: f.object %>
-         <aside class="">
           <section>
-            <!-- <h2 style="margin-left:65px;padding:3px;">Moderators</h2> -->
-            <ul class="user" style="overflow:auto;">
+            <ul class="list-unstyled mb0">
               <% @ucs.each do |uc| %>
               <% user = User.find(uc.user_id) %>
-              <ol>
-                <div style="background-color:#f0f0f0;padding:5px;" class="span5">
-                  <%= link_to user.name, "#" %>
+              <ol class="pl5">
                   <%= gravatar_for user, size: 25 %>
-                  <div style="margin-right:10px;" class="pull-right">
-                    <%= check_box_tag 'user_ids[]', user.id, uc.is_admin? %>
-                    <%= hidden_field_tag 'user_all_ids[]', user.id %>
-                  </div>
-                </div>
+                  <%= link_to user.name, "#" %>
+                  
+                  <div class="checkboxFive pull-right mr10">
+                            <%= check_box_tag 'user_ids[]', user.id, uc.is_admin?, id: "checkboxFiveInput#{uc.id}" %>
+                            <label for="checkboxFiveInput<%= uc.id %>"></label>
+                        </div>
+                  
+                            <%= hidden_field_tag 'user_all_ids[]', user.id %>
+                                  
               </ol>
               <% end %>
             </ul>     
           </section>
-        </aside>
       </div>
-    </div>   
   </div>
   <div class="modal-footer" >
-    <%= f.submit "Update", class: "btn primary pull-right", id: "submit_add_mod" %>  
+    <%= f.submit "Update", class: "btn btn-success btn-custom pull-right", id: "submit_add_mod" %>  
   </div>
+</div>
 </div>
 </div>
 <% end %>
@@ -97,29 +96,28 @@
 
 
 <%= form_for( group, url: invite_app_user_group_path(group), method: :get, remote: true) do |f| %>
-<div id="modal_invite" style="display:none;" >
-  <div id="modal-from-dom2" class="modal hide fade in" style="display: block;width:700px;">
+<div id="modal_invite" class="modal fade">
+  <div class="modal-dialog">
+  <div class="modal-content">
     <div class="modal-header">
       <a href="#" id="close_invite" class="close">×</a>
-      <span style="font-size:20px;line-height: 2;">Invite</span>
+      <span>Invite</span>
     </div>
-    <div class="modal-body" style="max-height:550px;">
-      <div class="row">
-        <div class="span14 ui-front">
-          <div class="center_block clearfix"><br>
-            <%= f.label "Invite by User name:" %>
-            <div class="input ui-front">
-              <%= f.text_field :user_tokens, id: "search_user" %>
+    <div class="modal-body">
+          <div class="center_block clearfix">
+            <%= f.label "Invite by User name:", class: "control-label pl15" %>
+            <div>
+            <div class="col-sm-6">
+              <%= f.text_field :user_tokens, id: "search_user", class: "form-control" %>
+            </div>
             </div>
           </div>
-        </div>
-      </div>   
     </div>
     <div class="modal-footer" >
-      <%= f.submit "Invite", class: "btn primary pull-right", id: "invite_submit" %>  
+      <%= f.submit "Invite", class: "btn btn-primary pull-right", id: "invite_submit" %>  
     </div>
   </div>
-
+  </div>
 </div>
 <% end %>
 

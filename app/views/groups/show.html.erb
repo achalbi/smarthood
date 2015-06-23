@@ -1,24 +1,6 @@
-<% provide(:title, @group.name) %>
-<div class="row">
-  <aside class="span4">
-    <section>
-      <h1>
-        
-        <%= @group.name %>
-      </h1>
-    </section>
-    <section>
-      <%= render 'shared/group_stats' %>
-    </section>
-  </aside>
-  <div class="span8">
-  	 <%= render 'follow_form' if signed_in? %>
-    <% if @group.posts.any? %>
-      <h3>Posts (<%= @group.posts.count %>)</h3>
-      <ol class="microposts">
-        <%= render @posts %>
-      </ol>
-      <%= will_paginate @posts %>
-    <% end %>
-  </div>
-</div>
+<script> 
+$(".busy").button('reset');
+$('#create_grp_form')[0].reset();
+$('#modal_create_group').modal('hide');
+$('#community_tabs').html('<%= escape_javascript(render("show")) %>');
+</script>

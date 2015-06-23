@@ -18,7 +18,7 @@ class GroupsController < ApplicationController
   @group.User = current_user
   if @group.photo.nil?
     @photo = Photo.new
-    @photo.remote_pic_url = "http://res.cloudinary.com/rashi/image/upload/v1407379267/Group_mdl8bh.png"
+    @photo.remote_pic_url = "https://res.cloudinary.com/rashi/image/upload/v1407379267/Group_mdl8bh.png"
     @photo.save
     @group.photo = @photo 
   end
@@ -53,7 +53,8 @@ class GroupsController < ApplicationController
      else
           respond_to do |format|
            format.html { }
-           format.js { redirect_to :controller => 'communities', :action => 'show_group', :grp_id => @group.id, id: params[:comm_id] }
+           #format.js { redirect_to :controller => 'communities', :action => 'show_group', :grp_id => @group.id, id: params[:comm_id] }
+           format.js { redirect_to @group }
          end
      end
    end
@@ -71,7 +72,7 @@ class GroupsController < ApplicationController
     @ucs = @group.user_groups.where("user_id = ?  AND is_admin=?",current_user.id, true )
     @community = active_community
     respond_to do |format|
-     format.html {  }
+     format.html { render  :locals => { :group => @group, :posts => @posts, :user => @user } }
      format.js {render  :locals => { :group => @group, :posts => @posts, :user => @user }  }
     end
  end
@@ -267,7 +268,8 @@ def unjoin_grp
     @usergroup = @user.user_groups.find_by_group_id(params[:id])
     @usergroup.invitation = Uc_enum::UNJOINED
     @usergroup.save
-    redirect_to :controller => 'communities', :action => 'show_group', :grp_id => params[:id], id: params[:comm_id]
+  #  redirect_to :controller => 'communities', :action => 'show_group', :grp_id => params[:id], id: params[:comm_id]
+    redirect_to @group
 
   end
 end
@@ -275,8 +277,8 @@ end
 def join_grp
   @group = Group.find(params[:id])
   @group.follow!(current_user, params[:id], Uc_enum::JOINED, false, params[:comm_id])
-  redirect_to :controller => 'communities', :action => 'show_group', :grp_id => params[:id], id: params[:comm_id]
-
+ # redirect_to :controller => 'communities', :action => 'show_group', :grp_id => params[:id], id: params[:comm_id]
+  redirect_to @group
 end
 
 def destroy

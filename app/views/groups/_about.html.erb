@@ -1,59 +1,97 @@
 <div id="aboutDiv">
-    <%= link_to "edit", '#', id: "edit_group",  class: " pull-right uibutton icon edit marginRight5",:title => "Edit" %>
+    <!--<%= link_to "edit", '#', id: "edit_group",  class: "pull-right btn btn-primary icon edit mr5 hide",:title => "Edit" %>
    <% if @group.is_joined?(current_user, @group) %>
-   <%= link_to "Unjoin", unjoin_grp_group_path(@group), class: "uibutton icon prev pull-right", remote: true %>
- <% end %>
- <p><h4>Description : <small><%= group.description %></small></h4></p>
+   <%= link_to "Unjoin", unjoin_grp_group_path(@group), class: "btn btn-primary icon prev pull-right mr5 hide", remote: true %>
+ <% end %>-->
+<!-- <p><h4>Description : <small><%= group.description %></small></h4></p>
 
- <p><h4>Privacy : <%= group.privacy == Privacyenum::PRIVATE ? 'Private' : 'Public' %></h4></p>
- <ul class="users" id="activity_groups_ul" >
+ <p><h4>Privacy : <%= group.privacy == Privacyenum::PRIVATE ? 'Private' : 'Public' %></h4></p>-->
+ 
+ <!--<div class="tab-content">
+  <div  class="tab-pane np active " id="group_moderators">-->
+  <div class="row ml10">
+    <div class="row">
+    <% if @is_admin %>
+    <a class=" btn-sm btn-success pull-right mt10 mr30" href="#" id="invite" data-toggle="modal" data-target="#modal_invite" >Add Members</a>
+    <a class=" btn-sm btn-warning pull-right mt10 mr5" href="#" id="moderator" data-toggle="modal" data-target="#modal_add_mod" >Edit</a>
+    <% end %>
+    </div>
+ <ul class="list-unstyled" id="activity_groups_ul" >
   <% if ad_users.count > 0  %>
-  <h4>Moderators</h4>
   <% ad_users.each do |user|%>
-  <li style="width:100px;float:left;">
-    <div  class="img_zoom" style="float:left;" >
-      <%= gravatar_for user, size: 52 %>
-    </div>
-    <span style="margin:5px;float:left;">
-      <%= link_to user.name, user %>
-    </span>
+  <li>
+    
+                                          <div class="col-sm-6 pl0  pr5 mb5">
+                                                <div class="panel widget nm">
+                                                    <div class="table-layout nm">
+                                                        <img src="<%= gravatar_for_url user, size: 82 %>" class="pull-left gravatar" ></img>
+                                                        <p class="mb0">
+                                                                  <% if @group.is_joined?(current_user, @group) %>
+                                                                     <%= link_to "Unjoin", unjoin_grp_group_path(@group), class: "btn btn-xs btn-danger pull-right mr5 bd-top-none", data: { confirm: "You sure?" }, remote: true %>
+                                                                   <% end %>
+                                                        <span class="badge badge-success ml10 mt5">moderator</span>
+                                                        </p>
+                                                        <div class=" valign-middle">
+                                                            <div class="panel-body mt5 pl95 pb0 pr0">
+                                                                <h5 class="semibold mt0 mb0"><%= link_to user.name.length > 17 ? user.name.slice(0..17) + "..." : user.name, user %></h5>
+                                                                <p class="mb0"><a class="ellipsis text-muted mb0" mailto="<%= user.email %>"><%= user.email.length > 17 ? user.email.slice(0..17) + "..." : user.email %></a></p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+    
   </li>
   <% end %>
-  <li style="clear:both;"></li>
   <% end %> 
-
-  <% if inv_users.count > 0 %>
-  <h4>Members</h4>
-  <% inv_users.each do |user|%>
-  <li style="width:100px;float:left;">
-    <div  class="img_zoom" style="float:left;" >
-      <%= gravatar_for user, size: 52 %>
-    </div>
-    <span style="margin:5px;float:left;">
-      <%= link_to user.name, user %>
-    </span>
-  </li>
-  <% end %>
-  <li style="clear:both;"></li>
-  <% end %>
-
-</ul>
-
-
-<br>
+  </ul>
 </div>
 
-<%= form_for( @group, remote: true, :html => {:multipart => true}) do |f| %>
-<div id="modal_edit_grp" style="display:none;" >
-  <div id="modal-from-dom2" class="modal hide fade in" style="display: block;width:700px;">
-    <div class="modal-header">
-      <a href="#" id="closeX_edit_grp" class="close">×</a>
-      <span style="font-size:20px;line-height: 2;">Edit Group</span>
+  <div class="row ml10">
+    <div class="row">
+    
     </div>
-    <div class="modal-body" style="max-height:550px;">
-      <div class="row">
-        <div class="span14 ui-front">
+    <ul class="list-unstyled">
+  <% if inv_users.count > 0 %>
+  <% inv_users.each do |user|%>
+  <li>
+    <div class="col-sm-6 pl0  pr5 mb5">
+                                                <div class="panel widget nm">
+                                                    <div class="table-layout nm">
+                                                        <img src="<%= gravatar_for_url user, size: 82 %>" class="pull-left gravatar" ></img>
+                                                              <p class="mb0">
+                                                                  <% if @group.is_joined?(current_user, @group) %>
+                                                                     <%= link_to "Unjoin", unjoin_grp_group_path(@group), class: "btn btn-xs btn-danger pull-right mr5 bd-top-none", data: { confirm: "You sure?" }, remote: true %>
+                                                                   <% end %>
+                                                                </p>   
+                                                        <div class=" valign-middle">
+                                                            <div class="panel-body mt20 pl95 pb0 pr0">
+                                                                <h5 class="semibold mt0 mb0"><%= link_to user.name.length > 17 ? user.name.slice(0..17) + "..." : user.name, user %></h5>
+                                                                <p class="mb0"><a class="ellipsis text-muted mb0" mailto="<%= user.email %>"><%= user.email.length > 17 ? user.email.slice(0..17) + "..." : user.email %></a></p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+  </li>
+  <% end %>
+ 
+  <% end %>
+  </ul>
+</div>
+</div>
 
+<!--<%= form_for( @group, remote: true, :html => {:multipart => true}) do |f| %>
+<div id="modal_edit_grp" class="modal fade" >
+  <div class="modal-dialog">
+    <div class="modal-content">
+  <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal">×</button>
+      <span class="semibold font-15">Edit Group</h3>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+        <div class="">
          <%= render 'shared/error_messages', object: f.object %>
          <div class="center_block clearfix">
           <%= f.label :name %>
@@ -84,7 +122,7 @@
               <% unless @group.photo.nil? %>
               <%= cl_image_tag(@group.photo.pic_url(:small), class:" thumbnail albumLink", id:"group_edit_pic", style: "cursor:pointer;") %>   
               <% end %>
-              <canvas id="imageCanvas2" style = "border: 1px solid #ddd; padding:5px; align:center; width:200px;display:none;cursor:pointer" >select new image</canvas>
+              <canvas id="imageCanvas_event" style = "border: 1px solid #ddd; padding:5px; align:center; width:200px;display:none;cursor:pointer" >select new image</canvas>
             </div>
           </div>  
 
@@ -95,9 +133,76 @@
       <%= f.submit "Update", class: "btn primary pull-right", id: "updGroup" %>  
     </div>
   </div>
+  </div>
+</div>
+<% end %>-->
+
+<%= form_for( group, url: invite_app_user_group_path(group), method: :get, remote: true) do |f| %>
+<div id="modal_invite" class="modal fade">
+  <div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <!--<a href="#" id="close_invite" class="close">×</a>-->
+      <button type="button" class="close" data-dismiss="modal">×</button>
+      <span class="semibold font-15">Invite</span>
+    </div>
+    <div class="modal-body">
+          <div class="center_block clearfix">
+            <%= f.label "Invite by User name:", class: "control-label pl15" %>
+            <div>
+            <div class="col-sm-6">
+              <%= f.text_field :user_tokens, id: "search_user", class: "form-control" %>
+            </div>
+            </div>
+          </div>
+    </div>
+    <div class="modal-footer" >
+      <%= f.submit "Invite", class: "btn btn-success btn-custom pull-right", id: "invite_submit" %>  
+    </div>
+  </div>
+  </div>
 </div>
 <% end %>
 
+<%= form_for( group, url: add_moderators_group_path(group), method: :get, remote: true) do |f| %>
+<div id="modal_add_mod" class="modal fade">
+  <div class="modal-dialog modal-sm">
+  <div class="modal-content">
+    <div class="modal-header">
+      <!--<a href="#" id="close_add_mod" class="close">×</a>-->
+      <button type="button" class="close" data-dismiss="modal">×</button>
+      <span>Edit Moderators</span>
+    </div>
+    <div class="modal-body">
+        <div class="">         
+         <%= render 'shared/error_messages', object: f.object %>
+          <section>
+            <ul class="list-unstyled mb0">
+              <% @ucs.each do |uc| %>
+              <% user = User.find(uc.user_id) %>
+              <ol class="pl5">
+                  <%= gravatar_for user, size: 25 %>
+                  <%= link_to user.name, "#" %>
+                  
+                    <div class="checkboxFive pull-right mr10">
+                            <%= check_box_tag 'user_ids[]', user.id, uc.is_admin?, id: "checkboxFiveInput#{uc.id}" %>
+                            <label for="checkboxFiveInput<%= uc.id %>"></label>
+                        </div>
+                  
+                            <%= hidden_field_tag 'user_all_ids[]', user.id %>
+              </ol>
+              <% end %>
+            </ul>     
+          </section>
+      </div>
+  </div>
+  <div class="modal-footer" >
+    <%= f.submit "Update", class: "btn btn-success btn-custom pull-right", id: "submit_add_mod" %>  
+  </div>
+</div>
+</div>
+</div>
+<% end %>
 
 
 
@@ -105,12 +210,12 @@
 $(document).ready(function(){
   $('#edit_group').hide();
 });
-$('#aboutDiv').hover(function(){
+/*$('#aboutDiv').hover(function(){
   $('#edit_group').toggle();
 },function(){
   $('#edit_group').toggle();
 });
-
+*/
 $("#edit_group").click(function(){
       $('#modal_edit_grp').modal('show');
     });
@@ -125,21 +230,21 @@ $("#edit_group").click(function(){
     $("#group_edit_pic").click(function(){
       $('#group_edit_pic').hide();
       $('#pic2').click();
-      $('#imageCanvas2').show();
+      $('#imageCanvas_event').show();
     });
 
       var imageLoader = document.getElementById('pic2');
     imageLoader.addEventListener('change', handleImage, false);
-    $("#imageCanvas2").click(function(){
+    $("#imageCanvas_event").click(function(){
         $("#pic2").click();
     });
-        var canvas = document.getElementById('imageCanvas2');
+        var canvas = document.getElementById('imageCanvas_event');
     var ctx = canvas.getContext('2d');
     ctx.font="30px Arial";
     ctx.fillText("Change picture",10,50);
 
   function handleImage(e){
-    var canvas = document.getElementById('imageCanvas2');
+    var canvas = document.getElementById('imageCanvas_event');
     var ctx = canvas.getContext('2d');
     var iCnt=0;
     var files = e.target.files;
@@ -173,6 +278,17 @@ $("#edit_group").click(function(){
             }
           }
   }
+
+   $("#search_user").tokenInput("/events/search_auto_user", {
+    crossDomain: false,
+   // prePopulate: $(".eventdetails_with_autocomplete").data("pre"),
+    theme: "facebook",
+        resultsFormatter: function(item){ return "<li>" + "<img src='" + item.profile_pic + "' title='" + item.name + "' height='30px' width='30px' />" + "<div style='display: inline-block; padding-left: 10px;'><div class='full_name'>" + item.name + " " + ""+ "</div><div class='email'>" + item.description + "</div></div></li>" },
+        tokenFormatter: function(item) { return  "<li>" + "<img src='" + item.profile_pic + "' title='" + item.name + "' height='30px' width='30px' />" + "<div style='display: inline-block; padding-left: 10px;'><div class='full_name'>" + item.name +"</div></div></li>" },
+        preventDuplicates: true ,
+        zindex: 11001,
+        hintText: "Type in a user name",
+  });
 
 
 </script>

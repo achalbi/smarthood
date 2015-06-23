@@ -563,7 +563,8 @@ html.frontend body {
 }
 .sidebar {
   position: fixed;
-  z-index: 1031;
+  /*z-index: 1031;*/
+  z-index: 1029;
   top: 0px;
   bottom: 0px;
   width: 240px;
@@ -577,7 +578,7 @@ html.frontend body {
   content: '';
   position: absolute;
   top: 0;
-  bottom: 0;
+//  bottom: 0;
   width: inherit;
   z-index: -1;
   background-color: inherit;
@@ -605,7 +606,7 @@ html.frontend body {
 }
 .sidebar .header:after {
   position: absolute;
-  bottom: 0px;
+//  bottom: 0px;
   left: 0px;
   right: 0px;
   content: "";
@@ -617,7 +618,7 @@ html.frontend body {
 }
 .sidebar .footer {
   position: absolute;
-  bottom: 0px;
+//  bottom: 0px;
   z-index: 11;
 }
 .sidebar .footer:after {
@@ -635,13 +636,13 @@ html.frontend body {
 .sidebar .viewport {
   position: absolute !important;
   top: 0px;
-  bottom: 0px;
+//  bottom: 0px;
   width: 100% !important;
 }
 .sidebar .content {
   position: absolute;
   top: 0px;
-  bottom: 0px;
+//  bottom: 0px;
   overflow-y: scroll;
   -ms-overflow-style: -ms-autohiding-scrollbar;
   -webkit-overflow-scrolling: touch;
@@ -717,7 +718,7 @@ html.frontend body {
     bottom: 60px;
   }
   .sidebar.sidebar-menu {
-    position: relative;
+    position: fixed;
   }
   .sidebar.sidebar-menu:before {
     position: fixed;
@@ -730,7 +731,7 @@ html.frontend body {
   .sidebar.sidebar-menu .footer ~ .viewport,
   .sidebar.sidebar-menu .header ~ .content,
   .sidebar.sidebar-menu .footer ~ .content {
-    top: 0;
+    top: 0px;
   }
   .sidebar.sidebar-menu .viewport {
     position: relative !important;

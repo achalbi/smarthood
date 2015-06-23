@@ -1,9 +1,131 @@
-
-      <div class="img_zoom" >
-       <h4 class="pull-left" style="margin-left:10px;font-size:18px;">
-        <div id="albumLink">
-          <%= link_to group.name, group, class:"albumLink", id: "grp_name", remote: true %>
+        <article class="panel overflow-hidden mb5">
+            <header class="thumbnail">
+            <div class="media wallpaper-container">
+            <div class="image_overlay wallpaper">
+               <!-- <div class="text pull-right">
+                   <%= link_to "<span class='ico-home' ></span>".html_safe, group, class:"albumLink  btn btn-primary ", id: "grp_name", remote: true %>
+                </div>-->
+                 <!-- Start of Main Title + Intro -->
+            <div class="huge-title ">
+              <%= link_to cl_image_tag(group.photo.pic_url(:largest), class:"roundCorner albumLink wd100", id:"grp_#{group.id}") ,group, class:"albumLink roundCorner wallpaper-media wallpaper-image native bottom-gardient", remote: true %>
+                 <h3 class="  meta bottom bottom-gardient ht55 mb0 animated color-white" data-wow-offset="80" data-wow-duration="3s" style="visibility: visible;-webkit-animation-duration: 3s; -moz-animation-duration: 3s; animation-duration: 3s;  text-shadow: 2px 2px #6A6A6A;"></h3>
+               <h3 class="  meta bottom mb0 wow bounceInDown animated color-white" data-wow-offset="80" data-wow-duration="3s" style="visibility: visible;-webkit-animation-duration: 3s; -moz-animation-duration: 3s; animation-duration: 3s;  text-shadow: 2px 2px #6A6A6A;"><%= group.name %></h3>
+                     
+                <!--<h6 class="wow bounceInDown animated " style="visibility: visible;-webkit-animation-duration: 3s; -moz-animation-duration: 3s; animation-duration: 3s;"> <%= render 'shared/stats' %></h6> -->   
+               
+            </div>
+            </div>
+            </div>
+            </header>
+            <section class="panel-body ptb0">
+                <div class="row">
+                 <div class="col-xs-12 pt5 pr5">
+                <div class="center" id="follow_form">
+                  <% unless current_user.id == @group.User_id %>
+                    <% if @group.privacy? %>
+                    <%= link_to "join",join_grp_group_path(@group), class: "btn btn-success btn-custom secure pull-right show_loading mr5" , remote: true %>
+                    <% else %>
+                        <% if @group.following?(current_user, @group) %>
+                        <%= render 'unfollow', :group => @group %>
+                        <% else %>
+                        <%= render 'follow', :group => @group %>
+                        <% end %>
+                    <% end %>
+                  <% else %>
+                    <a href="#" id="edit_group" class="btn btn-warning btn-custom secure pull-right show_loading mr5" data-toggle="modal" data-target="#">Edit</a>
+                   <% if @group.is_joined?(current_user, @group) %>
+                   <%= link_to "Unjoin", unjoin_grp_group_path(@group), class: "btn btn-danger btn-custom secure pull-right show_loading mr5", remote: true %>
+                   <% end %>
+                   <% end %>
+                </div>
+            </div>
         </div>
-      </h4>
-      <%= link_to cl_image_tag(group.photo.pic_url(:thumb_medium), class:"roundCorner albumLink", id:"grp_#{group.id}") ,group, class:"albumLink roundCorner", remote: true %>
+    <aside class="">
+        <section id="about_sec">
+        <!--<%= link_to group.name, group, class:"albumLink", id: "grp_name", remote: true %>-->
+        <address class="mt10">
+                  <!--  <p class="mtb0"><strong class=" semi-bold">Name : &nbsp;</strong><span class="font-12 color-light-black"><%= group.name %></span></p>-->
+                    <p class="mtb0"><strong class=" semi-bold">Description : &nbsp;</strong><span class="font-12 color-light-black"><%= group.description %></span></p>
+                    <p class="mtb0"><strong class=" semi-bold">Privacy : &nbsp;</strong><span class="font-12 color-light-black"><%= privacy_str(group) %></span></p>
+                    <p class="mtb0"><strong class=" semi-bold"><%= "Member".pluralize(group.users.count) %> : &nbsp;</strong><span class="font-12"><%= pluralize(group.users.count, "person") %></span>
+                  </address> 
+        </section>
+    </aside>
+    </section>
+</article>
+
+
+<%= form_for( @group, remote: true, :html => {:multipart => true}) do |f| %>
+<div id="modal_edit_grp" class="modal fade" >
+  <div class="modal-dialog">
+    <div class="modal-content">
+  <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal">×</button>
+      <span class="semibold font-15">Edit Group</h3>
     </div>
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-sm-offset-1">
+         <%= render 'shared/error_messages', object: f.object %>
+         <div class="center_block clearfix">
+          <%= f.label :name, class: "control-label ml15 mt15" %>
+          <div>
+          <div class="col-sm-9">
+            <%= f.text_field :name,class: "form-control", :placeholder=>"Title" %></div>
+          </div>
+          </div>
+
+          <div class="center_block clearfix">
+            <%= f.label :description, class: "control-label ml15 mt15" %>
+            <div>
+                
+            <div class="col-sm-9">
+              <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width form-control', :title=>"Description", rows: 3, cols: 75  %> 
+            </div>
+          </div>
+            </div>
+
+          <div class="center_block clearfix">
+              <div class="control-label ml15 mt15 pull-left">
+                  
+            <%= label_tag "Private group:" %>
+              </div>
+              <div>
+                  
+            <div class="col-sm-1 mt7">
+              <%= f.check_box :privacy, class: "form-control" %>
+            </div>
+              </div>
+          </div>
+
+          <div class="center_block clearfix">
+              <div class="control-label ml15 mt15">
+                    <%= label_tag "Change picture:" %>
+              </div>
+            <%= f.fields_for :photo, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
+              <%= photo_form.file_field :pic, id: "pic2",style: "width:1px; height:1px; padding:0px;  left:0px;" %>  
+            <% end %>
+            <div class="col-sm-9"> 
+              <% unless @group.photo.nil? %>
+              <%= cl_image_tag(@group.photo.pic_url(:small), class:" thumbnail albumLink", id:"group_edit_pic", style: "cursor:pointer;") %>   
+              <% end %>
+              <canvas id="imageCanvas_event" style = "border: 1px solid #ddd; padding:5px; align:center; width:200px;display:none;cursor:pointer" >select new image</canvas>
+            </div>
+          </div>  
+
+        </div>
+      </div>   
+    </div>
+    <div class="modal-footer" >
+      <%= f.submit "Update", class: "btn btn-success pull-right btn-custom", id: "updGroup" %>  
+    </div>
+  </div>
+  </div>
+</div>
+<% end %>
+
+
+
+<script>
+    
+</script>

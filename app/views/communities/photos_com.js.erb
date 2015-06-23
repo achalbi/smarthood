@@ -1,1 +1,3 @@
 $("#community_tabs").html("<%= escape_javascript(render partial: 'communities/albums', locals: { albums: @albums} ) %>")
+$(".topmenu > li.active > a > span.loading_menu").addClass('hide');
+$(document).click();

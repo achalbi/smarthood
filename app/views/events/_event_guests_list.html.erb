@@ -1,35 +1,57 @@
-<table class="pull-left" style="width:230px;">
-        <thead>
-          <tr class="tr-hover">
-            <th >
-             <%="Moderator".pluralize(ad_users.count) %>
+                                                        
+
+      
+
+      <div class="row">
+        
+        <%="".pluralize(ad_users.count) %>
              <% if event.responded?(current_user) %>
                 <% if event.is_admin?(current_user.id) %>
-                 <%= link_to "edit", '#', id: "moderator",  class: "uibutton icon edit pull-right button_toggle" %>
+                 <a id="moderator" class="btn btn-warning btn-custom pull-right mr15 mb5" data-toggle="modal" data-target="#modal_add_mod">Edit Moderators</a>
                 <% end %>
               <% end %>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-            <% ad_users.each do |ed|%>
-          <tr class="tr-hover">
-            <td>
-            <div  class="img_zoom" style="float:left;" >
-              <%= gravatar_for ed.user, size: 52 %>
-            </div>
-                <address>
-                  <strong> <a href="#"><%= ed.user.name %></a></strong><br>
-                  <a mailto="<%= ed.user.email %>"><%= ed.user.email %></a>
-                </address>             
-            </td>
-          </tr>
-          <% end %>
-            
-        </tbody>
-      </table>
+      </div>
+      
+   <div class="row ml0">
+     
+          <ul class="list-unstyled mb0">
+           <% ad_users.each do |user|%>
+            <li>
+                <div class="col-sm-6 pl0  pr5 mb5">
+                    <div class="panel widget nm">
+                        <div class="table-layout nm">
+                            <img src="<%= gravatar_for_url user.user, size: 82 %>" class="pull-left gravatar" ></img>
+                            <span class="badge badge-success ml10 mt5">Moderator</span>
+                            <div class=" valign-middle">
+                                <div class="panel-body mt5 pt10 pl95 pb0 pr0">
+                                     <p class="semibold mt0 mb0 ellipsis"><%= link_to user.user.name, user.user, remote: true %></p>
+                                     <p class="mb0 ellipsis"><a class=" text-muted mb0" mailto="<%= user.user.email %>"><%= user.user.email %></a></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        <% end %>
+  </ul>
+      
+   </div>
+      
+       <div class="row ml0">
+              <%="".pluralize(inv_users.count) %>
+                <ul class="nav nav-pills mt5 mb10 ml5 list-unstyled">
+                  <li class="active" id="all_li"><a class="c-pointer pt3 pb3 bd-rad12" data-toggle="tab" ><span class="font-11">Invited - <%= inv_users.count %></span></a></li>
+                  <li id="yes_li"><a class="c-pointer pt3 pb3 bd-rad12"><span class="font-11" data-toggle="tab">Yes - <%= inv_users.where(status: "yes").count %></span></a></li>
+                  <li id="no_li"><a class="c-pointer pt3 pb3 bd-rad12"><span class="font-11" data-toggle="tab">No - <%= inv_users.where(status: "no").count %></span></a></li>
+                  <li id="maybe_li"><a class="c-pointer pt3 pb3 bd-rad12"><span class="font-11" data-toggle="tab">May be - <%= inv_users.where(status: "maybe").count %></span></a></li>
+                </ul>
+          
+        </div> 
+      
+   
+      
 
-      <table class="marginLeft15 pull-left" style="width:320px;">
+      <!--<table class="marginLeft15 pull-left" style="width:320px;">
         <thead>
           <tr class="tr-hover">
             <th >
@@ -47,75 +69,107 @@
                   <li id="maybe_li"><a class="c-pointer">May be - <%= inv_users.where(status: "maybe").count %></a></li>
                 </ul>
             </td>
-          </tr>
+          </tr>-->
+        
+        
+        
+        <div class="row ml0">
+          
           <% if inv_users.count > 0 %>
-            <% inv_users.each do |ed|%>
-              <tr class="tr-hover all <%= ed.status %>" >
-                <td >
-                <div  class="img_zoom" style="float:left;" >
-                  <%= gravatar_for ed.user, size: 52 %>
-                </div>
-                      <% if ed.status == "invited" %>
-                          <span class="label pull-right ">Not Responded</span>
-                      <% elsif ed.status == "yes" %>
-                          <span class="label success pull-right ">Yes</span>
-                      <% elsif ed.status == "no" %>
-                          <span class="label important pull-right ">No</span>
-                      <% elsif ed.status == "maybe" %>
-                          <span class="label warning pull-right ">May be</span>
-                      <% else %>
-                      <% end %>
-                    <address>
-                      <strong> <a href="#"><%= ed.user.name %></a></strong><br>
-                      <a mailto="<%= ed.user.email %>"><%= ed.user.email %></a>
-                    </address>
-                </td>
-              </tr>
+               <ul class="list-unstyled">
+            <% inv_users.each do |user|%>
+                                   
+                                         <% if user.status == "invited" %>
+                                                            <li class="invited">
+                                                        <% elsif user.status == "yes" %>
+                                                            <li class="yes">
+                                                        <% elsif user.status == "no" %>
+                                                            <li class="no">
+                                                        <% elsif user.status == "maybe" %>
+                                                            <li class="maybe">
+                                                        <% else %>
+                                                        <% end %>
+                                            <div class="col-sm-6 pl0 pr5 mb5">
+                                                <div class="panel widget nm">
+                                                    <div class="table-layout nm">
+                                                        <img src="<%= gravatar_for_url user.user, size: 82 %>" class="pull-left gravatar" ></img>
+                                                        
+                                                        <% if user.status == "invited" %>
+                                                            <span class="badge badge-default ml10 mt5 ">Not Responded</span>
+                                                        <% elsif user.status == "yes" %>
+                                                            <span class="badge badge-default ml10 mt5 ">Yes</span>
+                                                        <% elsif user.status == "no" %>
+                                                            <span class="badge badge-default ml10 mt5 ">No</span>
+                                                        <% elsif user.status == "maybe" %>
+                                                            <span class="badge badge-default ml10 mt5 ">May be</span>
+                                                        <% else %>
+                                                        <% end %>
+                                                        
+                                                        
+                                                        <div class=" valign-middle">
+                                                            <div class="panel-body mt5 pt10 pl95 pb0 pr0">
+                                                                 <p class="semibold mt0 mb0 ellipsis"><%= link_to user.user.name, user.user %></p>
+                                                                <p class="mb0 ellipsis"><a class=" text-muted mb0" mailto="<%= user.user.email %>"><%= user.user.email %></a></p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                         
             <% end %>
+                              </ul>
           <% else %>
-          <tr>
-            <td>
+          
               <address>No guests in the event</address>
-            </td>
-          </tr>
+            
           <% end %>
             
-        </tbody>
-      </table>
+        </div>
+      
+      
+                     
+      
+      
 
 <%= form_for( event, url: add_event_moderators_event_path(event), method: :get, remote: true) do |f| %>
-<div id="modal_add_mod" style="display:none;" >
-  <div id="modal-from-dom__add_mod" class="modal hide fade in" style="display: block;">
+<div id="modal_add_mod" class="modal fade" >
+  <div class="modal-dialog">
+  <div class="modal-content">
     <div class="modal-header">
-      <a href="#" id="close_add_mod" class="close">×</a>
-      <span style="font-size:15px;line-height: 2;"><strong>Set moderators</strong></span>
+      <button type="button" class="close" data-dismiss="modal">×</button>
+      <span class="semibold font-15">Set moderators</span>
     </div>
-      <span style="font-size:11px;line-height: 3;margin-right:10px;" class="pull-right">(Check to set member as a Moderator)</span>
-    <div class="modal-body" style="max-height:350px;width:530px;">
+      <span class="semibold font-12 pull-right">(Check to set member as a Moderator)</span>
+    <div class="modal-body">
       <div class="row">
-        <div class=" ui-front">  
+        <div class="">  
         <%= f.hidden_field :id %>       
          <%= render 'shared/error_messages', object: f.object %>
          <aside class="">
           <section>
             <!-- <h2 style="margin-left:65px;padding:3px;">Moderators</h2> -->
-            <ul class="users" style="overflow:auto;">
+            
+            <ul class="list-unstyled pl0">
               <% @eds.each do |uc| %>
               <% user = User.find(uc.user_id) %>
               <% if user == current_user  %>
                 <% next %>
               <% end %>
-                  <li style="margin-left:15px;" class="tr-hover">
-                    <div class="checkboxFive pull-right marginRight15" style="margin-top:5px;">
+                  <li class="tr-hover pa10 li-none select_unselect_community c-pointer">
+                    <div class="checkboxFive pull-right marginRight15" style="margin-top:12px;">
                         <%= check_box_tag 'user_ids[]', user.id, uc.is_admin?, id: "checkboxFiveInput#{uc.id}" %>
                       <label for="checkboxFiveInput<%= uc.id %>"></label>
                     </div>
                     <div  class="img_zoom" style="float:left;margin-left:15px;" >
                       <%= gravatar_for user, size: 52 %>
                     </div>
+                    
+                    <address style="margin-left:82px;margin-top:5px;">
                       <strong> <a href="#"><%= user.name %></a></strong>
                       <p><%= user.email %></p>
-                  <div style="margin-right:10px;" class="pull-right">
+                    </address> 
+                  <div class="pull-right">
                     <%= hidden_field_tag 'user_all_ids[]', user.id %>
                   </div>
                   </li>
@@ -127,20 +181,19 @@
     </div>   
   </div>
   <div class="modal-footer" >
-    <%= f.submit "Update", class: "btn primary pull-right busy", id: "submit_add_mod" %>  
+    <%= f.submit "Update", class: "btn btn-primary pull-right busy", id: "submit_add_mod" %>  
   </div>
+</div>
 </div>
 </div>
 <% end %>
 
 <script type="text/javascript">
   $('#all_li').click(function(){
-      $(".all").show();
-      $('#all_li').removeClass('active');
-      $('#all_li').addClass('active');
-      $('#yes_li').removeClass('active');
-      $('#no_li').removeClass('active');
-      $('#maybe_li').removeClass('active');
+       $(".invited").show();
+      $(".no").show();
+      $(".maybe").show();
+      $(".yes").show();
   });
 
     $('#yes_li').click(function(){
@@ -148,11 +201,7 @@
       $(".no").hide();
       $(".maybe").hide();
       $(".yes").show();
-      $('#yes_li').removeClass('active');
-      $('#yes_li').addClass('active');
-      $('#all_li').removeClass('active');
-      $('#no_li').removeClass('active');
-      $('#maybe_li').removeClass('active');
+
   });
 
    $('#no_li').click(function(){
@@ -160,11 +209,6 @@
       $(".maybe").hide();
       $(".yes").hide();
       $(".no").show();
-      $('#no_li').removeClass('active');
-      $('#no_li').addClass('active');
-      $('#all_li').removeClass('active');
-      $('#yes_li').removeClass('active');
-      $('#maybe_li').removeClass('active');
   });
 
    $('#maybe_li').click(function(){
@@ -172,22 +216,17 @@
       $(".no").hide();
       $(".yes").hide();
       $(".maybe").show();
-      $('#maybe_li').removeClass('active');
-      $('#maybe_li').addClass('active');
-      $('#all_li').removeClass('active');
-      $('#no_li').removeClass('active');
-      $('#yes_li').removeClass('active');
   });
 
 
-$("#moderator").on( "click", function() {
+/*$("#moderator").on( "click", function() {
  $('#modal_add_mod').modal({
       //keyboard: true,
       backdrop: "static",
     });
 // $('body').css('overflow','hidden');
 // $('body').css('position','fixed');
-});
+});*/
 
 $("#close_add_mod").click(function(){
   $('#modal_add_mod').modal('hide');
@@ -210,3 +249,8 @@ $(function(){
 });
 
       </script>
+
+
+
+
+

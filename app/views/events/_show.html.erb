@@ -1,154 +1,148 @@
 <% provide(:title, @event.title) %>
 <% provide(:page_image, @event.photo.pic_url) %>
 <% unless signed_in? %>
-    <br> 
-    <br> 
-    <br> 
-    <br> 
-    <br> 
 <% end %>
-<div class="">
-      <div  class="image_overlay tr-hover-btn" >
-<!--  
-             <h4 class="pull-left" style="margin-left:10px;font-size:18px;">
-             <div id="albumLink">
-              <%= link_to @event.title, @event, class:"albumLink", remote: true %>
-              </div>
-            </h4>
-               -->
-              <% unless @event.responded?(current_user) %>
-                <div class="text_overlay_cu_cover_pic button_toggle_pic" style=" margin-bottom:250px;height:60px;padding:0;margin-top:0;">
-                    <span class="pull-right "> &nbsp;</span>
-                  <address style="width:874px !important;"><p  style="width:100% !important;"><strong style="line-height:1.8">Attend this event</strong>
-                    <span class="pull-right "> &nbsp;</span>
-                    <%= link_to "May be", "/events/#{@event.id}/event_invitation?status=maybe", class: "uibutton pull-right button_toggle_pic event_inv", remote: true %>
-                    <span class="pull-right "> &nbsp;</span>
-                    <%= link_to "No", "/events/#{@event.id}/event_invitation?status=no", class: "uibutton pull-right button_toggle_pic event_inv marginRight5", remote: true %>
-                    <span class="pull-right "> &nbsp;</span>
-                    <%= link_to "Yes", "/events/#{@event.id}/event_invitation?status=yes", class: "uibutton pull-right button_toggle_pic event_inv ", remote: true %>
-                  </p></address>
-                </div>
+        <article class="panel overflow-hidden mb5">
+            <header class="thumbnail">
+            <div class="media wallpaper-container">
+            <div class="image_overlay wallpaper">
+            <div class="huge-title">
+               <% unless @event.photo.nil? %>
+                <%= link_to cl_image_tag(@event.photo.pic_url(:largest), class:"padding1",rel: "#{@event.id}", id:"#{@event.photo.id}") , @event.photo.pic_url, class: "fancybox-album albumLink roundCorner wallpaper-media wallpaper-image native", title: "#{@event.title}", remote: true %>
               <% end %>
-            <% unless @event.photo.nil? %>
-           <%= link_to cl_image_tag(@event.photo.pic_url(:largest), class:"padding1",rel: "#{@event.id}", id:"#{@event.photo.id}") , @event.photo.pic_url, class: "fancybox-album", rel: "#{@event.id}" , title: "#{@event.title}"    %>
-            <% end %>
-            <div class="btn_overlay_cu_cover_pic">
-              <div id="edit_del_btn">
-                <% if @event.responded?(current_user) %>
-                  <% if @event.is_admin?(current_user) %>
-                       <button class=" pull-right uibutton icon edit button_toggle_pic " id="edit_event">edit</button>
-                   <% end %>
-
-                   <span class="pull-right "> &nbsp;</span>
-                   <% if @event.is_admin?(current_user) %>
-                      <%= link_to "delete",  @event, method: :delete, remote: true,
-                                               data: { confirm: "You sure?" },
-                                               class: "pull-right uibutton button_toggle_pic",
-                                               title: "Delete this event" %>
-                   <% end %>
-                  <span class="pull-right "> &nbsp;</span>
-                <% end %>
-              </div>
+              <h3 class="  meta bottom bottom-gardient ht55 mb0 animated color-white" data-wow-offset="80" data-wow-duration="3s" style="visibility: visible;-webkit-animation-duration: 3s; -moz-animation-duration: 3s; animation-duration: 3s;  text-shadow: 2px 2px #6A6A6A;"></h3>
+               <h3 class="  meta bottom mb0 wow bounceInDown animated color-white" data-wow-offset="80" data-wow-duration="3s" style="visibility: visible;-webkit-animation-duration: 3s; -moz-animation-duration: 3s; animation-duration: 3s;  text-shadow: 2px 2px #6A6A6A;"><%= @event.title %></h3>
             </div>
-            <h2 class="text_overlay_cover_pic button_toggle_pic">
-              <%= render partial: "events/text_overlay", locals: {obj: @event} %>
-            </h2>
-        </div>
-  <aside class="span6" style="margin-left:10px;">
-    <section>
+            </div>
+            </div>
+            </header>
+            <section class="panel-body pt5 pb0">
+                <aside class="">
+                    <%= render partial: "events/text_overlay", locals: {obj: @event} %>
+                </aside>
+          </section>
+        </article>
+        
+        
 
-
-    </section>
-    <section id="activity_span" style="background-color:#e5e5e5;padding:10px;" class="well">
-      <h2 id="act_h"><span  class="pull-left" style="margin-left:10px;font-size:13px;"><strong>Event</strong></span></h2>
-      <span style="clear:both"></span>
+    <div id="activity_span" class="">
+     <!-- <h2 id="act_h"><span  class="pull-left"><strong>Event</strong></span></h2>
       <div id="event_link">    
-          <li class="sidetabs sidetabs_selected" style="list-style-type: none;padding:5px; margin:5px;">
+          <li class="sidetabs sidetabs_selected">
                 <h6><%= link_to  @event.title, @event, id: "act_#{@event.id}", remote: true %></h6>
           </li>
-          <%= link_to "", @event, remote: true %>
-      </div>
-      <h2 id="act_h"><span  class="pull-left" style="margin-left:10px;font-size:13px;line-height:2;"><strong>Sub-event</strong></span>
-      <% if @event.responded?(current_user) %>
-       <%= link_to "add", '#', id: "create_activity",  class: " pull-right uibutton icon add",:title => "Add Activity" %>
-      <% end %>
-     </h2>
-      <span style="clear:both"></span>
-      <div id="event_activities">    
-          <%= render @activities %>
-      </div>
-    </section>
-      
-   </aside>
+      </div>-->
+      <!--<h2 id="act_h"><span  class="pull-left"><strong>Sub-event</strong></span>   </h2>-->
+     
+                                     <div id="btn_group_overlay" class="btn-group pull-right mb5">
+                                        <button type="button" class="btn btn-sm btn-info btn-custom dropdown-toggle " data-toggle="dropdown" aria-expanded="false"> Sub-Event <span class="caret"></span></button>
+                                        <ul class="dropdown-menu semibold-imp">
+                                              <li class="">
+                                                <% if @event.responded?(current_user) %>
+                                                 <a id="create_activity" class="semibold " href="#" data-toggle="modal" data-target="#modal_create_activity">Create Sub-Event</a>
+                                                <% end %>
+                                              </li>
+                                             <%= render @activities %>
+                                        </ul>
+                                    </div>
+                                    <div id="back_to_event" class="hide pull-right mb5">
+                                        <%= link_to "Back to Event",@event,class: "semibold btn btn-info btn-custom", remote: true %>
+                                    </div>
+      <!--<% if @event.responded?(current_user) %>
+       <a id="create_activity" class="btn btn-sm btn-success pull-right mr10" href="#" data-toggle="modal" data-target="#modal_create_activity">Add Activity</a>
+      <% end %>-->
+    </div>
+   
 <div class="center loading_page hide" ><img src="/assets/loading.gif"></div>
 
-<div class="span13" style="margin-top:10px;">
+<div class="">
 <div id="event_list">
   <%= render partial: "events/event_links", locals: { event: @event, activity: @activity } %>
 </div>
-
         <div id="show_event_div">
+                             
             <%= render partial: "events/event_members", locals: { event: @event, activity: @activity, ad_users: @ad_users, inv_users: @inv_users } %>
         </div>
 </div>
 
 
 <%= form_for( [@event.activities.build], remote: true,  :html => {id: "create_activity_form"}) do |f| %>
-  <div id="modal_create_activity" style="display:none" >
-          <div id="modal-from-dom" class="modal hide fade in" style="display: block;width:700px;">
+  <div id="modal_create_activity" class="modal fade">
+          <div class="modal-dialog">
+          <div class="modal-content">
             <div class="modal-header">
-              <a href="#" id="closeX_create_activity" class="close">×</a>
-              <h3>Create Sub-event</h3>
+              <button type="button" class="close" data-dismiss="modal">×</button>
+              <span class="semi-bold font-15">Create Sub-event</span>
             </div>
               <%= f.hidden_field :event_id, value: @event.id %>
-            <div class="modal-body" style="max-height:550px;">
+            <div class="modal-body">
               <div class="row">
-          <div class="span14 ui-front">
+          <div class="col-sm-offset-1">
                <%= render 'shared/error_messages', object: f.object %>
                 <div class="center_block clearfix">
-                  <%= f.label :title %>
-                  <div class="input">
-                    <%= f.text_field :title, :placeholder=>"Title", 'data-validation' => "length",
-     'data-validation-length' =>"3-25", 'data-validation-error-msg' => "The Event name has to be a value between 3-25 characters" %></div>
+                  <%= f.label :title, class: "control-label ml15 pt15" %>
+                  <div>
+                  <div class="col-sm-9">
+                    <%= f.text_field :title, :placeholder=>"Title",class: "form-control", 'data-validation' => "length",
+                     'data-validation-length' =>"3-25", 'data-validation-error-msg' => "The Event name has to be a value between 3-25 characters" %></div>
+                </div>
                 </div>
 
                 <div class="center_block clearfix">
+                  <div class="control-label ml15 pt15">
                   <%= label_tag :starts_at %>
-                  <div class="input">
-                  <%= f.text_field :starts_at, :placeholder => "Time", value: @event.starts_at  %>&nbsp;&nbsp;&nbsp;
-                <a id="end_date_add_link_act" class="uibutton icon add">End Date</a>
-                </div>
-                </div>
-                <div class="center_block clearfix" id="end_date_act">
-                  <%= label_tag :ends_at %>
-                  <div class="input">
-                    <%= f.text_field :ends_at,  value: @event.ends_at  %>&nbsp;&nbsp;&nbsp;
-                   <a id="end_date_remove_link_act" class="uibutton icon prev">Remove</a>
                   </div>
+                  <div>
+                  <a id="end_date_add_link_act" class="btn btn-success btn-sm mt3 icon add pull-right mr12-xs mr60-sm">End Date</a>
+                  <div class="col-sm-9 col-xs-9">
+                  <%= f.text_field :starts_at,class: "form-control", :placeholder => "Time", value: @event.starts_at  %>&nbsp;&nbsp;&nbsp;
+                </div>
+                </div>
+                </div>
+                
+                <div class="center_block clearfix" id="end_date_act">
+                  <div class="control-label ml15">
+                  <%= label_tag :ends_at %>
+                  </div>
+                  <div>
+                  <a id="end_date_remove_link_act" class="btn-danger btn-sm mt3 icon add pull-right mr12-xs mr60-sm icon prev">Remove</a>
+                  <div class="col-sm-9 col-xs-9">
+                    <%= f.text_field :ends_at,class: "form-control",  value: @event.ends_at  %>&nbsp;&nbsp;&nbsp;
+                  </div>
+                </div> 
                 </div> 
 
                 <div class="center_block clearfix">
-                  <%= f.label :location %>
-                  <div class="input ">
-                  <%= f.text_field :address, :placeholder => :location, :size => 43, class: 'events_with_autocomplete inherit_width', 'data-autocompleteUrl' => search_address_events_path , 'data-validation' => "length",
-     'data-validation-length' =>"3-250", 'data-validation-error-msg' => "The event address has to be a value between 3-250 characters", value: @event.address %>&nbsp;&nbsp;&nbsp;
+                  <%= f.label :location,class: "control-label pl15" %>
+                  <div>
+                  <%= link_to "View map", '#', id: "view_map_link_act",  class: "btn-info btn-sm mt3 icon add pull-right mr12-xs mr60-sm icon prev" %>
+                  <%= link_to "Hide map", '#', id: "hide_map_link_act",  class: "btn-danger btn-sm mt3 icon add pull-right mr12-xs mr60-sm icon prev" %>
+                  <div class="col-sm-9 col-xs-9">
+                  <%= f.text_field :address, :placeholder => :location, :size => 43, class: 'form-control events_with_autocomplete inherit_width', 'data-autocompleteUrl' => search_address_events_path , 'data-validation' => "length",
+                 'data-validation-length' =>"3-250", 'data-validation-error-msg' => "The event address has to be a value between 3-250 characters", value: @event.address %>&nbsp;&nbsp;&nbsp;
                 
-                  <%= link_to "View map", '#', id: "view_map_link_act",  class: "uibutton icon prev" %>
                 </div>
-                <div class="input" id="view_map_act">
+                  <div class="" id="view_map_act">
+                  </div>
+                </div>
+                </div>
                 
-                </div>
-                </div>
                 <div class="center_block clearfix">
-                  <%= f.label :description %>
-                  <div class="input">
-                  <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title=>"Description", rows: 3, cols: 75, 'data-validation' => "length",
+                  <%= f.label :description, class: "control-label ml15 pt15" %>
+                  <div>
+                    
+                  <div class="col-sm-9">
+                  <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width form-control', :title=>"Description", rows: 3, cols: 75, 'data-validation' => "length",
      'data-validation-length' =>"3-250", 'data-validation-error-msg' => "The event description has to be a value between 3-250 characters"  %> 
                 </div>
                 </div>
+                  </div>
+                  
                 <div class="center_block clearfix">
+                  <div class="control-label ml15 pt15">
                   <%= label_tag :privacy %>
-                  <div class="input">
+                  </div>
+                  <div class="col-sm-9">
                     <%= f.select :privacy, options_for_select([["Public", Privacyenum::PUBLIC], ["Private", Privacyenum::PRIVATE]]), {}, id: "activity_privacy_create" %>
                   </div>
                 </div>
@@ -156,108 +150,58 @@
         </div>   
            </div>
             <div class="modal-footer" >
-              <%= f.submit "Create", class: "btn primary pull-right", id: "create_activity_act" %>  
+              <%= f.submit "Create", class: "btn btn-success pull-right btn-custom", id: "create_activity_act" %>  
             </div>
           </div>
           
         </div>
-<% end %>
-
-
-
- <%= form_for( @event, remote: true, :html => {:multipart => true, id: 'update_event_form'}) do |f| %>
-<div id="modal_edit_event" style="display:none;" >
-          <div id="modal-from-dom" class="modal hide fade in" style="display: block;width:700px;">
-            <div class="modal-header">
-              <a href="#" id="closeX_edit_event" class="close">×</a>
-              <h3>Update Event</h3>
-            </div>
-            <div class="modal-body" style="max-height:450px;">
-            <div class="row">
-              <div class="span14 ui-front">
-               <%= render 'shared/error_messages', object: f.object %>
-               <div class="center_block clearfix">
-                  <%= f.label :title %>
-                  <div class="input">
-                    <%= f.text_field :title, :placeholder=>"Title", 'data-validation' => "length",
-     'data-validation-length' =>"3-25", 'data-validation-error-msg' => "The Event name has to be a value between 3-25 characters" %></div>
-                </div>
-
-                <div class="center_block clearfix">
-                  <%= label_tag :starts_at %>
-                  <div class="input">
-                  <%= f.text_field :starts_at, :placeholder => "Time" %>&nbsp;&nbsp;&nbsp;
-                <a id="end_date_add_link_event" class="uibutton icon add">End Date</a>
-                </div>
-                </div>
-                <div class="center_block clearfix" id="end_date_event">
-                  <%= label_tag :ends_at %>
-                  <div class="input">
-                    <%= f.text_field :ends_at %>&nbsp;&nbsp;&nbsp;
-                   <a id="end_date_remove_link_event" class="uibutton icon prev">Remove</a>
-                  </div>
-                </div> 
-
-                <div class="center_block clearfix">
-                  <%= f.label :location %>
-                  <div class="input ">
-                  <%= f.text_field :address, :placeholder => :location, :size => 43, class: 'events_with_autocomplete inherit_width', 'data-autocompleteUrl' => search_address_events_path , 'data-validation' => "length",
-     'data-validation-length' =>"3-250", 'data-validation-error-msg' => "The event address has to be a value between 3-250 characters" %>&nbsp;&nbsp;&nbsp;
-                
-                  <%= link_to "View map", '#', id: "view_map_link_event",  class: "uibutton icon prev hide" %>
-                </div>
-                <div class="input" id="view_map">
-                
-                </div>
-                </div>
-                <div class="center_block clearfix">
-                  <%= f.label :description %>
-                  <div class="input">
-                  <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title=>"Description", rows: 3, cols: 75, 'data-validation' => "length",
-     'data-validation-length' =>"3-250", 'data-validation-error-msg' => "The event description has to be a value between 3-250 characters"  %> 
-                </div>
-                </div>
-                <div class="center_block clearfix">
-                  <%= label_tag :privacy %>
-                  <div class="input">
-                    <%= f.select :privacy, options_for_select([["Public", Privacyenum::PUBLIC], ["Private", Privacyenum::PRIVATE]]) %>
-                  </div>
-                </div> <br>
-
-          <div class="center_block clearfix">
-            <%= label_tag "Change picture:" %>
-            <%= f.fields_for :photo, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
-              <%= photo_form.file_field :pic, id: "pic2",style: "width:0px; height:0px; padding:0px;  left:0px;" %>  
-            <% end %>
-            <div class="input"> 
-              <% unless @event.photo.nil? %>
-              <%= cl_image_tag(@event.photo.pic_url(:small), class:" thumbnail albumLink", id:"event_edit_pic", style: "cursor:pointer;") %>   
-              <% end %>
-              <canvas id="imageCanvas2" style = "border: 1px solid #ddd; padding:5px; align:center; width:200px;display:none;cursor:pointer" >select new image</canvas>
-            </div>
-          </div>  
-
-        </div>   
-      </div>
-      </div>
-            <div class="modal-footer" >
-              <%= f.submit "Update", class: "btn primary pull-right", id: "update_event" %>  
-            </div>
-          </div> 
         </div>
-  <% end %>
+<% end %>
+<script>
+  
+$('#activity_privacy_create').addClass('form-control');
 
-</div>
 
+
+    $('#hide_map_link_act').hide();
+    
+    $('#view_map_link_act').click(function(){
+    var address = "/events/get_geo_coordinates?address="+$('#event_address').val();
+     $.ajax({
+      type: "GET",
+      url: address,
+      dataType: "script"
+    });
+    $('#view_map_link_act').hide();
+    $('#hide_map_link_act').show();
+   
+});
+
+    $('#hide_map_link_act').click(function(){
+      $('#view_map_act').hide();
+      $('#hide_map_link_act').hide();
+      $('#view_map_link_act').show();
+    });
+  
+  
+  
+  $('#end_date_act').hide();
+    $('#end_date_add_link_act').click(function(){
+      $('#end_date_act').show();
+      $('#end_date_add_link_act').hide();
+    });
+    
+    $('#end_date_remove_link_act').click(function(){
+      $('#end_date_act').hide();
+      $('#end_date_add_link_act').show();
+    });
+    
+
+
+</script>
 
 <script type="text/javascript">
 
-$(".sidetabs").click(function(){
-  $(".sidetabs").removeClass('sidetabs_selected');
-  $(this).addClass('sidetabs_selected');
-  $(this).next('a').click();
-  $('.loading_page').show();
-});
 
 $('#posts_events_li').click(function(){
   $('#posts_events_li').addClass('active');
@@ -290,16 +234,23 @@ $('#photos_events_li').click(function(){
          $(this).find('.button_toggle_pic').hide();
     });*/
 
-$(document).ready(function(){
+
+
+
   $("#upload_pics").show();
   $('#activity_events').hide();
   $('#photos_events').hide();
 
-  $('#end_date_act').hide();
-  $('#view_map_link_act').hide();
+  /*$('#end_date_act').hide();
+  $('#view_map_link_act').hide();*/
 
   $('#modal_create_event').hide();
   $(".modal-backdrop").remove();
+  
+  
+  
+ 
+  
 
  $(document).ready(function(){
                 $.validate({
@@ -323,19 +274,14 @@ $(document).ready(function(){
                         $('#modal_create_activity').modal('hide');
                       });
 
-                  $('#end_date_add_link_act').click(function(){
-                    $('#end_date_act').show();
-                    $('#end_date_add_link_act').hide();
-                  });
-                  $('#end_date_remove_link_act').click(function(){
-                    $('#end_date_act').hide();
-                    $('#end_date_add_link_act').show();
-                  });
+                 
+                  
+
 
 });
 
     $(function() {
-      return $('.events_with_autocomplete').autocomplete({
+      /*return $('.events_with_autocomplete').autocomplete({
         minLength: 2,
         source: function(request, response) {
           return $.ajax({
@@ -349,7 +295,7 @@ $(document).ready(function(){
             }
           });
         }
-      });
+      });*/
     });
 
     
@@ -396,10 +342,10 @@ var endDateTextBox = $("#activity_ends_at");
       });
 
 
-
+/*
 $('#activity_address').keydown(function(){
     $('#view_map_link').hide();
-    $('#view_map').hide();
+    $('#view_map_act').hide();
 });
 
 $('#view_map_link').click(function(){
@@ -429,8 +375,9 @@ $('#end_date_remove_link').click(function(){
   $('#end_date').hide();
   $('#end_date_add_link').show();
 });
-
+*/
   $(function() {
+});
   $("#search_user").tokenInput("/events/<%= @event.id %>/search_selected_user", {
     crossDomain: false,
     prePopulate: $("#search_user").data("pre"),
@@ -441,9 +388,9 @@ $('#end_date_remove_link').click(function(){
         zindex: 11001,
         hintText: "Type in a user name",
   });
-});
 
   $(function() {
+});
   $("#search_group").tokenInput("/events/<%= @event.id %>/search_selected_group", {
     crossDomain: false,
     prePopulate: $("#search_group").data("pre"),
@@ -454,7 +401,6 @@ $('#end_date_remove_link').click(function(){
         zindex: 11001,
         hintText: "Type in a group name",
   });
-});
 
 
   $( "#activity_privacy" ).change(function () {
@@ -552,7 +498,7 @@ $('#next2-2').click(function(){
              });
 });
 
-$('#event_address').keydown(function(){
+/*$('#event_address').keydown(function(){
     $('#view_map_link2').hide();
     $('#view_map2').hide();
 });
@@ -584,7 +530,7 @@ $('#end_date_remove_link2').click(function(){
   $('#end_date2').hide();
   $('#end_date_add_link2').show();
 });
-
+*/
   $(function() {
   $("#search_user_evt").tokenInput("/events/search_auto_user", {
     crossDomain: false,
@@ -613,6 +559,7 @@ $('#end_date_remove_link2').click(function(){
 
 $(document).ready(function() {
 
+});
 /*    $('#create_activity').hide();
    
     $('#activity_span').hover(function(){
@@ -623,18 +570,19 @@ $(document).ready(function() {
 
   $('#page2-2').hide();
 
-  $('#view_map_link2').hide();
-  $('#end_date_add_link2').hide();
+  /*$('#view_map_link2').hide();
+  $('#end_date_add_link2').hide();*/
 
     $("#event_pic").click(function(){
       $('#event_pic').hide();
       $('#pic2').click();
-      $('#imageCanvas2').show();
+      $('#imageCanvas_event').show();
     });
 
 
+     /*
     $(function() {
-      return $('.events_with_autocomplete').autocomplete({
+     return $('.events_with_autocomplete').autocomplete({
         minLength: 2,
         source: function(request, response) {
           return $.ajax({
@@ -650,8 +598,8 @@ $(document).ready(function() {
         }
       });
     });
+      */
 
-    $(function() {
       return $('.eventdetails_with_autocomplete').autocomplete({
         minLength: 2,
         source: function(request, response) {
@@ -667,13 +615,14 @@ $(document).ready(function() {
           });
         }
       });
+    $(function() {
     });
 
 
 
-});
 
 $(document).ready(function(){
+});
   $('#modal_create_activity').modal('hide');
    $('.modal-backdrop').remove();
   $.validate({
@@ -684,27 +633,26 @@ $(document).ready(function(){
     },
   });
   $('.loading_page').hide();
-
+/*
   $('#end_date_event').hide();
 
-  $('#view_map_link_event').hide();
-});
+  $('#view_map_link_event').hide();*/
 
 
-                  $('#end_date_add_link_event').click(function(){
+                 /* $('#end_date_add_link_event').click(function(){
                     $('#end_date_event').show();
                     $('#end_date_add_link_event').hide();
                   });
                   $('#end_date_remove_link_event').click(function(){
                     $('#end_date_event').hide();
                     $('#end_date_add_link_event').show();
-                  });
+                  });*/
 
 
 
 $("#edit_event").click(function(){
-      $('#modal_edit_event').modal({
-        backdrop: "static"
+      /*$('#modal_edit_event').modal({
+        backdrop: "static"*/
       });
     });
     $("#closeX_edit_event").click(function(){
@@ -721,16 +669,16 @@ $("#edit_event").click(function(){
 
 var imageLoader = document.getElementById('pic2');
 imageLoader.addEventListener('change', handleImage, false);
-$("#imageCanvas2").click(function(){
+$("#imageCanvas_event").click(function(){
   $("#pic2").click();
 });
-var canvas = document.getElementById('imageCanvas2');
+var canvas = document.getElementById('imageCanvas_event');
 var ctx = canvas.getContext('2d');
 ctx.font="30px Arial";
 ctx.fillText("Change picture",10,50);
 
 function handleImage(e){
-  var canvas = document.getElementById('imageCanvas2');
+  var canvas = document.getElementById('imageCanvas_event');
   var ctx = canvas.getContext('2d');
   var iCnt=0;
   var files = e.target.files;
@@ -739,13 +687,13 @@ function handleImage(e){
      if(files.length<1){
       $('#pic2').val('');
       $('#event_edit_pic').show();
-      $('#imageCanvas2').hide();
+      $('#imageCanvas_event').hide();
       return;
     }
   for( var i = 0, len = files.length; i < len; i++) 
   {
           $('#event_edit_pic').hide();
-          $('#imageCanvas2').show();
+          $('#imageCanvas_event').show();
     if(files[i])
     {
       var reader = new FileReader();
@@ -796,7 +744,7 @@ function checkScroll_post() {
     }
     jQuery.ajax('/events/post_paginate?id='+$('#activity_id').html()+'&event_id=<%= @event.id %>&page=' + currentPage, {asynchronous:true, evalScripts:true, method:'get', success: function(data, textStatus, jqXHR) {
       $('#loading_page').hide();
-    if($(data).find('#posts_one_div').html()==null || $(data).find('#posts_one_div').html() == '' ){
+    if($(data).find('.posts_one_div').html()==null || $(data).find('.posts_one_div').html() == '' ){
       clearInterval(intervalID);
       for (var i = 1; i < 99999; i++){
         window.clearInterval(i);
@@ -879,6 +827,5 @@ var startDateTextBox = $("#event_starts_at");
         },
         dateFormat: "dd/mm/yy"
       });
-
 
 </script>

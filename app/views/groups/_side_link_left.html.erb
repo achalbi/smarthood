@@ -1,45 +1,25 @@
-<aside class="span">
+<aside class="">
   <% unless @group.nil? %>
   <% unless @group.id.nil? %>
   <div id="group_pic">
-  <section >
     <%= render partial: 'groups/group_pic', locals: {group: @group} %>
-
-  </section>
-  <section>
-    <div class="center" id="follow_form">
-      <% unless current_user.id == @group.User_id %>
-        <% if @group.privacy? %>
-        <br>
-        <%= link_to "Send request",'', class: "uibutton icon secure" %>
-        <% else %>
-        <% if @group.following?(current_user, @group) %>
-        <%= render 'unfollow', :group => @group %>
-        <% else %>
-        <%= render 'follow', :group => @group %>
-        <% end %>
-        <% end %>
-      <% end %>
-
-    </div>
-  </section>
   </div>
   <% end %>
   <% end %>
 
-  <section id="group_sec" style="background-color:#e5e5e5;padding:10px;width:210px;" class="well">
+  <section class="hide" id="group_sec" class="well">
     <span style="clear:both"></span>
-    <%= link_to "Create Group", '#', id: "create_group",  class: " pull-right uibutton icon add" %><br><br>
+    <%= link_to "Create Group", '#', id: "create_group",  class: " pull-right icon add" %><br><br>
     <div id="comUnity_div">    
-      <li class="sidetabs sidetabs_selected" style="list-style-type: none;padding:5px; margin:5px;">
+      <li class="sidetabs sidetabs_selected">
         <h6><%= link_to  "My", "#" %></h6>
       </li>
       <%= link_to "", my_groups_path , id: "my_group", remote: true %>
-      <li class="sidetabs "id="public_li" style="list-style-type: none;padding:5px; margin:5px;">
+      <li class="sidetabs "id="public_li">
         <h6><%= link_to  "Public", "#" %></h6>
       </li>
       <%= link_to "", public_groups_path, id: "public_group", remote: true %>
-      <li class="sidetabs "id="gp_li" style="list-style-type: none;padding:5px; margin:5px;">
+      <li class="sidetabs "id="gp_li" >
         <h6><%= link_to  "Group post", "#" %></h6>
       </li>
       <%= link_to "", group_post_groups_path, id: "group_post", remote: true %>
@@ -49,7 +29,7 @@
 
 
 <div id="modal_sel_grp" style="display:none;" >
-  <div id="modal-from-dom2" class="modal hide fade in" style="display: block;width:700px;">
+  <div id="modal-from-dom2" class="modal fade in" style="display: block;width:700px;">
     <div class="modal-header">
       <a href="#" id="closeX_sel_grp" class="close">×</a>
       <span style="font-size:20px;line-height: 2;">Select Groups</span>
@@ -68,21 +48,19 @@
     </div>
   </div>
 </div>
-
-
 </aside>
 
 <%= form_for( Group.new, remote: true, :html => {:multipart => true}) do |f| %>
-<div id="modal" style="display:none;" >
-  <div id="modal-from-dom2" class="modal hide fade in" style="display: block;width:700px;">
+<div id="modal"  class="modal fade">
+  <div class="content" >
+  <div class="dialog" >
     <div class="modal-header">
       <a href="#" id="closeX" class="close">×</a>
       <span style="font-size:20px;line-height: 2;">Create Group</span>
     </div>
-    <div class="modal-body" style="max-height:550px;">
+    <div class="modal-body">
       <div class="row">
-        <div class="span14 ui-front">
-
+        <div class="">
          <%= render 'shared/error_messages', object: f.object %>
 
          <div class="center_block clearfix">
@@ -129,6 +107,7 @@
       <%= f.submit "Create", class: "btn primary pull-right", id: "crtGroup" %>  
     </div>
   </div>
+  </div>
 </div>
 <% end %>
 
@@ -142,9 +121,9 @@ $(".sidetabs").click(function(){
   $(this).next('a').click();
 });
 
-$("#create_group").click(function(){
+/*$("#create_group").click(function(){
   $('#modal').modal('show');
-});
+});*/
 $("#closeX").click(function(){
   $('#modal').modal('hide');
 });
@@ -204,6 +183,7 @@ function handleImage(e){
         }
 
         $(function() {
+        });
           $("#search_users").tokenInput("/groups/search_app_user", {
             crossDomain: false,
             theme: "facebook",
@@ -213,6 +193,5 @@ function handleImage(e){
             zindex: 11001,
             hintText: "Type in a user name",
           });
-        });
 
         </script>

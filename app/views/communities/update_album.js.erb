@@ -1,4 +1,5 @@
-$('#gallery').html('<%= escape_javascript(render("albums/album")) %>');
+$('#group_gallery').show();
+$('#group_gallery').html('<%= escape_javascript(render("albums/album")) %>');
 $('#show_event_div').html('<%= escape_javascript(render("albums/album")) %>');
 $(".busy").button('reset');
-$('.modal-backdrop').remove();
+$('#modal_com').modal('hide')

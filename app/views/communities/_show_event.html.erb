@@ -1,6 +1,6 @@
-  <ul class="tabs">
+  <!--<ul class="tabs">
     <%= render 'communities/links' %>
-  </ul>
+  </ul>-->
 <div class="row">
         <div class="marginLeft15 ui-front">
 
@@ -93,7 +93,7 @@
 
 <%= form_for( @event, url: update_event_community_path(community), remote: true, :html => {:multipart => true, id: 'update_event_form'}) do |f| %>
 <div id="modal_edit_event" style="display:none;" >
-          <div id="modal-from-dom" class="modal hide fade in" style="display: block;width:700px;">
+          <div id="modal-from-dom" class="modal fade in" style="display: block;width:700px;">
             <div class="modal-header">
               <a href="#" id="closeX_edit_event" class="close">×</a>
               <h3>Update Event</h3>

@@ -13,13 +13,13 @@
                   </address> 
 
 <div id="modal_maps" style="display:none;" >
-  <div id="modal-from-dom2" class="modal hide fade in" style="display: block;width:675px;">
+  <div id="modal-from-dom2" class="modal fade in" style="display: block;width:675px;">
     <div class="modal-header">
       <a href="#" id="close_map" class="close">×</a>
       <span style="font-size:15px;line-height: 2;"><strong>Maps</strong></span>
     </div>
     <div class="modal-body" style="max-height:550px;">
-        <%= image_tag "http://maps.google.com/maps/api/staticmap?size=650x400&sensor=false&zoom=15&markers=#{obj.latitude}%2C#{obj.longitude}" %>
+        <%= image_tag "https://maps.google.com/maps/api/staticmap?size=650x400&sensor=false&zoom=15&markers=#{obj.latitude}%2C#{obj.longitude}" %>
     </div>
   </div>
 </div>

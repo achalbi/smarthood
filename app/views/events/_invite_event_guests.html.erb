@@ -1,53 +1,77 @@
- <ul class="users">
-  <li class="tr-hover" >
-  <span style="font-size:13px;line-height: 2;margin-left:15px;"><strong>Send invitation to </strong></span>
-    <% if session["fb_access_token"].present? %>
-       <a class=" uibutton pull-right" style="margin-right:5px;" id="invite_fb"> Facebook Friends</a>
-    <% end %>
-         <a class="uibutton pull-right" style="margin-right:5px;" id="invite_cu" >Smarthood users</a>
-     <a class="uibutton pull-right" style="margin-right:2px;" id="invite_email" > Email </a>
-  </li>
- </ul>
-
+   <div class="btn-group pull-right mb5">
+        <button type="button" class="btn btn-custom btn-info dropdown-toggle " data-toggle="dropdown" aria-expanded="false">Invite <span class="caret"></span></button>
+        <ul class="dropdown-menu">
+           <% if session["fb_access_token"].present? %>
+             <a class=" uibutton pull-right" style="margin-right:5px;" id="invite_fb"> Facebook Friends</a>
+          <% end %>
+             <li><a href="#" id="invite_cu" data-toggle="modal" data-target="#modal_invite">Smarthood </a></li>
+             <li><a href="#" id="invite_email" data-toggle="modal" data-target="#modal_invite_email">By Email </a></li>
+        </ul>
+    </div>
 
 <%= form_for( event, url: invite_event_guests_by_user_event_path(event), method: :get, remote: true) do |f| %>
-<div id="modal_invite" style="display:none;" >
-  <div id="modal-from-dom2" class="modal hide fade in" style="display: block;">
+<div id="modal_invite" class="modal fade">
+  <div class="modal-dialog">
+  <div class="modal-content">
     <div class="modal-header">
-      <a href="#" id="close_invite" class="close">×</a>
-      <span style="font-size:15px;line-height: 2;"><strong>Invite Smarthood users</strong></span>
+      <button type="button" class="close" data-dismiss="modal">×</button>
+      <span class="semibold font-15">Invite Smarthood users</span>
     </div>
     	<%= f.hidden_field :id %>
-    <div class="modal-body" style="max-height:450px;">
+    <div class="modal-body">
       <div class="row">
-        <div class=" ui-front">
-        <ul class="users marginLeft20">
-        	<li class="tr-hover">
-        	<div class="center_block clearfix  marginLeft50">
-                    <div class="checkboxFive pull-left marginRight15" style="margin-top:6px;">
-                  <%= check_box_tag 'invite_everyone' %>
-                    <label for="invite_everyone"> </label>
-                  </div>
-                    <label style="width:250px;line-height:2;">Invite guests from all my communities</label>
-                </div> <br>
-          </li>
-        	<li class="tr-hover select_comm_li">
-	          <label style="width:145px;line-height:2;margin-left:50px;">Invite guests by group</label>
-	          <div class="center_block clearfix marginLeft50"><br>
-	              <%= f.text_field :group_tokens, id: "search_group_evt1" %>
-	          </div>
-        	</li>
-        	<li class="tr-hover select_comm_li">
-	          <label style="width:145px;line-height:2;margin-left:50px;">Invite guests by name</label>
-	          <div class="center_block clearfix marginLeft50"><br>
-	              <%= f.text_field :user_tokens, id: "search_user_evt1" %>
-	          </div>
-        	</li>
-          <li class="select_comm_li" >
-            <label style="width:335px;line-height:2;margin-left:50px;">Invite guests from below selected communities 
-            <!--   &nbsp;&nbsp;&nbsp;<a class=" uibutton pull-right" style="margin-right:5px;" id="com_btn">Select</a>  -->
-            </label>
-                <ul class="users" style="display: block;clear:both;">
+        <div class="">
+        	<div class="tr-hover">
+          	<!--<div class="center_block clearfix">
+                  <div class="checkboxFive pull-right mr150">
+                      <label for="invite_everyone"> </label>
+                    <%= check_box_tag 'invite_everyone' %>
+                    </div>
+            </div>-->
+            
+       
+            
+            <li style="width:320px;padding:3px!important;" class="tr-hover li-none select_unselect_event c-pointer">
+                        <div class="checkboxFive pull-right marginRight15">
+                          <%= check_box_tag 'invite_everyone' %>
+                          <label class="ml40" for="invite_everyone"></label>
+                        </div>
+                        <address style="margin-top:5px;">
+                          <span class="control-label pl15 mt15">Invite guests from all my communities</span>
+                        </address> 
+                       
+                      </li> 
+            
+         
+          </div>
+        	<div class="select_comm_li mb10">
+	           <div class="center_block clearfix">
+	            <span class="control-label pl15 mt15">Invite guests by group</span>
+              <div>
+              <div class="col-sm-6">
+  	              <%= f.text_field :group_tokens, class: "form-control", id: "search_group_evt1" %>
+              </div>
+              </div>
+            </div>
+	          
+        	</div>
+        	
+        	<div class="mb10 select_comm_li">
+	          
+	           <div class="center_block clearfix">
+	              <span class="control-label pl15 mt15">Invite guests by name</span>
+              <div>
+              <div class="col-sm-6">
+	              <%= f.text_field :user_tokens, class: "form-control", id: "search_user_evt1" %>
+              </div>
+              </div>
+            </div>
+        	</div>
+        	
+          <div class="select_comm_li" >
+            <span class="control-label pl15 mt15">Invite guests from below selected communities 
+            </span>
+                <ul class="list-unstyled">
             <div class="center_block clearfix marginLeft50"><br>
                   <% current_user.joined_uc.collect(&:community).uniq.each do |cu| %>
                       <li style="margin-left:40px;width:320px;padding:3px!important;" class="tr-hover select_unselect_event c-pointer">
@@ -68,14 +92,15 @@
                     <% end %>
             </div>
                 </ul>
-          </li>
-        </ul>
+          </div>
+        
         </div>
       </div>   
     </div>
     <div class="modal-footer" >
-      <%= f.submit "Invite", class: "btn primary pull-right busy", id: "invite_submit" %>  
+      <%= f.submit "Invite", class: "btn btn-success btn-custom pull-right busy", id: "invite_submit" %>  
     </div>
+  </div>
   </div>
 
 </div>
@@ -85,19 +110,21 @@
 
 
 <%= form_for( event, url: invite_event_guests_by_email_event_path(event), method: :get, remote: true) do |f| %>
-<div id="modal_invite_email" style="display:none;" >
-  <div id="modal-from-dom2" class="modal hide fade in" style="display: block;">
+
+<div id="modal_invite_email" class="modal fade" >
+  <div class="modal-dialog">
+  <div class="modal-content">
     <div class="modal-header">
-      <a href="#" id="close_invite_email" class="close">×</a>
-      <h3>Invite by email</h3>
+      <button type="button" class="close" data-dismiss="modal">×</button>
+      <span class="semibold font-15">Invite by email</h3>
     </div>
     <%= f.hidden_field :id %>
-    <div class="modal-body" style="max-height:550px;">
+    <div class="modal-body pt0">
       <div class="row">
         <div class="span10 ui-front">
           <div class="center_block clearfix"><br>
               <div class="bs-example bs-email">
-                        <div class="form-group">
+                        <div class="pl20">
                           <input type="text" class="form-control tokenfields" style="width:480px;" id="tokenfield-m1" name="event[user_tokens]" placeholder="Type email and hit tab/enter" data-validation="required" data-validation-error-msg="Please type email and hit tab/enter to add" />
                         </div>
                 </div>
@@ -106,11 +133,14 @@
       </div>   
     </div>
     <div class="modal-footer" >
-      <%= f.submit "Invite", class: "btn primary pull-right busy", id: "invite_email_submit" %>  
+      <%= f.submit "Invite", class: "btn btn-success btn-custom pull-right busy", id: "invite_email_submit" %>  
     </div>
   </div>
 
 </div>
+</div>
+
+
 <% end %>
 
 <script type="text/javascript">
@@ -122,13 +152,13 @@ $(document).ready(function(){
     // $("#invite_email_submit").button('loading');
       $("#invite_submit").attr('data-loading-text', 'Inviting...');
       $("#invite_submit").button('loading');
-      $('#modal_invite_email').modal('hide');
+      
 
     },
   });
   });
 
-
+$("#invite_everyone").addClass("ml40");
 $("#invite_fb").on( "click", function() {
   FB.ui({method: 'apprequests',
     message: '<%=current_user.name%> has invited you for the event <%= event.title %>'
@@ -144,7 +174,7 @@ function requestCallback(response)
         FB.ui({
           method: 'send',
           to: response.to[i],
-          link: 'http://www.smarthood.in/events/<%= event.id %>?i_id=<%= event.photo.id.to_s + File.basename( event.photo.pic_url, ".*" ) %>'
+          link: 'https://www.smarthood.in/events/<%= event.id %>?i_id=<%= event.photo.id.to_s + File.basename( event.photo.pic_url, ".*" ) %>'
         });
   }
 
@@ -152,53 +182,28 @@ function requestCallback(response)
   }
 }
 
-
-
-$("#invite_cu").on( "click", function() {
- $('#modal_invite').modal({
-      //keyboard: true,
-      backdrop: "static",
-    });
-});
-
-$("#close_invite").click(function(){
-  $('#modal_invite').modal('hide');
-});
-
 $("#invite_submit").click(function(){
  //     $(this).attr('data-loading-text', 'Inviting...');
  //     $(this).button('loading');
-});
-
-$("#invite_email").on( "click", function() {
-/* $('#modal_invite_email').modal({
-      //keyboard: true,
-      backdrop: "static",
-    });*/
-  $('#modal_invite_email').modal('show');
-});
-
-$("#close_invite_email").click(function(){
-  $('#modal_invite_email').modal('hide');
 });
 
 $("#invite_email_submit").click(function(){
 });
 
 
-$(function() {
   $("#search_user_evt1").tokenInput("/events/search_auto_user", {
     crossDomain: false,
     theme: "facebook",
+    // resultsFormatter: function(item){ return "<li>"  + + item.name +  "</li>" },
     resultsFormatter: function(item){ return "<li>" + "<img src='" + item.profile_pic + "' title='" + item.name + "' height='30px' width='30px' />" + "<div style='display: inline-block; padding-left: 10px;'><div class='full_name'>" + item.name + " " + ""+ "</div><div class='full_name'>" + item.email + " " + ""+ "</div></div></li>" },
     tokenFormatter: function(item) { return  "<li>" + "<img src='" + item.profile_pic + "' title='" + item.name + "' height='30px' width='30px' />" + "<div style='display: inline-block; padding-left: 10px;'><div class='full_name'>" + item.name +"</div><div class='full_name'>" + item.email + " " + ""+ "</div></div></li>" },
     preventDuplicates: true ,
     zindex: 11001,
     hintText: "Type in a user name",
   });
+$(function() {
 });
 
-  $(function() {
   $("#search_group_evt1").tokenInput("/events/search_auto_group", {
     crossDomain: false,
    // prePopulate: $(".eventdetails_with_autocomplete").data("pre"),
@@ -209,11 +214,12 @@ $(function() {
         zindex: 11001,
         hintText: "Type in a group name",
   });
+  $(function() {
 });
 
 
 
-
+/*
          $('.tokenfields').on('beforeCreateToken', function (e) {
             var token = e.token.value.split('|')
             e.token.value = token[1] || token[0]
@@ -234,7 +240,7 @@ $(function() {
            // alert('Token removed! Token value was: ' + e.token.value)
           }).on('preventDuplicateToken', function (e) {
             alert('Duplicate detected! Token value is: ' + e.token.value)
-          }).tokenfield();
+          }).tokenfield();*/
 
 $(".select_unselect_event").click( function() {
   var id = $(this).find('p').html();

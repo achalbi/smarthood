@@ -1,0 +1,280 @@
+ <!-- <ul class="tabs">
+    <%= render 'communities/links', locals: { community: @community} %>
+  </ul>-->
+
+          <div class="col-md-3">
+                        <!-- thumbnail -->
+                        <div class="thumbnail thumbnail-album animation animating delay fadeInLeft">
+                            <!-- media -->
+                            <div class="media">
+                                <!-- indicator -->
+                                <div class=""><span class="spinner"></span></div>
+                                <!--/ indicator -->
+                                <!-- toolbar overlay -->
+                                <div class="overlay">
+                                    <div class="toolbar">
+                                        <a href="javascript:void(0);" class="btn btn-default" title="upload to collection"><i class="ico-upload22"></i></a>
+                                        <a href="javascript:void(0);" class="btn btn-success" title="watch collection"><i class="ico-facetime-video"></i></a>
+                                        <a href="javascript:void(0);" class="btn btn-default" title="love this collection"><i class="ico-heart6"></i></a>
+                                    </div>
+                                </div>
+                                <!--/ toolbar overlay -->
+                                <!--<img data-toggle="unveil" src="../image/background/400x250/background1.jpg" data-src="../image/background/400x250/background1.jpg" alt="Cover" width="100%" class="unveiled">-->
+                                
+                                    <div id="gallery"  >
+                                      <div id="grp_album">
+                                        <div id="gallery1" class=" pull-left">
+                                         <ul id="grid" style="margin:0px"> 
+                                          <% if @community.is_active?(current_user, @community) %>
+                                           <% unless (@community.privacy == Privacyenum::PROTECTED && !current_user.is_cu_admin?(@community)) %>
+                                  
+                                             <li style="background-color:#ffffff!important;margin-left:0px;">
+                                              <div id="upload_pics_com"  style = "border:2px dashed #ddd; width:110px; height:110px; padding:10px;  left:40px; text-align:middle; z-index: 1;  cursor:pointer;  float:left; margin-bottom:3px;" class="bgClrChg">  <h5 class="center" style="margin:38px 0 0 0 "> Create Album </h5>
+                                              </div>
+                                             </li>               
+                                           <% end %>  
+                                           <% end %>
+                                        <% unless albums.nil? %>
+                                          <% albums.each do |album| %>
+                                            <% unless album.photos[0].nil? %>
+                                             <%= render partial: 'groups/album_list', locals: {album: album} %>
+                                            <% end %> 
+                                          <% end %>
+                                        <% end %>  
+                                      </ul>
+                                    </div>
+                                    </div>
+                                  
+                                  </div>
+                                
+                                
+                            </div>
+                            <!--/ media -->
+                            <!-- caption -->
+
+                            <!--/ caption -->
+                            <hr class="mt5 mb5">
+                            
+                        </div>
+                        <!--/ thumbnail -->
+                    </div>
+
+
+
+
+
+
+  <div id="gallery"  >
+    <div id="grp_album">
+      <div id="gallery1" class=" pull-left">
+       <ul id="grid" style="margin:0px"> 
+        <% if @community.is_active?(current_user, @community) %>
+         <% unless (@community.privacy == Privacyenum::PROTECTED && !current_user.is_cu_admin?(@community)) %>
+
+           <li style="background-color:#ffffff!important;margin-left:0px;">
+            <div id="upload_pics_com"  style = "border:2px dashed #ddd; width:110px; height:110px; padding:10px;  left:40px; text-align:middle; z-index: 1;  cursor:pointer;  float:left; margin-bottom:3px;" class="bgClrChg">  <h5 class="center" style="margin:38px 0 0 0 "> Create Album </h5>
+            </div>
+           </li>               
+         <% end %>  
+         <% end %>
+      <% unless albums.nil? %>
+        <% albums.each do |album| %>
+          <% unless album.photos[0].nil? %>
+           <%= render partial: 'groups/album_list', locals: {album: album} %>
+          <% end %> 
+        <% end %>
+      <% end %>  
+    </ul>
+  </div>
+  </div>
+
+</div>
+
+<%= form_for(Album.new, url: create_album_communities_path, remote: true, :html => {:multipart => true}) do  |f| %> 
+<div id="modal_com" class="modal" >
+  <div id="modal-from-dom_com" class="fade">
+    <div class="modal-header">
+      <a href="#" id="closeX_com" class="close">×</a>
+      <h3>Create album</h3>
+    </div>
+    <div class="modal-body">
+      <div class="modal-dialog">
+        <div class="modal-content">
+      <div class="row">
+        <div class="span14 ui-front "  >
+
+         <%= render 'shared/error_messages', object: f.object %>
+         <div class="center_block clearfix pull-left">
+          <%= f.label :title %>
+          <div class="input">
+            <%= f.text_field :title, :placeholder=>"Title", 'data-validation' => "length",
+     'data-validation-length' =>"3-25", 'data-validation-error-msg' => "The Album title has to be a value between 3-25 characters" %>
+          </div>
+        </div>
+
+        <div class="center_block clearfix pull-left">
+          <%= f.label :description %>
+          <div class="input">
+            <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title=>"Description", rows: 3, cols: 75, 'data-validation' => "length ",
+     'data-validation-length' =>"3-250", 'data-validation-error-msg' => "The album description has to be an alphanumeric value between 3-250 characters"   %> 
+          </div>
+        </div>
+        <span class="overrideClass">
+          <div class="center_block clearfix pull-left">
+            <%= f.label "privacy:" %>
+            <div class="input">
+              <%= f.select :privacy, options_for_select([["Public", Privacyenum::PUBLIC], ["Private", Privacyenum::PRIVATE]]) %>
+            </div>
+          </div>
+        </span>
+          <div class="center_block clearfix pull-left ">
+            <%= f.label  "Album downloadable: " %>
+            <div class="input">
+              <%= f.check_box :downloadable %>
+            </div>
+          </div>
+        <div class="center_block clearfix pull-left clear">
+         <div class="input">    
+           <%= fields_for :photos, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
+
+           <%= photo_form.file_field :pic, id: "pic_com", :multiple => true, style: "width:0px; height:0px; padding:0px;  left:0px;", 'data-validation' => "required", 'data-validation-error-msg' => "Please select atleast 1 photo" %>  
+           <% end %>
+           <%= hidden_field_tag :type, "communities" %>
+           <%= hidden_field_tag :id, active_community.id %>
+           <canvas id="imageCanvas_com" style = "border: 1px solid #ddd; padding:5px; align:center;cursor:pointer;" >click to add photos</canvas>
+         </div>
+       </div>
+     </div>
+   </div>
+ </div>
+ <div class="modal-footer" >
+  <%= f.submit "Create Album", class: "btn primary pull-right busy", id: "crtAlb_com" %> 
+  <%= f.submit "", :class => 'hide reset_form', :type => 'reset' %> 
+
+</div>
+</div>
+</div>
+</div>
+</div>
+<% end %>
+
+
+
+<script type="text/javascript">
+$("#upload_pics_com").click(function(){
+    $('#modal_com').modal({
+    //  keyboard: true,
+      backdrop: "static",
+    });
+ // $('#modal_com').modal('show');
+});
+
+$("#closeX_com").click(function(){
+  $('#modal_com').modal('hide');
+  $('.reset_form').click();
+
+
+  $('#pic_com').val('');
+  var canvas = document.getElementById('imageCanvas_com');
+  var ctx = canvas.getContext('2d');
+  canvas.width = 300;
+  canvas.height = 155;
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.font="15px Arial";
+      ctx.fillText("Click here to add photos (Max: 50 files)",25,75);
+
+});
+
+
+$(document).ready(function(){
+  $.validate({
+    onSuccess : function() {
+      $('#crtAlb_com').attr('data-loading-text', 'Creating...');
+      $('#crtAlb_com').button('loading');
+     // return false; // Will stop the submission of the form
+    },
+  });
+});
+
+
+var imageLoader = document.getElementById('pic_com');
+imageLoader.addEventListener('change', handleImage, false);
+$("#imageCanvas_com").click(function(){
+  $("#pic_com").click();
+});
+
+var canvas = document.getElementById('imageCanvas_com');
+var ctx = canvas.getContext('2d');
+  ctx.font="15px Arial";
+  ctx.fillText("Click here to add photos (Max: 50 files)",25,75);
+
+function handleImage(e){
+  var canvas = document.getElementById('imageCanvas_com');
+  var ctx = canvas.getContext('2d');
+  var iCnt=0;
+  var files = e.target.files;
+   if(files.length>50){
+      alert("Maximum of 50 files can be selected");
+      $('#pic_com').val('');
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      canvas.width = 300;
+      canvas.height = 155;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.font="15px Arial";
+      ctx.fillText("Click here to add photos (Max: 50 files)",25,75);
+      return;
+    }
+   if(files.length<1){
+    $('#pic_com').val('');
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      canvas.width = 300;
+      canvas.height = 155;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.font="15px Arial";
+      ctx.fillText("Click here to add photos (Max: 50 files)",25,75);
+      return;
+    }
+  canvas.width = 453;
+  canvas.height = 155*(Math.ceil(files.length/3));
+  for( var i = 0, len = files.length; i < len; i++) 
+  {
+    if(files[i])
+    {
+      var reader = new FileReader();
+      reader.onload = function(event){
+        var img = new Image();
+
+        img.onload = function(){
+          var ratioPx = 150;
+          var sWidth =ratioPx;
+          var ratio = img.width/sWidth;
+          var sHeight = img.height/ratio;   
+          if(sHeight>ratioPx){
+           sHeight =ratioPx;
+           ratio = img.height/sHeight;
+           sWidth = img.width/ratio;  
+         }
+         ctx.drawImage(img, 155*(iCnt%3),155*(Math.floor(iCnt/3)),sWidth,sHeight);
+                          //ctx.drawImage(img,0,0,sWidth,sHeight);
+                          iCnt++;
+                        }
+                        img.src = event.target.result;
+                      }
+                      reader.readAsDataURL(e.target.files[i]);     
+                    }
+                  }
+                }
+
+
+
+                $(document).ready(function(){
+                  $('#posts_community_li').removeClass('active');
+                  $('#about_community_li').removeClass('active');
+                  $('#photos_community_li').addClass('active');
+                  $('#members_community_li').removeClass('active');
+                  $('#groups_community_li').removeClass('active');
+                });
+                </script>
+              </div>
+            </div>  

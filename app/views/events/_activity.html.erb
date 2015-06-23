@@ -1,16 +1,16 @@
 
-          <li style="padding:0px;position:relative;border-bottom:0px;" class="tr-hover1" >
+          <li style="padding:0px;position:relative;border-bottom:0px;" class="tr-hover1 li-none" >
             <% if @event.responded?(current_user) %>
               <% if @activity.admin?(current_user) %>
-               <button class=" pull-right uibutton icon edit button_toggle_pic" id="edit_activity">edit</button>
+               <button class=" pull-right btn btn-warning btn-custom" id="edit_activity">edit</button>
                <% end %>
 
-               <span class="pull-right "> &nbsp;</span>
+     
                <% if @activity.admin?(current_user) %>
 
                   <%= link_to "delete", "/events/#{@event.id}/delete_activity?activity_id=#{@activity.id}", method: :delete, remote: true,
                                            data: { confirm: "You sure?" },
-                                           class: "pull-right uibutton button_toggle_pic",
+                                           class: "pull-right btn btn-danger btn-custom mr10",
                                            title: "Delete this activity" %>
                <% end %>
             <% else %>
@@ -31,79 +31,152 @@
 
 
 <%= form_for( @activity, remote: true,  :html => {id: "update_activity_form"}) do |f| %>
-  <div id="modal_update_activity" style="display:none" >
-          <div id="modal-from-dom" class="modal hide fade in" style="display: block;width:700px;">
+  <div id="modal_update_activity" class="modal fade">
+          <div class="modal-dialog">
+          <div class="modal-content">
             <div class="modal-header">
-              <a href="#" id="closeX_update_activity" class="close">×</a>
-              <h3>Edit Sub-event</h3>
+              <button type="button" class="close" data-dismiss="modal">×</button>
+              <span class="semibold font-15">Edit Sub-event</span>
             </div>
-            <div class="modal-body" style="max-height:550px;">
+            <div class="modal-body">
               <div class="row">
-          <div class="span14 ui-front">
+          <div class="span14 ui-front col-sm-offset-1">
             <%= f.hidden_field :event_id %>
             <%= f.hidden_field :id %>
                <%= render 'shared/error_messages', object: f.object %>
                 <div class="center_block clearfix">
-                  <%= f.label :title %>
-                  <div class="input">
-                    <%= f.text_field :title, :placeholder=>"Title", 'data-validation' => "length",
+                  <%= f.label :title, class:"control-label pl15 mt15" %>
+                  <div>
+                  <div class="col-sm-9">
+                    <%= f.text_field :title, class:"form-control", :placeholder=>"Title", 'data-validation' => "length",
      'data-validation-length' =>"3-25", 'data-validation-error-msg' => "The event name has to be a value between 3-25 characters" %></div>
                 </div>
+                  </div>
 
                 <div class="center_block clearfix">
+                  <div class="control-label ml15 pt15">
+                    
                   <%= label_tag :starts_at %>
-                  <div class="input">
-                  <%= f.text_field :starts_at, :placeholder => "Time" %>&nbsp;&nbsp;&nbsp;
-                <a id="end_date_add_link" class="uibutton icon add">End Date</a>
+                  </div>
+                  <div>
+                    
+                <a id="end_date_add_link" class="btn btn-success btn-sm mt3 icon add pull-right mr60-sm mr12-xs">End Date</a>
+                  <div class="col-sm-9 col-xs-9">
+                  <%= f.text_field :starts_at, class:"form-control", :placeholder => "Time" %>&nbsp;&nbsp;&nbsp;
                 </div>
                 </div>
+                  </div>
+                  
                 <div class="center_block clearfix" id="end_date">
+                  <div class="control-label pl15">
+                    
                   <%= label_tag :ends_at %>
-                  <div class="input">
-                    <%= f.text_field :ends_at %>&nbsp;&nbsp;&nbsp;
-                   <a id="end_date_remove_link" class="uibutton icon prev">Remove</a>
+                  </div>
+                  <div>
+                   <a id="end_date_remove_link"  href="#" class="btn-danger btn-sm icon add pull-right mt3 mr60-sm mr12-xs icon prev">Remove</a>
+                    
+                  <div class="col-sm-9 col-xs-9">
+                    <%= f.text_field :ends_at, class:"form-control" %>
                   </div>
                 </div> 
+                  </div>
 
                 <div class="center_block clearfix">
-                  <%= f.label :location %>
-                  <div class="input ">
-                  <%= f.text_field :address, :placeholder => :location, :size => 43, class: 'events_with_autocomplete inherit_width', 'data-autocompleteUrl' => search_address_events_path , 'data-validation' => "length",
-     'data-validation-length' =>"3-250", 'data-validation-error-msg' => "The event address has to be a value between 3-250 characters" %>&nbsp;&nbsp;&nbsp;
-                
-                  <%= link_to "View map", '#', id: "view_map_link",  class: "uibutton icon prev" %>
+                  <%= f.label :location, class: "control-label ml15" %>
+                  <div>
+                    
+                  <%= link_to "View map", '#', id: "view_map_link_activity",  class: "btn-info mt3 btn-sm icon add pull-right mr60-sm mr12-xs icon prev" %>
+                  <%= link_to "Hide map", '#', id: "hide_map_link_activity",  class: "btn-danger mt3 btn-sm icon add pull-right mr60-sm mr12-xs icon prev" %>
+                  <div class="col-sm-9 col-xs-9">
+                  <%= f.text_field :address, :placeholder => :location, :size => 43, class: 'form-control events_with_autocomplete inherit_width', 'data-autocompleteUrl' => search_address_events_path , 'data-validation' => "length",
+                   'data-validation-length' =>"3-250", 'data-validation-error-msg' => "The event address has to be a value between 3-250 characters" %>&nbsp;&nbsp;&nbsp;
                 </div>
                 <div class="input" id="view_map">
-                
                 </div>
                 </div>
+                  </div>
                 <div class="center_block clearfix">
-                  <%= f.label :description %>
-                  <div class="input">
-                  <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title=>"Description", rows: 3, cols: 75, 'data-validation' => "length",
+                  <%= f.label :description ,class: "control-label ml15 pt15" %>
+                  <div>
+                    
+                  <div class="col-sm-9">
+                  <%= f.text_area :description, :placeholder=>"Description", class: 'form-control inherit_width', :title=>"Description", rows: 3, cols: 75, 'data-validation' => "length",
      'data-validation-length' =>"3-250", 'data-validation-error-msg' => "The event description has to be a value between 3-250 characters"  %> 
                 </div>
                 </div>
+                  </div>
                 <div class="center_block clearfix">
+                  <div class="control-label pl15 mt15">
+                    
                   <%= label_tag :privacy %>
-                  <div class="input">
+                  </div>
+                  <div>
+                    
+                  <div class="col-sm-9">
                     <%= f.select :privacy, options_for_select([["Public", Privacyenum::PUBLIC], ["Private", Privacyenum::PRIVATE]], f.object.privacy), {}, id: "activity_privacy_edit" %>
                   </div>
                 </div>
+                  </div>
           </div>
         </div>   
            </div>
             <div class="modal-footer" >
-              <%= f.submit "Update", class: "btn primary pull-right", id: "update_activity" %>  
+              <%= f.submit "Update", class: "btn btn-success pull-right btn-custom", id: "update_activity" %>  
             </div>
           </div>
-          
+        </div>
         </div>
 <% end %>
 
 
 
               <script type="text/javascript">
+              
+              $('#activity_privacy_edit').addClass('form-control');
+              
+              $('#end_date').hide();
+              $('#end_date_add_link').click(function(){
+                $('#end_date').show();
+                $('#end_date_add_link').hide();
+              });
+              $('#end_date_remove_link').click(function(){
+                $('#end_date').hide();                
+                $('#end_date_add_link').show();
+              });
+              
+                        /*$('#activity_address').keydown(function(){
+                          $('#view_map_link').hide();
+                          $('#view_map').hide();
+                        });
+          */
+            $('#hide_map_link_activity').hide();
+          $('#view_map_link_activity').click(function(){
+              var address = "/events/get_geo_coordinates?address="+$('#activity_address').val();
+              // $.get(address,"script");
+               $.ajax({
+                type: "GET",
+                url: address,
+                dataType: "script"
+              }); 
+              
+          });
+          
+          $('#hide_map_link_activity').click(function(){
+            $('#hide_map_link_activity').hide();
+            $('#view_map_link_activity').show();
+            $('#view_map').hide();
+          });
+              
+        /*  $('a.ui-corner-all').on("click", function(){
+            if($('#activity_address').val()!=""){
+              $('#view_map_link').show();
+            }else{
+              $('#view_map_link').hide();
+            }
+          });*/
+
+              
+              
 
               $(document).ready(function(){
                 $.validate({
@@ -161,7 +234,7 @@
     $('#view_map_link').hide();
 
     $(function() {
-      return $('.events_with_autocomplete').autocomplete({
+      /*return $('.events_with_autocomplete').autocomplete({
         minLength: 2,
         source: function(request, response) {
           return $.ajax({
@@ -175,7 +248,7 @@
             }
           });
         }
-      });
+      });*/
     });
 
 
@@ -225,28 +298,6 @@ var endDateTextBox = $("#activity_ends_at");
 
 
 
-$('#activity_address').keydown(function(){
-    $('#view_map_link').hide();
-    $('#view_map').hide();
-});
-
-$('#view_map_link').click(function(){
-    var address = "/events/get_geo_coordinates?address="+$('#activity_address').val();
-    // $.get(address,"script");
-     $.ajax({
-      type: "GET",
-      url: address,
-      dataType: "script"
-    }); 
-});
-
-$('a.ui-corner-all').on("click", function(){
-  if($('#activity_address').val()!=""){
-    $('#view_map_link').show();
-  }else{
-    $('#view_map_link').hide();
-  }
-});
 
 
 $('#end_date_add_link').click(function(){

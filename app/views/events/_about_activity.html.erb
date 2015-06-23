@@ -108,7 +108,7 @@
 
 <%= form_for( @activity, remote: true) do |f| %>
   <div id="modal2" style="display:none" >
-          <div id="modal-from-dom" class="modal hide fade in" style="display: block;width:700px;">
+          <div id="modal-from-dom" class="modal fade in" style="display: block;width:700px;">
             <div class="modal-header">
               <a href="#" id="close2X" class="close">×</a>
               <h3>Edit Activity</h3>
@@ -247,7 +247,7 @@
     $('#view_map_link').hide();
 
     $(function() {
-      return $('.events_with_autocomplete').autocomplete({
+      /*return $('.events_with_autocomplete').autocomplete({
         minLength: 2,
         source: function(request, response) {
           return $.ajax({
@@ -261,7 +261,7 @@
             }
           });
         }
-      });
+      });*/
     });
 
    $("#activity_privacy_edit option:selected" ).each(function() {

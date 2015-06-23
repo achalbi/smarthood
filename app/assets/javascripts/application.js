@@ -11,25 +11,26 @@
 // GO AFTER THE REQUIRES BELOW.
 //
 //= require jquery
+//= require jquery-ui
 //= require jquery_ujs
-//= require jquery.ui.all
 //= require jquery.remotipart
 //= require autocomplete-rails
 //= require jquery.tokeninput
-//= require_tree ./adminre/a/.
-//= require ./adminre/vendor
-//= require ./adminre/core
-//= require_tree ./adminre/.
+//= require ./moment.min
+//= require fullcalendar
+//= require jquery.fullscreen
+//= require_tree ../../../vendor/assets/javascripts/fancybox/.
 //= require_tree .
 //= require_tree ../../../vendor/assets/javascripts/lightview/.
 //= require_tree ../../../vendor/assets/javascripts/spinners/.
 //= require_tree ../../../vendor/assets/javascripts/excanvas/.
-//= require_tree ../../../vendor/assets/javascripts/datetime/.
 //= require_tree ../../../vendor/assets/javascripts/sidemenu/.
-//= require_tree ../../../vendor/assets/javascripts/fancybox/.
+//= require ../../../vendor/assets/javascripts/adminre/vendor
+//= require ../../../vendor/assets/javascripts/adminre/core
+//= require ../../../vendor/assets/javascripts/adminre/app
+//= require_tree ../../../vendor/assets/javascripts/adminre/.
 
-// fullcalendar
-
+// ../../../vendor/assets/javascripts/datetime/.
 // jquery.lazy-images
 // bootstrap-multiselect
 // jquery-fileupload/basic

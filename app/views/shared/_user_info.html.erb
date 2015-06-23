@@ -1,16 +1,15 @@
-<div  class="img_zoom" style="float:left;" >
-	<a href="<%= user_path(current_user) %>" data-remote="true">
-  		<%= gravatar_for current_user, size: 100 %>
-	</a>
-</div>
-<address style="margin-top:10px;">
-	<strong> <%= link_to current_user.name, current_user, remote: true  %></strong><br>
-	<a><%= current_user.email %></a>
-	<span><%= current_user.address.city  %></span>
-	<span><%= current_user.address.country  %></span><br>
-</address>
-<script type="text/javascript">
-$(document).ready(function(){
-//  $('.gravatar').addClass('thumbnail');
-});
-</script>
+				        <div class="widget panel hidden-xs">
+                            <div class="panel-body pl0 pr0">
+                                <ul class="list-unstyled">
+                                    <li class="text-center">
+                                       <a href="<%= user_path(current_user) %>" data-remote="true"><%= gravatar_for current_user, size: 100 %></a>
+                                    </li>
+                                    <li class="text-center">
+                                        <h5 class="semibold mb0 break-word"><%= link_to current_user.name, current_user, remote: true  %></h5>
+                                        <span class="break-word mb5 text-muted"><%= current_user.email %></span>
+                                        <div class="break-word text-muted"><%= current_user.address.city  %></div>
+										<div class="break-word text-muted"><%= current_user.address.country  %></div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>

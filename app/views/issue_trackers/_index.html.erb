@@ -1,153 +1,213 @@
-<%= link_to "Create issue", '#', id: "create_issue_link",  class: " pull-right uibutton icon edit", style: "margin-right:15px;",:title => "Create issue" %>
-<div>
-<br>
-<br>
-<br>
+<div class="col-md-9">
+<div class="row mt10 mb10">
+	<a href="#" class="btn btn-success btn-custom pull-right" data-toggle="modal" data-target="#modal_issue">Create Issue</a>
 </div>
-<aside class="well " style="margin:0px;">
+
+<div class="row ">
 <h4>Quick Filter</h4>
-	<section>
+	<%= form_tag '/issue_trackers/quick_filter', :method => :post, :remote => true do  %>
+		
+		<div class="center_block clearfix col-sm-2pt5 pl0 pr5">
+          	<div>
+          	<span class="ellipsis ml5">Issue Type:</span>
+              	<div class="col-sm-12 plr1 mt5">
+					<%= select_tag "issue_type", options_for_select([["Bug", "Bug"], ["Improvement", "Improvement"], ["New feature", "New feature"], ["Task", "Task"], ["Sub-task", "Sub-task"]]), class: "span4 quick_filter plr0", id: "issue_type_search"%>
+          		</div>
+        	</div>
+      	</div>
+		
+		
+	<div class="center_block clearfix col-sm-2pt5 pl0 pr5">
+          	<div>
+          	<span class="ellipsis ml5">Module:</span>
+              	<div class="col-sm-12 plr1 mt5">
+					<%= select_tag :module, options_for_select([["Home", "Home"], ["Community", "ComUnity"], ["Users", "Users"], ["Events", "Events"], ["Photos", "Photos"], ["Groups", "Groups"], ["Notifications", "Notifications"], ["Issues Tracker", "Issues tracker"]]), class: "span4 quick_filter plr0", id: "issue_module_search" %>
+          		</div>
+        	</div>
+      	</div>
 
-	<%= form_tag '/issue_trackers/quick_filter', :method => :post, :remote => true do %>
-
-	<div  class="span4" style="border-top:1px solid #aaa;padding:5px;margin-left:0px;" >
-			<h4>Issue Type:
-				<span style="overflow: hidden;font-size:small">
-					<%= select_tag "issue_type", options_for_select([["Bug", "Bug"], ["Improvement", "Improvement"], ["New feature", "New feature"], ["Task", "Task"], ["Sub-task", "Sub-task"]]),  multiple: true, class: "span4 quick_filter", id: "issue_type_search", size: "5", style: "width:110%;" %>
-				</span> 
-			</h4>
+	<div class="center_block clearfix col-sm-2 pl0 pr5">
+          	<div>
+          	<span class="ellipsis ml5">Priority:</span>
+              	<div class="col-sm-12 plr1 mt5">
+					<%= select_tag :priority, options_for_select([["Critical", "Critical"], ["High", "High"], ["Medium", "Medium"], ["Low", "Low"]]), class: "span4 quick_filter plr0", id: "issue_priority_search" %>
+          		</div>
+        	</div>
+      	</div>
 			
-		</div>
-
-		<div class="span4" style="border-top:1px solid #aaa; padding:5px;margin-left:0px;">
-			<h4>Module:
-				<span style="overflow: hidden;font-size:small">
-					<%= select_tag :module, options_for_select([["Home", "Home"], ["Community", "ComUnity"], ["Users", "Users"], ["Events", "Events"], ["Photos", "Photos"], ["Groups", "Groups"], ["Notifications", "Notifications"], ["Issues Tracker", "Issues tracker"]]),  multiple: true, class: "span4 quick_filter", style: "width:110%;", id: "issue_module_search", size: "8" %>
-				</span> 
-			</h4>
-		</div>
-		<div class="span4" style="border-top:1px solid #aaa;padding:5px;margin-left:0px;">
-			<h4>Priority:
-				<span style="overflow: hidden;font-size:small">
-					<%= select_tag :priority, options_for_select([["Critical", "Critical"], ["High", "High"], ["Medium", "Medium"], ["Low", "Low"]]),  multiple: true, class: "span4 quick_filter", style: "width:110%;", id: "issue_priority_search", size: "4" %>
-				</span> 
-			</h4>
-		</div>
-		<div class="span4" style="border-top:1px solid #aaa;padding:5px;margin-left:0px;">
-			<h4>Severity :
-				<span style="overflow: hidden;font-size:small">
-					<%= select_tag :severity, options_for_select([["Critical", "Critical"], ["High", "High"], ["Medium", "Medium"], ["Low", "Low"]]),  multiple: true, class: "span4 quick_filter", style: "width:110%;", id: "issue_severity_search", size: "4" %>
-				</span> 
-			</h4>
-		</div>
-		<div class="span4" style="border-top:1px solid #aaa;padding:5px;margin-left:0px;">
-			<h4>Status :
-				<span style="overflow: hidden;font-size:small">
-					<%= select_tag :status, options_from_collection_for_select(@ticket_actions, "description", "description"),  multiple: true, class: "span4 quick_filter", style: "width:110%;", id: "ticket_action_id_search", size: "7" %>
-				</span> 
-			</h4>
-		</div>
+		<div class="center_block clearfix col-sm-2 pl0 pr5">
+          	<div>
+          	<span class="ellipsis ml5">Severity:</span>
+              	<div class="col-sm-12 plr1 mt5">
+					<%= select_tag :severity, options_for_select([["Critical", "Critical"], ["High", "High"], ["Medium", "Medium"], ["Low", "Low"]]), class: "span4 quick_filter plr0", id: "issue_severity_search" %>
+          		</div>
+        	</div>
+      	</div>
+			
+		<div class="center_block clearfix col-sm-2pt5 pl0 pr5">
+          	<div>
+          	<span class="ellipsis ml5">Status:</span>
+              	<div class="col-sm-12 plr1 mt5">
+					<%= select_tag :status, options_from_collection_for_select(@ticket_actions, "description", "description"), class: "span4 quick_filter plr0", id: "ticket_action_id_search"%>
+          		</div>
+        	</div>
+      	</div>	
+			
+	
 		<div class="hide">
 			<%= submit_tag "Search", class: "uibutton pull-right ", id: "search_submit" %>  
 		</div>
 		<% end %>
-	</section>
-</aside>
-<br>
+</div>
+
 <div id="quick_filter" class="span14">
 	<%=render 'issue_trackers/table' %>
 </div>
 
-
+</div>
 <%= form_for( @issue, remote: true,  :html => {:multipart => true}) do |f| %>
-  <div id="modal_issue" class="modal_issue" style="display:none" >
-          <div id="modal-from-dom" class="modal hide fade in" style="display: block;width:700px;">
+  <div id="modal_issue" class="modal fade">
+          <div class="modal-dialog">
+          <div class="modal-content">
             <div class="modal-header">
-              <a href="#" id="close_issue" class="close">×</a>
-              <h3>Create issue</h3>
+              <button type="button" class="close" data-dismiss="modal">×</button>
+              <sapn class="font-15 semibold">Create issue</h3>
             </div>
-            <div class="modal-body" style="max-height:430px;">
+            <div class="modal-body">
               <div class="row">
-		          <div class="span14 ui-front">
+		          <div class="col-sm-offset-1 col-sm-10">
 		               <%= render 'shared/error_messages', object: f.object %>
 		               <div class="center_block clearfix">
-		                  <%= f.label :title %>
-		                  	<div class="input">
-             					<%= f.text_area :title, :placeholder=>"Title", class: ' inherit_width', :title => "Title", rows: 2, cols: 75, 'data-validation' => "required", 'data-validation-error-msg' => "Title can't be blank"   %> 
+		                  <%= f.label :title, class: "control-label ml15 mt15" %>
+		                  <div>
+		                  	
+		                  	<div class="col-sm-12">
+             					<%= f.text_area :title, :placeholder=>"Title", class: ' inherit_width form-control', :title => "Title", rows: 2, cols: 75, 'data-validation' => "required", 'data-validation-error-msg' => "Title can't be blank"   %> 
 		              		</div>
 		                </div>
+		                  </div>
 		                <div class="center_block clearfix">
-		                  <%= f.label :description %>
-		                  	<div class="input">
-             					<%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title => "Description", rows: 3, cols: 75  %> 
+		                  <%= f.label :description, class:"control-label ml15 mt15" %>
+		                  <div>
+		                  	
+		                  	<div class="col-sm-12">
+             					<%= f.text_area :description, :placeholder=>"Description", class: 'form-control inherit_width', :title => "Description", rows: 3, cols: 75  %> 
 		              		</div>
 		                </div>
-		                <div class="center_block clearfix">
-		                  <%= f.label :issue_type %>
-		                  	<div class="input">
-		                  		<%= f.select :issue_type, options_for_select([["Bug", "Bug"], ["Improvement", "Improvement"], ["New feature", "New feature"], ["Task", "Task"], ["Sub-task", "Sub-task"]], f.object.issue_type), {}, id: "issue_type" %>
-		              		</div>
-		                </div>
-		                <div class="center_block clearfix">
-		                  <%= f.label :module %>
-		                  	<div class="input">
-		                  		<%= f.select :module, options_for_select([["Home", "Home"], ["Community", "ComUnity"], ["Users", "Users"], ["Events", "Events"], ["Photos", "Photos"], ["Groups", "Groups"], ["Notifications", "Notifications"], ["Issues Tracker", "Issues tracker"]], f.object.module), {}, id: "issue_module" %>
-		              		</div>
-		                </div>
-		                <div class="center_block clearfix">
-		                  <%= f.label :priority %>
-		                  	<div class="input">
-		                  		<%= f.select :priority, options_for_select([["Critical", "Critical"], ["High", "High"], ["Medium", "Medium"], ["Low", "Low"]], f.object.priority), {}, id: "issue_priority" %>
-		              		</div>
-		                </div>
-		                <div class="center_block clearfix">
-		                  <%= f.label :severity %>
-		                  	<div class="input">
-		                  		<%= f.select :severity, options_for_select([["Critical", "Critical"], ["High", "High"], ["Medium", "Medium"], ["Low", "Low"]], f.object.severity), {}, id: "issue_severity" %>
-		              		</div>
-		                </div>
-		                <div class="center_block clearfix">
-		                  <%= f.label :version %>
-		                  	<div class="input">
-		                  		<%= f.text_field :version, :placeholder=>"Version", value: "0.1" %>
-		              		</div>
-		                </div>
-		                <div class="center_block clearfix">
-		                  <%= f.label :impact %>
-		                  	<div class="input">
-              					<%= f.text_area :impact, :placeholder=>"Impact", class: ' inherit_width', :title => "Impact", rows: 3, cols: 75  %> 
-		              		</div>
-		                </div>
-		                <div class="center_block clearfix">
-		                  <%= f.label :author %>
-		                  	<div class="input">
-              					<%= text_field_tag current_user.name, nil, value: current_user.name, class: 'disabled', disabled: true %> 
-		              		</div>
-		                </div>
-			          <%= f.fields_for :issue_ticket_actions, IssueTicketAction.new do |ff| %>
-			               <div class="center_block clearfix">
+		                  </div>
+		                  <div class="row">
+		                  	
+			                <div class="center_block clearfix col-sm-6">
+				                  <%= f.label :issue_type, class: "control-label ml15 mt15" %>
+				                  <div>
+				                  	
+				                  	<div class="col-sm-12">
+				                  		<%= f.select :issue_type, options_for_select([["Bug", "Bug"], ["Improvement", "Improvement"], ["New feature", "New feature"], ["Task", "Task"], ["Sub-task", "Sub-task"]], f.object.issue_type), {}, id: "issue_type" %>
+				              		</div>
+			                	  </div>
+			                  </div>
+			                	<div class="center_block clearfix col-sm-6">
+				                  	<%= f.label :module, class: "control-label ml15 mt15" %>
+				                  	<div>
+				                  	
+					                  	<div class="col-sm-12">
+					                  		<%= f.select :module, options_for_select([["Home", "Home"], ["Community", "ComUnity"], ["Users", "Users"], ["Events", "Events"], ["Photos", "Photos"], ["Groups", "Groups"], ["Notifications", "Notifications"], ["Issues Tracker", "Issues tracker"]], f.object.module), {}, id: "issue_module" %>
+					              		</div>
+				                	</div>
+			                  	</div>
+		                  </div>
+		                <div class="row">  
+			                <div class="center_block clearfix col-sm-6">
+			                  <%= f.label :priority, class: "control-label ml15 mt15" %>
+				                  <div>
+				                  	
+				                  	<div class="col-sm-12">
+				                  		<%= f.select :priority, options_for_select([["Critical", "Critical"], ["High", "High"], ["Medium", "Medium"], ["Low", "Low"]], f.object.priority), {}, id: "issue_priority" %>
+				              		</div>
+				                </div>
+			                  </div>
+			                <div class="center_block clearfix col-sm-6">
+			                  <%= f.label :severity, class: "control-label ml15 mt15" %>
+				                  <div>
+				                  	
+				                  	<div class="col-sm-12">
+				                  		<%= f.select :severity, options_for_select([["Critical", "Critical"], ["High", "High"], ["Medium", "Medium"], ["Low", "Low"]], f.object.severity), {}, id: "issue_severity" %>
+				              		</div>
+				                </div>
+			                  </div>
+		                  </div>
+		               
+		                <div class="row">
+			                <div class="center_block clearfix col-sm-6">
+					                  <%= f.label :version, class: "control-label mt15 ml15" %>
+					                  <div>
+					                  	
+					                  	<div class="col-sm-12">
+					                  		<%= f.text_field :version, :placeholder=>"Version", class: "form-control", value: "0.1" %>
+					              		</div>
+					                </div>
+			                  </div>
+			                   <%= f.fields_for :issue_ticket_actions, IssueTicketAction.new do |ff| %>
+			               <div class="center_block clearfix col-sm-6">
+			               	<div class="control-label ml15 mt15">
+			               		 
 			                  <%= ff.label :ticket_action_id, "Status" %>
-			                  <div class="input">
+			               	</div>
+			                  <div>
+			                  	
+			                  <div class="col-sm-12">
 			                  <%= ff.select(:ticket_action_id, TicketAction.all.collect {|a| [a.description, a.id]}) %>
+			                  </div>
 			                  </div>
 			                  
 			               </div>
+			            
+		                </div>  
+		                <div class="center_block clearfix">
+		                  <%= f.label :author, class: "control-label ml15 mt15" %>
+		                  <div>
+		                  	
+		                  	<div class="col-sm-12">
+              					<%= text_field_tag current_user.name, nil, value: current_user.name, class: ' form-control disabled', disabled: true %> 
+		              		</div>
+		                </div>
+		                  </div>
+			          
+			               
+			               <div class="center_block clearfix">
+					                  <%= f.label :impact, class: "control-label ml15 mt15" %>
+					                  <div>
+					                  	
+					                  	<div class="col-sm-12">
+			              					<%= f.text_area :impact, :placeholder=>"Impact", class: 'form-control inherit_width', :title => "Impact", rows: 3, cols: 75  %> 
+					              		</div>
+					                </div>
+			                  </div>
+			               
+			               
+			               
 			               <%= ff.hidden_field :user_id, :value => current_user.id %>
 			          	
 			               <div class="center_block clearfix">
+			               	<div class="control-label ml15 mt15">
+			               		
 			                  <%= ff.label :comment, "Comments" %>
-			                  <div class="input">
-              					<%= ff.text_area :comment, :placeholder=>"Comment", class: ' inherit_width', :title => "Comment", rows: 3, cols: 75  %> 
+			               	</div>
+			                  <div class="col-sm-12">
+              					<%= ff.text_area :comment, :placeholder=>"Comment", class: 'form-control inherit_width', :title => "Comment", rows: 3, cols: 75  %> 
 			                  </div>
 			               </div>
 
 			                <div class="center_block clearfix">
+			                	<div class="control-label mt15 ml15"> 
+			                		
 						            <%= label_tag "Add picture:" %>
+			                	</div>
 						            <%= fields_for :photos, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
-						            	<%= photo_form.file_field :pic, id: "pic", :multiple => true, style: "width:1px; height:1px; padding:0px;  left:0px;" %>  
+						            	<%= photo_form.file_field :pic, id: "pic", :multiple => true, style: "width:0px; height:0px; padding:0px;  left:0px;" %>  
 						            <% end %>
-						            <div class="input">
-						              <canvas id="imageCanvas" style = "border: 1px solid #ddd; padding:5px; align:center; width:500px;cursor:pointer" >select new image</canvas>
+						            <div class="col-sm-9">
+						              <canvas id="imageCanvas" style = "border: 1px solid #ddd; padding:5px; align:center;cursor:pointer" >Add Picture</canvas>
 						            </div>
 						        </div>
 
@@ -158,14 +218,28 @@
           	 </div>
            </div>
             <div class="modal-footer" >
-              <%= f.submit "Create", class: "btn primary pull-right ", id: "create_issue_submit" %> 
+              <%= f.submit "Create", class: "btn btn-success pull-right btn-custom ", id: "create_issue_submit" %> 
                     <%= f.submit "", :class => 'hide reset_form', :type => 'reset' %> 
  
             </div>
           </div>          
         </div>
+        </div>
 <% end %>
 <script type="text/javascript">
+
+$('#issue_type').addClass('form-control');
+$('#issue_module').addClass('form-control');
+$('#issue_priority').addClass('form-control');
+$('#issue_severity').addClass('form-control');
+$('#issue_tracker_issue_ticket_actions_attributes_0_ticket_action_id').addClass('form-control');
+
+$('#issue_type_search').addClass('form-control');
+$('#issue_module_search').addClass('form-control');
+$('#issue_priority_search').addClass('form-control');
+$('#issue_severity_search').addClass('form-control');
+$('#ticket_action_id_search').addClass('form-control');
+
 
     $("#create_issue_link").click(function(){
        $('.modal_issue').modal({

@@ -1,58 +1,63 @@
+<div class="comments img_zoom panel-body slimscroll np">
+  <ul class="media-list mb0" id="comment_form_<%= post.id %>">
+  <li class="media no-border p0">
+    <%= form_for [post.comments.build], remote: true, html: {id: "comment_#{post.id}"}  do |f| %>
+    <%= button_tag(type: 'submit', class: "btn btn-default pull-right mt7 pl6 pr6 pt6 pb6 mr5", style: "border-radius: 999px") do %>
+     <i class="ico-arrow-right7 font-20"></i>
+    <% end %>
+    <span class = "media-body bg-white">
+      <%= f.text_field :content, :placeholder=>"Write comment...", class: "form-control form-control-minimal ht50",:title => "Comment", 'data-validation' => "required", 'data-validation-error-msg' => "Comment can't be blank"  %>
+      <div class="center loading_page_<%= post.id %> pull-right hide"><img src="/assets/loading.gif"></div>
+      <%= f.hidden_field :post_id %>
+        <!--<span class="media-meta pull-right hide">
+          <%= f.submit "Post", class: "btn primary" %>
+        </span>-->
+    </span>
+  <% end %>
+  </li> 
+  <hr class="nm">
+</ul>
 
-<div style="background-color:#f5f5f5;" class="comments img_zoom">
-<% if post.comments.count > 3 %>
-<a class="pull-right" id="cmnts_<%= post.id %>" style="cursor:pointer;margin-right:5px;font-size:13px;" >View more comments</a><br>
-<% end %>
-<% post.comments.reverse_each do |comment| %>
+<% post.comments.each do |comment| %>
 <% unless comment.id.nil? %>
   
-<ol style="padding:5px;margin:0;" class="comments_ol_<%= post.id %>" id="comments_ol_<%= comment.id %>">
-<a href="/users/<%=comment.user.id %>/" data-remote="true" style="cursor:pointer;border:0px;padding:0px;" class="pop_up" rel="popover" data-content='<%= gravatar_for comment.user, size: 100 %>' data-original-title="<%= comment.user.name %>" ><%= gravatar_for comment.user, size: 40 %></a>
-    <% if current_user?(comment.user) %>
-    <div class="pull-right hide" style="padding:5px 0 0 5px;margin:1px 0 0 0;" id="comments_del_<%= comment.id %>">
-             <strong style="font-size:11px;margin-right:3px;"> <%= link_to "×", comment, method: :delete, remote: true, style: "color:#99A7C3 !important;",
-                                               data: { confirm: "You sure?" },
-                                               title: "delete the comment" %></strong>
-    </div>
-    <% end %>
-    <address style="margin-top:2px;margin-bottom:0;">
-      <span>
-     <strong style="font-size:13px; float: left; line-height: 1;margin-right: 8px;"> <%= link_to comment.user.name, comment.user, remote: true %></strong>
-      </span>
-     <span class="content" style="font-size:13px;line-height: 1;"> <%= comment.content %></span>
-     <span class="timestamp">
-      <%= time_ago_in_words(comment.created_at) %> ago.
-    </span>
-    </address>
-</ol>
+<ul class=" mb0 media-list comments_ol_<%= post.id %>" id="comments_ol_<%= comment.id %>">
+  <hr class="nm mt0 mb10">
+  <li class="media no-border p0 pb5 mt5">
+    <a class="pull-left pl10 pr0" href="/users/<%=comment.user.id %>/" data-remote="true" class="pop_up" rel="popover" data-content='<%= gravatar_for comment.user, size: 40 %>' data-original-title="<%= comment.user.name %>" ><%= gravatar_for comment.user, size: 40 %></a>
+        <div class = "media-body plr10">
+        <% if current_user?(comment.user) %>
+        <span class="pull-right" id="comments_del_<%= comment.id %>">
+                 <strong> <%= link_to "×", comment, method: :delete, remote: true,
+                                                   data: { confirm: "You sure?" },
+                                                   title: "delete the comment" %></strong>
+        </span>
+        <% end %>
+          <p class="media-heading"><%= link_to comment.user.name, comment.user, remote: true %></p>
+          <p class="media-text"><%= comment.content %>
+            <span class="media-meta pull-right"><%= time_ago_in_words(comment.created_at) %> ago.</span>
+          </p>
+        </div>
+  </li>
+</ul>
 <script type="text/javascript">
-$( "#comments_ol_<%= comment.id %>" ).hover(
+/*$( "#comments_ol_<%= comment.id %>" ).hover(
   function() {
     $("#comments_del_<%= comment.id %>").show();
   }, function() {
     $("#comments_del_<%= comment.id %>").hide();
   }
-);
+);*/
 $("#comments_del_<%= comment.id %>").click(function(){
-  $( "#comments_ol_<%= comment.id %>" ).hide();
+//  $( "#comments_ol_<%= comment.id %>" ).hide();
 });
 </script>
 
 <% end %>
 <% end %>
-<ol style="padding:5px;margin:0;height:30px;overflow:hidden;">
-<%= gravatar_for(current_user, size: 38) %>
-<%= form_for [post.comments.build], remote: true, html: {style: "margin-bottom: 0px;", id: "comment_#{post.id}"}  do |f| %>
-    <%= f.text_field :content, :placeholder=>"Comment...", style: 'width:465px;', :title => "Comment", 'data-validation' => "required", 'data-validation-error-msg' => "Comment can't be blank"  %>
-    <div class="center loading_page_<%= post.id %> pull-right hide" style="padding:0 5px;margin:0 8px;"><img src="/assets/loading.gif"></div>
-    <%= f.hidden_field :post_id %>
-    <div class="hide pull-left">
-      <%= f.submit "Post", class: "btn primary" %>
-    </div>
-<% end %>
-                                
-</ol>
+
 </div>
+
 
 <script type="text/javascript">
 $(document).ready(function(){
@@ -64,9 +69,14 @@ $(document).ready(function(){
 $(".comments_ol_<%= post.id %>").hide();
 $(".comments_ol_<%= post.id %>:lt(3)").show();
 $("#cmnts_<%= post.id %>").click(function(){
-  $(".comments_ol_<%= post.id %>").show('slow');
-  $("#cmnts_<%= post.id %>").hide();
+  $(".comments_ol_<%= post.id %>").toggle();
+  $(".comments_ol_<%= post.id %>:lt(3)").toggle();
+//  $(".comments_ol_<%= post.id %>").toggle();
+//  $(".comments_ol_<%= post.id %>").toggle('slow');
+  $("#cmnts_<%= post.id %> > span").toggle();
+  $("#comment_form_<%= post.id %>").toggle();
 });
+  $("#comment_form_<%= post.id %>").toggle();
 
      $(document).ready(function(){
         $.validate({

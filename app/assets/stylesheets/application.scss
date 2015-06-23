@@ -1,5 +1,6 @@
 @import "bootstrap-sprockets";
 /*@import "bootstrap";*/
+@import "jquery-ui-1.10.1";
 @import "custom-two";
 @import "font-awesome";
 @import "custom-mobile";
@@ -8,6 +9,12 @@
 @import "adminre/layout";
 @import "adminre/theme4";
 @import "adminre/uielement";
+@import "fancybox/jquery.fancybox-buttons";
+@import "fancybox/jquery.fancybox-thumbs";
+@import "fancybox/jquery.fancybox";
+@import "fb-boot";
+@import "vendor";
+
 //@import "bootstrap-facebook";
 /*
  * This is a manifest file that'll be compiled into application.css, which will include all the files
@@ -22,7 +29,6 @@
 
  *= require_self 
  *= require_tree .
- *= require jquery.ui.all
  *= require_tree ../../../vendor/assets/stylesheets
  *= require_tree ../../../vendor/assets/stylesheets/lightview/.
  *= require_tree ../../../vendor/assets/stylesheets/datetime/.

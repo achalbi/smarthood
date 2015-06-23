@@ -1,6 +1,6 @@
 <div id="show_issue">
-	<div style="border-bottom:1px solid #eee;padding:5px;">
-		<h2>
+	<div>
+		
 			<% if current_user?(@issue.author) %>
 			    <%= link_to "Delete", @issue, method: :delete, class: "btn danger pull-left",
 			                                     data: { confirm: "You sure?" }, remote: true,
@@ -9,9 +9,9 @@
 			<%= @issue.ticket_id + ": " + @issue.title %>
 			<%= link_to "Edit", '#', id: "edit_issue_link",  class: " pull-right uibutton icon edit", style: "margin-right:15px;",:title => "Create issue" %>
 
-		</h2>
+		
 	</div>
-	<br>
+
 	<aside class="span5 well">
 		<div  class="span4" style="padding:5px;" >
 			<h4>Issue Type:
@@ -63,8 +63,7 @@
 		<div class="span4" style="border-bottom:1px solid #aaa;padding:5px;">
 			<h4>Screenshots:</h4>
 		</div>
-		<br>
-		<br>
+	
 		<div style="padding:5px;">
 			<ul id="grid" style="padding:5px;margin:10px;">
 				<% @issue.issue_ticket_actions.reverse_each do |ita| %>
@@ -80,8 +79,6 @@
 			<% end %>
 		</ul>
 	</div>
-</div>
-
 
 </aside>
 <aside >
@@ -140,173 +137,145 @@
           				</span>
           				<span class="clear-float"></span>
 					</div>
-					<div id="modal_issue_action_delete_<%= ita.id %>" style="display:none" class="modal_issue_action" >
-						<div id="modal-from-dom" class="modal hide fade in" style="display: block;">
-							<div class="modal-header">
-								<a href="#" id="close_issue_action" class="close close_issue_action_delete">×</a>
-								<h3>Delete Action</h3>
-							</div>
-							<div class="modal-body" style="max-height:430px;">
-								<div class="row">
-									<h2> Are you sure?</h2>
-								</div>
-							</div>
-							<div class="modal-footer" >
-								<%= link_to "Delete", ita, method: :delete, id: "delete_#{ita.id}", class: "btn danger pull-right del_action delete_issue_action", remote: true, title: "Delete" %>
-								<%= link_to "Cancel", '#', id: "_cancel_#{ita.id}",  class: "btn pull-right delete_issue_action", style: "margin-right:15px;",:title => "Cancel" %>
-							</div>
-						</div>          
-					</div>
-											
-					<%= form_for( ita, url: update_action_issue_trackers_path, remote: true) do |f| %>
-					<div id="modal_issue_action_<%= ita.id %>" style="display:none" class="modal_issue_action" >
-						<div id="modal-from-dom" class="modal hide fade in" style="display: block;width:700px;">
-							<div class="modal-header">
-								<a href="#" id="close_issue_action" class="close close_issue_action">×</a>
-								<h3>Create issue</h3>
-							</div>
-							<div class="modal-body" style="max-height:430px;">
-								<div class="row">
-									<div class="span14 ui-front">
-										<%= render 'shared/error_messages', object: f.object %>
-
-										<div class="center_block clearfix">
-											<%= f.label :ticket_action_id, "Status" %>
-											<div class="input">
-												<%= f.select(:ticket_action_id, TicketAction.all.collect {|a| [a.description, a.id]}) %>
-											</div>
-
-										</div>
-
-										<%= f.hidden_field :id %>
-										<%= f.hidden_field :user_id, :value => current_user.id %>
-										<div class="center_block clearfix">
-											<%= f.label :comment, "Comments" %>
-											<div class="input">
-												<%= f.text_area :comment, :placeholder=>"Comment", class: ' inherit_width', :title => "Comment", rows: 3, cols: 75  %> 
-											</div>
-										</div>
-
-									</div> 	  
-								</div>
-							</div>
-							<div class="modal-footer" >
-								<%= f.submit "Edit", class: "btn primary pull-right edit_issue_action_submit" %>  
-							</div>
-						</div>          
-					</div>
-					<% end %>
+					
 
 
 					<% end %>
 				</ul>
-				<br>
 			</div>
 		</section>
 
 	</aside>
 
-
+</div>
 
 	<%= form_for( @issue, remote: true) do |f| %>
-	<div id="modal_issue_edit" style="display:none" >
-		<div id="modal-from-dom" class="modal hide fade in" style="display: block;width:700px;">
+	<div id="modal_issue_edit" class="modal fade">
+		<div class="modal-dialog">
+		<div class="modal-content">
 			<div class="modal-header">
-				<a href="#" id="close_issue_edit" class="close">×</a>
-				<h3>Edit issue</h3>
+				<button type="button" class="close" data-dismiss="modal">×</button>
+				<span class="font-15 semibold">Edit issue</span>
 			</div>
-			<div class="modal-body" style="max-height:430px;">
+			<div class="modal-body">
 				<div class="row">
-					<div class="span14 ui-front">
+					<div class="col-sm-offset-1">
 						<%= render 'shared/error_messages', object: f.object %>
 						<div class="center_block clearfix">
-							<%= f.label :title %>
-							<div class="input">
-								<%= f.text_area :title, :placeholder=>"Title", class: ' inherit_width', :title => "Title", rows: 2, cols: 75  %> 
+							<%= f.label :title, class: "control-label mt15 ml15" %>
+							<div>
+								
+							<div class="col-sm-11">
+								<%= f.text_area :title, :placeholder=>"Title", class: 'form-control inherit_width', :title => "Title", rows: 2, cols: 75  %> 
+							</div>
 							</div>
 						</div>
+						
 						<div class="center_block clearfix">
-							<%= f.label :description %>
-							<div class="input">
-								<%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title => "Description", rows: 3, cols: 75  %> 
+							<%= f.label :description, class: "control-label mt15 pl15" %>
+							<div>
+								
+							<div class="col-sm-11">
+								<%= f.text_area :description, :placeholder=>"Description", class: 'form-control inherit_width', :title => "Description", rows: 3, cols: 75  %> 
 							</div>
 						</div>
-						<div class="center_block clearfix">
-		                  <%= f.label :issue_type %>
-		                  	<div class="input">
+					</div>
+					<div class="row">
+						
+						<div class="center_block clearfix col-sm-6">
+		                  <%= f.label :issue_type, class: "control-label mt15 pl15" %>
+		                  	<div class="col-sm-10">
 		                  		<%= f.select :issue_type, options_for_select([["Bug", "Bug"], ["Improvement", "Improvement"], ["New feature", "New feature"], ["Task", "Task"], ["Sub-task", "Sub-task"]], f.object.issue_type), {}, id: "issue_type" %>
 		              		</div>
 		                </div>
-		                <div class="center_block clearfix">
-		                  <%= f.label :module %>
-		                  	<div class="input">
+		                <div class="center_block clearfix col-sm-6">
+		                  <%= f.label :module, class: "control-label mt15 pl15" %>
+		                  	<div class="col-sm-10">
 		                  		<%= f.select :module, options_for_select([["Home", "Home"], ["Community", "ComUnity"], ["Users", "Users"], ["Events", "Events"], ["Photos", "Photos"], ["Groups", "Groups"], ["Notifications", "Notifications"], ["Issues Tracker", "Issues tracker"]], f.object.module), {}, id: "issue_module" %>
 		              		</div>
 		                </div>
-		                <div class="center_block clearfix">
-		                  <%= f.label :priority %>
-		                  	<div class="input">
+					</div>
+						
+					<div class="row">
+						
+		                <div class="center_block clearfix col-sm-6">
+		                  <%= f.label :priority, class: "control-label mt15 pl15" %>
+		                  	<div class="col-sm-10">
 		                  		<%= f.select :priority, options_for_select([["Critical", "Critical"], ["High", "High"], ["Medium", "Medium"], ["Low", "Low"]], f.object.priority), {}, id: "issue_priority" %>
 		              		</div>
 		                </div>
-		                <div class="center_block clearfix">
-		                  <%= f.label :severity %>
-		                  	<div class="input">
+		                <div class="center_block clearfix col-sm-6">
+		                  <%= f.label :severity, class: "control-label mt15 pl15" %>
+		                  	<div class="col-sm-10">
 		                  		<%= f.select :severity, options_for_select([["Critical", "Critical"], ["High", "High"], ["Medium", "Medium"], ["Low", "Low"]], f.object.severity), {}, id: "issue_severity" %>
 		              		</div>
 		                </div>
+					</div>
 						<div class="center_block clearfix">
-							<%= f.label :impact %>
-							<div class="input">
-								<%= f.text_area :impact, :placeholder=>"Impact", class: ' inherit_width', :title => "Impact", rows: 3, cols: 75  %> 
+							<%= f.label :impact, class: "control-label mt15 pl15" %>
+							<div>
+								
+							<div class="col-sm-11">
+								<%= f.text_area :impact, :placeholder=>"Impact", class: 'form-control inherit_width', :title => "Impact", rows: 3, cols: 75  %> 
+							</div>
 							</div>
 						</div>
 					</div> 	  
 				</div>
 			</div>
 			<div class="modal-footer" >
-				<%= f.submit "Update", class: "btn primary pull-right", id: "update_issue_edit_submit" %>  
+				<%= f.submit "Update", class: "btn btn-success pull-right btn-custom", id: "update_issue_edit_submit" %>  
 			</div>
 		</div>          
 	</div>
 	<% end %>
 
 	<%= form_for( @issue, remote: true) do |f| %>
-	<div id="modal_issue_action" style="display:none" >
-		<div id="modal-from-dom" class="modal hide fade in" style="display: block;width:700px;">
+	<div id="modal_issue_action" class="modal fade">
+		<div class="modal-dialog">
+		<div class="modal-content">
 			<div class="modal-header">
-				<a href="#" id="close_issue_action" class="close">×</a>
-				<h3>Create Action</h3>
+				<button type="button" class="close" data-dismiss="modal">×</button>
+				<span class="semibold font-15">Create Action</span>
 			</div>
-			<div class="modal-body" style="max-height:430px;">
+			<div class="modal-body">
 				<div class="row">
-					<div class="span14 ui-front">
+					<div class="col-sm-offset-1">
 						<%= render 'shared/error_messages', object: f.object %>
 
 						<%= f.fields_for :issue_ticket_actions, IssueTicketAction.new do |ff| %>
 						<div class="center_block clearfix">
-							<%= ff.label :ticket_action_id, "Status" %>
-							<div class="input">
-								<%= ff.select(:ticket_action_id, TicketAction.all.collect {|a| [a.description, a.id]}) %>
+							<div class="control-label pl15 mt15">
+								<%= ff.label :ticket_action_id, "Status" %>
 							</div>
-
+							<div>
+								<div class="col-sm-9">
+									<%= ff.select(:ticket_action_id, TicketAction.all.collect {|a| [a.description, a.id]}) %>
+								</div>
+							</div>
 						</div>
 
 						<%= ff.hidden_field :user_id, :value => current_user.id %>
 						<div class="center_block clearfix">
-							<%= ff.label :comment, "Comments" %>
-							<div class="input">
-								<%= ff.text_area :comment, :placeholder=>"Comment", class: ' inherit_width', :title => "Comment", rows: 3, cols: 75  %> 
+							<div class="control-label pl15 mt15">
+								<%= ff.label :comment, "Comments" %>
+							</div>
+							<div>
+								<div class="col-sm-9">
+									<%= ff.text_area :comment, :placeholder=>"Comment", class: 'form-control inherit_width', :title => "Comment", rows: 3, cols: 75  %> 
+								</div>
 							</div>
 						</div>
 
 								<div class="center_block clearfix">
-						            <%= label_tag "Add picture:" %>
+									<div class="control-label mt15 pl15">
+							            <%= label_tag "Add picture:" %>
+									</div>
 						            <%= fields_for :photos, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
 						            	<%= photo_form.file_field :pic, id: "pic_action", :multiple => true, style: "width:1px; height:1px; padding:0px;  left:0px;" %>  
 						            <% end %>
-						            <div class="input">
-						              <canvas id="imageCanvas_action" style = "border: 1px solid #ddd; padding:5px; align:center; width:500px;cursor:pointer" >select new image</canvas>
+						            <div class="col-sm-9">
+						              <canvas id="imageCanvas_action" style = "border: 1px solid #ddd; padding:5px; align:center;cursor:pointer" >Select new Image</canvas>
 						            </div>
 						        </div>
 
@@ -317,9 +286,10 @@
 				</div>
 			</div>
 			<div class="modal-footer" >
-				<%= f.submit "Create", class: "btn primary pull-right", id: "create_issue_action_submit" %>  
+				<%= f.submit "Create", class: "btn btn-success pull-right btn-custom", id: "create_issue_action_submit" %>  
 			</div>
 		</div>          
+	</div>
 	</div>
 	<% end %>
 
@@ -335,7 +305,12 @@
 		'overlayShow' : false
 	});*/
 
-
+	$('#issue_tracker_issue_ticket_actions_attributes_0_ticket_action_id').addClass('form-control');
+	$('#issue_type').addClass('form-control');
+	$('#issue_module').addClass('form-control');
+	$('#issue_priority').addClass('form-control');
+	$('#issue_severity').addClass('form-control');
+	
 	$(document).ready(function(){
 		$(".gravatar").addClass(" thumbnail");
 		//$('.modal_issue').modal('hide');

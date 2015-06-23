@@ -1,6 +1,6 @@
  <ul class="users">
   <li class="tr-hover" >
-  <span style="font-size:13px;line-height: 2;margin-left:15px;"><strong>Send invitation to </strong></span>
+  <span><strong>Send invitation to </strong></span>
     <% if session["fb_access_token"].present? %>
        <a class=" uibutton pull-right" style="margin-right:5px;" id="invite_fb"> Facebook Friends</a>
     <% end %>
@@ -12,7 +12,7 @@
 
 <%= form_for( event, url: invite_event_guests_by_user_community_path(community), method: :get, remote: true) do |f| %>
 <div id="modal_invite" style="display:none;" >
-  <div id="modal-from-dom2" class="modal hide fade in" style="display: block;">
+  <div id="modal-from-dom2" class="modal fade in" style="display: block;">
     <div class="modal-header">
       <a href="#" id="close_invite" class="close">×</a>
       <span style="font-size:15px;line-height: 2;"><strong>Invite Smarthood users</strong></span>
@@ -59,8 +59,9 @@
 
 
 <%= form_for( event, url: invite_event_guests_by_email_community_path(community), method: :get, remote: true) do |f| %>
-<div id="modal_invite_email" style="display:none;" >
-  <div id="modal-from-dom2" class="modal hide fade in" style="display: block;">
+<div id="modal_invite_email" class="modal fade" >
+  <div class="modal-dialog">
+  <div class="modal-content">
     <div class="modal-header">
       <a href="#" id="close_invite_email" class="close">×</a>
       <h3>Invite by email</h3>
@@ -85,6 +86,7 @@
   </div>
 
 </div>
+</div>
 <% end %>
 
 <script type="text/javascript">
@@ -107,7 +109,7 @@ $("#invite_fb").on( "click", function() {
   {
     method: 'feed',
     name: '<%= event.title %>',
-    link: 'http://www.smarthood.in/events/40',
+    link: 'https://www.smarthood.in/events/40',
     picture: '<%= event.photo.pic_url %>',
     caption: '- Event -',
     description: 'Events have been posted for facebook.'
@@ -138,8 +140,8 @@ function requestCallback(response)
         FB.ui({
           method: 'send',
           to: response.to[i],
-          //link: 'http://www.smarthood.in/events/<%= event.id %>',
-          link: 'http://www.smarthood.in/events/40',
+          //link: 'https://www.smarthood.in/events/<%= event.id %>',
+          link: 'https://www.smarthood.in/events/40',
         });
   }
 
@@ -162,7 +164,7 @@ function requestCallback(response)
         FB.ui({
           method: 'send',
           to: response.to[i],
-          link: 'http://www.smarthood.in/events/40?i_id=<%= event.photo.id.to_s + File.basename( event.photo.pic_url, ".*" ) %>'
+          link: 'https://www.smarthood.in/events/40?i_id=<%= event.photo.id.to_s + File.basename( event.photo.pic_url, ".*" ) %>'
         });
   }
 

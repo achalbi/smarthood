@@ -50,7 +50,7 @@ $(document).ready(function(){
 
  <%= form_for( Community.new, remote: true, :html => {:multipart => true, id: "create_community"}) do |f| %>
  <div id="modal" style="display:none;" >
-  <div id="modal-from-dom2" class="modal hide fade in" style="display: block;width:700px;">
+  <div id="modal-from-dom2" class="modal fade in" style="display: block;width:700px;">
     <div class="modal-header">
       <a href="#" id="closeX" class="close">×</a>
       <span style="font-size:20px;line-height: 2;">Create Community</span>
@@ -256,6 +256,7 @@ $('a.ui-corner-all').on("click", function(){
 
 
 $(function() {
+});
   return $('.cu_with_autocomplete').autocomplete({
     minLength: 2,
     source: function(request, response) {
@@ -269,7 +270,6 @@ $(function() {
       });
     }
   });
-});
 
 var imageLoader = document.getElementById('pic');
 imageLoader.addEventListener('change', handleImage, false);

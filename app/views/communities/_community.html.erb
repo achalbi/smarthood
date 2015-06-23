@@ -1,23 +1,63 @@
-<li style="padding-left:15px;cursor:pointer;position:relative;" class="tr-hover community" >
-  <% unless community.photo.nil? %>
-  <%= link_to cl_image_tag(community.photo.pic_url(:cover_pic_smaller), class:"image_al_c1 thumbnail pull-left ", id:"#{community.photo.id}"), "#" %>
+<!--                    <li class="col-md-6 col-sm-6 col-xs-12 li-none community">
+                        <div class="widget panel">
+                            <div class="thumbnail">
+                                <div class="media">
+                                    <div class=""><span class="spinner"></span></div>
+                                          <% unless community.photo.nil? %>
+                                              <%= link_to cl_image_tag(community.photo.pic_url(:large), class:"image_al_c1 thumbnail pull-left ", id:"#{community.photo.id}"), "/communities/#{community.id}" %>
+                                          <% end %>
+                                </div>
+                            </div>
+                                <div class="panel-body p0 text-center">
+                                       <div class="ht80">
+                                        <h5 class="semibold mb0"><%= link_to community.name, "/communities/#{community.id}" %></h5>
+                                        <p style="word-wrap:break-word;" class="nm text-muted"><%= length_trim(community.description,50) %></p>
+                                        <p class=""><span class="nm text-muted"><%= length_trim(community.address,50) %></span></p>
+                                          <% if community.is_requested?(current_user) %>
+                                            <span class="color-turquoise-blue pull-right pt15 mr10"><strong>Request Sent</strong></span>
+                                          <% end %>
+                                       </div>
+                                        <hr class="mb5">
+                                        <ul class="nav nav-section nav-justified mb10">
+                                            
+                                            <li>
+                                                <div class="section">
+                                                    <h4 class="nm"><%= privacy_str(community) %></h4>
+                                                    <p class="nm text-muted">Privacy</p>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="section">
+                                                    <h4 class="nm"><%= pluralize(community.users_count, "") %></h4>
+                                                    <p class="nm text-muted">Members</p>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                </div>
+                                   
+                            </div>
+                    </li>-->
+                    
+                    
+                    <li class="tr-hover community" >
+                      <div class="col-sm-6 pl0 pr5">
+                        <div class="panel  panel-default mb5">
+                            <div class="media pos-rel min-ht188">
+                                <% unless community.photo.nil? %>
+                                  <%= link_to cl_image_tag(community.photo.pic_url(:thumb_full_medium_fit), class:"img-center image_al_c1", id:"#{community.photo.id}"), "/communities/#{community.id}" %>
+                                <% end %>
+                          </div>
+                        <section class="panel-body pt10 pb5">
+                             <% if community.is_requested?(current_user) %>
+                                <span class="badge badge-info pull-right">Request Sent</span>
+                            <% end %>
+                            <span class="semibold mt10 ellipsis"><%= link_to community.name, "/communities/#{community.id}" %></span>
+                              <p class="ellipsis timestamp mb0 text-muted" ><%= privacy_str(community) %></p>
+                              <p class="ellipsis mb5 ellipsis font-11 text-muted"><span class="ico-location"><%= length_trim(community.address,50) %></p>
+                        </section>
+                        </div>
+                    </div>
+                </li>
 
-  <% end %>
+                    
 
-  <div style="margin-left:190px;margin-top:5px;">
-  <address>
-    <strong> <%= link_to community.name, "#", style: "font-size:14px;" %></strong> <br>
-    <strong>Description : &nbsp;</strong> <%= community.description %><br>
-    <strong>Privacy : &nbsp;</strong><%= privacy_str(community) %><br>
-    <strong>Location : &nbsp;</strong><%= community.address %><br>
-  <% unless (community.req_pending_cnt.nil? || community.req_pending_cnt == 0)%>
-    <strong><%=  'Request'.pluralize(community.req_pending_cnt) %> pending : &nbsp;</strong> <span class=" label important" style="right:0;padding-bottom:2px;"><%= if community.req_pending_cnt > 0 then community.req_pending_cnt end %></span><br>
-  <% end %>
-  <strong><%= "Member".pluralize(community.users_count) %> : </strong><%= pluralize(community.users_count, "person") %> <br> 
-  </address>
-  </div>
-  <% if community.is_requested?(current_user) %>
-    <span class="margin15 padding5 label warning pull-right" style="font-size:small;position:absolute;bottom: 0;right: 0;"><strong>Request pending to join the community</strong></span><br>
-  <% end %>
-</li>
-<%= link_to "", "/communities/#{community.id}", remote: true %>

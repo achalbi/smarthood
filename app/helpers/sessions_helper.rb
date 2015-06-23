@@ -63,6 +63,32 @@ module SessionsHelper
       return communities_path
     end
   end
+  
+    
+  def set_community_active(id)
+  	 @usercommunity = Usercommunity.where(['status=? and user_id=?','active',current_user.id]).first
+    unless @usercommunity.blank?
+      @usercommunity.status=""
+      @usercommunity.save
+    end
+  	@usercommunitySel = Usercommunity.where(['community_id=? and user_id=?',id,current_user.id]).first
+    unless @usercommunitySel.blank?
+    	@usercommunitySel.status="active"
+    	@usercommunitySel.save
+    else
+       @usercommunity = Usercommunity.new 
+       @usercommunity.community_id = '1'
+       @usercommunity.user_id = current_user.id
+       @usercommunity.invitation = Uc_enum::JOINED
+       @usercommunity.is_admin = false
+       @usercommunity.status="active"
+       @usercommunity.save
+    end
+  end
+  
+  def length_trim(str,n)
+    str.length > n ? str.slice(0..n) + "..." : str
+  end
 
   def active_community
     unless signed_in?
@@ -94,7 +120,7 @@ module SessionsHelper
   def fb_friends
       @friends = Array.new
     if session["fb_access_token"].present?
-      graph = Koala::Facebook::GraphAPI.new(session["fb_access_token"]) # Note that i'm using session here
+      graph = Koala::Facebook::API.new(session["fb_access_token"]) # Note that i'm using session here
       # @profile_image = graph.get_picture("me")
       # @fbprofile = graph.get_object("me")
       @friends = graph.get_connections("me", "friends")
@@ -108,7 +134,7 @@ module SessionsHelper
       @user = User.find_by_fb_uid(uid)
       if @user.blank?
         @user = User.create(fb_uid: uid)
-        graph = Koala::Facebook::GraphAPI.new(session["fb_access_token"]) # Note that i'm using session here
+        graph = Koala::Facebook::API.new(session["fb_access_token"]) # Note that i'm using session here
         @user.name = graph.get_object(uid)["name"]
         #@user.valid = false
         @user.save(validate: false)

@@ -2,15 +2,12 @@
 <% if signed_in? %>
   <% if is_community_active? %>
   <div class="row">
-      <aside class="span6">
-        <section>
-          <%= render 'shared/user_info' %>
-          <br>
-        </section>
-      </aside>
-     <div id="cu_post" class="span12" style="margin-left:0px;">
-      <%= render 'posts/communities_post' %> 
-    </div>
+     <div  id="cu_post" class="col-sm-9 pl20 pt5">
+        <%= render 'posts/communities_post' %> 
+      </div>
+     <!--<div class="col-sm-3 center np">
+        <%= render 'shared/user_info' %>
+    </div>-->
   </div> 
   <% else %>
     <script type="text/javascript">
@@ -21,21 +18,21 @@
 <% else %>
   <div class = "">
     <div class = "col-md-4 col-xs-12">
-        <div class = "pt30-percent">
-          <h3 class=" hidden-xs color-dark-blue ">
+        <div class = "mt70-md ml5-md">
+          <h3 class=" hidden-xs color-dark-blue mb0-sm">
              Come unite with friends, neighbours and the world around you on Smarthood. 
           </h3>
-            <h5 class="text-muted visible-md">
+            <h5 class="text-muted visible-md visible-lg">
               It’s free. If you have Facebook account, just login with it.
             </h5>
         </div>
-          <a href="#" id="sign_in_fb" class="btn btn-primary col-xs-6 sign_in_fb ml40 mt25 hidden-xs hidden-sm">Log In with <i class="fa fa-facebook"></i> </a>
+          <a href="#" id="sign_in_fb" class="btn btn-facebook col-xs-6 sign_in_fb ml40 mt25 hidden-xs hidden-sm">Log In with&nbsp;&nbsp;<i class="fa fa-facebook"></i> </a>
    </div>
-  <div class="col-md-8 col-xs-12 text-color">
+  <div class="col-md-7 col-xs-12 text-color mt30 ml70-md">
     <div>
-    <h3 id  = "sign_up_header" class = "hidden-xs center">
+    <h2 id  = "sign_up_header" class = "hidden-xs mb15 mt0-sm">
       Sign Up
-    </h3>
+    </h2>
     <h3 id  = "log_in_header" class = "hidden-sm hidden-md hidden-lg center">
       Log in
     </h3>
@@ -70,7 +67,8 @@ $("#gp_link").click(function(){
 if(GetURLParameter('page')=='signup'){
   xs_signup();
 }
-$(document).ready(function(){
+$(document).click();
+/*$(document).ready(function(){
 $('.loading_menu').hide();
-});
+});*/
 </script>

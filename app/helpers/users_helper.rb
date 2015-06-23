@@ -9,7 +9,7 @@ require 'uri'
     unless user.authentications.first.nil?
       auth = user.authentications.find_by_provider('facebook')
       unless auth.nil?
-        gravatar_url = "http://graph.facebook.com/#{user.authentications.first.username}/picture?width=180&height=180"
+        gravatar_url = "https://graph.facebook.com/#{user.authentications.first.username}/picture?width=180&height=180"
           u = URI.parse(gravatar_url)
           head = Net::HTTP.get_response(u)
           gravatar_url = head['location']
@@ -18,7 +18,7 @@ require 'uri'
       gravatar_id = Digest::MD5::hexdigest(user.email.downcase)
       gravatar_url = "https://secure.gravatar.com/avatar/#{gravatar_id}"
     end
-    image_tag(gravatar_url, alt: user.name, class: "gravatar")
+    image_tag(gravatar_url, alt: user.name, class: "gravatar img-circle")
   end
 
   # Returns the Gravatar (http://gravatar.com/) for the given user.
@@ -30,7 +30,7 @@ require 'uri'
         auth = user.authentications.find_by_provider('facebook')
         unless auth.nil?
         size = (size.to_i-10).to_s
-          gravatar_url = "http://graph.facebook.com/#{auth.username}/picture?width=#{size}&height=#{size}"
+          gravatar_url = "https://graph.facebook.com/#{auth.username}/picture?width=#{size}&height=#{size}"
             u = URI.parse(gravatar_url)
             head = Net::HTTP.get_response(u)
             gravatar_url = head['location']
@@ -44,7 +44,7 @@ require 'uri'
       end
     rescue Exception => e
     end
-      image_tag(gravatar_url, alt: user.name, class: "gravatar")
+      image_tag(gravatar_url, alt: user.name, class: "gravatar img-circle")
   end
   
     def gravatar_for_url(user, options = { size: 50 })
@@ -54,7 +54,7 @@ require 'uri'
         unless user.authentications.first.nil?
           auth = user.authentications.find_by_provider('facebook')
         unless auth.nil?
-            gravatar_url = "http://graph.facebook.com/#{auth.username}/picture?width=#{size}&height=#{size}"
+            gravatar_url = "https://graph.facebook.com/#{auth.username}/picture?width=#{size}&height=#{size}"
             u = URI.parse(gravatar_url)
               h = Net::HTTP.new u.host, u.port
               h.use_ssl = u.scheme == 'https'
@@ -77,12 +77,12 @@ require 'uri'
 
   def fb_profile_pic_url(id, options = {size: 50})
     size = options[:size]
-    fb_profile_pic_url = "http://graph.facebook.com/#{id}/picture?width=#{size}&height=#{size}"
+    fb_profile_pic_url = "https://graph.facebook.com/#{id}/picture?width=#{size}&height=#{size}"
   end
 
   def fb_profile_pic(id, options = {size: 50})
     size = options[:size]
-    fb_profile_pic_url = "http://graph.facebook.com/#{id}/picture?width=#{size}&height=#{size}"
-    image_tag(fb_profile_pic_url, alt: name, class: "gravatar")
+    fb_profile_pic_url = "https://graph.facebook.com/#{id}/picture?width=#{size}&height=#{size}"
+    image_tag(fb_profile_pic_url, alt: name, class: "gravatar img-circle")
   end
 end

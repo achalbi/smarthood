@@ -1,76 +1,155 @@
 <% provide(:title, @group.name) %>
-<div class="row span7" >
     <%= render '/groups/side_link_left' %>
-</div>  
-
-<div>
-<ul id="group_list" class="span13 grid">
-  <ul class="tabs">
-    <li class="active" id="posts_groups_li"><a href="#"><h4>Posts</h4></a></li>
-    <li id="about_groups_li"><a ><h4>About</h4></a></li>
-    <li id="photos_groups_li"><a ><h4>Photos</h4></a></li>
-  </ul>
-
-     <div id="posts_groups">  
-      <ul class="users" id="posts_groups_ul" >
+    
+       
+             <div>
+                        <ul class="nav nav-pills mt5 mb10 ml5">
+                            <li class="active"><a class="p7" href="#posts_groups" data-toggle="tab" aria-expanded="true" id="posts_groups_li">Posts</a><li>
+                            <li><a class="p7" href="#about_groups" data-toggle="tab" aria-expanded="true" id="about_groups_li">Members</a><li>
+                            <li><a class="p7" href="#photos_groups" data-toggle="tab" aria-expanded="true" id="photos_groups_li">Albums</a><li>
+                        </ul>
+              </div>
+    
+    
+    <!--<ul id="group_list" class="tabs list-unstyled mb0">
+        <span>
+                  <div class="col-md-6 col-sm-6 col-xs-12 bg-none mb5 p0">
+                        <div class="panel panel-default   ">
+                            <div class="panel-heading">
+                                <h3 class="panel-title ellipsis">Members (<%= @group.joined_users.count %>)</h3>
+                            </div>
+                            <div class="panel-body p5 ">
+                                
+                                <ul class="list-table">
+                                    <li>
+                                        <div class="img-group img-group-stack pt5 pl5">
+                                          <%  @group.joined_users.first(3).each do |user_grp|  %>
+                                          <% user = user_grp.user %>
+                                            <img src='<%= gravatar_for_url user, size: 75 %>' class="img-circle" alt="" title="<%= user.name %>">
+                                          <% end %>
+                                          <% if @group.joined_users.count > 3 %>
+                                            <span class="more img-circle">+<%= @group.joined_users.count.-3 %></span>
+                                          <% end %>
+                                          
+                                        </div>
+                                    </li>
+                                </ul>
+                                
+                             
+                            </div>
+                        </div>
+                    </div>
+                  
+                    
+                    <div class="col-md-6 col-sm-6 col-xs-12 bg-none mb5 p0">
+                        <div class="panel panel-default thumbnail">
+                            <div class="panel-heading">
+                                <h3 class="panel-title ellipsis">Albums (<%=  @group.albums.count %>)</h3>
+                            </div>
+                            <div class="panel-body  p5">
+                                <ul class="list-table">
+                                    <li>
+                                        <div class="img-group img-group-stack">
+                                          <%  @group.albums.first(3).each do |album|  %>
+                                           <%= link_to cl_image_tag(album.photos[0].pic_url(:smallest), class:"image_al_c thumbnail") , album, class:"img-circle", remote: true %>
+                                          <% end %>
+                                          <% if  @group.albums.count > 3 %>
+                                            <span class="more img-circle">+<%=  @group.albums.count.-3 %></span>
+                                          <% end %>
+                                           <% if @group.albums.count < 1 %>
+                                            <span class="more img-circle">+</span>
+                                          <% end %>
+                                          
+                                        </div>
+                                    </li>
+                                   
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    </span>
+    </ul>-->  
+ 
+  <div class="tab-content">
+     <div class="tab-pane np active " id="posts_groups">  
+      <ul class="list-unstyled" id="posts_groups_ul" >
             <div id="posts" style="overflow:auto;">
                 
             <%= render :partial => 'posts/group_post', :locals => {:post => @post}, :group => @group %>
-            <br><br>
               <div id="div_post" class="resources<%= @group.id %>">
                 <%= render partial: 'posts/post', locals: {posts: @posts, group: @group}  %>
               </div>
               <p id="group_id" class='hide'><%= @group.id %></p>
-               <div id="loading_page" class="center" ><img src="http://res.cloudinary.com/rashi/image/upload/v1377924529/loading7_gvb06y.gif"></div>
+              <div id="loading_page" class="center loading_page_post"></div>
             </div>
       
       </ul>
-    <br>
   </div>
-  <div id="about_groups">  
-   <%= render partial: 'groups/about', locals: {ad_users: @ad_users, inv_users: @inv_users, ad_groups: @ad_groups, inv_groups: @inv_groups, group: @group} %>
-  </div>
-  <div id="photos_groups">
-        <%= render partial: 'groups/albums', locals: {group: @group, albums: @group.albums, album: @album} %>
+    <div  class="tab-pane np" id="about_groups">
+           <%= render partial: 'groups/about', locals: {ad_users: @ad_users, inv_users: @inv_users, ad_groups: @ad_groups, inv_groups: @inv_groups, group: @group} %>
+     </div>
+    <div  class="tab-pane np " id="photos_groups">
+        <%= render partial: 'groups/albums', locals: {group: @group, albums: @group.albums, album: @album, community: @community} %>
+   </div>
   </div>
 
-</div>
-</div>
-
+<!--
 <div id="sidebar_right" class="row">
-    <%= render '/groups/side_link_right' %>
-</div>  
+           <%= render '/groups/side_link_right' %>
+</div>  -->
 
 
 
 <script type="text/javascript">
+
+$(".busy").button('reset');
+$('#modal_create_group').modal('hide');
+$('#create_grp_form')[0].reset();
+ 
+ $('.home_link').addClass('hide');
+ 
+ $('.home_link').click(function(){
+     $('.home_link').addClass('hide');
+ });
+ 
+   $('.toolbar a').click(function(){
+        $('.home_link').removeClass('hide');
+    });
 $('#posts_groups_li').click(function(){
-  $('#posts_groups_li').addClass('active');
+/*  $('#posts_groups_li').addClass('active');
   $('#about_groups_li').removeClass('active');
   $('#photos_groups_li').removeClass('active');
   $('#posts_groups').show();
   $('#about_groups').hide();
-  $('#photos_groups').hide();
+  $('#photos_groups').hide();*/
+  $('#group_pic').show('slow');
 });
 $('#about_groups_li').click(function(){
-  $('#posts_groups_li').removeClass('active');
+  /*$('#posts_groups_li').removeClass('active');
   $('#about_groups_li').addClass('active');
   $('#photos_groups_li').removeClass('active');
   $('#posts_groups').hide();
   $('#about_groups').show();
-  $('#photos_groups').hide();
+  $('#photos_groups').hide();*/
+  $('#group_pic').hide('slow');
 });
-$('#photos_groups_li').click(function(){
-  $('#posts_groups_li').removeClass('active');
+$('#photos_groups_li, #back_to_album').click(function(){
+/*  $('#posts_groups_li').removeClass('active');
   $('#about_groups_li').removeClass('active');
   $('#photos_groups_li').addClass('active');
   $('#posts_groups').hide();
   $('#about_groups').hide();
-  $('#photos_groups').show();
+  $('#photos_groups').show();*/
+  $('#group_gallery').hide();
+  $('#group_pic').hide('slow');
+  $('#gallery').show();
+  $('#upload_pics_grp').show();
+  
 });
-
-
-
+$('#photos_groups_li').click(function(){
+$('#back_to_album').addClass('hide');
+  $('#upload_pics_grp').removeClass('hide');
+});
 var currentPage = 1;
 var intervalID = -1000;
  
@@ -80,6 +159,7 @@ function checkScroll_post() {
  // console.log("--"+intervalID+"---"+$('#group_id').html());
   $('#loading_page').show();
   if($('#group_id').html() == null){
+      $('.loading_page').hide();
       clearInterval(intervalID);
       clearInterval(intervalID-1);
       for (var i = 1; i < 99999; i++){
@@ -122,8 +202,8 @@ function pageHeight() {
  
 $('document').ready(function(){
   intervalID = setInterval(checkScroll_post, 250);
-  $('#about_groups').hide();
-  $('#photos_groups').hide();
+//  $('#about_groups').hide();
+//  $('#photos_groups').hide();
   $(".sidetabs").removeClass('sidetabs_selected');
 })
 

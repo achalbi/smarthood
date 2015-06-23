@@ -1,23 +1,37 @@
-  <div id="image" style="display:block;">
-    <div id="textarea_div" style="resize: both;border: 1px solid #d4dae8;overflow: hidden;background-color:#f2f2f2;">
-<%= form_for(@post, remote: true,  :html => {:multipart => true, id: "group_post"}) do |f| %>
-    <%= render 'shared/error_messages', object: f.object %>
-                <%= fields_for :photo, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
-                 
-                <%= photo_form.file_field :pic, id: "pic-grp",style: "width:1px; height:1px; padding:0px;  left:0px;display:none;" %>  
-
-                <% end %>
-                 <div class=" pull-left">
-                    <%= f.text_area :content, placeholder: "Compose new post...", :rows=>6, class: "span10", 'data-validation' => "required", 'data-validation-error-msg' => "Post can't be blank" %>
-                 <canvas id="imageCanvas-grp" style = "border: 1px solid #ddd; padding:2px; align:center;cursor:pointer; background-color:#ffffff;" width="137px" height="88px">Add pictures</canvas>
-                </div> 
- <%= f.submit "Post", class: "btn primary pull-right busy", id: "submit_grp_post" %>
-  <%= hidden_field_tag :type, "group" %>  
-  <%= hidden_field_tag :group_id, @group.id %>
-<% end %>
-      </div>
+<div id="image">
+  <%= form_for(@post, remote: true,  :html => {:multipart => true, id: "group_post", class: "panel mb5"}) do |f| %>
+      <div id="textarea_div">
+      <%= render 'shared/error_messages', object: f.object %>
+                  <%= fields_for :photo, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
+                  <%= photo_form.file_field :pic, id: "pic-grp",style: "width:1px; height:1px; padding:0px;  left:0px;display:none;" %>  
+                  <% end %>
+                   <div class="">
+                      <%= f.text_area :content, placeholder: "Compose new post...", 'data-validation' => "required", 'data-validation-error-msg' => "Post can't be blank", 'rows' => "2", class: "form-control form-control-minimal" %>
+                    </div>
+                    <div class="thumbnail thumbnail-album">
+                        <div class="media">
+                            <canvas id="imageCanvas-grp" width="100%" class="pull-left ml2 mb3 mr0" >Add pictures</canvas>
+                            <a href="#" id="img_close1" class="close pull-left">×</a>
+                        </div>
+                    </div>
+                    <div class="panel-footer">
+                            <div class="panel-toolbar-wrapper">
+                            <div class="panel-toolbar">
+                                <div class="btn-group">
+                                  <button type="button" class="btn btn-default" id="cam1"><span class="glyphicon glyphicon-camera"></span></button>
+                                  <!--<button type="button" class="btn btn-default" id="community_post_select"  data-toggle="modal" data-target="#modal_sel_cu"><span class="glyphicon glyphicon-home"></span></button>-->
+                                </div>
+                              </div>
+                            <div class="panel-toolbar text-right">
+                               <%= f.submit "Post", class: "btn btn-primary btn-custom pull-right busy", id: "submit_grp_post" %>
+                            </div>
+                          </div>
+                      </div>
+                  </div> 
+              <%= hidden_field_tag :type, "group" %>  
+              <%= hidden_field_tag :group_id, @group.id %>
+              <% end %>
 </div>
-
 
 <script type="text/javascript">
 $("#image_upload").click(function(){
@@ -25,14 +39,7 @@ $("#image_upload").click(function(){
    $("#image_upload").before($("div#image").html().replace('NEW_RECORD', new Date().getTime()) ); 
    
   });
-
-$("#remove_image").click(function(){
-  $("#pic-grp").val("");
-  $("#image").hide();
-  $("#image_upload").show();
-
-});
-
+  
 $(document).ready(function(){
   $.validate({
     form : "#group_post",
@@ -46,6 +53,26 @@ $(document).ready(function(){
   });
 
 
+  $("#remove_image").click(function(){
+    $("#pic-grp").val("");
+    $("#image").hide();
+    $("#image_upload1").show();
+
+  });
+  $("#img_close1").hide();
+  $("#img_close1").click(function(){
+    $("#img_close1").hide();
+    $("#pic-grp").val("");
+    $("#imageCanvas-grp").hide();
+  });
+
+  var imageLoader = document.getElementById('pic-grp');
+  imageLoader.addEventListener('change', handleImage, false);
+  $("#cam1").click(function(){
+    $("#pic-grp").click();
+  });
+
+
  var imageLoader = document.getElementById('pic-grp');
     imageLoader.addEventListener('change', handleImage, false);
     $("#imageCanvas-grp").click(function(){
@@ -56,12 +83,15 @@ $(document).ready(function(){
     ctx.font="8pt tahoma ";
     ctx.fillStyle = 'grey';
     ctx.fillText("Add picture",35,46);
+     $("#imageCanvas-grp").hide();
 
   function handleImage(e){
     var canvas = document.getElementById('imageCanvas-grp');
     var ctx = canvas.getContext('2d');
     var iCnt=0;
     var files = e.target.files;
+     $("#imageCanvas-grp").show();
+    $("#img_close1").show();
     canvas.width = 137;
     canvas.height = 88*(Math.ceil(files.length/1));
     for( var i = 0, len = files.length; i < len; i++) 

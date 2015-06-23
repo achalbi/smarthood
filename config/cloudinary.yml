@@ -5,6 +5,7 @@ development:
   api_secret: T-p52ID4QRy_XxL71knJF9knQus
   enhance_image_tag: true
   static_image_support: false
+  secure: true
 production:
   cloud_name: rashi
   api_key: '299957439382349'

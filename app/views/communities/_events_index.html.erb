@@ -1,157 +1,191 @@
 <% unless community.nil? %>
-  <ul class="tabs">
+  <!--<ul class="tabs">
     <%= render 'communities/links' %>
-  </ul>
-   <ul class="users">
-  <% if @invited_events.count > 0 %>
-      <span style="font-size:13px;line-height: 2;margin-left:15px;"><strong>Invitation from events </strong></span>
-  <% end %>
-          <% unless (community.privacy == Privacyenum::PROTECTED && !current_user.is_cu_admin?(community)) %>
+  </ul>-->
+  
+  <div class="row">
+ <% unless (community.privacy == Privacyenum::PROTECTED && !current_user.is_cu_admin?(community)) %>
               <% if community.is_active?(current_user, community) %>
-                <a class="uibutton pull-right icon add " id="create_event" >Create event</a>
+                <a class="btn btn-success pull-right btn-custom mr3" id="create_event" data-toggle="modal" data-target="#modal_create_event" >Create event</a>
               <% end %>
           <% end %>
-    <br>
-  <% @invited_events.each do |event| %>
-      <li style="padding-left:15px;margin-top:5px;cursor:pointer;position:relative;" class="tr-hover event" >
-        <% unless event.photo.nil? %>
-        <%= link_to cl_image_tag(event.photo.pic_url(:cover_pic_smallest), class:"image_al_c1 thumbnail pull-left ", id:"#{event.photo.id}"), "#" %>
+</div>
+  
+  <div class="row pl15">
+  <% if @invited_events.count > 0 %>
+      <!--<span class="semibold font-15 ml15">Invitations</span>-->
+  <% end %>
 
+   <ul class="list-unstyled mt5">
+      <% @invited_events.each do |event| %>
+              <div class="col-xs-6 pl0 pr5">
+                  <li class="tr-hover event" >
+                        <div class="panel  panel-default mb5">
+                            <div class="media">
+                                <% unless event.photo.nil? %>
+                                  <%= link_to cl_image_tag(event.photo.pic_url(:thumb_full_wide), class:"image_al_c1 wdp-100", id:"#{event.photo.id}"), event, remote: true  %>
+                                <% end %>
+                          </div>
+                        <section class="panel-body pt10 pb5">
+                            <span class="badge badge-default pull-right">Invitation pending</span>
+                            <span class="semibold mt10 ellipsis"><%= link_to event.title , event, class:"albumLink font-15", remote: true, title: "#{event.title}" %></span>
+                              <p class="ellipsis timestamp mb0 text-muted" ><span class="ico-time"></span><%= event.starts_at.strftime("%A, %B %d, %Y") %></p>
+                              <p class="ellipsis mb5 ellipsis font-11 text-muted"><span class="ico-location"></span><%= event.address %></p>
+                        </section>
+                        </div>
+                  </li>
+            </div>
+          <%= link_to "", "/communities/#{community.id}/show_event?event_id=#{event.id}", remote: true %>  
         <% end %>
-                  <div style="margin-left:95px;margin-top:5px;">
-                    <!--
-                    <%= link_to "May be", "/communities/#{community.id}/event_invitation?event_id=#{event.id}&status=maybe", class: "uibutton pull-right button_toggle event_inv", remote: true %>
-                    <span class="pull-right "> &nbsp;</span>
-                    <%= link_to "No", "/communities/#{community.id}/event_invitation?event_id=#{event.id}&status=no", class: "uibutton pull-right button_toggle event_inv marginRight5", remote: true %>
-                    <span class="pull-right "> &nbsp;</span>
-                    <%= link_to "Yes", "/communities/#{community.id}/event_invitation?event_id=#{event.id}&status=yes", class: "uibutton pull-right button_toggle event_inv ", remote: true %>
-                  -->
-                    <address>
-                      <strong> <%= link_to event.title, "#", style: "font-size:13px;" %></strong> <br>
-                      <strong>Description : &nbsp;</strong> <%= event.description %><br>
-                      <strong>Location : &nbsp;</strong><%= event.address %><br>
-                      <strong>Privacy : &nbsp;</strong><%= privacy_str(event) %><br>
-                        
-                    </address>  
-                  </div>
-      </li>
-      <%= link_to "", "/communities/#{community.id}/show_event?event_id=#{event.id}", remote: true %>  
-    <% end %>
  </ul>
- <br>
+</div>
 
-<ul class="tabs span13" id="group_link">
-  <li class="active" id="up_events_li"><a href="#">Upcoming events</a></li><%= link_to "", up_events_community_path(@community) , remote: true %>
-  <li id="prev_events_li"><a href="#">Past events</a></li><%= link_to "", prev_events_community_path(@community) , remote: true %>
-</ul>
-      <div class="row" >
-        <div class="span13 ui-front" id="comm_groups_list">
-              <section id="events_list" class="home_page_post">
-                <%= render :partial => 'communities/events', :locals => {:events => events, community: community} %>                  
-              </section>
-        </div>
-      </div>
+<!--    <div class="row">
+      <ul class="nav nav-pills mt5 mb10 ml5" id="group_link">
+        <li class="active" id="up_events_li"><a class="p7" href="#" data-toggle="tab">Upcoming events</a></li><%= link_to "", up_events_community_path(@community) , remote: true %>
+        <li id="prev_events_li"><a class="p7" href="#" data-toggle="tab">Past events</a></li><%= link_to "", prev_events_community_path(@community) , remote: true %>
+      </ul>
+</div>-->
+  <div class="row pl15" id="comm_groups_list">
+        <ul id="events_list" class="home_page_post list-unstyled mt5">
+          <%= render :partial => 'communities/events', :locals => {:events => events, community: community} %>                  
+        </ul>
+  </div>
+  <div  class="center loading_page_post loading_sub mt10 mb10"></div>
+  
 
 
 <%= form_for( @event, url: create_event_communities_path, remote: true, :html => {:multipart => true, id: 'create_event_form'}) do |f| %>
-<div id="modal_create_event" style="display:none;" >
-          <div id="modal-from-dom" class="modal hide fade in" style="display: block;width:700px;">
+<div id="modal_create_event" class="modal fade">
+  <div class="modal-dialog">
+  <div class="modal-content">
             <div class="modal-header">
-              <a href="#" id="closeX" class="close">×</a>
-              <h3>Create Event</h3>
+              <button type="button" class="close" data-dismiss="modal">×</button>
+              <span class="semibold font-15">Create Event</span>
             </div>
-            <div class="modal-body" style="max-height:450px;">
-            <div class="row">
-              <div class="span15 ui-front">
-            
+            <div class="modal-body">
+              <div class="row">
+            <div class="col-sm-offset-1">
                <%= render 'shared/error_messages', object: f.object %>
+               
                <div class="center_block clearfix">
-                  <%= f.label :title %>
-                  <div class="input">
-                    <%= f.text_field :title, :placeholder=>"Title", 'data-validation' => "length",
-     'data-validation-length' =>"3-25", 'data-validation-error-msg' => "The event name has to be a value between 3-25 characters" %></div>
+                  <%= f.label :title, class: "control-label pl15 mt15" %>
+                    <div>
+                  <div class="col-sm-9">
+                    <%= f.text_field :title, class: "form-control" ,:placeholder=>"Title", 'data-validation' => "length",
+                     'data-validation-length' =>"3-25", 'data-validation-error-msg' => "The event name has to be a value between 3-25 characters" %>
+                   </div>
+                    </div>
                 </div>
 
                 <div class="center_block clearfix">
+                  <div class="control-label pl15 mt15">
                   <%= label_tag :starts_at %>
-                  <div class="input">
-                  <%= f.text_field :starts_at, :placeholder => "Time" %>&nbsp;&nbsp;&nbsp;
-                <a id="end_date_add_link" class="uibutton icon add">End Date</a>
+                  </div>
+                <div>
+                  <a id="end_date_add_link" href="#" class="btn-success mt3 btn-sm icon add pull-right mr60-sm mr12-xs icon prev icon add">End Date</a>
+                  <div class="col-sm-9 col-xs-9">
+                  <%= f.text_field :starts_at, :placeholder => "Time" %>
+                    </div>
                 </div>
                 </div>
+                
                 <div class="center_block clearfix" id="end_date">
+                  <div class="control-label pl15">
                   <%= label_tag :ends_at %>
-                  <div class="input">
-                    <%= f.text_field :ends_at %>&nbsp;&nbsp;&nbsp;
-                   <a id="end_date_remove_link" class="uibutton icon prev">Remove</a>
+                    </div>
+                    <div>
+                   <a id="end_date_remove_link" href="#" class="btn-danger mt3 btn-sm add pull-right mr60-sm mr12-xs icon prev">Remove</a>
+                  <div class="col-sm-9 col-xs-9">
+                    <%= f.text_field :ends_at %>
+                    </div>
                   </div>
                 </div> 
 
                 <div class="center_block clearfix">
-                  <%= f.label :location %>
-                  <div class="input ">
+                  <%= f.label :location, class: "control-label pl15 mt15" %>
+                    <div>
+                  <%= link_to "View map", '#', id: "view_map_link",  class: "btn-info mt3 btn-sm icon add pull-right mr60-sm mr12-xs icon prev" %>
+                  <%= link_to "Hide map", '#', id: "hide_map_link",  class: "btn-danger mt3 btn-sm icon add pull-right mr60-sm mr12-xs icon prev" %>
+                  <div class="col-sm-9 col-xs-9">    
                   <%= f.text_field :address, :placeholder => :location, :size => 43, class: 'events_with_autocomplete inherit_width', 'data-autocompleteUrl' => search_address_events_path , 'data-validation' => "length",
-     'data-validation-length' =>"3-250", 'data-validation-error-msg' => "The event address has to be a value between 3-250 characters" %>&nbsp;&nbsp;&nbsp;
-                
-                  <%= link_to "View map", '#', id: "view_map_link",  class: "uibutton icon prev" %>
+                  'data-validation-length' =>"3-250", 'data-validation-error-msg' => "The event address has to be a value between 3-250 characters" %>&nbsp;&nbsp;&nbsp;
+                    </div>
                 </div>
+                </div>
+                
                 <div class="input" id="view_map">
+                </div>
                 
-                </div>
-                </div>
                 <div class="center_block clearfix">
-                  <%= f.label :description %>
-                  <div class="input">
-                  <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title=>"Description", rows: 3, cols: 75, 'data-validation' => "length",
-     'data-validation-length' =>"3-250", 'data-validation-error-msg' => "The event description has to be a value between 3-250 characters"  %> 
+                  <%= f.label :description,class: "control-label pl15 mt15" %>
+                    <div>
+                  <div class="col-sm-9">
+                      
+                  <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width form-control', :title=>"Description", rows: 3, cols: 75, 'data-validation' => "length",
+                   'data-validation-length' =>"3-250", 'data-validation-error-msg' => "The event description has to be a value between 3-250 characters"  %> 
                 </div>
-                </div>
+              </div>
+            </div>
+            
                 <div class="center_block clearfix">
-                  <%= label_tag :privacy %>
-                  <div class="input">
+                    <div class="control-label pl15 mt15">
+                      <%= label_tag :privacy %>
+                    </div>
+                    <div>
+                  <div class="col-sm-9">
                     <%= f.select :privacy, options_for_select([["Public", Privacyenum::PUBLIC], ["Private", Privacyenum::PRIVATE]]) %>
+                    </div>
                   </div>
-                </div> <br>
-                <div class="center_block clearfix ">
-                    <label>Guests can invite</label>
-                  <div class="input">
-                    <div class="checkboxFive pull-right marginRight15" >
-                  <%= f.check_box 'GuestsCanInvite', id: "Guests_can_invite_other_guests" %>
-                    <label for="Guests_can_invite_other_guests" </label>
-                  </div>
-                  </div>
-                </div> <br>
-                  <div class="center_block clearfix ">
-                    <label >Invite everyone from this community</label>
-                  <div class="input">
-                    <div class="checkboxFive pull-right marginRight15" style="margin-top:6px;">
-                  <%= check_box_tag 'invite_everyone', 1, id: "invite_everyone" %>
-                    <label for="invite_everyone" </label>
-                  </div>
-                  </div>
-                </div> <br>
-                <div class="center_block clearfix">
-                <%= label_tag "Add picture:" %>
+                </div>
                 
-                <div class="input">    
+                <div class="center_block clearfix ">
+                    <div>
+                  <div class="col-sm-9 mt15">
+                    <label class="control-label pl15 mt5">Guests can invite</label>
+                    <div class="checkboxFive pull-right" >
+                  <%= f.check_box 'GuestsCanInvite', id: "Guests_can_invite_other_guests",class: "control-label pl15 mt15" %>
+                    <label class="mt2" for="Guests_can_invite_other_guests" </label>
+                  </div>
+                  </div>
+                  </div>
+                </div>
+                
+                  <div class="center_block clearfix ">
+                    <div>
+                  <div class="col-sm-9 mt15">
+                    <label class="control-label pl15 mt5 ">Invite everyone from this community</label>
+                    <div class="checkboxFive pull-right">
+                  <%= check_box_tag 'invite_everyone', 1, id: "invite_everyone",class: "control-label pl15 mt15" %>
+                    <label for="invite_everyone" </label>
+                    </div>
+                  </div>
+                  </div>
+                </div>
+                
+                <div class="center_block clearfix">
+                <div class="control-label pl15  mt15">
+                  <%= label_tag "Add picture:" %>
+                </div>
+                <div class="col-sm-9">    
                 <canvas id="imageCanvas" style = "border: 1px solid #ddd; padding:5px; align:center;cursor:pointer" >select new image</canvas>
                 </div>
                 <%= f.fields_for :photo, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
                   <%= photo_form.file_field :pic, id: "pic",style: "width:0px; height:0px;  padding:0px;  left:0px;" %>  
                 <% end %>
               </div>
-        </div>   
+     
+    
+      </div>
       </div>
       </div>
             <div class="modal-footer" >
-              <%= f.submit "Create", class: "btn primary pull-right", id: "create_event_submit" %>  
+              <%= f.submit "Create", class: "btn btn-success pull-right btn-custom", id: "create_event_submit" %>  
             </div>
           </div> 
-        </div>
+          </div> 
+          </div> 
   <% end %>
-
-
-
 
 
 <script type="text/javascript">
@@ -174,6 +208,10 @@ $(function(){
 
 });
 
+$('#event_starts_at').addClass('form-control');
+$('#event_ends_at').addClass('form-control');
+$('#event_address').addClass('form-control');
+$('#event_privacy').addClass('form-control');
 
 $('.event_inv').click(function(){
   $(this).closest('li').hide();
@@ -204,7 +242,7 @@ $(document).ready(function(){
 });
 
     $(function() {
-      return $('.events_with_autocomplete').autocomplete({
+      /*return $('.events_with_autocomplete').autocomplete({
         minLength: 2,
         source: function(request, response) {
           return $.ajax({
@@ -218,7 +256,7 @@ $(document).ready(function(){
             }
           });
         }
-      });
+      });*/
     });
 
 
@@ -236,18 +274,18 @@ $('#prev_events_li').click(function(){
 
   $(document).ready(function(){
 //  $('.gravatar').addClass('thumbnail');  
-    $("#create_event").click(function(){
+  });
+/*    $("#create_event").click(function(){
       $('#modal_create_event').modal({
       //keyboard: true,
       backdrop: "static",
     });
-    });
+    });*/
     $("#closeX").click(function(){
           $('#modal_create_event').modal('hide');
         });
 
     $('#end_date').hide();
-  });
 
 
 var imageLoader = document.getElementById('pic');
@@ -311,15 +349,28 @@ $('#event_address').keydown(function(){
     $('#view_map').hide();
 });
 
+
+ $('#hide_map_link').hide();
 $('#view_map_link').click(function(){
     var address = "/events/get_geo_coordinates?address="+$('#event_address').val();
-    // $.get(address,"script");
      $.ajax({
       type: "GET",
       url: address,
       dataType: "script"
-    }); 
+    });
+   
 });
+
+    $('#hide_map_link').click(function(){
+      $('#view_map').hide();
+      $('#hide_map_link').hide();
+      $('#view_map_link').show();
+    });
+
+
+
+
+
 
 $('a.ui-corner-all').on("click", function(){
   if($('#event_address').val()!=""){
@@ -410,7 +461,7 @@ $(document).ready(function() {
                            insideLoop_up = "false";
                            return;
                          }
-                         jQuery.ajax('/communities/<%= community.id %>/up_events_page?page=' + currentPage, {asynchronous:true, evalScripts:true, method:'get', success: function(data, textStatus, jqXHR) {
+                         jQuery.ajax('/communities/<%= community.id %>/events_page?page=' + currentPage, {asynchronous:true, evalScripts:true, method:'get', success: function(data, textStatus, jqXHR) {
                           $('.home_page_post').append($(data));
                           $('.loading_sub').hide();
                           if(typeof jQuery(data) == 'undefined' ||jQuery(data).html() == null || $(data).find('.events_paginate').html()==null){
@@ -438,7 +489,8 @@ $(document).ready(function() {
                            insideLoop_prev = "false";
                            return;
                          }
-                         jQuery.ajax('/communities/<%= community.id %>/prev_events_page?page=' + currentPage, {asynchronous:true, evalScripts:true, method:'get', success: function(data, textStatus, jqXHR) {
+                      //   jQuery.ajax('/communities/<%= community.id %>/prev_events_page?page=' + currentPage, {asynchronous:true, evalScripts:true, method:'get', success: function(data, textStatus, jqXHR) {
+                         jQuery.ajax('/communities/<%= community.id %>/events_page?page=' + currentPage, {asynchronous:true, evalScripts:true, method:'get', success: function(data, textStatus, jqXHR) {
                           $('.home_page_post').append($(data));
                           $('.loading_sub').hide();
                           if(typeof jQuery(data) == 'undefined' ||jQuery(data).html() == null || $(data).find('.events_paginate').html()==null){
@@ -465,9 +517,8 @@ $(document).ready(function() {
                         return Math.max(document.body.scrollHeight, document.body.offsetHeight);
                       }
 
-                      $('document').ready(function(){
                         intervalID = setInterval(checkScroll_up_evts, 500);
-                      });
+                      
 
                       $("#up_events_li").click(function(){
                          currentPage = 1;

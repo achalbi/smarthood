@@ -30,7 +30,7 @@
 
 <%= form_for( post.postable, url: "/buysell/update", remote: true,  :html => {:multipart => true, method: 'put'}) do |f| %>
   <div id="modal_edit_buysell_<%= post.id%>" style="display:none" class="modal_edit_buysell" >
-          <div id="modal-from-dom" class="modal hide fade in" style="display: block;width:700px;">
+          <div id="modal-from-dom" class="modal fade in" style="display: block;width:700px;">
             <div class="modal-header">
               <a href="#" id="close_edit_item" class="close close_edit_item">×</a>
               <h3>Create category</h3>

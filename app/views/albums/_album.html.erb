@@ -1,24 +1,23 @@
+   <div id="photo_list">
     <script type="text/javascript">var photoCount = 0;</script>
     <div id="album_downlink"></div>
-          <div class="span13" style="margin-right:120px;"  >
-               <div id="album_indiv" style=" margin-bottom:0px;">
-                  <ul class="breadcrumb" style="width:100%;height:22px;">
+          <div class="row mt5 mb5" >
+               <div id="album_indiv" class="pull-right">
                     <!-- <li><a href="#" class="marginLeft10 marginRight10" style="line-height:21px;" id="album_bc">Albums</a><span class="divider" style="line-height:21px;" >></span> </li>
                     <li><a href="#" class="marginLeft5" style="line-height:21px;"  ><%= @album.title %></a></li> -->
                     <% if @album.user == current_user %>
-                      <%= link_to "Delete", "/communities/delete_album?id=#{@album.id}" , method: :get, class: "uibutton danger pull-left del-alb", id: "delete_album", 
+                      <%= link_to "Delete", "/communities/delete_album?id=#{@album.id}" , method: :get, class: "btn btn-danger btn-custom  mr10", id: "delete_album", 
                                              data: { confirm: "You sure?" }, remote: true,
                                              title: "Delete album: " + @album.title %>
-                      <%= link_to "edit", '#', id: "edit_album",  class: "uibutton icon edit pull-left" %>
+                      <%= link_to "edit", '#', id: "edit_album",  class: "btn btn-warning mr10 icon edit btn-custom", :title => "Edit" %>
+                      
                     <% end %>
                       <% if @album.privacy ==  Privacyenum::PUBLIC || @album.user == current_user  %>
-                        <span style="margin-right:5px;float:right;"><li><%= link_to "Share", '#', id: "share",  class: "uibutton icon add" %></li>
+                       <%= link_to "Share", '#', id: "share",  class: "btn btn-info  mr10 btn-custom" %>
                       <% end %>
                       <% if @album.downloadable? %>
-                         <li><%= link_to "Download", gen_downloadable_link_album_path(@album.id) , id: "gen_download",  class: "uibutton", remote: true %></li>
+                       <%= link_to "Download", gen_downloadable_link_album_path(@album.id) , id: "gen_download",  class: "btn btn-success btn-custom  mr20", remote: true %>
                       <% end %>
-                    </span>
-                  </ul>
                 </div>
               <span id="buttonset" style="display:none;">
                   <input type="checkbox" id="option-fullscreen"><label for="option-fullscreen">Fullscreen</label>
@@ -67,79 +66,94 @@
               </div>
             </h4>
     </div>
-    <span style="clear:both;" ></span>
-    <div id="gallery1" class="pull-left span13">
-      <ul id="grid" style="margin:0px;"  class="pull-left span13" >
+    <div id="group_gallery">
+    <div id="gallery1" class="">
+      <ul id="grid" class="list-unstyled" >
         <% if @album.user == current_user %>
-<!--           <li style="background-color:#ffffff!important;margin-left:0px;">
-            <div id="upload_pics"  style = "border:2px dashed #ddd; width:106px; height:106px; padding:10px;  left:40px; text-align:middle; z-index: 1;  cursor:pointer;  float:left; margin-bottom:3px;" class="bgClrChg">  <h5 class="center" style="margin:38px 0 0 0 "> Add Photos </h5>
-            </div>
-          </li>    -->            
         <% end %>
 
 
         <% @album.photos.each do |photo| %>
-          <li style="margin-left:0px;position:relative" class="img-hover-btn">
-                  <a href="<%= photo.pic_url %>"  class="fancybox-album" rel="group1">
-                  <%= cl_image_tag(photo.pic_url(:small_mid), class:"thumbnail", style: "margin:0px!important;", alt: "http://res.cloudinary.com/rashi/image/upload/v1377921346/RYW-Logo-smaller_rbkszn.png")  %>
-                  </a> 
-                  
-        <% if @album.user == current_user  && @album.photos.count > 1 %>
-                  <div class="btn_overlay_cu_cover_pic hide">
-                    <%= link_to "Delete", photo , method: :delete, class: "uibutton danger pull-right photo_del", remote: true, title: "Delete photo" %>
-                  </div>
-        <% end %>
-              </li>
+          <li>
+                  <div class="col-xs-6 plr5">
+                        <div class="thumbnail">
+                            <div class="">
+                              <a href="<%= photo.pic_url %>"  class="fancybox-album" rel="group1">
+                                <%= cl_image_tag(photo.pic_url(:medium), class:"thumbnail", alt: "https://res.cloudinary.com/rashi/image/upload/v1377921346/RYW-Logo-smaller_rbkszn.png")  %>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+          <% if @album.user == current_user  && @album.photos.count > 1 %>
+                    <div class="btn_overlay_cu_cover_pic hide">
+                      <%= link_to "Delete", photo , method: :delete, class: "uibutton danger pull-right photo_del", remote: true, title: "Delete photo" %>
+                    </div>
+          <% end %>
+          </li>
             
         <% end %>
       
       </ul>
     </div>
-  </div>
+    </div>
 
 <%= form_for(@album , url: update_album_communities_path, remote: true, :html => {:multipart => true, id: 'update_album'}) do  |f| %> 
-<div id="modal_com" style="display:none" >
-  <div id="modal-from-dom_com" class="modal hide fade in" style="display: block;width:700px;">
-    <div class="modal-header">
-      <a href="#" id="closeX_com" class="close">×</a>
-      <h3>Edit album</h3>
-    </div>
-    <div class="modal-body" style="max-height:450px;">
+<div id="modal_com" class="modal fade" >
+    <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" >×</button>
+        <span class="semibold font-15">Edit album</span>
+      </div>
+    <div class="modal-body">
       <div class="row">
-        <div class="span14 ui-front "  >
+        <div class="col-sm-offset-1"  >
 
          <%= render 'shared/error_messages', object: f.object %>
-         <div class="center_block clearfix pull-left">
-          <%= f.label :title %>
-          <div class="input">
-            <%= f.text_field :title, :placeholder=>"Title", 'data-validation' => "length",
+          
+        
+        <div class="center_block clearfix">
+          <%= f.label :title, class: "control-label pl15 mt15" %>
+          <div>
+          <div class="col-sm-9">
+            <%= f.text_field :title, class: "form-control", :placeholder=>"Title", 'data-validation' => "length",
      'data-validation-length' =>"3-25", 'data-validation-error-msg' => "The album title has to be a value between 3-25 characters" %>
+          </div>
           </div>
         </div>
 
-        <div class="center_block clearfix pull-left">
-          <%= f.label :description %>
-          <div class="input">
-            <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title=>"Description", rows: 3, cols: 75, 'data-validation' => "length ",
+        
+         <div class="center_block clearfix">
+          <%= f.label :description, class: "control-label pl15 mt15" %>
+          <div>
+          <div class="col-sm-9">
+            <%= f.text_area :description, :placeholder=>"Description", class: 'inherit_width form-control', :title=>"Description", rows: 3, cols: 75, 'data-validation' => "length ",
      'data-validation-length' =>"3-250", 'data-validation-error-msg' => "The album description has to be an alphanumeric value between 3-250 characters"   %> 
           </div>
+          </div>
         </div>
-        <span class="overrideClass">
-          <div class="center_block clearfix pull-left">
-            <%= f.label "privacy:" %>
-            <div class="input">
-              <%= f.select :privacy, options_for_select([["Public", Privacyenum::PUBLIC], ["Private", Privacyenum::PRIVATE]], f.object.privacy) %>
+   
+        <div class="center_block clearfix">
+            <%= f.label "privacy:", class: "control-label pl15 mt15" %>
+            <div>
+            <div class="col-sm-9">
+             <%= f.select :privacy, options_for_select([["Public", Privacyenum::PUBLIC], ["Private", Privacyenum::PRIVATE]], f.object.privacy) %>
+            </div>
             </div>
           </div>
-        </span>
-          <div class="center_block clearfix pull-left ">
-            <%= f.label  "Album downloadable: " %>
-            <div class="input">
-              <%= f.check_box :downloadable %>
+ 
+           <div class="center_block clearfix ">
+            <%= f.label  "Album downloadable: ", class: "control-label pl15 mt10 pull-left" %>
+            <div>
+            <div class="col-sm-1 ">
+              <%= f.check_box :downloadable, class: "form-control" %>
+            </div>
             </div>
           </div>
-        <div class="center_block clearfix pull-left clear">
-         <div class="input">    
+          
+        
+       <div class="center_block clearfix mt10">
+         <div class="col-sm-9">    
            <%= fields_for :photos, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
 
            <%= photo_form.file_field :pic, id: "pic_com", :multiple => true, style: "width:0px; height:0px; padding:0px;  left:0px;" %>  
@@ -150,40 +164,40 @@
            <canvas id="imageCanvas_com" style = "border: 1px solid #ddd; padding:5px; align:center;cursor:pointer;" >click to add photos</canvas>
          </div>
        </div>
+       
+       
      </div>
+  </div>
+  </div>
+   <div class="modal-footer" >
+    <%= f.submit "Update", class: "btn btn-success btn-custom pull-right busy", id: "updAlb_com" %> 
+    <%= f.submit "", :class => 'hide reset_form', :type => 'reset' %> 
    </div>
- </div>
- <div class="modal-footer" >
-  <%= f.submit "Update", class: "btn primary pull-right busy", id: "updAlb_com" %> 
-  <%= f.submit "", :class => 'hide reset_form', :type => 'reset' %> 
-
-</div>
-</div>
+        </div>
+  </div>
 </div>
 <% end %>
 
-
     <%= form_for  @share, :url => new_share_path, :method => :get, remote: true do  |f| %>
-      <div id="modal_share" style="display:none" >
-          <div id="modal-from-dom" class="modal hide fade in" style="display: block;">
-
-            <div class="modal-header">
+      <div id="modal_share" class="modal fade">
+            <div class="modal-dialog modal-sm">
+              <div class="modal-content">
+                <div class="modal-header">
               <a href="#" id="clsX" class="close">×</a>
-              <h3>Share album</h3>
+              <span class="semibold font-15">Share album</span>
             </div>
             <div class="modal-body">
                       <div class="bs-example bs-email">
-                        <div class="form-group">
-                          <input type="text" class="form-control tokenfields" style="width:480px;" id="tokenfield-m1" name="email" placeholder="Type email and hit tab/enter" data-validation="required" data-validation-error-msg="Please type email and hit tab/enter to add"  />
-                        </div>
+                          <input type="text" class="form-control tokenfields" id="tokenfield-m1" name="email" placeholder="Type email and hit tab/enter" data-validation="required" data-validation-error-msg="Please type email and hit tab/enter to add"  />
                 </div>
                 <%= hidden_field_tag 'type', 'album' %>  
                 <%= hidden_field_tag "id", "#{@album.id}" %>
             </div>
-            <div class="modal-footer" >
-              <%= f.submit "Share", id: "shareAlb", class: "btn primary", style: "float:right;"  %> 
+            <div class="modal-footer pb10 pt10" >
+              <%= f.submit "Share", id: "shareAlb", class: "btn btn-primary pull-right"  %> 
             </div>
-          </div>
+            </div>
+            </div>
         </div>
     <% end %>
 <script type="text/javascript">
@@ -192,29 +206,7 @@ $("#gen_download").click(function(){
   $('.loading_page').show();
 });
 
-         $('.tokenfields').on('beforeCreateToken', function (e) {
-            var token = e.token.value.split('|')
-            e.token.value = token[1] || token[0]
-            e.token.label = token[1] ? token[0] + ' (' + token[1] + ')' : token[0]
-          }).on('afterCreateToken', function (e) {
-            // Über-simplistic e-mail validation
-            var re = /\S+@\S+\.\S+/
-            var valid = re.test(e.token.value)
-            if (!valid) {
-              $(e.relatedTarget).addClass('invalid')
-            }
-          }).on('beforeEditToken', function (e) {
-            if (e.token.label !== e.token.value) {
-              var label = e.token.label.split(' (')
-              e.token.value = label[0] + '|' + e.token.value
-            }
-          }).on('removeToken', function (e) {
-           // alert('Token removed! Token value was: ' + e.token.value)
-          }).on('preventDuplicateToken', function (e) {
-            alert('Duplicate detected! Token value is: ' + e.token.value)
-          }).tokenfield();
 
-        $(document).ready(function(){
 
            $("#share").click(function(){
               $('#modal_share').modal('show');
@@ -230,8 +222,6 @@ $("#gen_download").click(function(){
 
 
 
-          });
-
 /* 
              $('.album_bc').on('click', function(){
                 $(this).closest('.photos_tab').click();
@@ -246,16 +236,18 @@ $("#gen_download").click(function(){
           $('#modal_share').modal('hide');
         },
       });
+
   });
 
 
 
+
 $("#edit_album").click(function(){
-    $('#modal_com').modal({
+   /* $('#modal_com').modal({
     //  keyboard: true,
       backdrop: "static",
-    });
- // $('#modal_com').modal('show');
+    });*/
+  $('#modal_com').modal('show');
 });
 
 $("#closeX_com").click(function(){
@@ -275,6 +267,7 @@ $("#closeX_com").click(function(){
 
 });
 
+$("#album_privacy").addClass('form-control mt5-xs col-sm-4  mr10 pull-left pl6');
 
 $(document).ready(function(){
   $.validate({
@@ -370,4 +363,27 @@ $(".del-alb").click(function(){
  // $('.loading_page').show();
 });
 
+/*         $('.tokenfields').on('beforeCreateToken', function (e) {
+            var token = e.token.value.split('|')
+            e.token.value = token[1] || token[0]
+            e.token.label = token[1] ? token[0] + ' (' + token[1] + ')' : token[0]
+          }).on('afterCreateToken', function (e) {
+            // Über-simplistic e-mail validation
+            var re = /\S+@\S+\.\S+/
+            var valid = re.test(e.token.value)
+            if (!valid) {
+              $(e.relatedTarget).addClass('invalid')
+            }
+          }).on('beforeEditToken', function (e) {
+            if (e.token.label !== e.token.value) {
+              var label = e.token.label.split(' (')
+              e.token.value = label[0] + '|' + e.token.value
+            }
+          }).on('removeToken', function (e) {
+           // alert('Token removed! Token value was: ' + e.token.value)
+          }).on('preventDuplicateToken', function (e) {
+            alert('Duplicate detected! Token value is: ' + e.token.value)
+          }).tokenfield();*/
+          
       </script>
+      </div>

@@ -1,11 +1,7 @@
 <% provide(:title, @event.title) %>
 <% provide(:page_image, @event.photo.pic_url) %>
 <% unless signed_in? %>
-    <br> 
-    <br> 
-    <br> 
-    <br> 
-    <br> 
+<div class="mt50"></div>
 <% end %>
 <div class="container container-fluid">
       <div  class="image_overlay" >
@@ -73,7 +69,7 @@
                 <%= render partial: 'posts/post', locals: {posts: @posts, activity: @activity}  %>
               </div>
               <p id="activity_id" class='hide'><%= @activity.id %></p>
-               <div id="loading_page" class="center" ><img src="http://res.cloudinary.com/rashi/image/upload/v1377924529/loading7_gvb06y.gif"></div>
+               <div id="loading_page" class="center" ><img src="https://res.cloudinary.com/rashi/image/upload/v1377924529/loading7_gvb06y.gif"></div>
             </div>
 			</ul>
 		<br>
@@ -283,7 +279,7 @@
                 <% unless @event.photo.nil? %>
                   <%= cl_image_tag(@event.photo.pic_url(:small), class:" thumbnail albumLink", id:"event_pic", style: "cursor:pointer;") %>   
                 <% end %>
-                <canvas id="imageCanvas2" style = "border: 1px solid #ddd; padding:5px; align:center; width:200px;display:none;cursor:pointer" >select new image</canvas>
+                <canvas id="imageCanvas_event" style = "border: 1px solid #ddd; padding:5px; align:center; width:200px;display:none;cursor:pointer" >select new image</canvas>
                 </div>
               </div>
 
@@ -655,7 +651,7 @@ $(document).ready(function() {
     $("#event_pic").click(function(){
       $('#event_pic').hide();
       $('#pic2').click();
-      $('#imageCanvas2').show();
+      $('#imageCanvas_event').show();
     });
 
 
@@ -714,16 +710,16 @@ $("#edit_event").click(function(){
 
       var imageLoader = document.getElementById('pic2');
     imageLoader.addEventListener('change', handleImage, false);
-    $("#imageCanvas2").click(function(){
+    $("#imageCanvas_event").click(function(){
         $("#pic2").click();
     });
-        var canvas = document.getElementById('imageCanvas2');
+        var canvas = document.getElementById('imageCanvas_event');
     var ctx = canvas.getContext('2d');
     ctx.font="30px Arial";
     ctx.fillText("Change picture",10,50);
 
   function handleImage(e){
-    var canvas = document.getElementById('imageCanvas2');
+    var canvas = document.getElementById('imageCanvas_event');
     var ctx = canvas.getContext('2d');
     var iCnt=0;
     var files = e.target.files;
@@ -778,7 +774,7 @@ function checkScroll_post() {
     }
     jQuery.ajax('/events/post_paginate?id='+$('#activity_id').html()+'&event_id=<%= @event.id %>&page=' + currentPage, {asynchronous:true, evalScripts:true, method:'get', success: function(data, textStatus, jqXHR) {
       $('#loading_page').hide();
-    if($(data).find('#posts_one_div').html()==null || $(data).find('#posts_one_div').html() == '' ){
+    if($(data).find('.posts_one_div').html()==null || $(data).find('.posts_one_div').html() == '' ){
       clearInterval(intervalID);
       for (var i = 1; i < 99999; i++){
         window.clearInterval(i);

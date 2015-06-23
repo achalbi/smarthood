@@ -1,0 +1,251 @@
+
+<div class="mt10">
+    
+<div class="wallpaper-container"><div class="wallpaper-media wallpaper-image native" style="opacity: 1; background-image: url(/assets/background_him.jpg);">
+<div id="video_element" class="wallpaper pt50 pb20 pl20">
+
+    <!-- Start of Main Title + Intro -->
+    <div class="huge-title">
+             
+        <img src="<%= gravatar_for_url @user, size: 100 %>" alt="<%=  @user.name %>" class="headshot wow tada animated img-circle" data-wow-delay="3s" data-wow-offset="80" data-wow-duration="1s" style="visibility: visible;-webkit-animation-duration: 1s; -moz-animation-duration: 1s; animation-duration: 1s;-webkit-animation-delay: 3s; -moz-animation-delay: 3s; animation-delay: 3s;">
+        <h1 class="wow bounceInDown animated color-white" data-wow-offset="80" data-wow-duration="3s" style="visibility: visible;-webkit-animation-duration: 3s; -moz-animation-duration: 3s; animation-duration: 3s;"><%=  @user.name %></h1>
+        <!--<h6 class="wow bounceInDown animated " style="visibility: visible;-webkit-animation-duration: 3s; -moz-animation-duration: 3s; animation-duration: 3s;"> <%= render 'shared/stats' %></h6> -->   
+       
+    </div><!-- End of Main Title + Intro -->
+
+
+    <!-- Start of Shade - this is the css based gradient over the image for that cool effect -->
+    <div class="shade"></div><!-- End of Shade -->
+
+</div>
+
+</div>
+</div>
+</div>
+
+
+<div class="panel">
+  <% if current_user == @user %>
+ <%= link_to "edit", '#', id: "edit_user",  class: "btn btn-sm btn-warning pull-right mr10 mt10 edit",:title => "Edit" %>
+ <% end %>
+ <div class="panel-body">
+      <h5 class="mt0 mb5 text-bold">Personal details:</h5>
+      <address>
+          
+          <p class="mtb0">
+              <strong class=" semi-bold">Name : &nbsp;</strong>
+              <span class="font-12 color-light-black"><%= @user.user_info.first_name %></small> <small><%= @user.user_info.middle_name %></small> <small><%= @user.user_info.last_name %></small></span>
+          </p>
+          <p class="mtb0">
+              <strong class=" semi-bold">E-mail : &nbsp;</strong>
+              <span class="font-12 color-light-black"><%= @user.email  %></span>
+          </p>
+          <p class="mtb0">
+              <strong class=" semi-bold">Birthday : &nbsp;</strong>
+              <span class="font-12 color-light-black"><%= @user.user_info.dob.strftime("%d/%m/%Y") unless @user.user_info.dob.nil? %></span>
+          </p>
+           <p class="mtb0">
+              <strong class=" semi-bold">Gender : &nbsp;</strong>
+              <span class="font-12 color-light-black"><%= @user.user_info.gender  %></span>
+          </p>
+          <p class="mtb0">
+              <strong class=" semi-bold">Mobile : &nbsp;</strong>
+              <span class="font-12 color-light-black"><%= @user.user_info.mobile  %></span>
+          </p>
+          <p class="mtb0">
+              <strong class=" semi-bold">Relationship Status : &nbsp;</strong>
+              <span class="font-12 color-light-black"><%= @user.user_info.relationship_status  %></span>
+          </p>
+    
+          <h5 class="mb5 text-bold">Address:</h5>
+          
+          <p class="mtb0">
+              <strong class=" semi-bold">Door No. : &nbsp;</strong>
+              <span class="font-12 color-light-black"><%= @user.address.doorno  %></span>
+          </p>
+          <p class="mtb0">
+              <strong class=" semi-bold">Street : &nbsp;</strong>
+              <span class="font-12 color-light-black"><%= @user.address.street  %></span>
+          </p>
+           <p class="mtb0">
+              <strong class=" semi-bold">City : &nbsp;</strong>
+              <span class="font-12 color-light-black"><%= @user.address.city  %></span>
+          </p>
+          <p class="mtb0">
+              <strong class=" semi-bold">Country : &nbsp;</strong>
+              <span class="font-12 color-light-black"><%= @user.address.country  %></span>
+          </p>
+          <p class="mtb0">
+              <strong class=" semi-bold">Postal Code : &nbsp;</strong>
+              <span class="font-12 color-light-black"><%= @user.address.postalcode  %></span>
+          </p>
+          
+      </address>
+
+          
+          
+         <!-- <span><strong>Name : </strong><small><%= @user.user_info.first_name %></small> <small><%= @user.user_info.middle_name %></small> <small><%= @user.user_info.last_name %></small> </span><br>
+          <span><strong>e-mail : </strong><%= @user.email  %></span><br>-->
+          <!-- <span><strong>Current city : </strong><%= @user.user_info.current_city  %></span><br>
+          <span><strong>Home town : </strong><%= @user.user_info.home_town  %></span><br> -->
+          <!--<span><strong>Birthday : </strong><%= @user.user_info.dob.strftime("%d/%m/%Y") unless @user.user_info.dob.nil? %></span><br>
+          <span><strong>Gender : </strong><%= @user.user_info.gender  %></span><br>
+          <span><strong>Mobile : </strong><%= @user.user_info.mobile  %></span><br>
+          <span><strong>Relationship status : </strong><%= @user.user_info.relationship_status  %></span><br>-->
+          <!--<h4 style="line-height:2;margin-top:20px;">Address:</h4>
+              <span><strong>Door no. : </strong><%= @user.address.doorno  %></span><br>
+              <span><strong>Street : </strong><%= @user.address.street  %></span><br>
+              <span><strong>City : </strong><%= @user.address.city  %></span><br>
+              <span><strong>Country : </strong><%= @user.address.country  %></span><br>
+              <span><strong>Postal code : </strong><%= @user.address.postalcode  %></span><br>-->
+          <!-- <span><strong>work : </strong><%= @user.user_info.work  %></span><br>
+          <span><strong>Education : </strong><%= @user.user_info.education  %></span><br> -->
+</div>
+</div>
+
+
+<%= form_for( @user, remote: true, :html => {:multipart => true}) do |f| %>
+<div id="modal_user" style="display:none;" >
+          <div id="modal-from-dom2" class="modal fade in" style="display: block;width:700px;">
+            <div class="modal-header">
+              <a href="#" id="closeX_user" class="close">×</a>
+              <span style="font-size:20px;line-height: 2;">Edit User</span>
+            </div>
+            <div class="modal-body" style="max-height:420px;">
+              <div class="row">
+          <div class="span14 ui-front">
+            
+               <%= render 'shared/error_messages', object: f.object %>
+          <%= f.fields_for :user_info do |ui| %>
+               <div class="center_block clearfix">
+                  <%= ui.label :first_name, "Name" %>
+                  <div class="input">
+                  <%= ui.text_field :first_name, :placeholder=>"First name", class: "span4" %>
+                 <!-- <%= ui.text_field :middle_name, :placeholder=>"Middle name", class: "span4" %>-->
+                  <%= ui.text_field :last_name, :placeholder=>"Last name",class: "span4" %>
+                  </div>
+               </div>
+
+          <% end %>
+
+          <div id="change_password_link_div" class="center_block clearfix">
+            <div class="input">
+              <%= link_to "change password", '#', id: "change_password_link",  class: "uibutton icon edit",:title => "Change password" %>
+            </div>
+          </div>
+          <div id="change_password" class="center_block clearfix">
+              <%= f.label :password %>
+            <div class="input">
+              <%= f.password_field :password, :placeholder=>"Password" %>
+              <%= f.password_field :password_confirmation, :placeholder=>"Confirm Password" %>
+            </div>
+          </div>
+
+
+          <div class="center_block clearfix">
+              <%= f.label "E-mail" %>
+            <div class="input">
+              <%= f.email_field :email, :placeholder=>"E-mail" %>
+            </div>
+          </div>
+
+          <%= f.fields_for :user_info do |ui| %>
+               <div class="center_block clearfix">
+                  <%= ui.label "Birthday" %>
+                  <div id="dob_date" class="input">
+                  <%= ui.date_select :dob, :placeholder=>"Birthday",  start_year: 10.years.ago.year, end_year: 100.years.ago.year, prompt: { day: 'Select day', month: 'Select month', year: 'Select year' } %>
+                  </div>
+               </div>
+               <div class="center_block clearfix">
+                    <%= ui.label :gender %>
+                  <div class="input">
+                    <%= ui.radio_button :gender, "male", :checked => true  %> Male &nbsp;
+                    <%= ui.radio_button :gender, "female" %> Female &nbsp;
+                    <%= ui.radio_button :gender, "other" %> Other
+                  </div>
+               </div>
+               <div class="center_block clearfix">
+                  <%= ui.label :mobile %>
+                  <div class="input">
+                  <%= ui.telephone_field :mobile, :placeholder=>"Mobile" %>
+                  </div>
+               </div>
+               <div class="center_block clearfix">
+                  <%= ui.label :relationship_status %>
+                  <div class="input">
+                    <%= ui.select :relationship_status, options_for_select([["Married", "married"], ["Single", "single"], ["Committed", "committed"]], ui.object.relationship_status) %>
+                  </div>
+               </div>
+
+          <% end %>
+          <%= f.fields_for :address do |f| %>
+               <div class="center_block clearfix">
+                  <%= f.label "Door no." %>
+                  <div class="input">
+                  <%= f.text_field :doorno, :placeholder=>"Door no." %>
+                  </div>
+               </div>
+               <div class="center_block clearfix">
+                    <%= f.label :street %>
+                  <div class="input">
+                    <%= f.text_field :street, :placeholder=>"Street" %>
+                  </div>
+               </div>
+               <div class="center_block clearfix">
+                    <%= f.label :city %>
+                  <div class="input">
+                    <%= f.text_field :city, :placeholder=>"City" %>
+                  </div>
+               </div>
+               <div class="center_block clearfix">
+                    <%= f.label :country %>
+                  <div class="input">
+                    <%= f.text_field :country, :placeholder=>"Country" %>
+                  </div>
+               </div>
+               <div class="center_block clearfix">
+                    <%= f.label :postalcode, "Postal Code" %>
+                  <div class="input">
+                    <%= f.text_field :postalcode, :placeholder=>"Postal Code" %>
+                  </div>
+               </div>
+
+          <% end %>
+                         
+          </div>
+        </div>   
+           </div>
+            <div class="modal-footer" >
+              <%= f.submit "Update", class: "btn primary pull-right", id: "updUser" %>  
+            </div>
+          </div>
+          
+        </div>
+            <% end %>
+    
+</div>
+
+
+<script type="text/javascript">
+    $("#edit_user").click(function(){
+      $('#modal_user').modal('show');
+    });
+    $("#closeX_user").click(function(){
+          $('#modal_user').modal('hide');
+        });
+    $("#updUser").click(function(){
+          $('#modal_user').modal('hide');
+          $("#change_password").show();
+        });
+    $("#dob_date select").addClass('medium');
+
+   $("#change_password_link").click(function(){
+    $("#change_password_link").hide();
+    $("#change_password").show();
+
+   });
+   $(document).ready(function(){
+    $("#change_password").hide();
+  });
+
+</script>

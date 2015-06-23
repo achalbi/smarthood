@@ -1,132 +1,211 @@
-<div class="span8">
+
+<div class="">
+    
+<div class="wallpaper-container"><div class="wallpaper-media wallpaper-image native" style="opacity: 1; background-image: url(/assets/background_him.jpg);">
+<div id="video_element" class="wallpaper pt50 pb20 pl20">
+
+    <!-- Start of Main Title + Intro -->
+    <div class="huge-title">
+             
+        <img src="<%= gravatar_for_url @user, size: 100 %>" alt="<%=  @user.name %>" class="headshot wow tada animated img-circle" data-wow-delay="3s" data-wow-offset="80" data-wow-duration="1s" style="visibility: visible;-webkit-animation-duration: 1s; -moz-animation-duration: 1s; animation-duration: 1s;-webkit-animation-delay: 3s; -moz-animation-delay: 3s; animation-delay: 3s;">
+        <h1 class="wow bounceInDown animated color-white" data-wow-offset="80" data-wow-duration="3s" style="visibility: visible;-webkit-animation-duration: 3s; -moz-animation-duration: 3s; animation-duration: 3s;"><%=  @user.name %></h1>
+        <!--<h6 class="wow bounceInDown animated " style="visibility: visible;-webkit-animation-duration: 3s; -moz-animation-duration: 3s; animation-duration: 3s;"> <%= render 'shared/stats' %></h6> -->   
+       
+    </div><!-- End of Main Title + Intro -->
+
+
+    <!-- Start of Shade - this is the css based gradient over the image for that cool effect -->
+    <div class="shade"></div><!-- End of Shade -->
+
+</div>
+
+</div>
+</div>
+</div>
+
+
+<div class="panel">
+ <div class="panel-body">
   <% if current_user == @user %>
- <%= link_to "edit", '#', id: "edit_user",  class: " pull-right uibutton icon edit",:title => "Edit" %>
+ <%= link_to "edit", '#', id: "edit_user",  class: "btn btn-sm btn-warning pull-right icon edit", :title => "Edit" %>
  <% end %>
-      <h6 style="line-height:2">Personal details:</h6>
-      <address>
-          <span><strong>Name : </strong><small><%= @user.user_info.first_name %></small> <small><%= @user.user_info.middle_name %></small> <small><%= @user.user_info.last_name %></small> </span><br>
-          <span><strong>e-mail : </strong><%= @user.email  %></span><br>
-          <!-- <span><strong>Current city : </strong><%= @user.user_info.current_city  %></span><br>
-          <span><strong>Home town : </strong><%= @user.user_info.home_town  %></span><br> -->
-          <span><strong>Birthday : </strong><%= @user.user_info.dob.strftime("%d/%m/%Y") unless @user.user_info.dob.nil? %></span><br>
-          <span><strong>Gender : </strong><%= @user.user_info.gender  %></span><br>
-          <span><strong>Mobile : </strong><%= @user.user_info.mobile  %></span><br>
-          <span><strong>Relationship status : </strong><%= @user.user_info.relationship_status  %></span><br>
-          <h6 style="line-height:2;margin-top:20px;">Address:</h6>
-          <span><strong>Door no. : </strong><%= @user.address.doorno  %></span><br>
-          <span><strong>Street : </strong><%= @user.address.street  %></span><br>
-          <span><strong>City : </strong><%= @user.address.city  %></span><br>
-          <span><strong>Country : </strong><%= @user.address.country  %></span><br>
-          <span><strong>Postal code : </strong><%= @user.address.postalcode  %></span><br>
-          <!-- <span><strong>work : </strong><%= @user.user_info.work  %></span><br>
-          <span><strong>Education : </strong><%= @user.user_info.education  %></span><br> -->
+     
+      <address class="mb5">
+          
+         
+          <p class="mtb0">
+              <span class="font-14 color-light-black semibold col-sm-3">E-mail </span><span class="font-14 color-light-black"><%= @user.email  %></span>
+          </p>
+          <p class="mtb0">
+               <span class="font-14 color-light-black semibold col-sm-3">Date of Birth </span><span class="font-14 color-light-black"><%= @user.user_info.dob.strftime("%d/%m/%Y") unless @user.user_info.dob.nil? %></span>
+          </p>
+           <p class="mtb0">
+               <span class="font-14 color-light-black semibold col-sm-3">Gender </span><span class="font-14 color-light-black"><%= @user.user_info.gender  %></span>
+          </p>
+          <p class="mtb0">
+               <span class="font-14 color-light-black semibold col-sm-3">Phone </span><span class="font-14 color-light-black"><%= @user.user_info.mobile  %></span>
+          </p>
+          <p class="mtb0">
+               <span class="font-14 color-light-black semibold col-sm-3">Relationship </span><span class="font-14 color-light-black"><%= @user.user_info.relationship_status  %></span>
+          </p>
+        <% unless (@user.address.doorno.nil? &&  @user.address.street.nil? &&  @user.address.city.nil? &&  @user.address.country.nil? &&  @user.address.postalcode.nil?) %>
+          <span class="mb5 color-light-black semibold col-sm-3 font-14">Address</span>
+
+              
+          <p class="mtb0 ">
+              <span class="font-12 color-light-black"><%= @user.address.doorno  %>, </span>
+          
+              <span class="font-12 color-light-black"><%= @user.address.street  %>, </span>
+         
+              <span class="font-12 color-light-black"><%= @user.address.city  %>, </span>
+         
+              <span class="font-12 color-light-black"><%= @user.address.country  %>, </span>
+         
+              <span class="font-12 color-light-black"><%= @user.address.postalcode  %>.</span>
+          </p>
+
+         <% end %> 
+          
       </address>
+
+          
+</div>
 </div>
 
 
 <%= form_for( @user, remote: true, :html => {:multipart => true}) do |f| %>
-<div id="modal_user" style="display:none;" >
-          <div id="modal-from-dom2" class="modal hide fade in" style="display: block;width:700px;">
+    <div id="modal_user" class="modal fade" >
+          <div id="modal-from-dom2" class="">
+               <div class="modal-dialog">
+                <div class="modal-content">
             <div class="modal-header">
               <a href="#" id="closeX_user" class="close">×</a>
-              <span style="font-size:20px;line-height: 2;">Edit User</span>
+              <span class="semibold font-15">Edit User</span>
             </div>
-            <div class="modal-body" style="max-height:420px;">
+            <div class="modal-body">
               <div class="row">
-          <div class="span14 ui-front">
+                  <div class=" plr10">
             
                <%= render 'shared/error_messages', object: f.object %>
           <%= f.fields_for :user_info do |ui| %>
-               <div class="center_block clearfix">
-                  <%= ui.label :first_name, "Name" %>
-                  <div class="input">
-                  <%= ui.text_field :first_name, :placeholder=>"First name", class: "span4" %>
-                 <!-- <%= ui.text_field :middle_name, :placeholder=>"Middle name", class: "span4" %>-->
-                  <%= ui.text_field :last_name, :placeholder=>"Last name",class: "span4" %>
+               <div class="center_block clearfix ">
+                  <%= ui.label :first_name, "Name", class: "control-label pl15 " %>
+                  <div class="">
+                 <div class="col-sm-6  mb5">    
+                  <%= ui.text_field :first_name, :placeholder=>"First name", class: " form-control" %>
+                  </div>
+                 <!-- <%= ui.text_field :middle_name, :placeholder=>"Middle name", class: " form-control" %>-->
+                 <div class="col-sm-6  mb5">    
+                  <%= ui.text_field :last_name, :placeholder=>"Last name",class: "form-control" %>
+                  </div>
                   </div>
                </div>
 
           <% end %>
 
           <div id="change_password_link_div" class="center_block clearfix">
-            <div class="input">
-              <%= link_to "change password", '#', id: "change_password_link",  class: "uibutton icon edit",:title => "Change password" %>
-            </div>
+            <span class="">
+              <%= link_to "change password", '#', id: "change_password_link",  class: "btn btn-info btn-sm pull-right mr20",:title => "Change password" %>
+            </span>
           </div>
-          <div id="change_password" class="center_block clearfix">
-              <%= f.label :password %>
-            <div class="input">
-              <%= f.password_field :password, :placeholder=>"Password" %>
-              <%= f.password_field :password_confirmation, :placeholder=>"Confirm Password" %>
+          <div id="change_password" class="center_block clearfix ">
+              <%= f.label :password , class: " control-label pl15  mt5" %>
+              <div>
+            <div class="col-sm-6 mb5">
+              <%= f.password_field :password, :placeholder=>"Password", class: " form-control" %>
+            </div>
+            <div class="col-sm-6  mb5">
+              <%= f.password_field :password_confirmation, :placeholder=>"Confirm Password", class: " form-control" %>
+            </div>
             </div>
           </div>
 
 
           <div class="center_block clearfix">
-              <%= f.label "E-mail" %>
-            <div class="input">
-              <%= f.email_field :email, :placeholder=>"E-mail" %>
+              <%= f.label "E-mail", class: " control-label pl15 "%>
+              <div>
+                <div class="col-sm-6">
+                  <%= f.email_field :email, :placeholder=>"E-mail", class: " form-control" %>
+                </div>
             </div>
           </div>
 
           <%= f.fields_for :user_info do |ui| %>
-               <div class="center_block clearfix">
-                  <%= ui.label "Birthday" %>
-                  <div id="dob_date" class="input">
-                  <%= ui.date_select :dob, :placeholder=>"Birthday" %>
+               <div class="center_block clearfix pl15  mt5 ">
+                  <%= ui.label "Birthday",class: " control-label" %>
+                  <div>
+                  <div id="dob_date" class="">
+                  <%= ui.date_select :dob, :placeholder=>"Birthday", class: " form-control",  start_year: 10.years.ago.year, end_year: 100.years.ago.year, prompt: { day: 'Select day', month: 'Select month', year: 'Select year' } %>
+                  </div>
                   </div>
                </div>
                <div class="center_block clearfix">
-                    <%= ui.label :gender %>
-                  <div class="input">
+                    <%= ui.label :gender, class:"control-label pl15  mt5" %>
+                    <div>
+                  <div class="col-sm-6  mb5">
                     <%= ui.radio_button :gender, "male", :checked => true  %> Male &nbsp;
                     <%= ui.radio_button :gender, "female" %> Female &nbsp;
                     <%= ui.radio_button :gender, "other" %> Other
                   </div>
-               </div>
-               <div class="center_block clearfix">
-                  <%= ui.label :mobile %>
-                  <div class="input">
-                  <%= ui.telephone_field :mobile, :placeholder=>"Mobile" %>
                   </div>
                </div>
-               <div class="center_block clearfix">
-                  <%= ui.label :relationship_status %>
-                  <div class="input">
+               <div class="center_block clearfix ">
+                  <%= ui.label :mobile, class:"control-label pl15  mt5" %>
+                  <div>
+                  <div class="col-sm-6  mb5">
+                  <%= ui.telephone_field :mobile, class:"form-control", :placeholder=>"Mobile" %>
+                  </div>
+                  </div>
+               </div>
+               <div class="center_block clearfix ">
+                  <%= ui.label :relationship_status, class: "control-label pl15  mt5" %>
+                  <div>
+                  <div class="col-sm-6 mb5">
                     <%= ui.select :relationship_status, options_for_select([["Married", "married"], ["Single", "single"], ["Committed", "committed"]], ui.object.relationship_status) %>
+                  </div>
                   </div>
                </div>
 
           <% end %>
           <%= f.fields_for :address do |f| %>
-               <div class="center_block clearfix">
-                  <%= f.label "Door no." %>
-                  <div class="input">
-                  <%= f.text_field :doorno, :placeholder=>"Door no." %>
+               <div class="center_block clearfix ">
+                  <%= f.label "Door no.", class: "control-label pl15  mt5" %>
+                  <div>
+                  <div class="col-sm-6  mb5">
+                      <%= f.text_field :doorno, :placeholder=>"Door no.", class:"form-control" %>
+                  </div>
                   </div>
                </div>
-               <div class="center_block clearfix">
-                    <%= f.label :street %>
-                  <div class="input">
-                    <%= f.text_field :street, :placeholder=>"Street" %>
+               <div class="center_block clearfix ">
+                    <%= f.label :street, class: "control-label pl15  mt5" %>
+                  <div class="">
+                  <div class="col-sm-6  mb5">
+                    <%= f.text_field :street, :placeholder=>"Street", class:"form-control" %>
+                  </div>
                   </div>
                </div>
-               <div class="center_block clearfix">
-                    <%= f.label :city %>
-                  <div class="input">
-                    <%= f.text_field :city, :placeholder=>"City" %>
+               <div class="center_block clearfix ">
+                    <%= f.label :city, class: "control-label pl15  mt5" %>
+                  <div class="">
+                  <div class="col-sm-6  mb5">
+                    <%= f.text_field :city, :placeholder=>"City" , class:"form-control"%>
+                  </div>
                   </div>
                </div>
-               <div class="center_block clearfix">
-                    <%= f.label :country %>
-                  <div class="input">
-                    <%= f.text_field :country, :placeholder=>"Country" %>
+               <div class="center_block clearfix ">
+                    <%= f.label :country, class: "control-label pl15  mt5" %>
+                  <div class="">
+                  <div class="col-sm-6  mb5">
+                    <%= f.text_field :country, :placeholder=>"Country", class:"form-control" %>
+                  </div>
                   </div>
                </div>
-               <div class="center_block clearfix">
-                    <%= f.label :postalcode, "Postal Code" %>
-                  <div class="input">
-                    <%= f.text_field :postalcode, :placeholder=>"Postal Code" %>
+               <div class="center_block clearfix ">
+                    <%= f.label :postalcode, "Postal Code", class: "control-label pl15  mt5" %>
+                  <div class="">
+                  <div class="col-sm-6  mb5">
+                    <%= f.text_field :postalcode, :placeholder=>"Postal Code", class:"form-control" %>
+                  </div>
                   </div>
                </div>
 
@@ -136,18 +215,17 @@
         </div>   
            </div>
             <div class="modal-footer" >
-              <%= f.submit "Update", class: "btn primary pull-right", id: "updUser" %>  
+              <%= f.submit "Update", class: "btn btn-primary pull-right", id: "updUser" %>  
             </div>
           </div>
+        </div>
+        </div>
           
         </div>
             <% end %>
 
 
-    
-</div>
-
-<script type="text/javascript">
+<script>
     $("#edit_user").click(function(){
       $('#modal_user').modal('show');
     });
@@ -158,7 +236,8 @@
           $('#modal_user').modal('hide');
           $("#change_password").show();
         });
-    $("#dob_date select").addClass('medium');
+    $("#dob_date select").addClass('form-control mt5-xs col-sm-4 inline form-control-xsmall mr10 pull-left pl6');
+    $("#user_user_info_attributes_relationship_status").addClass('form-control mt5-xs col-sm-4 inline  mr10 pull-left pl6');
 
    $("#change_password_link").click(function(){
     $("#change_password_link").hide();

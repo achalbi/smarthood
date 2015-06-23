@@ -74,6 +74,9 @@ class PhotoUploader < CarrierWave::Uploader::Base
   version :small do
      cloudinary_transformation :width => 150, :height => 150, :crop => :fill, :gravity => :faces
    end 
+  version :thumb_mid do
+     cloudinary_transformation :width => 175, :height => 175, :crop => :fill, :gravity => :faces
+   end
   version :comm_img do
     cloudinary_transformation :width => 50, :height => 50, :crop => :fill, :gravity => :faces, :radius => :max
    end 
@@ -82,7 +85,16 @@ class PhotoUploader < CarrierWave::Uploader::Base
    end 
     version :thumb_half_medium do
     cloudinary_transformation :width => 225, :height => 225, :crop => :fill, :gravity => :faces
+   end  
+    version :thumb_full_wide do
+    cloudinary_transformation :width => 261, :height => 160, :crop => :fill, :gravity => :faces
    end 
+   version :thumb_full_medium do
+    cloudinary_transformation :width => 242, :height => 200, :crop => :fill, :gravity => :faces
+   end 
+   version :thumb_full_medium_fit do
+    cloudinary_transformation :width => 250, :height => 200, :crop => :fit
+   end
    version :thumb_medium do
     cloudinary_transformation :width => 250, :height => 250, :crop => :fill, :gravity => :faces
    end 
@@ -123,8 +135,9 @@ class PhotoUploader < CarrierWave::Uploader::Base
    end
 
    version :photogrid_two do
-     cloudinary_transformation :width => 271, :height => 175, :crop => :fill, :gravity => :faces
+     cloudinary_transformation :width => 254, :height => 175, :crop => :fill, :gravity => :faces
    end
+   
    version :photogrid_three_one do
      cloudinary_transformation :width => 335, :height => 350, :crop => :fill, :gravity => :faces
    end
