@@ -6,7 +6,7 @@
                   <%= photo_form.file_field :pic, id: "pic-grp",style: "width:1px; height:1px; padding:0px;  left:0px;display:none;" %>  
                   <% end %>
                    <div class="">
-                      <%= f.text_area :content, placeholder: "Compose new post...", 'data-validation' => "required", 'data-validation-error-msg' => "Post can't be blank", 'rows' => "2", class: "form-control form-control-minimal" %>
+                      <%= f.text_area :content, placeholder: "Compose new post...", 'data-validation' => "required", 'data-validation-error-msg' => "Post can't be blank", 'rows' => "2", class: "form-control form-control-minimal", :id => 'group_post_text' %>
                     </div>
                     <div class="thumbnail thumbnail-album">
                         <div class="media">
@@ -23,7 +23,7 @@
                                 </div>
                               </div>
                             <div class="panel-toolbar text-right">
-                               <%= f.submit "Post", class: "btn btn-primary btn-custom pull-right busy", id: "submit_grp_post" %>
+                               <%= f.submit "Post", class: "btn btn-primary btn-custom pull-right disabled busy", id: "submit_grp_post" %>
                             </div>
                           </div>
                       </div>
@@ -34,6 +34,18 @@
 </div>
 
 <script type="text/javascript">
+
+   $('#group_post_text').keyup(function(){
+    if($('#group_post_text').val().length <1){
+      $('#submit_grp_post').addClass('disabled');
+    }else{
+      $('#submit_grp_post').removeClass('disabled');
+    }
+  });
+
+
+
+
 $("#image_upload").click(function(){
       
    $("#image_upload").before($("div#image").html().replace('NEW_RECORD', new Date().getTime()) ); 

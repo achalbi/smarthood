@@ -47,7 +47,10 @@
           .pl-xs#{$i * 5}{  padding-left: #{$i * 5}px!important; } 
           .pr-xs#{$i}{  padding-right: #{$i}px!important; } 
           .pr-xs#{$i * 5}{  padding-right: #{$i * 5}px!important; }     
-}
+    }
+    .wdp-100-xs {
+        width: 100%!important;
+    }
    
         
 }
@@ -85,6 +88,9 @@
         width: 27%;
         float: left;
     }
+    .wd235-sm{
+    width: 235px!important;
+}
 
 }
 
@@ -105,6 +111,7 @@
     .ml60-md{
         margin-left: 160px!important;
     }
+    
 }
 
 @media(min-width: 767px) and (max-width: 991px){

@@ -9,7 +9,7 @@
  
  <!--<div class="tab-content">
   <div  class="tab-pane np active " id="group_moderators">-->
-  <div class="row ml10">
+  <div class="row pl15">
     <div class="row">
     <% if @is_admin %>
     <a class=" btn-sm btn-success pull-right mt10 mr30" href="#" id="invite" data-toggle="modal" data-target="#modal_invite" >Add Members</a>
@@ -47,7 +47,7 @@
   </ul>
 </div>
 
-  <div class="row ml10">
+  <div class="row pl15">
     <div class="row">
     
     </div>
@@ -139,16 +139,15 @@
 
 <%= form_for( group, url: invite_app_user_group_path(group), method: :get, remote: true) do |f| %>
 <div id="modal_invite" class="modal fade">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-sm">
   <div class="modal-content">
     <div class="modal-header">
       <!--<a href="#" id="close_invite" class="close">×</a>-->
       <button type="button" class="close" data-dismiss="modal">×</button>
-      <span class="semibold font-15">Invite</span>
+      <span class="semibold font-15">Invite Smarthood Users</span>
     </div>
     <div class="modal-body">
           <div class="center_block clearfix">
-            <%= f.label "Invite by User name:", class: "control-label pl15" %>
             <div>
             <div class="col-sm-6">
               <%= f.text_field :user_tokens, id: "search_user", class: "form-control" %>
@@ -207,6 +206,9 @@
 
 
 <script type="text/javascript">
+
+
+
 $(document).ready(function(){
   $('#edit_group').hide();
 });
@@ -216,6 +218,7 @@ $(document).ready(function(){
   $('#edit_group').toggle();
 });
 */
+
 $("#edit_group").click(function(){
       $('#modal_edit_grp').modal('show');
     });
@@ -290,5 +293,6 @@ $("#edit_group").click(function(){
         hintText: "Type in a user name",
   });
 
+  $(".token-input-list-facebook").addClass("form-control wdp-100-xs wd235-sm font-15 autocomplete-border");
 
 </script>

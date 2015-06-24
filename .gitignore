@@ -15,3 +15,9 @@ doc/
 .project
 .DS_Store
 .idea
+
+#Ignore all c9 files
+/.c9
+/.git
+/bundler*
+/spring

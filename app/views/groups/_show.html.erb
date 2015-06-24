@@ -3,7 +3,7 @@
     
        
              <div>
-                        <ul class="nav nav-pills mt5 mb10 ml5">
+                        <ul class="nav nav-pills mt5 mb5 ml2">
                             <li class="active"><a class="p7" href="#posts_groups" data-toggle="tab" aria-expanded="true" id="posts_groups_li">Posts</a><li>
                             <li><a class="p7" href="#about_groups" data-toggle="tab" aria-expanded="true" id="about_groups_li">Members</a><li>
                             <li><a class="p7" href="#photos_groups" data-toggle="tab" aria-expanded="true" id="photos_groups_li">Albums</a><li>
@@ -79,7 +79,7 @@
               <div id="div_post" class="resources<%= @group.id %>">
                 <%= render partial: 'posts/post', locals: {posts: @posts, group: @group}  %>
               </div>
-              <p id="group_id" class='hide'><%= @group.id %></p>
+             
               <div id="loading_page" class="center loading_page_post"></div>
             </div>
       
@@ -102,19 +102,19 @@
 
 <script type="text/javascript">
 
-$(".busy").button('reset');
-$('#modal_create_group').modal('hide');
-$('#create_grp_form')[0].reset();
+
  
  $('.home_link').addClass('hide');
  
  $('.home_link').click(function(){
      $('.home_link').addClass('hide');
  });
- 
+
    $('.toolbar a').click(function(){
         $('.home_link').removeClass('hide');
     });
+    
+
 $('#posts_groups_li').click(function(){
 /*  $('#posts_groups_li').addClass('active');
   $('#about_groups_li').removeClass('active');
@@ -150,62 +150,54 @@ $('#photos_groups_li').click(function(){
 $('#back_to_album').addClass('hide');
   $('#upload_pics_grp').removeClass('hide');
 });
-var currentPage = 1;
-var intervalID = -1000;
- 
-function checkScroll_post() {
-  if (nearBottomOfPage()) {
-    currentPage++;
- // console.log("--"+intervalID+"---"+$('#group_id').html());
-  $('#loading_page').show();
-  if($('#group_id').html() == null){
-      $('.loading_page').hide();
-      clearInterval(intervalID);
-      clearInterval(intervalID-1);
-      for (var i = 1; i < 99999; i++){
-        window.clearInterval(i);
-      }
-      restartInterval();
 
-    //  console.log("-null-"+intervalID);
-    }
-    jQuery.ajax('/groups/post_paginate?id=<%= @group.id %>&page=' + currentPage, {asynchronous:true, evalScripts:true, method:'get', success: function(data, textStatus, jqXHR) {
-      $('#loading_page').hide();
-    if($(data).find('.grid').html()==null || $(data).find('.grid').html() == '' || $('#group_id').html()== null){
-     // console.log("-1-"+ $(data).find('.grid').html()+"-1-");
-      clearInterval(intervalID);
-      clearInterval(intervalID-1);
-      for (var i = 1; i < 99999; i++){
-        window.clearInterval(i);
-      }
-      restartInterval();
 
-     // console.log("-1-"+intervalID);
-    }else{
-    $('.resources<%= @group.id %>').append(data);
+        var currentPage_grp = 1;
+        var groups_post_intervalID = -1000;
+        var insideLoop_grp ="false"; 
+        function checkScroll_groups_post() {
+            console.log('grp_post');
+          if (nearBottomOfPage() && insideLoop_grp!="true") {
+            insideLoop_grp="true";
+            currentPage_grp++;
+            $('#loading_page').show();
+            if($('.resources<%= @group.id %>').length == 0){
+                clearInterval(groups_post_intervalID);
+                for (var i = groups_post_intervalID; i > 0; i--){
+                  window.clearInterval(i);
+                }
+                insideLoop_grp = "false";
+                return;    
+            }
+           jQuery.ajax('/groups/post_paginate?id=<%= @group.id %>&page=' + currentPage_grp, {asynchronous:true, evalScripts:true, method:'get', success: function(data, textStatus, jqXHR){
+            $('.resources<%= @group.id %>').append($(data));
+            $('#loading_page').hide();
+            if(typeof jQuery(data) == 'undefined' ||jQuery(data).html() == null || $(data).find('.paginate_do').html()==null){
+              clearInterval(groups_post_intervalID);
+              for (var i = 1; i < 99999; i++){
+               window.clearInterval(i);
+             }
+             restartInterval();
+           }
+           insideLoop_grp ="false"; 
+         },});
+         }
+        }
+
+    function nearBottomOfPage() {
+      return scrollDistanceFromBottom() < 150;
     }
-  },});
-  }
-}
- 
-function nearBottomOfPage() {
-  return scrollDistanceFromBottom() < 50;
-}
- 
-function scrollDistanceFromBottom(argument) {
-  return pageHeight() - (window.pageYOffset + self.innerHeight);
-}
- 
-function pageHeight() {
-  return Math.max(document.body.scrollHeight, document.body.offsetHeight);
-}
- 
-$('document').ready(function(){
-  intervalID = setInterval(checkScroll_post, 250);
-//  $('#about_groups').hide();
-//  $('#photos_groups').hide();
-  $(".sidetabs").removeClass('sidetabs_selected');
-})
+    
+    function scrollDistanceFromBottom(argument) {
+      return pageHeight() - (window.pageYOffset + self.innerHeight);
+    }
+    
+    function pageHeight() {
+      return Math.max(document.body.scrollHeight, document.body.offsetHeight);
+    }
+      groups_post_intervalID = setInterval(checkScroll_groups_post, 500);
+  
+
 
 /*
 $('.pop_up').popover({

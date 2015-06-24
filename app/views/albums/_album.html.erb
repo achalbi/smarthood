@@ -75,20 +75,20 @@
 
         <% @album.photos.each do |photo| %>
           <li>
-                  <div class="col-xs-6 plr5">
-                        <div class="thumbnail">
+                  <div class="col-xs-6 pl0 pr5">
+                        <div class="thumbnail mb5">
                             <div class="">
                               <a href="<%= photo.pic_url %>"  class="fancybox-album" rel="group1">
-                                <%= cl_image_tag(photo.pic_url(:medium), class:"thumbnail", alt: "https://res.cloudinary.com/rashi/image/upload/v1377921346/RYW-Logo-smaller_rbkszn.png")  %>
+                                <%= cl_image_tag(photo.pic_url(:thumb_full_wide), class:"bd-rad5", alt: "https://res.cloudinary.com/rashi/image/upload/v1377921346/RYW-Logo-smaller_rbkszn.png")  %>
                                 </a>
                             </div>
                         </div>
                     </div>
-          <% if @album.user == current_user  && @album.photos.count > 1 %>
+          <!--<% if @album.user == current_user  && @album.photos.count > 1 %>
                     <div class="btn_overlay_cu_cover_pic hide">
                       <%= link_to "Delete", photo , method: :delete, class: "uibutton danger pull-right photo_del", remote: true, title: "Delete photo" %>
                     </div>
-          <% end %>
+          <% end %>-->
           </li>
             
         <% end %>

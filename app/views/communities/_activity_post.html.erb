@@ -11,7 +11,7 @@
                     <%= f.text_area :content, placeholder: "Compose new post...", :rows=>6, class: "span10", 'data-validation' => "required", 'data-validation-error-msg' => "Post can't be blank"  %>
                  <canvas id="imageCanvas1" style = "border: 1px solid #ddd; padding:2px; align:center;cursor:pointer; background-color:#ffffff;" width="132px" height="88px">Add pictures</canvas>
                 </div> 
- <%= f.submit "Post", id: "activity_post_submit", class: "btn primary pull-right" %>
+ <%= f.submit "Post", id: "activity_post_submit", class: "btn-primary btn-custom pull-right" %>
   <%= hidden_field_tag :type, "activity" %>  
   <%= hidden_field_tag :activity_id, @activity.id %>
   <%= hidden_field_tag :event_id, @event.id %>

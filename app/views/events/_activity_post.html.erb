@@ -1,6 +1,6 @@
   
 <div id="textarea_div">
-<%= form_for(Post.new, url: create_activity_post_event_path(event) , remote: true,  :html => {:multipart => true, id: "activity_new_post", class: "panel mb10"}) do |f| %>
+<%= form_for(Post.new, url: create_activity_post_event_path(event) , remote: true,  :html => {:multipart => true, id: "activity_new_post", class: "panel mb5"}) do |f| %>
     <%= render 'shared/error_messages', object: f.object %>
                 <%= fields_for :photo, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
                  
@@ -10,7 +10,7 @@
                 
                 
                  <div class="">
-                    <%= f.text_area :content, placeholder: "Compose new post...", 'data-validation' => "required", 'data-validation-error-msg' => "Post can't be blank", 'rows' => "2", class: "form-control form-control-minimal" %>
+                    <%= f.text_area :content, placeholder: "Compose new post...", 'data-validation' => "required", 'data-validation-error-msg' => "Post can't be blank", 'rows' => "2", class: "form-control form-control-minimal", :id => 'activity_post_text' %>
                 </div> 
                 <div class="thumbnail thumbnail-album">
                           <div class="media">
@@ -27,7 +27,7 @@
                               </div>
                             </div>
                           <div class="panel-toolbar text-right">
-                              <%= f.submit "Post", id: "activity_post_submit", class: "btn btn-primary" %>
+                              <%= f.submit "Post", id: "activity_post_submit", class: "btn btn-primary btn-custom disabled" %>
                               <%= hidden_field_tag :type, "activity" %>  
                               <%= hidden_field_tag :activity_id, activity.id %>
                               <%= hidden_field_tag :event_id, event.id %>
@@ -39,6 +39,18 @@
 </div>
 
 <script type="text/javascript">
+    
+    $('#activity_post_text').keyup(function(){
+    if($('#activity_post_text').val().length <1){
+      $('#activity_post_submit').addClass('disabled');
+    }else{
+      $('#activity_post_submit').removeClass('disabled');
+    }
+  });
+
+
+
+
   $("#img_close_event").hide();
   $("#img_close_event").click(function(){
     $("#img_close_event").hide();

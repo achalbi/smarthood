@@ -188,7 +188,7 @@
                                     </a>
                                   
                                  </li>
-                                 <li>
+                                 <li id="members_community_li">
                                   <% if current_user.is_cu_admin?(@community)  %>
                                     <% unless (@community.req_pending_cnt.nil? || @community.req_pending_cnt == 0)%>
                                         <span class="pull-right label important" style="margin:5px;margin-right:10px;position:absolute;right:0;"><%= if @community.req_pending_cnt > 0 then @community.req_pending_cnt end %></span>
