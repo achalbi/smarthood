@@ -62,23 +62,23 @@
                 <% end %>
 
                 <% if post.photos.count == 2 %>
-                  <%= link_to cl_image_tag(photo.pic_url(:photogrid_two), class:"albumLink pull-left img-res-xs-2p padding1 ml4",rel: "#{post.id}", id:"#{photo.id}") , photo.pic_url, class: "fancybox-album",rel: "#{post.id}" , title: "#{post.postable.title}"  %>
+                  <%= link_to cl_image_tag(photo.pic_url(:photogrid_two), class:"albumLink pull-left img-res-xs-2p padding1 ml2",rel: "#{post.id}", id:"#{photo.id}") , photo.pic_url, class: "fancybox-album",rel: "#{post.id}" , title: "#{post.postable.title}"  %>
                 <% end %>
 
                   <% if post.photos.count == 3 %>
                     <% if i == 1 %>
                       <%= link_to cl_image_tag(photo.pic_url(:photogrid_one), class:" albumLink pull-left padding1 p2", style: "display:block;", id:"#{photo.id}") , photo.pic_url, class: "fancybox-album", rel: "#{post.id}", title: "#{post.postable.title}" %>
                     <% else %>
-                      <%= link_to cl_image_tag(photo.pic_url(:photogrid_two), class:" albumLink pull-left padding1 img-res-xs-2p ml4", style: "display:block;", id:"#{photo.id}") ,  photo.pic_url, class: "fancybox-album", rel: "#{post.id}", title: "#{post.postable.title}" %>
+                      <%= link_to cl_image_tag(photo.pic_url(:photogrid_two), class:" albumLink pull-left padding1 img-res-xs-2p ml2", style: "display:block;", id:"#{photo.id}") ,  photo.pic_url, class: "fancybox-album", rel: "#{post.id}", title: "#{post.postable.title}" %>
                     <% end %>
                   <% end %>
 
                   <% if post.photos.count > 3 %>
                     <% if i > 4 %>
-                      <%= link_to cl_image_tag(photo.pic_url(:photogrid_two), class:" albumLink  img-res-xs-2p pull-left  padding1  ml4 mb4", style: "display:none;", id:"#{photo.id}") ,  photo.pic_url, class: "fancybox-album",rel: "#{post.id}", title: "#{post.postable.title}" %>
+                      <%= link_to cl_image_tag(photo.pic_url(:photogrid_two), class:" albumLink  img-res-xs-2p pull-left  padding1  ml2 mb2", style: "display:none;", id:"#{photo.id}") ,  photo.pic_url, class: "fancybox-album",rel: "#{post.id}", title: "#{post.postable.title}" %>
                       <% next %>
                     <% end %>
-                      <%= link_to cl_image_tag(photo.pic_url(:photogrid_two), class:" albumLink pull-left img-res-xs-2p padding1 ml4 mb4", style: "display:block;", id:"#{photo.id}") ,  photo.pic_url, class: "fancybox-album",rel: "#{post.id}", title: "#{post.postable.title}" %>
+                      <%= link_to cl_image_tag(photo.pic_url(:photogrid_two), class:" albumLink pull-left img-res-xs-2p padding1 ml2 mb2", style: "display:block;", id:"#{photo.id}") ,  photo.pic_url, class: "fancybox-album",rel: "#{post.id}", title: "#{post.postable.title}" %>
                   <% end %>
 
             <% end %>
@@ -145,7 +145,7 @@
       </div>
     </div>  
        
-    <div class=" panel-toolbar-wrapper b0 nm np">
+     <div class=" panel-toolbar-wrapper b0 nm np">
          <div class="panel-toolbar">
         <span class="timestamp hide">Posted to <%="community".pluralize(post.communities.count) %></span>
         <span class="pull-right more anchor hide" id="comm_more_<%= post.id %>">Show more</span>
@@ -156,8 +156,8 @@
                   <% j=0 %>
                  <!--  <strong style="font-size:14px;" > -->
                   <span class="center_block">
-                  <strong class="semibold text-default pull-left ml10 mr10">Communities:</strong>
-                  <div class="col-xs-9 pl0">
+                  <strong class="semibold text-default col-xs-100">Communities:</strong>
+                  <div class="col-xs-6  col-sm-9 pl0">
                   <% post.communities.each do |cu| %>
                   <% j+=1 %>
                   <!--<div  class="hide showless pull-left com_show_less<%= post.id %>">
@@ -184,8 +184,8 @@
         </div>
         <% unless post.activities[0].nil? %>
           <% unless post.activities[0].is_admin %>
-            <strong class="semibold text-default pull-left ml10 mr40">Activity:</strong>
-            <div class="col-xs-9 pl0">
+            <strong class="semibold text-default col-xs-100">Activity:</strong>
+            <div class="col-xs-6 col-sm-9 pl0">
               <span><%= link_to post.activities[0].title, "/events/#{post.activities[0].id}", class: " semibold ml2", remote: "true" %></span>
             </div>
           <% end %>
@@ -196,8 +196,8 @@
                   <!--<span class="timestamp "> Posted to <%="group".pluralize(post.groups.count) %><br>-->
                 </span>
                 <span  class="center_block">
-                  <strong class="semibold text-default pull-left ml10 mr45">Groups: </strong>
-                  <div class="col-xs-9 pl0">
+                  <strong class="semibold text-default col-xs-100">Groups: </strong>
+                  <div class="col-xs-6 col-sm-9 pl0">
                 <% post.groups.each do |group| %>
                 <% i+=1 %>
                 <span><%= link_to group.name, "/groups/#{group.id}", class: "semibold ml2" %> <%= "," if post.groups.count != i %> </span>

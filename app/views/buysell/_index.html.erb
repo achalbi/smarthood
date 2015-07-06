@@ -24,41 +24,38 @@
         </div>
       </div>
       <div class="col-sm-2pt5 pr0 mr2">
-      <h6>Community</h6>
-      <div class="inputs-list">
-                    <%= select_tag "comm_type", options_for_select([["All community", "all"], ["My communities", "my"]]), class: "plr0 quick_filter", id: "comm_type_search" %>
-                <div id="comm_list">
-                  <li class="li-none">
-                    <label>
-                  <%= check_box_tag( "search[community_id][]", active_community.id, @selected_comm.include?(active_community), class: " quick_filter") %>
-                      <span><%= active_community.name %></span>
-                    </label>
-                  </li>
-                  <% @joined_communities.each do |cu| %>
-                    <li class="li-none">
-                      <label>
-                        <%= check_box_tag("search[community_id][]", cu.id, @selected_comm.include?(cu), class: " quick_filter") %>
-                        <span><%= cu.name %></span>
-                      </label>
-                    </li>
-                  <% end %>
-                </div>
-      </div>
+        
+        <h6>Catgories</h6>
+        <div class="inputs-list ">
+            <%= collection_select(:buysell_item_category, :id1, BuysellItemCategory.all, :id, :name, {:prompt => 'Select'}, class: "plr0 quick_filter" )%>
+        </div>
     </div>
     <div class="col-sm-3pt5 pr0">  
-      <h6>Catgories</h6>
-        <div class="inputs-list ">
-                  <%= collection_select(:buysell_item_category, :id1, BuysellItemCategory.all, :id, :name, {:prompt => 'Select'}, class: "plr0 quick_filter" )%>
-        </div>
-      </div>
-      </div>
-      
-    <div class="row pr15">
-        <div class="col-sm-3 pr0">
-          <h6>Sub-Catgories</h6>
+      <h6>Sub-Catgories</h6>
             <div class="item_subcategory">
                 <%= collection_select(:buysell_item_subcategory, :id, @subcategories, :id, :name, {:prompt => 'Select'}, class: "span5 quick_filter" )%>
             </div>
+      </div>
+    </div>
+      
+    <div class="row pr15">
+        <div class="col-sm-3 pr0">
+          
+          <h6>Community</h6>
+          <div class="inputs-list">
+                        <%= select_tag "comm_type", options_for_select([["All community", "all"], ["My communities", "my"]]), class: "plr0 quick_filter", id: "comm_type_search" %>
+                    <div id="comm_list">
+                      <% @joined_communities.each do |cu| %>
+                        <li class="li-none">
+                          <label>
+                            <%= check_box_tag("search[community_id][]", cu.id, @selected_comm.include?(cu), class: " quick_filter") %>
+                            <span><%= cu.name %></span>
+                          </label>
+                        </li>
+                      <% end %>
+                    </div>
+          </div>
+          
         </div>
         <div class="col-sm-9">
           <div class="row">

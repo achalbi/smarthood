@@ -980,6 +980,9 @@ shade {
 .pos-rel{
     position: relative;
 }
+.pos-abs{
+    position: absolute;
+}
 
 .img-center{
     position: absolute;
@@ -996,5 +999,16 @@ shade {
 
 .autocomplete-border{
     border: 1px solid #CFD9DB!important;
+}
+
+.sidebar-info{
+    position: absolute;
+    right: 10px;
+    top: 13px;
+}
+
+.autoscroll-200{
+    max-height:200px;
+    overflow: auto;
 }
 

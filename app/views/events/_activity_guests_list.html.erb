@@ -2,12 +2,12 @@
   
              <%="".pluralize(ad_users.count) %>
                 <% if activity.admin?(current_user) %>
-                 <%= link_to "edit", '#', id: "moderator",  class: "btn btn-warning btn-custom mr15 pull-right button_toggle" %>
+                 <a href="#" id="moderator" class="btn btn-warning btn-custom mr15 pull-right button_toggle" data-toggle="modal" data-target="#modal_add_mod">Edit</a>
                 <% end %>
                 
               <%="".pluralize(inv_users.count) %>
                <% if activity.admin?(current_user) %>
-                 <%= link_to "add", '#', id: "guests",  class: "btn btn-success btn-custom pull-right button_toggle mr15" %>
+                 <a href="#" id="guests" class="btn btn-success btn-custom pull-right button_toggle mr15" data-toggle="modal" data-target="#modal_add_mem">Add</a>
                <% end %>
 </div>
                 
@@ -49,12 +49,14 @@
                       <div class="panel widget nm">
                           <div class="table-layout nm">
                               <img src="<%= gravatar_for_url user.user, size: 82 %>" class="pull-left gravatar" ></img>
-                                <% if activity.admin?(current_user) && user.user.id != current_user.id %>
-                                   <%= link_to "x", "/events/#{event.id}/unjoin_activity?user_id=#{user.user.id}&activity_id=#{activity.id}", class: "text-default ml150 font-15 button_toggle remove_act", remote: true,  data: { confirm: "You want to remove the guest from the sub-event ?" } %>
-                                <% end %>
                               <div class=" valign-middle">
                                   <div class="panel-body mt5 pt0 pl95 pb0 pr0">
-                                      <p class="semibold mt0 mb0"><%= link_to user.user.name.length > 17 ? user.user.name.slice(0..17) + "..." : user.user.name, user.user %></p>
+                                      <p class="semibold mt0 mb0">
+                                       <% if activity.admin?(current_user) && user.user.id != current_user.id %>
+                                         <%= link_to "Unjoin", "/events/#{event.id}/unjoin_activity?user_id=#{user.user.id}&activity_id=#{activity.id}", class: "btn btn-xs btn-danger pull-right mr5 bd-top-none button_toggle remove_act", style: "bottom: 6px;", remote: true,  data: { confirm: "You want to remove the guest from the sub-event ?" } %>
+                                       <% end %>
+                                       <%= link_to user.user.name.length > 17 ? user.user.name.slice(0..17) + "..." : user.user.name, user.user %>
+                                      </p>
                                       <p class="mb0"><a class="ellipsis text-muted mb0" mailto="<%= user.user.email %>"><%= user.user.email.length > 17 ? user.user.email.slice(0..17) + "..." : user.user.email %></a></p>
                                         
                                   </div>
@@ -102,7 +104,7 @@
                     <% next %>
                   <% end %>
                   <li class="tr-hover pa10 li-none select_unselect_community c-pointer">
-                    <div class="checkboxFive pull-right marginRight15" style="margin-top:12px;">
+                    <div class="checkboxFive pull-right mr50" style="margin-top:12px;">
                         <%= check_box_tag 'user_ids[]', user.id, uc.is_admin?, id: "checkboxFiveInput#{uc.id}" %>
                       <label for="checkboxFiveInput<%= uc.id %>"></label>
                     </div>
@@ -131,7 +133,7 @@
   </div>
   <% if @ads.count > 1 %>
   <div class="modal-footer" >
-    <%= f.submit "Update", class: "btn btn-primary pull-right busy", id: "submit_add_mod" %>  
+    <%= f.submit "Update", class: "btn btn-success btn-custom pull-right busy", id: "submit_add_mod" %>  
   </div>
   <% end %>
 </div>
@@ -161,13 +163,13 @@
           
           <div class="tr-hover">
           	
-            <li style="width:320px;padding:3px!important;" class="tr-hover li-none select_unselect_event c-pointer">
-                        <div class="checkboxFive pull-right marginRight15">
+            <li style="padding:3px!important;" class="tr-hover li-none select_unselect_event c-pointer">
+                        <div class="checkboxFive pull-right mr50 mt10">
                           <%= check_box_tag 'invite_everyone' %>
                           <label class="" for="invite_everyone"></label>
                         </div>
                         <address style="margin-top:5px;">
-                          <span class="control-label pl15 mt15">Invite guests from all my communities</span>
+                          <span class="control-label pl15 mt15">Invite all guests from event</span>
                         </address> 
                        
                       </li> 
@@ -187,26 +189,28 @@
 	          
         	</div>
         
-          <li class="search_event_guests_li li-none">
-            <label class="control-label ml15 ">Add guests from the event</label>
+          <li class="search_event_guests_li li-none " >
+            <label class="control-label ml15 mb0">Add guests from the event</label>
             <div class="center_block clearfix marginLeft50"><br>
-            <ul class="list-unstyled">
-              <% if @urs.count > 1 %>
+            <ul class="list-unstyled autoscroll-200">
+              <% if @urs.count > 0 %>
                   <% @urs.each do |uc| %>
                   <% user = User.find(uc) %>
                   <% if user == current_user  %>
                     <% next %>
                   <% end %>
-                      <li class="tr-hover ml15">
-                        <div class="checkboxFive pull-right marginRight15" style="margin-top:5px;">
+                      <li class="tr-hover ml15 ">
+                        <div class="checkboxFive pull-right mr50" style="margin-top:5px;">
                             <%= check_box_tag 'user_ids[]', user.id, nil, id: "checkboxFiveInput#{uc}" %>
                           <label for="checkboxFiveInput<%= uc %>"></label>
                         </div>
-                        <div  class="img_zoom" style="float:left;margin-left:15px;" >
-                          <%= gravatar_for user, size: 52 %>
+                        <div  class="img_zoom" style="float:left;margin-left:15px;margin-top: 5px;" >
+                          <%= gravatar_for user, size: 30 %>
                         </div>
-                          <strong><a href="#"><%= user.name %></a></strong>
-                          <p><%= user.email %></p>
+                        <div >
+                          <p class="ml50 mb0"><a href="#"><%= user.name %></a></p>
+                          <p class="ml50"><%= user.email %></p>
+                        </div>
                       <div style="margin-right:10px;" class="pull-right">
                         <%= hidden_field_tag 'user_all_ids[]', user.id %>
                       </div>
@@ -222,7 +226,7 @@
     </div>   
   </div>
   <div class="modal-footer" >
-    <%= f.submit "Update", class: "btn btn-primary pull-right busy", id: "submit_add_mem" %>  
+    <%= f.submit "Update", class: "btn btn-success btn-custom pull-right busy", id: "submit_add_mem" %>  
   </div>
 </div>
 </div>
@@ -240,7 +244,6 @@ $("#invite_everyone").click( function() {
   }
 });
 
-$(function() {
   $("#search_event_guests").tokenInput("/events/<%= event.id %>/search_event_guests?activity_id=<%= activity.id %>", {
     crossDomain: false,
     theme: "facebook",
@@ -250,8 +253,10 @@ $(function() {
     zindex: 11001,
     hintText: "Type in a user name",
   });
+$(function() {
 });
 
+$(".token-input-list-facebook").addClass("form-control mt5 font-15 autocomplete-border");
 
 $('.remove_act').click(function(){
   $('.loading_page').show();
@@ -304,7 +309,7 @@ $('.remove_act').click(function(){
   });
 
 
-$("#moderator").on( "click", function() {
+/*$("#moderator").on( "click", function() {
  $('#modal_add_mod').modal({
       //keyboard: true,
       backdrop: "static",
@@ -315,7 +320,7 @@ $("#moderator").on( "click", function() {
 
 $("#close_add_mod").click(function(){
   $('#modal_add_mod').modal('hide');
-});
+});*/
 
 $("#submit_add_mod").click(function(){
   $(this).attr('data-loading-text', 'Updating...');
@@ -323,7 +328,7 @@ $("#submit_add_mod").click(function(){
 });
 
 
-$("#guests").on( "click", function() {
+/*$("#guests").on( "click", function() {
  $('#modal_add_mem').modal({
       //keyboard: true,
       backdrop: "static",
@@ -335,7 +340,7 @@ $("#guests").on( "click", function() {
 $("#close_add_mem").click(function(){
   $('#modal_add_mem').modal('hide');
 });
-
+*/
 $("#submit_add_mem").click(function(){
   $(this).attr('data-loading-text', 'Updating...');
   $(this).button('loading');

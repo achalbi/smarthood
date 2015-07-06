@@ -18,14 +18,10 @@
                           </div>
                       </div>
                       
-                                     <div class="panel-footer">
+                    <!--<div class="panel-footer">
                       <div class="panel-toolbar-wrapper">
                           <div class="panel-toolbar hide">
                                   <ul class="media-list media-list-contact nm">
-                                    <% unless @groups.blank? %>
-                                        <%= link_to  "Select groups","#", id: "group_post_select", class: "uibutton pull-left" %>
-                                      <% end %>
-                                     <!--<%= f.submit "Post", id: "community_post_submit", class: "btn primary pull-right" %>-->
                                      <%= hidden_field_tag :type, "community" %> 
                                      <%= hidden_field_tag :id, @community.id %> 
                                      <div id="sel_grp_label"></div>
@@ -62,7 +58,71 @@
                              <%= f.submit "Post", id: "community_post_submit", class: "btn btn-primary btn-custom disabled" %>
                           </div>
                         </div>
-                    </div>
+                    </div>-->
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+    <div class="panel-footer">
+        <div class="panel-toolbar-wrapper">
+            <div class="panel-toolbar sel_grp_head">
+                <ul class="media-list media-list-contact nm">
+                    <%= hidden_field_tag :type, "community" %> 
+                    <%= hidden_field_tag :id, @community.id %>
+                    <li class=" text-muted semibold">Post to Groups</li>
+                    <% @groups.each do |grp| %>
+                       <li id="grp_label_<%= grp.id %>"  class="group" >
+                         <div class="ml10"><strong><%= link_to grp.name, "#" %></strong></div>
+                       </li>      
+                       <div style="display:none;">
+                         <%= check_box_tag 'grp_ids[]', grp.id, nil, id:"grp_check_#{grp.id}" %>
+                       </div>
+                    <% end %>
+                </ul>
+            </div>
+        </div>
+        <div class="panel-toolbar-wrapper">
+          <div class="panel-toolbar">
+              <div class="btn-group">
+                <button type="button" class="btn btn-default" id="cam"><span class="glyphicon glyphicon-camera"></span></button>
+                <button type="button" class="btn btn-default" id="modal_sel_grp_btn"  data-toggle="modal" data-target="#modal_sel_grp"><span class="glyphicon glyphicon-home"></span></button>
+              </div>
+            </div>
+          <div class="panel-toolbar text-right">
+             <%= f.submit "Post", id: "community_post_submit", class: "btn btn-primary btn-custom disabled" %>
+          </div>
+        </div>
+    </div>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
         
               </div>
         <% end %>
@@ -157,6 +217,8 @@ $("#remove_image").click(function(){
     $("#pic1").val("");
     $("#imageCanvas1").hide();
   });
+
+   $(".group").hide();
 
   var imageLoader = document.getElementById('pic1');
   imageLoader.addEventListener('change', handleImage, false);
@@ -257,8 +319,7 @@ $("#selGroup").click(function(){
   $('#modal_sel_grp').modal('hide');
 });
 
-
-var i=0;
+var i=1;
 $(".select_unselect_group").click( function() {
   var id = $(this).find('p').html();
   if($(this).find(':checkbox').is(':checked')){
@@ -272,7 +333,7 @@ $(".select_unselect_group").click( function() {
        $("#grp_label_"+id).show();
        i++;
   }
-  if(i>0){
+  if(i>1){
     $(".sel_grp_head").show();
   }else{
     $(".sel_grp_head").hide();
@@ -281,4 +342,38 @@ $(".select_unselect_group").click( function() {
     $(".sel_grp_head").hide();
 
 });
+
+
+
+
+
+
+
+/*var j=1;
+$(".select_unselect_group").click( function() {
+  var id = $(this).find('p').html();
+  if($(this).find(':checkbox').is(':checked')){
+    $(this).find(':checkbox').prop("checked",false);
+    $("#grp_check_"+id).prop("checked",false);
+    $("#grp_check_"+id).hide();
+    j--;
+  }else{
+    $(this).find(':checkbox').prop("checked",true);
+    $("#grp_check_"+id).prop("checked",true);
+    $("#grp_check_"+id).show();
+    j++;
+  }
+  if(j>1){
+    $(".sel_grp_head").show();
+  }else{
+    $(".sel_grp_head").hide();
+  }
+});
+    $(".sel_grp_head").hide();
+*/
+
+
+
+
+
 </script>

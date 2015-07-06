@@ -49,8 +49,11 @@
                           </div>
                         <section class="panel-body pt10 pb5">
                              <% if community.is_requested?(current_user) %>
-                                <span class="badge badge-info pull-right">Request Sent</span>
-                            <% end %>
+                                <span class="badge badge-default pull-right">Join Request Sent</span>
+                            <% end %> 
+                            <% if community.is_invited?(current_user, community) && community.is_private?(current_user) %>
+                                <span class="badge badge-default pull-right">Invitation Pending</span>
+                            <% end %> 
                             <span class="semibold mt10 ellipsis"><%= link_to community.name, "/communities/#{community.id}" %></span>
                               <p class="ellipsis timestamp mb0 text-muted" ><%= privacy_str(community) %></p>
                               <p class="ellipsis mb5 ellipsis font-11 text-muted"><span class="ico-location"><%= length_trim(community.address,50) %></p>

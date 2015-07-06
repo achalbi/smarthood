@@ -1,7 +1,7 @@
 $('#group_list').html("<%= escape_javascript(render :partial => 'posts/groups_post', :locals => {:post => @post}, :groups => @groups) %>");
 $('#groups_sec').html("<%= escape_javascript(render :partial => 'groups/group_list', :locals => {:groups => @groups}) %>")
-$('#group_pic').hide('slow');
-$('#grp_stats').hide('slow');
+$('#group_pic').hide();
+$('#grp_stats').hide();
 /*
 var i=0;
 $(".bgClrChg2").click( function() {

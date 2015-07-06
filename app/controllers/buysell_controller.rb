@@ -5,7 +5,7 @@ class BuysellController < ApplicationController
   def index
   	@comm_id = current_user.usercommunities.where("is_admin=? OR invitation != ?", true, Uc_enum::JOINED ).pluck(:community_id)
     @comm_id << active_community.id
-    @joined_communities = Community.where(['id IN (?) and id NOT IN (?)', current_user.joined_uc.pluck(:community_id), @comm_id]) 
+    @joined_communities = Community.where(['id IN (?)', current_user.communities.collect(&:id)])
     @selected_comm = []
     @selected_comm << active_community
     @posts  = Post.where('postable_type = ? ', Objecttypeenum::BUYSELLITEM).order('updated_at DESC') #.paginate(:page => params[:page], :per_page => 4)
@@ -38,7 +38,7 @@ class BuysellController < ApplicationController
 
     @comm_id = current_user.usercommunities.where("is_admin=? OR invitation != ?", true, Uc_enum::JOINED ).collect(&:community_id)
     @comm_id << active_community.id
-    @joined_communities = Community.where(['id IN (?) and id NOT IN (?)', current_user.joined_uc.collect(&:community_id), @comm_id]) 
+    @joined_communities = Community.where(['id IN (?)', current_user.communities.collect(&:id)])
     @selected_comm = []
     @selected_comm << active_community
     @items = current_user.buysell_items.all
@@ -55,7 +55,7 @@ class BuysellController < ApplicationController
   	
     @comm_id = current_user.usercommunities.where("is_admin=? OR invitation != ?", true, Uc_enum::JOINED ).collect(&:community_id)
     @comm_id << active_community.id
-    @joined_communities = Community.where(['id IN (?) and id NOT IN (?)', current_user.joined_uc.collect(&:community_id), @comm_id]) 
+    @joined_communities = Community.where(['id IN (?)', current_user.communities.collect(&:id)])
     @selected_comm = []
     @selected_comm << active_community
     @items = current_user.buysell_items.all
@@ -126,7 +126,7 @@ class BuysellController < ApplicationController
       end
       unless params[:buysell_item_category][:id1].blank?
         @items = @items.where(buysell_item_category_id: params[:buysell_item_category][:id1])
-      unless params[:buysell_item_subcategory][:id].blank?
+        unless params[:buysell_item_subcategory][:id].blank?
           @items = @items.where(buysell_item_subcategory_id: params[:buysell_item_subcategory][:id])
         end
       end
@@ -145,8 +145,7 @@ class BuysellController < ApplicationController
       end
     end
     @posts = @posts.reverse
-    
-      end
+  end
 
 
   def update

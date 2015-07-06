@@ -20,32 +20,32 @@
     
 
 <%= form_for( community, remote: true, :html => {:multipart => true , id: "update_community"}) do |f| %>
-<div id="modal2" style="display:none;" >
-  <div id="modal-from-dom2" class="modal fade in" style="display: block;width:700px;top: 40%!important;">
+<div id="modal2" class="modal fade" >
+  <div class="modal-dialog">
+  <div class="modal-content">
     <div class="modal-header">
-      <a href="#" id="close2X" class="close">×</a>
-      <h3>Edit community</h3>
+      <button type="button" class="close" data-dismiss="modal">×</button>
+      <span class="font-15 semibold">Edit community</span>
     </div>
-    <div class="modal-body" style="max-height:550px;">
-      <div class="row">
-        <div class="span14 ui-front">
+    <div class="modal-body">
+      <div class="">
+        <div class="mrp9 mlp9">
 
          <%= render 'shared/error_messages', object: f.object %>
 
          <div class="center_block clearfix">
-          <%= f.label :name %>
+          <%= f.label :name, class: " " %>
           <div class="input getname">
             <%= f.text_field :name, :placeholder=>"Title", 'data-validation' => "length",
-     'data-validation-length' =>"3-25", 'data-validation-error-msg' => "The community name has to be a value between 3-25 characters", id: "comm_name" %>
+     'data-validation-length' =>"3-25", 'data-validation-error-msg' => "The community name has to be a value between 3-25 characters", id: "comm_name", class: "form-control" %>
           <p style="margin-left:10px;"></p>
           </div>
           </div>
 
           <div class="center_block clearfix">
-            <%= f.label :location %>
+            <%= f.label :location, class: " " %>
             <div class="input ">
-              <%= f.text_field :address, :placeholder => :location, :size => 43, class: 'events_with_autocomplete inherit_width', id: 'community_address2', 'data-autocompleteUrl' => search_address_communities_path, 'data-validation' => "required", 'data-validation-error-msg' => "Location can't be blank" %>&nbsp;&nbsp;&nbsp;
-
+              <%= f.text_field :address, :placeholder => :location, :size => 43, class: 'form-control events_with_autocomplete inherit_width', id: 'community_address2', 'data-autocompleteUrl' => search_address_communities_path, 'data-validation' => "required", 'data-validation-error-msg' => "Location can't be blank" %>
               <%= link_to "View map", '#', id: "view_map_link2",  class: "uibutton icon prev" %>
             </div>
             <div class="input" id="view_map2">
@@ -53,21 +53,21 @@
             </div>
           </div>
           <div class="center_block clearfix">
-            <%= f.label :description %>
+            <%= f.label :description, class: " mt10" %>
             <div class="input">
-              <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title => "Description", rows: 3, cols: 75, 'data-validation' => "length ",
+              <%= f.text_area :description, :placeholder=>"Description", class: 'form-control inherit_width', :title => "Description", rows: 3, cols: 75, 'data-validation' => "length ",
      'data-validation-length' =>"0-250", 'data-validation-error-msg' => "The community description has to be maximum 250 characters"  %> 
             </div>
           </div>
                 <div class="center_block clearfix">
-                  <%= label_tag :comm_type, "Type" %>
+                  <%= label_tag :comm_type, "Type", class: "mt10" %>
                   <div class="input">
                     <%= f.select :comm_type, options_for_select([["Residential", "residential"], ["Organisation", "organisation"]], f.object.comm_type) %>
                   </div>
                 </div>          
 
           <div class="center_block clearfix">
-            <%= label_tag :privacy %>
+            <%= label_tag :privacy, "Privacy", class: "mt10" %>
             <div class="input">
               <%= f.select :privacy, options_for_select([["Public", Privacyenum::PUBLIC], ["Private", Privacyenum::PRIVATE], ["Protected", Privacyenum::PROTECTED]], f.object.privacy) %>
             </div>
@@ -90,8 +90,9 @@
       </div>                 
     </div>
     <div class="modal-footer" >
-       <a class="btn primary pull-right busy " id="updComUnity">Update</a>
+       <a class="btn btn-success pull-right busy btn-custom " id="updComUnity">Update</a>
     </div>
+  </div>
   </div>
 </div>
 <% end %>
@@ -318,7 +319,8 @@ function handleImage(e){
         });
 
 
-
+$('#community_comm_type').addClass('form-control');
+$('#community_privacy').addClass('form-control');
 
 
 

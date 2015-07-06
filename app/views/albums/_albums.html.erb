@@ -1,10 +1,5 @@
    <div id="camera_rolls" class="col-sm-9 pl5 pt5">
 
-      <div class="row"><a href="#" class="btn btn-sm btn-info pull-right mr20 hide" id="back" data-remote="true">Back to Albums</a></div>
-      <!-- <li>
-      <span style="float:right;"><%= link_to "Create Album", '#', id: "addTo",  class: "uibutton icon add " %></span>
-      </li> -->
-
 <%= form_for(@album, remote: true, :html => {:multipart => true}) do  |f| %> 
   <div id="modal" style="display:none" >
     <div id="modal-from-dom" class="modal fade in" style="display: block;width:700px;">
@@ -116,6 +111,8 @@ $('.albumLink').click(function(){
 $('#back').click(function(){
   $('#back').addClass('show');
 });
+
+//$('#back_to_albums_all').hide();
 
 $(document).ready(function(){
 

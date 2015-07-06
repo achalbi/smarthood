@@ -2,14 +2,17 @@
               <ul class=" nav nav-pills mt5 mb10 ml5">
                 <li class="active" id="members_event_tab"><%= link_to "Members","/events/#{event.id}/event_members?activity_id=#{activity.id }" ,class: "p7", remote: true %></li>
                 <li id="post_event_tab"><%= link_to "Posts","/events/#{event.id}/event_posts?activity_id=#{activity.id }",class: "p7", remote: true %></li>
-                <li id="photos_event_tab" class="photos_tab"><%= link_to "Albums","/events/#{event.id}/event_photos?activity_id=#{activity.id }",class: "p7", remote: true %></li>
+                <li id="photos_event_tab" class="photos_tab"><%= link_to "Albums","/events/#{event.id}/event_photos?activity_id=#{activity.id }",class: "p7" ,id: 'events_album_id', remote: true %></li>
               </ul>
+              <a id="back_to_albums_event" href="<%= "/events/#{event.id}/event_photos?activity_id=#{activity.id }" %>" data-remote="true" class="btn btn-primary btn-custom pull-right mr5">Back</a>
               <script type="text/javascript">
+				 $('#back_to_albums_event').hide();
               	$('#members_event_tab').click(function(){
 				  $('#members_event_tab').addClass('active');
 				  $('#post_event_tab').removeClass('active');
 				  $('#photos_event_tab').removeClass('active');
 				  $('.loading_sub').show();
+				  $('#back_to_albums_event').hide();
 				});
 
 				$('#post_event_tab').click(function(){
@@ -18,6 +21,7 @@
 				  $('#photos_event_tab').removeClass('active');
 				  currentPage<%= @event.id.to_s %> = 1;
 				  $('.loading_sub').show();
+				  $('#back_to_albums_event').hide();
 				});
 
 				$('#photos_event_tab').click(function(){

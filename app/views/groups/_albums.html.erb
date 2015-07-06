@@ -1,13 +1,13 @@
-    <% if community.is_active?(current_user, community) %>
-      <% if @group.is_joined?(current_user, @group) %> 
-    <div class="row"> 
-      <a  id="upload_pics_grp" class="btn btn-success pull-right btn-custom mr20 btn-sm"> Create Album</a>
-      <a  id="back_to_album" href="#photos_groups" class="btn btn-info pull-right mr20 btn-sm hide">Back to Album</a>
-    </div>
-    <% end %>  
-    <% end %>  
+          <a  id="back_to_album" href="<%= request.referer %>/group_photos?grp_id=<%= @group.id %>" data-remote="true" class="btn btn-primary pull-right mr5  btn-custom">Back</a>
           <div id="group_gallery"  ></div>
           <div id="gallery"  >
+            <% if community.is_active?(current_user, community) %>
+              <% if @group.is_joined?(current_user, @group) %> 
+            <div class="row"> 
+              <a  id="upload_pics_grp" class="btn btn-success pull-right btn-custom mr20 "> Create Album</a>
+            </div>
+            <% end %>  
+            <% end %>  
             <div id="grp_album">
                     <div id="gallery1">
                        <ul id="grid" class="list-unstyled">
@@ -120,15 +120,15 @@ $('#album_privacy').addClass('form-control');
 
 $('#grid').find('li').click(function(){
   $('#upload_pics_grp').hide();
-  $('#back_to_album').removeClass('hide');
+  $('#back_to_album').show();
 });
   $('#back_to_album').click(function(){
     $('#upload_pics_grp').show();
-    $('#back_to_album').addClass('hide');
+    $('#back_to_album').hide();
     
   });
-
 $(document).ready(function(){
+$('#back_to_album').hide();
   $.validate({
     onSuccess : function() {
       $('#crtAlb_com').attr('data-loading-text', 'Creating...');

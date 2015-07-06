@@ -19,7 +19,8 @@
                     <ul class="dropdown-menu dropdown-transparent dropdown-transparent-xs" role="menu" aria-labelledby="menu1">
                       <li role="presentation"><a role="menuitem" class="presentation" tabindex="-1" href="/"><span>Home</span></a></li>
                       <li class="divider"></li>
-                      <% current_user.communities.each do |community| %>
+                      <%  @joined_communities = Community.where(['id IN (?)', current_user.joined_uc.collect(&:community_id)])  %>
+                      <% @joined_communities.each do |community| %>
                         <li role="presentation"><a role="menuitem" class="presentation" tabindex="-1" href="/communities/<%= community.id %>"><span><%= community.name %></span></a></li>
                       <% end %>
                     </ul>

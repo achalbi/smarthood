@@ -1,13 +1,10 @@
-                                                        
-
-      
 
       <div class="row">
         
         <%="".pluralize(ad_users.count) %>
              <% if event.responded?(current_user) %>
                 <% if event.is_admin?(current_user.id) %>
-                 <a id="moderator" class="btn btn-warning btn-custom pull-right mr15 mb5" data-toggle="modal" data-target="#modal_add_mod">Edit Moderators</a>
+                 <a id="moderator" class="btn btn-warning btn-custom pull-right mr15 mb5" data-toggle="modal" data-target="#modal_add_moderators">Edit Moderators</a>
                 <% end %>
               <% end %>
       </div>
@@ -47,29 +44,6 @@
                 </ul>
           
         </div> 
-      
-   
-      
-
-      <!--<table class="marginLeft15 pull-left" style="width:320px;">
-        <thead>
-          <tr class="tr-hover">
-            <th >
-              <%="Guest".pluralize(inv_users.count) %>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td style="padding:5px 0 0 0;">
-                <ul class="pills guests center_block">
-                  <li class="active" id="all_li"><a class="c-pointer" >Invited - <%= inv_users.count %></a></li>
-                  <li id="yes_li"><a class="c-pointer">Yes - <%= inv_users.where(status: "yes").count %></a></li>
-                  <li id="no_li"><a class="c-pointer">No - <%= inv_users.where(status: "no").count %></a></li>
-                  <li id="maybe_li"><a class="c-pointer">May be - <%= inv_users.where(status: "maybe").count %></a></li>
-                </ul>
-            </td>
-          </tr>-->
         
         
         
@@ -116,9 +90,8 @@
                                                 </div>
                                             </div>
                                         </li>
-                         
-            <% end %>
-                              </ul>
+                                <% end %>
+                                      </ul>
           <% else %>
           
               <address>No guests in the event</address>
@@ -133,14 +106,13 @@
       
 
 <%= form_for( event, url: add_event_moderators_event_path(event), method: :get, remote: true) do |f| %>
-<div id="modal_add_mod" class="modal fade" >
+<div id="modal_add_moderators" class="modal fade" >
   <div class="modal-dialog">
   <div class="modal-content">
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal">×</button>
       <span class="semibold font-15">Set moderators</span>
     </div>
-      <span class="semibold font-12 pull-right">(Check to set member as a Moderator)</span>
     <div class="modal-body">
       <div class="row">
         <div class="">  
@@ -157,7 +129,7 @@
                 <% next %>
               <% end %>
                   <li class="tr-hover pa10 li-none select_unselect_community c-pointer">
-                    <div class="checkboxFive pull-right marginRight15" style="margin-top:12px;">
+                    <div class="checkboxFive pull-right mr40 mt15" >
                         <%= check_box_tag 'user_ids[]', user.id, uc.is_admin?, id: "checkboxFiveInput#{uc.id}" %>
                       <label for="checkboxFiveInput<%= uc.id %>"></label>
                     </div>
@@ -181,7 +153,7 @@
     </div>   
   </div>
   <div class="modal-footer" >
-    <%= f.submit "Update", class: "btn btn-primary pull-right busy", id: "submit_add_mod" %>  
+    <%= f.submit "Update", class: "btn btn-success btn-custom pull-right" , id: "submit_add_mod" %>  
   </div>
 </div>
 </div>
@@ -228,13 +200,11 @@
 // $('body').css('position','fixed');
 });*/
 
-$("#close_add_mod").click(function(){
-  $('#modal_add_mod').modal('hide');
-});
 
 $("#submit_add_mod").click(function(){
   $(this).attr('data-loading-text', 'Updating...');
   $(this).button('loading');
+  $('.modal').modal('hide');
 });
 
 $(function(){
@@ -248,7 +218,7 @@ $(function(){
 
 });
 
-      </script>
+</script>
 
 
 

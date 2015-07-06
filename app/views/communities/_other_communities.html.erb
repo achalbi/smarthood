@@ -29,11 +29,10 @@
          <div class="center_block clearfix">
           <%= f.label :name, class: "control-label mt15 pl15" %>
           <div>
-              
-                      <div class="col-sm-9 getname">
-                        <%= f.text_field :name, :placeholder=>"Title", 'data-validation' => "length",
-                       'data-validation-length' =>"3-25", 'data-validation-error-msg' => "The community name has to be a value between 3-25 characters", id: "comm_name", class: "form-control" %>
-                      </div>
+              <div class="col-sm-9 getname">
+                <%= f.text_field :name, :placeholder=>"Title", 'data-validation' => "length",
+               'data-validation-length' =>"3-25", 'data-validation-error-msg' => "The community name has to be a value between 3-25 characters", id: "comm_name", class: "form-control" %>
+              </div>
           </div>
          </div>
 
@@ -110,7 +109,7 @@
 <script>
 $('#hide_map_link_crt').hide();
 $('#view_map_link_crt').hide();
-  $(".cu_with_autocomplete").tokenInput($('.cu_with_autocomplete').data('autocompleteurl'), {
+ /* $(".cu_with_autocomplete").tokenInput($('.cu_with_autocomplete').data('autocompleteurl'), {
     crossDomain: false,
     theme: "facebook",
     resultsFormatter: function(item){ return "<li>" + "<img src='" + item.profile_pic + "' title='" + item.name + "' height='30px' width='30px' />" + "<div style='display: inline-block; padding-left: 10px;'><div class='full_name'>" + item.name + " " + ""+ "</div><div class='full_name'>" + item.email + " " + ""+ "</div></div></li>" },
@@ -121,7 +120,7 @@ $('#view_map_link_crt').hide();
     minChars: 2,
     tokenLimit: 1,
     hintText: "Type in a user name",
-  });
+  });*/
 
   $('.token-input-list-facebook').addClass('form-control wdp-100 font-17 autocomplete-border');
   
@@ -176,6 +175,7 @@ $('#view_map_link_crt').hide();
   });
 
 $(document).ready(function(){
+});
   $.validate({
     form : "#create_community",
     onSuccess : function() {
@@ -184,7 +184,6 @@ $(document).ready(function(){
      // return false; // Will stop the submission of the form
     },
   });
-});
 
 
 $(document).ready(function(){ 

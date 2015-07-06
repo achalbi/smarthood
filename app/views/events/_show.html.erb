@@ -244,9 +244,7 @@ $('#photos_events_li').click(function(){
   /*$('#end_date_act').hide();
   $('#view_map_link_act').hide();*/
 
-  $('#modal_create_event').hide();
-  $(".modal-backdrop").remove();
-  
+ 
   
   
  
@@ -264,7 +262,7 @@ $('#photos_events_li').click(function(){
               });
 
 
-                  $("#create_activity").click(function(){
+                  /*$("#create_activity").click(function(){
                     $('#modal_create_activity').modal({
                       //keyboard: true,
                       backdrop: "static",
@@ -273,7 +271,7 @@ $('#photos_events_li').click(function(){
                   $("#closeX_create_activity").click(function(){
                         $('#modal_create_activity').modal('hide');
                       });
-
+*/
                  
                   
 
@@ -623,8 +621,8 @@ $(document).ready(function() {
 
 $(document).ready(function(){
 });
-  $('#modal_create_activity').modal('hide');
-   $('.modal-backdrop').remove();
+  /*$('#modal_create_activity').modal('hide');
+   $('.modal-backdrop').remove();*/
   $.validate({
     form : "#update_event_form",
     onSuccess : function() {
@@ -654,10 +652,9 @@ $("#edit_event").click(function(){
       /*$('#modal_edit_event').modal({
         backdrop: "static"*/
       });
-    });
-    $("#closeX_edit_event").click(function(){
+   /* $("#closeX_edit_event").click(function(){
           $('#modal_edit_event').modal('hide');
-        });
+        });*/
 
     $("#update_event").click(function(){
       $('.loading_page').show();

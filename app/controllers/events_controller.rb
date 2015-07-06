@@ -591,14 +591,15 @@ class EventsController < ApplicationController
     @event = Event.find(params[:id])
     @ed_user = @event.eventdetails.pluck(:user_id).uniq
     @ad_user = @activity.activitydetails.pluck(:user_id).uniq
+    unless params[:user_ids].nil?
      @users_ids = params[:user_ids]
         @users_ids.each do |usr_id|
             @ad = Activitydetail.new
             @ad.is_admin = false
             @ad.user_id = usr_id
             @activity.activitydetails << @ad
-            
           end
+    end
     unless params[:invite_everyone].nil?
         @ed_user = @ed_user - @ad_user
           @ed_user.each do |user_id|
@@ -806,9 +807,9 @@ class EventsController < ApplicationController
       end
     end
   end
-
-
-
+  
+  
+  
   private
   def sort_column(sort)
 	Group.column_names.include?(sort) ? sort : "name"

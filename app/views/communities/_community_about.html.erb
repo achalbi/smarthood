@@ -1,12 +1,4 @@
-<% provide(:title, @selected_community.name) %>
-<% provide(:page_image, @selected_community.photo.pic_url) %>
- 
-<div class="row">
-    <div class="col-md-9 pl20 pt5"  id="community_tabs">
-        
-    
-    <div class="panel overflow-hidden mb5" id="community_about">
-            <header class="thumbnail">
+        <header class="thumbnail">
             <div class="media wallpaper-container">
             <div class="image_overlay wallpaper">
             <div class="huge-title">
@@ -53,28 +45,3 @@
                 </aside>
                 </aside>
           </section>
-        </div>
-    
-    
-    
-    
-    
-    
-    
-    <div id="community_list" >
-    <div>  
-      <%= render partial: 'communities/community_post', locals: {posts: @posts, community: @selected_community} %>
-   </div>
-     </div>
-    </div>  
-</div>
-                        <!--/ Blog post #2 --> 
-
-
-<script type="text/javascript">
-
-  
-  $('.show_loading').click(function(){
-    $('.loading_page').show();    
-  });
-</script>

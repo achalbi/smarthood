@@ -52,15 +52,32 @@
 <br>
 <% unless requested_users.nil?  %>
 <% if requested_users.count > 0 %>
-<div class="well" style="mragin:10px;padding:10px;" >
+<div class="" >
   <h6>Join requests</h6>
-  <ul class="users">
+  <ul class="list-unstyled mb0">
     <% requested_users.each do |req_user| %>
     <li>
-      <%= gravatar_for req_user, size: 50 %> <h5><%= req_user.name %></h5>
-      <br><br>
-      <a href="<%= declinerequest_community_path(community) << '?user_id='%><%= req_user.id %>"class="uibutton pull-right" data-remote="true" id="decline"> Decline <i class="icon-remove"></i></a><%= link_to "Accept", acceptrequest_community_path(community) << "?user_id=#{req_user.id}", id: "accept",  class: "uibutton icon add pull-right", remote: true %>
-    </li>
+         <div class="col-sm-6 pl0 pr5 mb5">
+                  <div class="panel widget nm">
+                      <div class="table-layout nm">
+                        <img src="<%= gravatar_for_url req_user, size: 82 %>" class="pull-left gravatar" ></img>
+                          <span class="badge badge-default pull-right mr10 mt5">Request Pending</span>
+                          <div class=" valign-middle">
+                              <div class="panel-body pl95 pb0 pr0">
+                                  <p class="semibold ellipsis mt0 mb0"><%= link_to req_user.name, req_user ,remote: true %></p>
+                                  <p class=" ellipsis mb0"><a class="ellipsis text-muted" mailto="<%= req_user.email %>"><%= req_user.email %></a></p>
+                                  <p>
+                                     <% if current_user.is_cu_admin?(community) %>
+                                        <a href="<%= declinerequest_community_path(community) << '?user_id='%><%= req_user.id %>"class="uibutton pull-right button-toggle decline_user" data-remote="true" id="decline" style="margin-right:5px;"> Decline </a>
+                                        <a href="<%= acceptrequest_community_path(community) << '?user_id='%><%= req_user.id %>"class="uibutton pull-right button-toggle decline_user" data-remote="true" id="accept" style="margin-right:5px;"> Accept <i class="icon-remove"></i></a>
+                                    <% end %>
+                                  </p>    
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+        </li>
     <% end %>
   </ul>
 </div>

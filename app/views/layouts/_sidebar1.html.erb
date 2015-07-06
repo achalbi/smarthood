@@ -191,8 +191,8 @@
                                  <li id="members_community_li">
                                   <% if current_user.is_cu_admin?(@community)  %>
                                     <% unless (@community.req_pending_cnt.nil? || @community.req_pending_cnt == 0)%>
-                                        <span class="pull-right label important" style="margin:5px;margin-right:10px;position:absolute;right:0;"><%= if @community.req_pending_cnt > 0 then @community.req_pending_cnt end %></span>
-                                        &nbsp;<% end %>
+                                        <span class="pull-right sidebar-info badge badge-primary text"><%= if @community.req_pending_cnt > 0 then @community.req_pending_cnt end %></span>
+                                        <% end %>
                                         <% end %>
                                     <a href='<%=members_com_community_path(@community) %>' id='members_community' class="color-white" data-remote="true">
                                     <span class="figure"><i class="ico-users3"></i></span>
@@ -236,7 +236,10 @@
           $(this).addClass("active");
           $(".topmenu > li.active > a > span.text").addClass('color-white');
           $(".topmenu > li.active > a > span.loading_menu").removeClass('hide');
+          $(".topmenu > li > span.badge-default").removeClass('badge-default').addClass('badge-primary');
+          $(this).find('.badge-primary').removeClass('badge-primary').addClass('badge-default');
          });
+         
          
            
          

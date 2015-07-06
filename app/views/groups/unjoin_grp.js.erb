@@ -1,1 +1,1 @@
-$('#groups_community_li').click();
+$('#about_groups').html("<%= j render partial: 'groups/about', locals: {ad_users: @ad_users, inv_users: @inv_users, group: @group} %>");

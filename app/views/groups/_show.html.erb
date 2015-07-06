@@ -104,7 +104,7 @@
 
 
  
- $('.home_link').addClass('hide');
+/* $('.home_link').addClass('hide');
  
  $('.home_link').click(function(){
      $('.home_link').addClass('hide');
@@ -112,7 +112,7 @@
 
    $('.toolbar a').click(function(){
         $('.home_link').removeClass('hide');
-    });
+    });*/
     
 
 $('#posts_groups_li').click(function(){
@@ -122,7 +122,7 @@ $('#posts_groups_li').click(function(){
   $('#posts_groups').show();
   $('#about_groups').hide();
   $('#photos_groups').hide();*/
-  $('#group_pic').show('slow');
+  $('#group_pic').show();
 });
 $('#about_groups_li').click(function(){
   /*$('#posts_groups_li').removeClass('active');
@@ -131,7 +131,7 @@ $('#about_groups_li').click(function(){
   $('#posts_groups').hide();
   $('#about_groups').show();
   $('#photos_groups').hide();*/
-  $('#group_pic').hide('slow');
+  $('#group_pic').hide();
 });
 $('#photos_groups_li, #back_to_album').click(function(){
 /*  $('#posts_groups_li').removeClass('active');
@@ -141,13 +141,12 @@ $('#photos_groups_li, #back_to_album').click(function(){
   $('#about_groups').hide();
   $('#photos_groups').show();*/
   $('#group_gallery').hide();
-  $('#group_pic').hide('slow');
+  $('#group_pic').hide();
   $('#gallery').show();
   $('#upload_pics_grp').show();
   
 });
 $('#photos_groups_li').click(function(){
-$('#back_to_album').addClass('hide');
   $('#upload_pics_grp').removeClass('hide');
 });
 

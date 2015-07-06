@@ -143,6 +143,7 @@ end
 def update
   @community = Community.find(params[:id])
   @com_photo = @community.photo
+  @user = current_user
   @community.update_attributes(params[:community])
   unless params[:community][:photo_attributes].nil?
     @com_photo.remove_pic!
@@ -175,7 +176,10 @@ def update
         @post_ids << @community.posts.collect(&:id)
         @posts = Post.where(id: @post_ids.uniq).paginate(page: params[:page], :per_page => 4)
  # getNotifiableUsers(Objecttypeenum::COMUNITY, @community, nil, nil, Uc_enum::UPDATED)
-
+    respond_to do |format|
+    # format.html { redirect_to  @community  }
+      format.all { }
+    end
 end
 
 def setactive
@@ -262,12 +266,17 @@ def acceptrequest
     if @notifications_settings.blank?
       createNotificationSettings(params[:id], params[:user_id])
     end
+    if current_user.id == params[:user_id].to_i
+       render js: %(window.location.href='#{request.referer}')
+    else
+      redirect_to  :action => 'members_com', :id => params[:id]
+  end
 #  getNotifiableUsers(Objecttypeenum::COMUNITY, @community, Objecttypeenum::USER, @usr, Uc_enum::ACCEPTED)  
 end
 
 def declinerequest
  @usercommunity = Usercommunity.where(['community_id=? and user_id=?',params[:id],params[:user_id]])[0]
- if current_user.id == params[:user_id]
+ if current_user.id == params[:user_id].to_i
    @usercommunity.invitation = Uc_enum::USER_DECLINED
  else
    @usercommunity.invitation = Uc_enum::MODERATOR_DECLINED
@@ -299,6 +308,11 @@ def declinerequest
   if @ucs.count > 0
     @requested_users = User.where(['id IN (?)' , @community.requested_uc.collect(&:user_id)])
   end   
+  if current_user.id == params[:user_id].to_i
+     render js: %(window.location.href='#{root_path}')
+  else
+    redirect_to  :action => 'members_com', :id => params[:id]
+  end
 end
 
 def join_cu
@@ -335,8 +349,9 @@ def join_cu
   end
   @uc_count = current_user.usercommunities.where('status=?','active').count
   if @uc_count < 1
-    render js: %(window.location.href='#{root_path}')
   end
+    render js: %(window.location.href='#{request.referer}')
+  
 end
 
 def unjoin_cu
@@ -355,13 +370,14 @@ def unjoin_cu
  @usercommunity.status=""
  @usercommunity.save
  @community = Community.find(params[:id])
- deleteNotificationSettings(params[:id], @user.id)
+ #deleteNotificationSettings(params[:id], @user.id)
  flash[:success] = "Unjoined community: " + @community.name
   unless params[:user_id].nil?
    respond_to do |format|
-      format.all { render :nothing => true, :status => 200 }
+    #  format.all { render :nothing => true, :status => 200 }
    end
   end
+     render js: %(window.location.href='#{root_path}')
 end
 
 
@@ -641,6 +657,7 @@ def search_app_user
          end
 
        end
+       redirect_to  :action => 'members_com', :id => params[:id]
       end 
   end
 
@@ -792,6 +809,7 @@ def search_app_user
     end
     @inv_pending_users = User.where(['id IN (?)' , @community.invited_uc.pluck(:user_id)])
     @ucs = @community.usercommunities.where('invitation = ?',Uc_enum::JOINED)
+    @user = current_user
  end
 
  def groups_com
@@ -1132,6 +1150,7 @@ def search_app_user
     @event = Event.find(params[:event_id])
     @ed_user = @event.eventdetails.pluck(:user_id)
     @ad_user = @activity.activitydetails.pluck(:user_id)
+    unless params[:user_ids].nil?
         @users_ids = params[:user_ids]
         @users_ids.each do |usr_id|
             @ad = Activitydetail.new
@@ -1140,6 +1159,7 @@ def search_app_user
             @activity.activitydetails << @ad
             
           end
+    end
     unless params[:invite_everyone].nil?
         @ed_user = @ed_user - @ad_user
           @ed_user.each do |user_id|

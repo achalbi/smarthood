@@ -139,7 +139,10 @@ def invite_app_user
      end
     # getNotifiableUsers(Objecttypeenum::GROUP, @group, Objecttypeenum::USER, @user_ids, Uc_enum::JOINED)
      @usergroup.save
-
+     @inv_users = User.where(['id IN (?)', @group.user_groups.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED,false).collect(&:user_id)])
+     @ad_users = User.where(['id IN (?)', @group.user_groups.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED,true).collect(&:user_id)])
+     @is_admin = @ad_users.include? current_user
+     @ucs = @group.user_groups.where("user_id = ?  AND is_admin=?",current_user.id, true )
    end
  end 
  unless params[:comm_id].nil?
@@ -259,19 +262,20 @@ end
 
 def unjoin_grp
   @usergroup
+   @group = Group.find(params[:id])
   if params[:user_id].nil?
-    @usergroup = current_user.user_groups.find_by_group_id(params[:id])
-    @usergroup.invitation = Uc_enum::UNJOINED
-    @usergroup.save
+    @user =  current_user
   else
     @user = User.find(params[:user_id])
+  end
     @usergroup = @user.user_groups.find_by_group_id(params[:id])
     @usergroup.invitation = Uc_enum::UNJOINED
     @usergroup.save
+     @inv_users = User.where(['id IN (?)', @group.user_groups.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED,false).collect(&:user_id)])
+     @ad_users = User.where(['id IN (?)', @group.user_groups.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED,true).collect(&:user_id)])
+     @is_admin = @ad_users.include? current_user
+     @ucs = @group.user_groups.where("user_id = ?  AND is_admin=?",current_user.id, true )
   #  redirect_to :controller => 'communities', :action => 'show_group', :grp_id => params[:id], id: params[:comm_id]
-    redirect_to @group
-
-  end
 end
 
 def join_grp

@@ -4,8 +4,9 @@ $("#posts").html("<%= escape_javascript(render( :partial => 'posts/activity_post
 <% end %>
 
 <% if @post_type == 'group' %>
-$('.loading_page').hide();
-$("#posts").html("<%= escape_javascript(render( :partial => 'posts/group_post', :locals => {:post => @post}, :group => @group )) %><div id='div_post_<%= @group.id.to_s %>' class='resources'><%= escape_javascript(render( partial: 'posts/post', locals: {posts: @posts, group: @group} )) %></div><p id='group_id' class='hide'><%= @group.id %></p>");
+<!--$('.loading_page').hide();-->
+$('#group_post_form')[0].reset();
+$(".posts_one_div").prepend("<%= j render :partial => "posts/post_one", :locals => { :post => @new_post}  %>")
 <% end %>
 
 <% if @post_type == 'groups' %>
@@ -47,3 +48,4 @@ $('#cu_post').html("<%= escape_javascript(render :partial => 'posts/communities_
 <% if @post_type == 'community' %>
 $('#community_tabs').html("<%= escape_javascript(render :partial => 'communities/community_post', locals: {posts: @posts, community: @community}) %>");
 <% end %>
+

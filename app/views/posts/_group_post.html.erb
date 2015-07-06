@@ -1,5 +1,5 @@
 <div id="image">
-  <%= form_for(@post, remote: true,  :html => {:multipart => true, id: "group_post", class: "panel mb5"}) do |f| %>
+  <%= form_for(@post, remote: true,  :html => {:multipart => true, id: "group_post_form", class: "panel mb5"}) do |f| %>
       <div id="textarea_div">
       <%= render 'shared/error_messages', object: f.object %>
                   <%= fields_for :photo, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>

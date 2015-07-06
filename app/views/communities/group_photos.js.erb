@@ -1,2 +1,3 @@
 $('.loading_page').hide();
-$("#show_group_div").html("<%= escape_javascript(render partial: 'groups/albums', locals: {group: @group, albums: @group.albums, album: @album, community: @community} ) %>");
+$("#photos_groups").html("<%= escape_javascript(render partial: 'groups/albums', locals: {group: @group, albums: @group.albums, album: @album, community: @community} ) %>");
+$('#back_to_album').hide();

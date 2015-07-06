@@ -11,6 +11,7 @@
     
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.1.47/jquery.form-validator.min.js"></script>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?sensor=true&libraries=places" type="text/javascript"></script>
     <%= stylesheet_link_tag "token-input-facebook" %>
     <%= javascript_include_tag "jquery.tokeninput" %>
     <%= csrf_meta_tags %>
@@ -82,7 +83,7 @@
           <% end %>
           <% if signed_in? %>
                 <div class="row mt50">
-                    <div class="col-md-3 col-sm-1 np">
+                    <div class="col-md-3 col-sm-1 np" id="app_sidebar">
                       <%= render 'layouts/sidebar1' %>
                     </div>
                     <div class="col-md-9 col-sm-11 plr2-xs pl0">
@@ -111,7 +112,6 @@
   </body>
   <div id="spinner">
   </div>
-
   <script type="text/javascript">
     var spinnerVisible = false;
     function showProgress() {

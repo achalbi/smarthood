@@ -40,9 +40,7 @@
                <% end %>  
                      
           </div>
-      <ul class="users" id="photos_events_ul" >
-      </ul>
-
+      
 
 <%= form_for(Album.new, url: create_event_album_event_path(event), remote: true, :html => {:multipart => true}) do  |f| %> 
 <div id="upload_pics_event_<%= activity.id.to_s %>" class="modal fade" >
@@ -106,12 +104,12 @@
      </div>
    </div>
  </div>
- <div class="modal-footer" >
-  <%= f.submit "Create Album", class: "btn btn-primary pull-right ", id: "crtAlb_com_#{activity.id.to_s }" %> 
-  <%= f.submit "", :class => 'hide reset_form', :type => 'reset' %> 
-</div>
-</div>
-</div>
+   <div class="modal-footer" >
+      <%= f.submit "Create Album", class: "btn btn-success btn-custom pull-right ", id: "crtAlb_com_#{activity.id.to_s }" %> 
+      <%= f.submit "", :class => 'hide reset_form', :type => 'reset' %> 
+    </div>
+  </div>  
+ </div>
 </div>
 <% end %>
 
@@ -120,114 +118,84 @@
 
 
 <script type="text/javascript">
-/*$("#upload_pics_event_<%= activity.id.to_s %>").click(function(){
-    $('#modal_com_<%= activity.id.to_s %>').modal({
-      keyboard: true,
-      backdrop: "static",
-    });
-  $('#modal_com').modal('show');
-});*/
 
-/*$("#closeX_com_<%= activity.id.to_s %>").click(function(){
-  $('#modal_com_<%= activity.id.to_s %>').modal('hide');
-  $('.reset_form').click();*/
+ 
 
+  $('#album_privacy').addClass('form-control');
+  $('#downloadable').addClass('form-control mt8');
 
-  $('#pic_com_<%= activity.id.to_s %>').val('');
-  var canvas = document.getElementById('imageCanvas_com_<%= activity.id.to_s %>');
-  var ctx = canvas.getContext('2d');
-  canvas.width = 300;
-  canvas.height = 155;
-      ctx.setTransform(1, 0, 0, 1, 0, 0);
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.font="15px Arial";
-      ctx.fillText("Click here to add photos (Max: 50 files)",25,75);
-
-});
-
-
-$('#album_privacy').addClass('form-control');
-$('#downloadable').addClass('form-control <mt8></mt8>');
-
-$(document).ready(function(){
-  $.validate({
-    onSuccess : function() {
-      $('#crtAlb_com_<%= activity.id.to_s %>').attr('data-loading-text', 'Creating...');
-      $('#crtAlb_com_<%= activity.id.to_s %>').button('loading');
-     // return false; // Will stop the submission of the form
-    },
+  var imageLoader = document.getElementById('pic_com_<%= activity.id.to_s %>');
+  imageLoader.addEventListener('change', handleImage, false);
+  $("#imageCanvas_com_<%= activity.id %>").click(function(){
+    $("#pic_com_<%= activity.id.to_s %>").click();
   });
-});
-
-
-var imageLoader = document.getElementById('pic_com_<%= activity.id.to_s %>');
-imageLoader.addEventListener('change', handleImage, false);
-$("#imageCanvas_com_<%= activity.id.to_s %>").click(function(){
-  $("#pic_com_<%= activity.id.to_s %>").click();
-});
-
-var canvas = document.getElementById('imageCanvas_com_<%= activity.id.to_s %>');
-var ctx = canvas.getContext('2d');
-  ctx.font="15px Arial";
-  ctx.fillText("Click here to add photos (Max: 50 files)",25,75);
-
-function handleImage(e){
-  var canvas = document.getElementById('imageCanvas_com_<%= activity.id.to_s %>');
+  
+  var canvas = document.getElementById('imageCanvas_com_<%= activity.id %>');
   var ctx = canvas.getContext('2d');
-  var iCnt=0;
-  var files = e.target.files;
-   if(files.length>50){
-      alert("Maximum of 50 files can be selected");
-      $('#pic_com_<%= activity.id.to_s %>').val('');
-      ctx.setTransform(1, 0, 0, 1, 0, 0);
-      canvas.width = 300;
-      canvas.height = 155;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.font="15px Arial";
-      ctx.fillText("Click here to add photos (Max: 50 files)",25,75);
-      return;
-    }
-   if(files.length<1){
-    $('#pic_com_<%= activity.id.to_s %>').val('');
-      ctx.setTransform(1, 0, 0, 1, 0, 0);
-      canvas.width = 300;
-      canvas.height = 155;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.font="15px Arial";
-      ctx.fillText("Click here to add photos (Max: 50 files)",25,75);
-      return;
-    }
-  canvas.width = 453;
-  canvas.height = 155*(Math.ceil(files.length/3));
-  for( var i = 0, len = files.length; i < len; i++) 
-  {
-    if(files[i])
+    ctx.font="15px Arial";
+    ctx.fillText("Click here to add photos (Max: 50 files)",25,75);
+  
+  function handleImage(e){
+    var canvas = document.getElementById('imageCanvas_com_<%= activity.id %>');
+    var ctx = canvas.getContext('2d');
+    var iCnt=0;
+    var files = e.target.files;
+      if(files.length>50){
+        alert("Maximum of 50 files can be selected");
+        $('#pic_com_<%= activity.id.to_s %>').val('');
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.font="20px Arial";
+        ctx.fillText("Click here to add photos",10,50);
+        return;
+      }
+     if(files.length<1){
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.font="20px Arial";
+        ctx.fillText("Click here to add photos",10,50);
+        return;
+      }
+    canvas.width = 600;
+    canvas.height = 155*(Math.ceil(files.length/4));
+    for( var i = 0, len = files.length; i < len; i++) 
     {
-      var reader = new FileReader();
-      reader.onload = function(event){
-        var img = new Image();
-
-        img.onload = function(){
-          var ratioPx = 150;
-          var sWidth =ratioPx;
-          var ratio = img.width/sWidth;
-          var sHeight = img.height/ratio;   
-          if(sHeight>ratioPx){
-           sHeight =ratioPx;
-           ratio = img.height/sHeight;
-           sWidth = img.width/ratio;  
-         }
-         ctx.drawImage(img, 155*(iCnt%3),155*(Math.floor(iCnt/3)),sWidth,sHeight);
-                          //ctx.drawImage(img,0,0,sWidth,sHeight);
-                          iCnt++;
-                        }
-                        img.src = event.target.result;
-                      }
-                      reader.readAsDataURL(e.target.files[i]);     
-                    }
+      if(files[i])
+      {
+        var reader = new FileReader();
+        reader.onload = function(event){
+          var img = new Image();
+  
+          img.onload = function(){
+            var ratioPx = 150;
+            var sWidth =ratioPx;
+            var ratio = img.width/sWidth;
+            var sHeight = img.height/ratio;   
+            if(sHeight>ratioPx){
+             sHeight =ratioPx;
+             ratio = img.height/sHeight;
+             sWidth = img.width/ratio;  
+           }
+           ctx.drawImage(img, 155*(iCnt%4),155*(Math.floor(iCnt/4)),sWidth,sHeight);
+                    //ctx.drawImage(img,0,0,sWidth,sHeight);
+                    iCnt++;
                   }
+                  img.src = event.target.result;
                 }
+                reader.readAsDataURL(e.target.files[i]);     
+              }
+          }
+        }
 
-
-        </script>
-</div>  
+  
+  $(document).ready(function(){
+    $.validate({
+      onSuccess : function() {
+        $('#crtAlb_com_<%= activity.id.to_s %>').attr('data-loading-text', 'Creating...');
+        $('#crtAlb_com_<%= activity.id.to_s %>').button('loading');
+       // return false; // Will stop the submission of the form
+      },
+    });
+  });
+</script>
+ 

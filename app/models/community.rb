@@ -59,6 +59,18 @@ def is_joined?(user, community)
     return false
 end  
 
+def is_invited?(user, community)
+    unless community.usercommunities.nil?
+     @usercommunity = community.usercommunities.where("user_id = ?  AND invitation = ?",user, Uc_enum::INVITED )
+        if @usercommunity.size > 0
+         return true
+        else
+          return false
+        end
+    end
+    return false
+end  
+
 def is_public?(current_user)
   @public_communities = nil
   if current_user.joined_uc.collect(&:community_id).count > 0 

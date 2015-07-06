@@ -1,5 +1,5 @@
 <div class="comments img_zoom panel-body slimscroll np">
-  <ul class="media-list mb0" id="comment_form_<%= post.id %>">
+  <ul class="media-list mb0 comment_form_<%= post.id %>" id="comment_form_<%= post.id %>" >
   <li class="media no-border p0">
     <%= form_for [post.comments.build], remote: true, html: {id: "comment_#{post.id}"}  do |f| %>
     <%= button_tag(type: 'submit', class: "btn btn-default pull-right mt7 pl6 pr6 pt6 pb6 mr5", style: "border-radius: 999px") do %>
@@ -15,7 +15,6 @@
     </span>
   <% end %>
   </li> 
-  <hr class="nm">
 </ul>
 
 <% post.comments.each do |comment| %>
@@ -62,21 +61,23 @@ $("#comments_del_<%= comment.id %>").click(function(){
 <script type="text/javascript">
 $(document).ready(function(){
 //  $('.gravatar').addClass('thumbnail');
+});
   $("#comment_<%= post.id %>").submit(function(){
     $(".loading_page_<%= post.id %>").show();
   });
-});
 $(".comments_ol_<%= post.id %>").hide();
 $(".comments_ol_<%= post.id %>:lt(3)").show();
+
 $("#cmnts_<%= post.id %>").click(function(){
   $(".comments_ol_<%= post.id %>").toggle();
   $(".comments_ol_<%= post.id %>:lt(3)").toggle();
 //  $(".comments_ol_<%= post.id %>").toggle();
 //  $(".comments_ol_<%= post.id %>").toggle('slow');
   $("#cmnts_<%= post.id %> > span").toggle();
-  $("#comment_form_<%= post.id %>").toggle();
+  $(".comment_form_<%= post.id %>").toggle();
 });
-  $("#comment_form_<%= post.id %>").toggle();
+
+  $(".comment_form_<%= post.id %>").hide();
 
      $(document).ready(function(){
         $.validate({

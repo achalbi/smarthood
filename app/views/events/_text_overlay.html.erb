@@ -18,7 +18,7 @@
                            <a href="#" class=" pull-right btn btn-custom btn-warning" id="edit_event" data-toggle="modal" data-target="#modal_edit_event">Edit</a>
                        <% end %>
                    <% if @event.is_admin?(current_user) %>
-                      <%= link_to "Delete",  @event, method: :delete, remote: true,
+                      <%= link_to "delete",  "/communities/#{active_community.id}/delete_event?event_id=#{@event.id}", method: :get, remote: true,
                                                data: { confirm: "You sure?" },
                                                class: "pull-right btn btn-danger btn-custom mr10",
                                                title: "Delete this event" %>

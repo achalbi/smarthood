@@ -90,7 +90,7 @@ function checkScroll_comm_post() {
   if (nearBottomOfPage() && insideLoop!="true" ) {
     insideLoop ="true";
     currentPage<%= @selected_community.id.to_s %>++;
-  $('.loading_page').show();
+  $('.loading_page_post').show();
       if($('#div_post_<%= @selected_community.id.to_s %>').length == 0){
       $('.loading_page').hide();
       clearInterval(intervalID);
@@ -102,7 +102,7 @@ function checkScroll_comm_post() {
     }
     jQuery.ajax('/communities/community_post_paginate?page=' + currentPage<%= @selected_community.id.to_s %> + '&id=' + '<%= @selected_community.id.to_s %>' , {asynchronous:true, evalScripts:true, method:'get', success: function(data, textStatus, jqXHR) {
     $('#div_post_<%= @selected_community.id.to_s %>').append($(data));
-    $('.loading_page').hide();
+    $('.loading_page_post').hide();
     if(typeof jQuery(data) == 'undefined' ||jQuery(data).html() == null || $(data).find('.paginate_do').html()==null){
       clearInterval(intervalID);
       for (var i = 1; i < 99999; i++){

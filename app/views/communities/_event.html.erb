@@ -14,6 +14,9 @@
             <% end %>
       </div>
     <section class="panel-body pt10 pb5">
+      <% if event.invited?(current_user) %>
+        <span class="badge badge-default pull-right">Invitation pending</span>
+      <% end %>  
         <span class="semibold mt10 ellipsis"><%= link_to event.title, event, class:"albumLink font-15", remote: true, title: "#{event.title}" %></span>
           <p class="timestamp mb0 text-muted" ><span class="ico-time"></span><%= event.starts_at.strftime("%A, %B %d, %Y") %></p>
           <p class="mb5 ellipsis font-11 text-muted"><span class="ico-location"></span><%= event.address %></p>

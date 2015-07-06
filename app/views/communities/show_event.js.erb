@@ -1,6 +1,4 @@
-$(".busy").button('reset');
-$('#modal_create_event').modal('hide');
-<!--$('.loading_page').hide();-->
-$("#community_tabs").html("<%= escape_javascript(render partial: 'events/show', locals: { event: @event, inv_users: @inv_users, ad_users: @ad_users, community: @community, activity: @activity} ) %>");
+$(".modal").modal("hide");
 $(".topmenu > li.active > a > span.loading_menu").addClass('hide');
 $(document).click();
+$("#community_tabs").html("<%= escape_javascript(render partial: 'events/show', locals: { event: @event, inv_users: @inv_users, ad_users: @ad_users, community: @community, activity: @activity} ) %>");

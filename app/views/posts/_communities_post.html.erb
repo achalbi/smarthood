@@ -1,68 +1,54 @@
 <div class="center loading_page hide" ><img src="/assets/loading.gif"></div>
-<div id="image" class="">
+<div id="image">
   <%= form_for(@post, remote: true,  :html => {:multipart => true, id: "communities_post", class: "panel mb10"}) do |f| %>
   <div id="textarea_div">
     <%= render 'shared/error_messages', object: f.object %>
     <%= fields_for :photo, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
-
         <%= photo_form.file_field :pic, id: "pic1",style: "width:1px; height:1px; padding:0px;  left:0px;display:none;" %>  
-
     <% end %>
-    <div class="">
-      <%= f.text_area :content, placeholder: "Compose new post...", 'data-validation' => "required", 'data-validation-error-msg' => "Post can't be blank", 'rows' => "2", class: "form-control form-control-minimal" %>
+    <div>
+      <%= f.text_area :content, placeholder: "Compose new post...", 'data-validation' => "required", 'data-validation-error-msg' => "Post can't be blank", 'rows' => "2", class: "form-control form-control-minimal", :id => 'feeds' %>
     </div> 
-                  <div class="thumbnail thumbnail-album">
-                        <!-- media -->
-                      <div class="media">
-                          <canvas id="imageCanvas1" width="100%" class="pull-left ml2 mb3 mr0" >Add pictures</canvas>
-                          <a href="#" id="img_close" class="close pull-left">×</a>
-                      </div>
-                                      <!--/ media -->
-                  </div>
-                  <div class="panel-footer">
-                      <div class="panel-toolbar-wrapper">
-                          <div class="panel-toolbar sel_com_head">
-                                  <ul class="media-list media-list-contact nm">
-                                      <li class=" text-muted semibold">Post to community</li>
-                                <% @communities.each do |cu| %>
-                                    <!--     <div id="cu_label_<%= cu.id %>" style="display:none;margin:5px;" class="pull-left"><%=link_to cu.name, cu, remote: true %> </div> -->
-                                     <li id="cu_label_<%= cu.id %>"  class="community" >
-                                      <!--<%= link_to cl_image_tag(cu.photo.pic_url(:smallest), class:"image_al_c1 thumbnail pull-left ", id:"#{cu.photo.id}"), "#" %>
-                                      <div >
-                                         <address>-->
-                                           <div class="ml10"><strong><%= link_to cu.name, "#",class: "" %></strong></div>
-                                            <!--<span style="word-wrap:break-word;"><%= cu.description.length > 17 ? cu.description.slice(0..17) + "..." : cu.description %></span><br>
-                                         </address>  
-                                      </div>-->
-                                     </li>      
-                                  <div style="display:none;">
-                                    <% if active_community.id == cu.id %>
-                                      <%= check_box_tag 'cu_ids[]', cu.id, active_community.id, id:"cu_check_#{cu.id}" %>
-                                    <% else %>
-                                      <%= check_box_tag 'cu_ids[]', cu.id, nil, id:"cu_check_#{cu.id}" %>
-                                    <% end %>
-                                  </div>
-                                  <% end %>
-                                  </ul>
-                          </div>
-                          </div>
-                          <div class="panel-toolbar-wrapper">
-                          <div class="panel-toolbar">
-                              <div class="btn-group">
-                                <button type="button" class="btn btn-default" id="cam"><span class="glyphicon glyphicon-camera"></span></button>
-                                <button type="button" class="btn btn-default" id="community_post_select"  data-toggle="modal" data-target="#modal_sel_cu"><span class="glyphicon glyphicon-home"></span></button>
-                              </div>
-                            </div>
-                          <div class="panel-toolbar text-right">
-                             <%= f.submit "Post", id: "community_post_submit", class: "btn btn-primary btn-custom" %>
-                          </div>
-                        </div>
-                    </div>
-       <!-- <span style="margin-left:5px;font-size:14px;line-height:2;" class="sel_com_head timestamp hfive">Post to community</span>
- -->
+    <div class="thumbnail thumbnail-album">
+        <div class="media">
+            <canvas id="imageCanvas1" width="100%" class="pull-left ml2 mb3 mr0" >Add pictures</canvas>
+            <a href="#" id="img_close" class="close pull-left">×</a>
+        </div>
+    </div>
+    <div class="panel-footer">
+        <div class="panel-toolbar-wrapper">
+            <div class="panel-toolbar sel_com_head">
+                <ul class="media-list media-list-contact nm">
+                    <li class=" text-muted semibold">Post to community</li>
+                    <% @communities.each do |cu| %>
+                       <li id="cu_label_<%= cu.id %>"  class="community" >
+                         <div class="ml10"><strong><%= link_to cu.name, "#",class: "" %></strong></div>
+                       </li>      
+                       <div style="display:none;">
+                          <% if active_community.id == cu.id %>
+                            <%= check_box_tag 'cu_ids[]', cu.id, active_community.id, id:"cu_check_#{cu.id}" %>
+                          <% else %>
+                            <%= check_box_tag 'cu_ids[]', cu.id, nil, id:"cu_check_#{cu.id}" %>
+                          <% end %>
+                       </div>
+                    <% end %>
+                </ul>
+            </div>
+        </div>
+        <div class="panel-toolbar-wrapper">
+           <div class="panel-toolbar">
+              <div class="btn-group">
+                  <button type="button" class="btn btn-default" id="cam"><span class="glyphicon glyphicon-camera"></span></button>
+                  <button type="button" class="btn btn-default" id="community_post_select"  data-toggle="modal" data-target="#modal_sel_cu"><span class="glyphicon glyphicon-home"></span></button>
+              </div>
+           </div>
+        <div class="panel-toolbar text-right">
+           <%= f.submit "Post", id: "community_post_submit", class: "btn btn-primary btn-custom disabled" %>
+        </div>
+      </div>
+    </div>
     <%= hidden_field_tag :type, "communities" %> 
     <div id="sel_comm_label"></div>
-
   </div>
   <% end %>
   <div id="div_post" class="home_page_post">
@@ -106,8 +92,8 @@
                               <% end %>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Done</button>
-                                <!-- <%= link_to "Done","#", class: "btn btn-success btn-sm pull-right", id: "selCU" %>  -->
+                                <button type="button" class="btn btn-success btn-custom" data-dismiss="modal">Done</button>
+                                <!-- <%= link_to "Done","#", class: "btn btn-success btn-sm pull-right ", id: "selCU" %>  -->
                             </div>
                         </div><!-- /.modal-content -->
                     </div><!-- /.modal-dialog -->
@@ -115,6 +101,17 @@
                 
 
 <script type="text/javascript">
+
+  
+  $('#feeds').keyup(function(){
+    if($('#feeds').val().length <1){
+      $('#community_post_submit').addClass('disabled');
+    }else{
+      $('#community_post_submit').removeClass('disabled');
+    }
+  });
+  
+
   $("#image_upload1").click(function(){
   
   $("#image_upload1").before($("div#image").html().replace('NEW_RECORD', new Date().getTime()) );

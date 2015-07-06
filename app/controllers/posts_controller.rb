@@ -10,6 +10,7 @@ class PostsController < ApplicationController
   end
 
   def create
+    @posts = []
     case params[:type]
     when "activity"
       @activity = Activity.find(params[:activity])
@@ -39,6 +40,7 @@ class PostsController < ApplicationController
     @post.content = Sanitize.clean(@post.content, Sanitize::Config::RELAXED)
     @post.user = current_user
     @post.save(:validate => false)
+    @new_post = @post
     unless params[:photo].nil?
       @post.photos << current_user.photos.build(params[:photo])
       @post.save(:validate => false)
@@ -48,7 +50,7 @@ class PostsController < ApplicationController
     @groupposts = Grouppost.where('group_id = ?', @group)
     @posts = @groupposts.paginate(page: params[:page], :per_page => 4).collect{|a| a.post}.uniq 
   #  getNotifiableUsers(Objecttypeenum::POST, @post, Objecttypeenum::GROUP, @group, Uc_enum::CREATED)
-    @post =Post.new
+    @post = Post.new
     @post_type = 'group'
     respond_to do |format|
      format.html { }
