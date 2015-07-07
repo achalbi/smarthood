@@ -1,6 +1,7 @@
 $('.modal').modal('hide');
 $('#btn_group_overlay').addClass('hide');
 $('#back_to_event').removeClass('hide');
+$('#event_name').html("<%= j render partial: 'activities/activity_title', locals: {obj: @activity} %>");
 $(".text_overlay_cover_pic").html("<%= escape_javascript( render partial: 'events/text_overlay', locals: {obj: @activity} ) %>");
 $(".text_overlay_cover_pic").show();
 $("#event_list").html("<%= escape_javascript(render partial: 'events/event_links', locals: { event: @event, activity: @activity } ) %>");

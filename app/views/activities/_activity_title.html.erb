@@ -1,0 +1,18 @@
+ <header class="thumbnail">
+    <div class="media wallpaper-container">
+    <div class="image_overlay wallpaper">
+    <div class="huge-title">
+       <% unless @event.photo.nil? %>
+        <%= link_to cl_image_tag(@event.photo.pic_url(:largest), class:"padding1",rel: "#{@event.id}", id:"#{@event.photo.id}") , @event.photo.pic_url, class: "fancybox-album albumLink roundCorner wallpaper-media wallpaper-image native", title: "#{@event.title}", remote: true %>
+      <% end %>
+      <h3 class="  meta bottom bottom-gardient ht55 mb0 animated color-white" data-wow-offset="80" data-wow-duration="3s" style="visibility: visible;-webkit-animation-duration: 3s; -moz-animation-duration: 3s; animation-duration: 3s;  text-shadow: 2px 2px #6A6A6A;"></h3>
+      <h3 class="  meta bottom mb0 wow bounceInDown animated color-white" data-wow-offset="80" data-wow-duration="3s" style="visibility: visible;-webkit-animation-duration: 3s; -moz-animation-duration: 3s; animation-duration: 3s;  text-shadow: 2px 2px #6A6A6A;"><%= @event.title %> => <%= @activity.title %></h3>
+    </div>
+    </div>
+    </div>
+  </header>
+  <section class="panel-body pt5 pb0">
+        <aside class="">
+            <%= render partial: "events/text_overlay", locals: {obj: @event} %>
+        </aside>
+  </section>
