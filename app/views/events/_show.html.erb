@@ -11,7 +11,9 @@
                 <%= link_to cl_image_tag(@event.photo.pic_url(:largest), class:"padding1",rel: "#{@event.id}", id:"#{@event.photo.id}") , @event.photo.pic_url, class: "fancybox-album albumLink roundCorner wallpaper-media wallpaper-image native", title: "#{@event.title}", remote: true %>
               <% end %>
               <h3 class="  meta bottom bottom-gardient ht55 mb0 animated color-white" data-wow-offset="80" data-wow-duration="3s" style="visibility: visible;-webkit-animation-duration: 3s; -moz-animation-duration: 3s; animation-duration: 3s;  text-shadow: 2px 2px #6A6A6A;"></h3>
-               <h3 class="  meta bottom mb0 wow bounceInDown animated color-white" data-wow-offset="80" data-wow-duration="3s" style="visibility: visible;-webkit-animation-duration: 3s; -moz-animation-duration: 3s; animation-duration: 3s;  text-shadow: 2px 2px #6A6A6A;"><%= @event.title %></h3>
+               <span id="event_name">
+                 <h3 class="  meta bottom mb0 wow bounceInDown animated color-white" data-wow-offset="80" data-wow-duration="3s" style="visibility: visible;-webkit-animation-duration: 3s; -moz-animation-duration: 3s; animation-duration: 3s;  text-shadow: 2px 2px #6A6A6A;"><%= @event.title %></h3>
+               </span>
             </div>
             </div>
             </div>
@@ -157,7 +159,7 @@
         </div>
         </div>
 <% end %>
-<script>
+<script  type="text/javascript">
   
 $('#activity_privacy_create').addClass('form-control');
 
@@ -196,11 +198,233 @@ $('#activity_privacy_create').addClass('form-control');
       $('#end_date_add_link_act').show();
     });
     
+ 
+              $.validate({
+                  form : '#create_activity_form',
+                  onSuccess : function() {
+                    $('#create_activity_act').attr('data-loading-text', 'Creating...');
+                    $('#create_activity_act').button('loading');
+                  },
+                });
+                
+                
+
+var startDateTextBox = $("#activity_starts_at");
+var endDateTextBox = $("#activity_ends_at");
+
+
+      startDateTextBox.datetimepicker({ 
+        onClose: function(dateText, inst) {
+          if (endDateTextBox.val() != '') {
+            var testStartDate = startDateTextBox.datetimepicker('getDate');
+            var testEndDate = endDateTextBox.datetimepicker('getDate');
+            if (testStartDate > testEndDate)
+              endDateTextBox.datetimepicker('setDate', testStartDate);
+          }
+          else {
+            endDateTextBox.val(dateText);
+          }
+        },
+        onSelect: function (selectedDateTime){
+          endDateTextBox.datetimepicker('option', 'minDate', startDateTextBox.datetimepicker('getDate') );
+        },
+        dateFormat: "dd/mm/yy"
+      });
+      endDateTextBox.datetimepicker({ 
+        onClose: function(dateText, inst) {
+          if (startDateTextBox.val() != '') {
+            var testStartDate = startDateTextBox.datetimepicker('getDate');
+            var testEndDate = endDateTextBox.datetimepicker('getDate');
+            if (testStartDate > testEndDate)
+              startDateTextBox.datetimepicker('setDate', testEndDate);
+          }
+          else {
+            startDateTextBox.val(dateText);
+          }
+        },
+        onSelect: function (selectedDateTime){
+          startDateTextBox.datetimepicker('option', 'maxDate', endDateTextBox.datetimepicker('getDate') );
+        },
+        dateFormat: "dd/mm/yy"
+      });
+
+
+  $.validate({
+    form : "#update_event_form",
+    onSuccess : function() {
+      $('#update_event').attr('data-loading-text', 'Updating...');
+      $('#update_event').button('loading');
+    },
+  });
+  
+  
+  
+var startDateTextBox = $("#event_starts_at");
+      var endDateTextBox = $("#event_ends_at");
+
+      startDateTextBox.datetimepicker({ 
+        onClose: function(dateText, inst) {
+          if (endDateTextBox.val() != '') {
+            var testStartDate = startDateTextBox.datetimepicker('getDate');
+            var testEndDate = endDateTextBox.datetimepicker('getDate');
+            if (testStartDate > testEndDate)
+              endDateTextBox.datetimepicker('setDate', testStartDate);
+          }
+          else {
+            endDateTextBox.val(dateText);
+          }
+        },
+        onSelect: function (selectedDateTime){
+          endDateTextBox.datetimepicker('option', 'minDate', startDateTextBox.datetimepicker('getDate') );
+        },
+        dateFormat: "dd/mm/yy"
+      });
+      endDateTextBox.datetimepicker({ 
+        onClose: function(dateText, inst) {
+          if (startDateTextBox.val() != '') {
+            var testStartDate = startDateTextBox.datetimepicker('getDate');
+            var testEndDate = endDateTextBox.datetimepicker('getDate');
+            if (testStartDate > testEndDate)
+              startDateTextBox.datetimepicker('setDate', testEndDate);
+          }
+          else {
+            startDateTextBox.val(dateText);
+          }
+        },
+        onSelect: function (selectedDateTime){
+          startDateTextBox.datetimepicker('option', 'maxDate', endDateTextBox.datetimepicker('getDate') );
+        },
+        dateFormat: "dd/mm/yy"
+      });
+      
+      
+      
+$("#edit_event").click(function(){
+      /*$('#modal_edit_event').modal({
+        backdrop: "static"*/
+      });
+   /* $("#closeX_edit_event").click(function(){
+          $('#modal_edit_event').modal('hide');
+        });*/
+
+    $("#update_event").click(function(){
+      $('.loading_page').show();
+        });
+
+    $("#event_edit_pic").click(function(){
+      $('#pic2').click();
+    });
+
+var imageLoader = document.getElementById('pic2');
+imageLoader.addEventListener('change', handleImage, false);
+$("#imageCanvas_event").click(function(){
+  $("#pic2").click();
+});
+var canvas = document.getElementById('imageCanvas_event');
+var ctx = canvas.getContext('2d');
+ctx.font="30px Arial";
+ctx.fillText("Change picture",10,50);
+
+function handleImage(e){
+  var canvas = document.getElementById('imageCanvas_event');
+  var ctx = canvas.getContext('2d');
+  var iCnt=0;
+  var files = e.target.files;
+  canvas.width = 180;
+  canvas.height = 155*(Math.ceil(files.length/4));
+     if(files.length<1){
+      $('#pic2').val('');
+      $('#event_edit_pic').show();
+      $('#imageCanvas_event').hide();
+      return;
+    }
+  for( var i = 0, len = files.length; i < len; i++) 
+  {
+          $('#event_edit_pic').hide();
+          $('#imageCanvas_event').show();
+    if(files[i])
+    {
+      var reader = new FileReader();
+      reader.onload = function(event){
+        var img = new Image();
+
+        img.onload = function(){
+          var ratioPx = 150;
+          var sWidth =ratioPx;
+          var ratio = img.width/sWidth;
+          var sHeight = img.height/ratio;   
+          if(sHeight>ratioPx){
+           sHeight =ratioPx;
+           ratio = img.height/sHeight;
+           sWidth = img.width/ratio;  
+         }
+         ctx.drawImage(img, 155*(iCnt%4),155*(Math.floor(iCnt/4)),sWidth,sHeight);
+                  //ctx.drawImage(img,0,0,sWidth,sHeight);
+                  iCnt++;
+                }
+                img.src = event.target.result;
+              }
+              reader.readAsDataURL(e.target.files[i]);     
+            }
+          }
+        }
+
+
+
+
+var currentPage = 1;
+var intervalID = -1000;
+var insideLoop ="false"; 
+ 
+function checkScroll_post() {
+   if (nearBottomOfPage() && insideLoop!="true" ) {
+    insideLoop ="true";
+    currentPage++;
+  $('#loading_page').show();
+  if($('#activity_id').html() == null){
+      clearInterval(intervalID);
+      for (var i = 1; i < 99999; i++){
+        window.clearInterval(i);
+      }
+      restartInterval();
+      insideLoop = "false";
+      return;
+    }
+    jQuery.ajax('/events/post_paginate?id='+$('#activity_id').html()+'&event_id=<%= @event.id %>&page=' + currentPage, {asynchronous:true, evalScripts:true, method:'get', success: function(data, textStatus, jqXHR) {
+      $('#loading_page').hide();
+    if($(data).find('.posts_one_div').html()==null || $(data).find('.posts_one_div').html() == '' ){
+      clearInterval(intervalID);
+      for (var i = 1; i < 99999; i++){
+        window.clearInterval(i);
+      }
+      restartInterval();
+    }else{
+      $('.resources<%= @activity.id %>').append(data);
+    }
+    insideLoop = "false";
+  },});
+  }
+}
+ 
+function nearBottomOfPage() {
+  return scrollDistanceFromBottom() < 150;
+}
+ 
+function scrollDistanceFromBottom(argument) {
+  return pageHeight() - (window.pageYOffset + self.innerHeight);
+}
+ 
+function pageHeight() {
+  return Math.max(document.body.scrollHeight, document.body.offsetHeight);
+}
+ 
+  intervalID = setInterval(checkScroll_post, 250);
 
 
 </script>
 
 <script type="text/javascript">
+
 
 
 $('#posts_events_li').click(function(){
@@ -244,22 +468,9 @@ $('#photos_events_li').click(function(){
   /*$('#end_date_act').hide();
   $('#view_map_link_act').hide();*/
 
- 
-  
-  
- 
-  
 
- $(document).ready(function(){
-                $.validate({
-                  form : '#create_activity_form',
-                  onSuccess : function() {
-                    $('#create_activity_act').attr('data-loading-text', 'Creating...');
-                    $('#create_activity_act').button('loading');
-                  },
-                });
+   
                 $('.loading_page').hide();
-              });
 
 
                   /*$("#create_activity").click(function(){
@@ -271,15 +482,16 @@ $('#photos_events_li').click(function(){
                   $("#closeX_create_activity").click(function(){
                         $('#modal_create_activity').modal('hide');
                       });
-*/
                  
                   
 
 
 });
 
+*/
+      /*
     $(function() {
-      /*return $('.events_with_autocomplete').autocomplete({
+      return $('.events_with_autocomplete').autocomplete({
         minLength: 2,
         source: function(request, response) {
           return $.ajax({
@@ -293,51 +505,12 @@ $('#photos_events_li').click(function(){
             }
           });
         }
-      });*/
+      });
     });
+      */
 
     
 
-
-
-var startDateTextBox = $("#activity_starts_at");
-var endDateTextBox = $("#activity_ends_at");
-
-
-      startDateTextBox.datetimepicker({ 
-        onClose: function(dateText, inst) {
-          if (endDateTextBox.val() != '') {
-            var testStartDate = startDateTextBox.datetimepicker('getDate');
-            var testEndDate = endDateTextBox.datetimepicker('getDate');
-            if (testStartDate > testEndDate)
-              endDateTextBox.datetimepicker('setDate', testStartDate);
-          }
-          else {
-            endDateTextBox.val(dateText);
-          }
-        },
-        onSelect: function (selectedDateTime){
-          endDateTextBox.datetimepicker('option', 'minDate', startDateTextBox.datetimepicker('getDate') );
-        },
-        dateFormat: "dd/mm/yy"
-      });
-      endDateTextBox.datetimepicker({ 
-        onClose: function(dateText, inst) {
-          if (startDateTextBox.val() != '') {
-            var testStartDate = startDateTextBox.datetimepicker('getDate');
-            var testEndDate = endDateTextBox.datetimepicker('getDate');
-            if (testStartDate > testEndDate)
-              startDateTextBox.datetimepicker('setDate', testEndDate);
-          }
-          else {
-            startDateTextBox.val(dateText);
-          }
-        },
-        onSelect: function (selectedDateTime){
-          startDateTextBox.datetimepicker('option', 'maxDate', endDateTextBox.datetimepicker('getDate') );
-        },
-        dateFormat: "dd/mm/yy"
-      });
 
 
 /*
@@ -374,8 +547,7 @@ $('#end_date_remove_link').click(function(){
   $('#end_date_add_link').show();
 });
 */
-  $(function() {
-});
+
   $("#search_user").tokenInput("/events/<%= @event.id %>/search_selected_user", {
     crossDomain: false,
     prePopulate: $("#search_user").data("pre"),
@@ -387,8 +559,7 @@ $('#end_date_remove_link').click(function(){
         hintText: "Type in a user name",
   });
 
-  $(function() {
-});
+
   $("#search_group").tokenInput("/events/<%= @event.id %>/search_selected_group", {
     crossDomain: false,
     prePopulate: $("#search_group").data("pre"),
@@ -529,7 +700,6 @@ $('#end_date_remove_link2').click(function(){
   $('#end_date_add_link2').show();
 });
 */
-  $(function() {
   $("#search_user_evt").tokenInput("/events/search_auto_user", {
     crossDomain: false,
    // prePopulate: $(".eventdetails_with_autocomplete").data("pre"),
@@ -540,9 +710,7 @@ $('#end_date_remove_link2').click(function(){
         zindex: 11001,
         hintText: "Type in a user name",
   });
-});
 
-  $(function() {
   $("#search_group_evt").tokenInput("/events/search_auto_group", {
     crossDomain: false,
    // prePopulate: $(".eventdetails_with_autocomplete").data("pre"),
@@ -553,11 +721,7 @@ $('#end_date_remove_link2').click(function(){
         zindex: 11001,
         hintText: "Type in a group name",
   });
-});
 
-$(document).ready(function() {
-
-});
 /*    $('#create_activity').hide();
    
     $('#activity_span').hover(function(){
@@ -598,7 +762,7 @@ $(document).ready(function() {
     });
       */
 
-      return $('.eventdetails_with_autocomplete').autocomplete({
+      $('.eventdetails_with_autocomplete').autocomplete({
         minLength: 2,
         source: function(request, response) {
           return $.ajax({
@@ -613,23 +777,15 @@ $(document).ready(function() {
           });
         }
       });
-    $(function() {
-    });
 
 
 
 
-$(document).ready(function(){
-});
+
+
   /*$('#modal_create_activity').modal('hide');
    $('.modal-backdrop').remove();*/
-  $.validate({
-    form : "#update_event_form",
-    onSuccess : function() {
-      $('#update_event').attr('data-loading-text', 'Updating...');
-      $('#update_event').button('loading');
-    },
-  });
+
   $('.loading_page').hide();
 /*
   $('#end_date_event').hide();
@@ -648,129 +804,6 @@ $(document).ready(function(){
 
 
 
-$("#edit_event").click(function(){
-      /*$('#modal_edit_event').modal({
-        backdrop: "static"*/
-      });
-   /* $("#closeX_edit_event").click(function(){
-          $('#modal_edit_event').modal('hide');
-        });*/
-
-    $("#update_event").click(function(){
-      $('.loading_page').show();
-        });
-
-    $("#event_edit_pic").click(function(){
-      $('#pic2').click();
-    });
-
-var imageLoader = document.getElementById('pic2');
-imageLoader.addEventListener('change', handleImage, false);
-$("#imageCanvas_event").click(function(){
-  $("#pic2").click();
-});
-var canvas = document.getElementById('imageCanvas_event');
-var ctx = canvas.getContext('2d');
-ctx.font="30px Arial";
-ctx.fillText("Change picture",10,50);
-
-function handleImage(e){
-  var canvas = document.getElementById('imageCanvas_event');
-  var ctx = canvas.getContext('2d');
-  var iCnt=0;
-  var files = e.target.files;
-  canvas.width = 180;
-  canvas.height = 155*(Math.ceil(files.length/4));
-     if(files.length<1){
-      $('#pic2').val('');
-      $('#event_edit_pic').show();
-      $('#imageCanvas_event').hide();
-      return;
-    }
-  for( var i = 0, len = files.length; i < len; i++) 
-  {
-          $('#event_edit_pic').hide();
-          $('#imageCanvas_event').show();
-    if(files[i])
-    {
-      var reader = new FileReader();
-      reader.onload = function(event){
-        var img = new Image();
-
-        img.onload = function(){
-          var ratioPx = 150;
-          var sWidth =ratioPx;
-          var ratio = img.width/sWidth;
-          var sHeight = img.height/ratio;   
-          if(sHeight>ratioPx){
-           sHeight =ratioPx;
-           ratio = img.height/sHeight;
-           sWidth = img.width/ratio;  
-         }
-         ctx.drawImage(img, 155*(iCnt%4),155*(Math.floor(iCnt/4)),sWidth,sHeight);
-                  //ctx.drawImage(img,0,0,sWidth,sHeight);
-                  iCnt++;
-                }
-                img.src = event.target.result;
-              }
-              reader.readAsDataURL(e.target.files[i]);     
-            }
-          }
-        }
-
-
-
-
-var currentPage = 1;
-var intervalID = -1000;
-var insideLoop ="false"; 
- 
-function checkScroll_post() {
-   if (nearBottomOfPage() && insideLoop!="true" ) {
-    insideLoop ="true";
-    currentPage++;
-  $('#loading_page').show();
-  if($('#activity_id').html() == null){
-      clearInterval(intervalID);
-      for (var i = 1; i < 99999; i++){
-        window.clearInterval(i);
-      }
-      restartInterval();
-      insideLoop = "false";
-      return;
-    }
-    jQuery.ajax('/events/post_paginate?id='+$('#activity_id').html()+'&event_id=<%= @event.id %>&page=' + currentPage, {asynchronous:true, evalScripts:true, method:'get', success: function(data, textStatus, jqXHR) {
-      $('#loading_page').hide();
-    if($(data).find('.posts_one_div').html()==null || $(data).find('.posts_one_div').html() == '' ){
-      clearInterval(intervalID);
-      for (var i = 1; i < 99999; i++){
-        window.clearInterval(i);
-      }
-      restartInterval();
-    }else{
-      $('.resources<%= @activity.id %>').append(data);
-    }
-    insideLoop = "false";
-  },});
-  }
-}
- 
-function nearBottomOfPage() {
-  return scrollDistanceFromBottom() < 150;
-}
- 
-function scrollDistanceFromBottom(argument) {
-  return pageHeight() - (window.pageYOffset + self.innerHeight);
-}
- 
-function pageHeight() {
-  return Math.max(document.body.scrollHeight, document.body.offsetHeight);
-}
- 
-$('document').ready(function(){
-  intervalID = setInterval(checkScroll_post, 250);
-});
-
 /*
 $('.pop_up').popover({
     html: true,
@@ -787,42 +820,5 @@ $('.pop_up').popover({
   });
 */
 
-var startDateTextBox = $("#event_starts_at");
-      var endDateTextBox = $("#event_ends_at");
-
-      startDateTextBox.datetimepicker({ 
-        onClose: function(dateText, inst) {
-          if (endDateTextBox.val() != '') {
-            var testStartDate = startDateTextBox.datetimepicker('getDate');
-            var testEndDate = endDateTextBox.datetimepicker('getDate');
-            if (testStartDate > testEndDate)
-              endDateTextBox.datetimepicker('setDate', testStartDate);
-          }
-          else {
-            endDateTextBox.val(dateText);
-          }
-        },
-        onSelect: function (selectedDateTime){
-          endDateTextBox.datetimepicker('option', 'minDate', startDateTextBox.datetimepicker('getDate') );
-        },
-        dateFormat: "dd/mm/yy"
-      });
-      endDateTextBox.datetimepicker({ 
-        onClose: function(dateText, inst) {
-          if (startDateTextBox.val() != '') {
-            var testStartDate = startDateTextBox.datetimepicker('getDate');
-            var testEndDate = endDateTextBox.datetimepicker('getDate');
-            if (testStartDate > testEndDate)
-              startDateTextBox.datetimepicker('setDate', testEndDate);
-          }
-          else {
-            startDateTextBox.val(dateText);
-          }
-        },
-        onSelect: function (selectedDateTime){
-          startDateTextBox.datetimepicker('option', 'maxDate', endDateTextBox.datetimepicker('getDate') );
-        },
-        dateFormat: "dd/mm/yy"
-      });
 
 </script>

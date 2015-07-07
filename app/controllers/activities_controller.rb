@@ -42,9 +42,17 @@ class ActivitiesController < ApplicationController
   #  getNotifiableUsers(Objecttypeenum::ACTIVITY, @activity, nil, nil, Uc_enum::CREATED)
     @activities = @et.activities
     #flash[:success] = "Activity created!"
-    respond_to do |format|
-         format.html { redirect_to root_path }
-         format.js { render  :locals => { :event => @event } }
+    
+       respond_to do |format|
+        if @activity.save
+        #  getNotifiableUsers(Objecttypeenum::EVENT, @event, nil, nil, Uc_enum::CREATED)
+        #  format.html { redirect_to @event, format: 'js', :success => 'Event was successfully created.' }
+          format.json { render :json => @activity, :status => :created, :location => @activity }
+          format.js { redirect_to(:action => :show, :format => :js, :id => @activity.id)} #redirect_to @event, format: :js, :success => 'Event was successfully created.' }
+        else
+          format.html { render :action => "show" }
+          format.json { render :json => @activity.errors, :status => :unprocessable_entity }
+        end
       end
   end
 

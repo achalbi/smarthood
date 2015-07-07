@@ -21,37 +21,31 @@
   
     <% if @invited_events.count > 0 %>
         <!--<span class="semibold font-15 ml15">Invitations</span>-->
-   <ul class="list-unstyled mt5">
-  
+  <ul class="list-unstyled mt5">
     <% @invited_events.each do |event| %>
-      
        <div class="col-xs-6 pl0 pr5">
-                  <li class="tr-hover event" >
-                        <div class="panel  panel-default mb5">
-                            <div class="media">
-                                <% unless event.photo.nil? %>
-                                  <%= link_to cl_image_tag(event.photo.pic_url(:thumb_full_wide), class:"image_al_c1 wdp-100", id:"#{event.photo.id}"), event, remote: true  %>
-                                <% end %>
-                          </div>
-                        <section class="panel-body pt10 pb5">
-                            <span class="badge badge-default pull-right">Invitation pending</span>
-                            <span class="semibold mt10 ellipsis"><%= link_to event.title , event, class:"albumLink font-15", remote: true, title: "#{event.title}" %></span>
-                              <p class="ellipsis timestamp mb0 text-muted" ><span class="ico-time"></span><%= event.starts_at.strftime("%A, %B %d, %Y") %></p>
-                              <p class="ellipsis mb5 ellipsis font-11 text-muted"><span class="ico-location"></span><%= event.address %></p>
-                        </section>
-                        </div>
-                  </li>
-            </div>
-      
-      
-      
-        <%= link_to "", event, remote: true %>  
-        
+            <li class="tr-hover event" >
+                  <div class="panel  panel-default mb5">
+                      <div class="media">
+                          <% unless event.photo.nil? %>
+                            <%= link_to cl_image_tag(event.photo.pic_url(:thumb_full_wide), class:"image_al_c1 wdp-100", id:"#{event.photo.id}"), event, remote: true  %>
+                          <% end %>
+                    </div>
+                  <section class="panel-body pt10 pb5">
+                      <% if event.invited?(current_user)%>
+                        <span class="badge badge-default pull-right">Invitation Pending</span>
+                      <% end %>
+                        <span class="semibold mt10 ellipsis"><%= link_to event.title , event, class:"albumLink font-15", remote: true, title: "#{event.title}" %></span>
+                        <p class="ellipsis timestamp mb0 text-muted" ><span class="ico-time"></span><%= event.starts_at.strftime("%A, %B %d, %Y") %></p>
+                        <p class="ellipsis mb5 ellipsis font-11 text-muted"><span class="ico-location"></span><%= event.address %></p>
+                  </section>
+                  </div>
+            </li>
+      </div>
+      <%= link_to "", event, remote: true %>  
       <% end %>
     <% end %>
-    
    </ul>
-
 </div>
 
 
