@@ -59,6 +59,7 @@
                       <img src="<%= gravatar_for_url user, size: 82 %>" class="pull-left gravatar" ></img>
                         <span class="badge badge-default pull-right mr10 mt5">invited</span>
                         <div class=" valign-middle">
+                              <div class="panel-body mt5 pt10 pl95 pb0 pr0">
                                 <p class="semibold ellipsis mt0 mb0"><%= link_to user.name, user ,remote: true %></p>
                                 <p class=" ellipsis mb0"><a class="ellipsis text-muted" mailto="<%= user.email %>"><%= user.email %></a></p>
                                 <p>
@@ -71,17 +72,14 @@
                     </div>
                 </div>
             </div>
-      </li>
-  <% end %>
-</ul>
-
-</div>
+        </li>
+      <% end %>
+      <%= render partial: 'communities/com_members', locals: {ad_users: @ad_users, inv_users: @inv_users, community: @community} %>
+    </ul>
+  </div>
 <% end %>
 <% end %> 
                    
-          <%= render partial: 'communities/com_members', locals: {ad_users: @ad_users, inv_users: @inv_users, community: @community} %>
-
- 
 
 <!-- 
 
