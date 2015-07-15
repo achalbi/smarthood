@@ -9,26 +9,61 @@
         <%= render 'communities/invite_members', :locals => { :community => community }  %>
     <% end %>
   
-    <% unless requested_users.nil?  %>
+   <!-- <% unless requested_users.nil?  %>
     <% if requested_users.count > 0 %>
-  <div class="row pl15">
-      <ul class="list-unstyled mb0">
-        <% requested_users.each do |user| %>
-        
-        <li>
-        <div class="col-sm-6 pl0 pr5 mb5">
+      <div class="row pl15">
+          <ul class="list-unstyled mb0">
+            <% requested_users.each do |user| %>
+            
+            <li>
+              <div class="col-sm-6 pl0 pr5 mb5">
                   <div class="panel widget nm">
                       <div class="table-layout nm">
                         <img src="<%= gravatar_for_url user, size: 82 %>" class="pull-left gravatar" ></img>
                           <span class="badge badge-default pull-right mr10 mt5">Request Pending</span>
                           <div class=" valign-middle">
                             <div class="panel-body mt5 pt10 pl95 pb0 pr0">
-                                  <p class="semibold ellipsis mt10 mb0"><%= link_to user.name, user ,remote: true %></p>
+                                <p class="semibold ellipsis mt10 mb0"><%= link_to user.name, user ,remote: true %></p>
+                                <p class=" ellipsis mb0"><a class="ellipsis text-muted" mailto="<%= user.email %>"><%= user.email %></a></p>
+                                <p>
+                                   <a href="<%= declinerequest_community_path(community) << '?user_id='%><%= user.id %>"class=" pull-right btn btn-xs btn-danger mb1  decline_user" data-remote="true" id="decline" style="margin-right:5px;"> Decline </a>
+                                   <a href="<%= acceptrequest_community_path(community) << '?user_id='%><%= user.id %>"class=" pull-right btn btn-xs btn-success mb1  accept_user" data-remote="true" id="accept" style="margin-right:5px;"> Accept <i class="icon-remove"></i></a>
+                                   <% if current_user.is_cu_admin?(community) %>
+                                   <% end %>
+                                </p>    
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+               </div>
+            </li>
+            
+            <% end %>
+          </ul>
+      </div>
+    <% end %>
+    <% end %> -->
+  <% end %>
+             
+
+  <% unless inv_pending_users.nil?  %>
+  <% if inv_pending_users.count > 0 %>
+    <div id="show_com_invites" class="row pl15">
+      <ul class="list-unstyled mb0">
+        <% inv_pending_users.each do |user| %>
+        <li>
+          <div class="col-sm-6 pl0 pr5 mb5">
+                  <div class="panel widget nm">
+                      <div class="table-layout nm">
+                        <img src="<%= gravatar_for_url user, size: 82 %>" class="pull-left gravatar" ></img>
+                          <span class="badge badge-default pull-right mr10 mt5">invited</span>
+                          <div class=" valign-middle">
+                                <div class="panel-body mt5 pt10 pl95 pb0 pr0">
+                                  <p class="semibold ellipsis mt0 mb0"><%= link_to user.name, user ,remote: true %></p>
                                   <p class=" ellipsis mb0"><a class="ellipsis text-muted" mailto="<%= user.email %>"><%= user.email %></a></p>
                                   <p>
-                                        <a href="<%= declinerequest_community_path(community) << '?user_id='%><%= user.id %>"class=" pull-right btn btn-xs btn-danger mb1  decline_user" data-remote="true" id="decline" style="margin-right:5px;"> Decline </a>
-                                        <a href="<%= acceptrequest_community_path(community) << '?user_id='%><%= user.id %>"class=" pull-right btn btn-xs btn-success mb1  accept_user" data-remote="true" id="accept" style="margin-right:5px;"> Accept <i class="icon-remove"></i></a>
                                      <% if current_user.is_cu_admin?(community) %>
+                                        <a href="<%= declinerequest_community_path(community) << '?user_id='%><%= user.id %>"class="uibutton pull-right button-toggle decline_user" data-remote="true" id="decline" style="margin-right:5px;"> Uninvite <i class="icon-remove"></i></a>
                                     <% end %>
                                   </p>    
                               </div>
@@ -36,50 +71,14 @@
                       </div>
                   </div>
               </div>
-        </li>
-        
+          </li>
         <% end %>
       </ul>
-  </div>
-    <% end %>
-    <% end %> 
-  
+    </div>
   <% end %>
-             
-
-  <% unless inv_pending_users.nil?  %>
-  <% if inv_pending_users.count > 0 %>
-  <div id="show_com_invites" class="row pl15">
-    <ul class="list-unstyled mb0">
-      <% inv_pending_users.each do |user| %>
-      <li>
-        <div class="col-sm-6 pl0 pr5 mb5">
-                <div class="panel widget nm">
-                    <div class="table-layout nm">
-                      <img src="<%= gravatar_for_url user, size: 82 %>" class="pull-left gravatar" ></img>
-                        <span class="badge badge-default pull-right mr10 mt5">invited</span>
-                        <div class=" valign-middle">
-                              <div class="panel-body mt5 pt10 pl95 pb0 pr0">
-                                <p class="semibold ellipsis mt0 mb0"><%= link_to user.name, user ,remote: true %></p>
-                                <p class=" ellipsis mb0"><a class="ellipsis text-muted" mailto="<%= user.email %>"><%= user.email %></a></p>
-                                <p>
-                                   <% if current_user.is_cu_admin?(community) %>
-                                      <a href="<%= declinerequest_community_path(community) << '?user_id='%><%= user.id %>"class="uibutton pull-right button-toggle decline_user" data-remote="true" id="decline" style="margin-right:5px;"> Uninvite <i class="icon-remove"></i></a>
-                                  <% end %>
-                                </p>    
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </li>
-      <% end %>
-      <%= render partial: 'communities/com_members', locals: {ad_users: @ad_users, inv_users: @inv_users, community: @community} %>
-    </ul>
-  </div>
-<% end %>
-<% end %> 
-                   
+  <% end %> 
+     
+ <%= render partial: 'communities/com_members', locals: {ad_users: @ad_users, inv_users: @inv_users, community: @community} %>
 
 <!-- 
 

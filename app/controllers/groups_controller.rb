@@ -66,8 +66,9 @@ class GroupsController < ApplicationController
     @user = current_user
     @users = @group.users
     @album = Album.new
-    @inv_users = User.where(['id IN (?)', @group.user_groups.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED,false).collect(&:user_id)])
+    @mem_users = User.where(['id IN (?)', @group.user_groups.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED,false).collect(&:user_id)])
     @ad_users = User.where(['id IN (?)', @group.user_groups.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED,true).collect(&:user_id)])
+    @all_users =  @group.user_groups.where('invitation = ? ',Uc_enum::JOINED)
     @is_admin = @ad_users.include? current_user
     @ucs = @group.user_groups.where("user_id = ?  AND is_admin=?",current_user.id, true )
     @community = active_community
@@ -94,10 +95,18 @@ class GroupsController < ApplicationController
 end
 
 def add_moderators
-  @group = Group.find(params[:id])
-  @group.user_groups.update_all({:is_admin => true}, {:user_id => params[:user_ids]})
-  @group.user_groups.update_all({:is_admin => false}, {:user_id => params[:user_all_ids]-params[:user_ids] })
-   redirect_to :controller => 'communities', :action => 'show_group', :grp_id => @group.id, id: params[:comm_id]
+      @group = Group.find(params[:id])
+    unless params[:user_ids].nil?
+      @group.user_groups.update_all({:is_admin => false}, {:user_id => params[:user_all_ids]-params[:user_ids] })
+      @group.user_groups.update_all({:is_admin => true}, {:user_id => params[:user_ids]})
+    end
+     @mem_users = User.where(['id IN (?)', @group.user_groups.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED,false).collect(&:user_id)])
+     @ad_users = User.where(['id IN (?)', @group.user_groups.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED,true).collect(&:user_id)])
+     @is_admin = @ad_users.include? current_user
+     @all_users =  @group.user_groups.where('invitation = ? ',Uc_enum::JOINED)
+     @ucs = @group.user_groups.where("user_id = ?  AND is_admin=?",current_user.id, true )
+  #   redirect_to @group
+  # redirect_to :controller => 'communities', :action => 'show_group', :grp_id => @group.id, id: active_community.id
 end
 
 def groups_post_paginate
@@ -139,9 +148,10 @@ def invite_app_user
      end
     # getNotifiableUsers(Objecttypeenum::GROUP, @group, Objecttypeenum::USER, @user_ids, Uc_enum::JOINED)
      @usergroup.save
-     @inv_users = User.where(['id IN (?)', @group.user_groups.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED,false).collect(&:user_id)])
+     @mem_users = User.where(['id IN (?)', @group.user_groups.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED,false).collect(&:user_id)])
      @ad_users = User.where(['id IN (?)', @group.user_groups.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED,true).collect(&:user_id)])
      @is_admin = @ad_users.include? current_user
+     @all_users =  @group.user_groups.where('invitation = ? ',Uc_enum::JOINED)
      @ucs = @group.user_groups.where("user_id = ?  AND is_admin=?",current_user.id, true )
    end
  end 
@@ -233,10 +243,11 @@ def create_album
     @group = Group.find(params[:id])
     @group.update_attributes(params[:group])
    # getNotifiableUsers(Objecttypeenum::GROUP, @group, nil, nil, Uc_enum::UPDATED)
-        respond_to do |format|
-           format.html { }
-           format.js { redirect_to :controller => 'communities', :action => 'show_group', :grp_id => @group.id, id: @group.community_id }
-         end
+      respond_to do |format|
+       format.html { }
+       #format.js { redirect_to :controller => 'communities', :action => 'show_group', :grp_id => @group.id, id: params[:comm_id] }
+       format.js { redirect_to @group }
+     end
   end
 
 def acceptrequest
@@ -270,12 +281,14 @@ def unjoin_grp
   end
     @usergroup = @user.user_groups.find_by_group_id(params[:id])
     @usergroup.invitation = Uc_enum::UNJOINED
+    @usergroup.is_admin = false
     @usergroup.save
-     @inv_users = User.where(['id IN (?)', @group.user_groups.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED,false).collect(&:user_id)])
+     @mem_users = User.where(['id IN (?)', @group.user_groups.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED,false).collect(&:user_id)])
      @ad_users = User.where(['id IN (?)', @group.user_groups.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED,true).collect(&:user_id)])
      @is_admin = @ad_users.include? current_user
-     @ucs = @group.user_groups.where("user_id = ?  AND is_admin=?",current_user.id, true )
+     @all_users =  @group.user_groups.where('invitation = ? ',Uc_enum::JOINED)
   #  redirect_to :controller => 'communities', :action => 'show_group', :grp_id => params[:id], id: params[:comm_id]
+  
 end
 
 def join_grp

@@ -8,7 +8,7 @@
   <div class="row">
  <% unless (community.privacy == Privacyenum::PROTECTED && !current_user.is_cu_admin?(community)) %>
               <% if community.is_active?(current_user, community) %>
-                <a class="btn btn-success pull-right btn-custom mr5" id="create_event" data-toggle="modal" data-target="#modal_create_event" >Create event</a>
+                <a class="btn btn-success pull-right btn-custom mr20" id="create_event" data-toggle="modal" data-target="#modal_create_event" >Create event</a>
               <% end %>
           <% end %>
 </div>
@@ -44,7 +44,7 @@
         <li id="prev_events_li"><a class="p7" href="#" data-toggle="tab">Past events</a></li><%= link_to "", prev_events_community_path(@community) , remote: true %>
       </ul>
 </div>-->
-  <div class="row pl15" id="comm_groups_list">
+  <div class="" id="comm_groups_list">
         <ul id="events_list" class="home_page_post list-unstyled mt5">
           <%= render :partial => 'communities/events', :locals => {:events => events, community: community} %>                  
         </ul>
@@ -106,7 +106,7 @@
                   <%= link_to "View map", '#', id: "view_map_link",  class: "btn-info mt3 btn-sm icon add pull-right mr60-sm mr12-xs icon prev" %>
                   <%= link_to "Hide map", '#', id: "hide_map_link",  class: "btn-danger mt3 btn-sm icon add pull-right mr60-sm mr12-xs icon prev" %>
                   <div class="col-sm-9 col-xs-9">    
-                  <%= f.text_field :address, type: "search", :placeholder => :location, :size => 43, class: 'events_with_autocomplete inherit_width', 'data-autocompleteUrl' => search_address_events_path , 'data-validation' => "length",
+                  <%= f.text_field :address, type: "text", :placeholder => :location, :size => 43, class: 'events_with_autocomplete inherit_width', 'data-autocompleteUrl' => search_address_events_path , 'data-validation' => "length",
                   'data-validation-length' =>"3-250", 'data-validation-error-msg' => "The event address has to be a value between 3-250 characters" %>
                     </div>
                     <%= hidden_field_tag 'location_name' %>
@@ -374,11 +374,6 @@ $('#view_map_link').click(function(){
       $('#hide_map_link').hide();
       $('#view_map_link').show();
     });
-
-
-
-
-
 
 $('a.ui-corner-all').on("click", function(){
   if($('#event_address').val()!=""){

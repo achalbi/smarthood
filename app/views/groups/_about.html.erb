@@ -10,9 +10,9 @@
  <!--<div class="tab-content">
   <div  class="tab-pane np active " id="group_moderators">-->
   <div class="row pl15">
-    <div class="row">
+    <div class="row mb5">
     <% if @is_admin %>
-    <a class=" btn-sm btn-success pull-right mt10 mr30" href="#" id="invite" data-toggle="modal" data-target="#modal_invite" >Add Members</a>
+    <a class=" btn-sm btn-success pull-right mt10 mr20" href="#" id="invite" data-toggle="modal" data-target="#modal_invite" >Add Members</a>
     <a class=" btn-sm btn-warning pull-right mt10 mr5" href="#" id="moderator" data-toggle="modal" data-target="#modal_add_mod" >Edit</a>
     <% end %>
     </div>
@@ -26,7 +26,7 @@
                                                     <div class="table-layout nm">
                                                         <img src="<%= gravatar_for_url user, size: 82 %>" class="pull-left gravatar" ></img>
                                                         <p class="mb0">
-                                                                  <% if @group.is_joined?(current_user, @group) %>
+                                                                  <% if @group.is_joined?(current_user, @group) && @group.can_admin_unjoin?(current_user) %>
                                                                      <%= link_to "Unjoin", unjoin_grp_group_path(@group, user_id: user.id), class: "btn btn-xs btn-danger pull-right mr5 bd-top-none", data: { confirm: "You sure?" }, remote: true %>
                                                                    <% end %>
                                                         <span class="badge badge-success ml10 mt5">moderator</span>
@@ -52,27 +52,27 @@
     
     </div>
     <ul class="list-unstyled">
-  <% if inv_users.count > 0 %>
-  <% inv_users.each do |user|%>
+  <% if mem_users.count > 0 %>
+  <% mem_users.each do |user|%>
   <li>
     <div class="col-sm-6 pl0  pr5 mb5">
-                                                <div class="panel widget nm">
-                                                    <div class="table-layout nm">
-                                                        <img src="<%= gravatar_for_url user, size: 82 %>" class="pull-left gravatar" ></img>
-                                                              <p class="mb0">
-                                                                  <% if @group.is_joined?(current_user, @group) %>
-                                                                     <%= link_to "Unjoin", unjoin_grp_group_path(@group, user_id: user.id), class: "btn btn-xs btn-danger pull-right mr5 bd-top-none", data: { confirm: "You sure?" }, remote: true %>
-                                                                   <% end %>
-                                                                </p>   
-                                                        <div class=" valign-middle">
-                                                            <div class="panel-body mt20 pl95 pb0 pr0">
-                                                                <h5 class="semibold mt0 mb0"><%= link_to user.name.length > 17 ? user.name.slice(0..17) + "..." : user.name, user %></h5>
-                                                                <p class="mb0"><a class="ellipsis text-muted mb0" mailto="<%= user.email %>"><%= user.email.length > 17 ? user.email.slice(0..17) + "..." : user.email %></a></p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+            <div class="panel widget nm">
+                <div class="table-layout nm">
+                    <img src="<%= gravatar_for_url user, size: 82 %>" class="pull-left gravatar" ></img>
+                          <p class="mb0">
+                              <% if @group.is_joined?(current_user, @group) %>
+                                 <%= link_to "Unjoin", unjoin_grp_group_path(@group, user_id: user.id), class: "btn btn-xs btn-danger pull-right mr5 bd-top-none", data: { confirm: "You sure?" }, remote: true %>
+                               <% end %>
+                            </p>   
+                    <div class=" valign-middle">
+                        <div class="panel-body mt20 pl95 pb0 pr0">
+                            <h5 class="semibold mt0 mb0"><%= link_to user.name.length > 17 ? user.name.slice(0..17) + "..." : user.name, user %></h5>
+                            <p class="mb0"><a class="ellipsis text-muted mb0" mailto="<%= user.email %>"><%= user.email.length > 17 ? user.email.slice(0..17) + "..." : user.email %></a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
   </li>
   <% end %>
  
@@ -177,9 +177,9 @@
          <%= render 'shared/error_messages', object: f.object %>
           <section>
             <ul class="list-unstyled mb0">
-              <% @ucs.each do |uc| %>
+              <% @all_users.each do |uc| %>
               <% user = User.find(uc.user_id) %>
-              <ol class="pl5">
+              <ol class="pl5 mb5 <%= "hide" if user == current_user %>">
                   <%= gravatar_for user, size: 25 %>
                   <%= link_to user.name, "#" %>
                   
@@ -208,11 +208,19 @@
 <script type="text/javascript">
 
 
+$('#submit_add_mod').click(function(){
+  $('#modal_add_mod').modal('hide');
+});
 
+$('#invite_submit').click(function(){
+  $('#modal_invite').modal('hide');
+});
+
+/*
 $(document).ready(function(){
   $('#edit_group').hide();
 });
-/*$('#aboutDiv').hover(function(){
+$('#aboutDiv').hover(function(){
   $('#edit_group').toggle();
 },function(){
   $('#edit_group').toggle();

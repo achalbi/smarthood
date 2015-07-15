@@ -17,8 +17,8 @@
 	// I'm Centering the map in Bangkok
 	// '13.731547730050778'
 	// '100.56798934936523'
-	var mylat = document.getElementById("event_latitude").value;
-	var mylng = document.getElementById("event_longitude").value;
+	var mylat = document.getElementById("activity_latitude").value;
+	var mylng = document.getElementById("activity_longitude").value;
   if (jQuery.isEmptyObject(mylat)) {
  //    mylat = '12.9667';
  //    mylng = '77.5667';
@@ -64,7 +64,7 @@
   var infowindow = new google.maps.InfoWindow();
   
   // Address Autocomplete
-  var input = document.getElementById('event_address');
+  var input = document.getElementById('activity_address');
   var autocomplete = new google.maps.places.Autocomplete(input);
   autocomplete.bindTo('bounds', map);
   
@@ -72,8 +72,8 @@
 	google.maps.event.addListener(marker, "dragend", function() {
 		var point = marker.getPosition();
 		map.panTo(point);
-		document.getElementById("event_latitude").value = point.lat();
-		document.getElementById("event_longitude").value = point.lng();
+		document.getElementById("activity_latitude").value = point.lat();
+		document.getElementById("activity_longitude").value = point.lng();
 		infowindow.close();
     marker.setIcon(defaultImage);
   });
@@ -86,8 +86,8 @@
     marker.setPosition(place.geometry.location);
     map.panTo(place.geometry.location);
     map.setZoom(16);
-		document.getElementById("event_latitude").value = place.geometry.location.lat();
-		document.getElementById("event_longitude").value = place.geometry.location.lng();
+		document.getElementById("activity_latitude").value = place.geometry.location.lat();
+		document.getElementById("activity_longitude").value = place.geometry.location.lng();
 		
 		// Sets the proper image on the marker. ie. school/hospital marker
 		var image = new google.maps.MarkerImage(

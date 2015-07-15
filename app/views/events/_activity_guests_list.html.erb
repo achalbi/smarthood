@@ -1,8 +1,8 @@
-<div class="row">
+<div class="row mb5">
   
              <%="".pluralize(ad_users.count) %>
                 <% if activity.admin?(current_user) %>
-                 <a href="#" id="moderator" class="btn btn-warning btn-custom mr15 pull-right button_toggle" data-toggle="modal" data-target="#modal_add_mod">Edit</a>
+                 <a href="#" id="moderator" class="btn btn-warning btn-custom mr20 pull-right button_toggle" data-toggle="modal" data-target="#modal_add_mod">Edit</a>
                 <% end %>
                 
               <%="".pluralize(inv_users.count) %>
@@ -69,11 +69,9 @@
           </ul>
       
    </div>
-          <% else %>
-         
-              <address>No guests in the sub-event</address>
-            
-          <% end %>
+    <% else %>
+              <p class="semibold">No guests in the sub-event</p>
+    <% end %>
       
 
 <%= form_for( activity, url: add_activity_moderators_event_path(event), method: :get, remote: true) do |f| %>
@@ -96,14 +94,14 @@
          <aside class="">
           <section>
             <!-- <h2 style="margin-left:65px;padding:3px;">Moderators</h2> -->
-             <ul class="list-unstyled pl0">
+             <ul class="list-unstyled pl0 mb0">
               <% if @ads.count > 1 %>
                   <% @ads.each do |uc| %>
                   <% user = User.find(uc.user_id) %>
                   <% if user == current_user  %>
                     <% next %>
                   <% end %>
-                  <li class="tr-hover pa10 li-none select_unselect_community c-pointer">
+                  <li class="tr-hover li-none select_unselect_community c-pointer">
                     <div class="checkboxFive pull-right mr50" style="margin-top:12px;">
                         <%= check_box_tag 'user_ids[]', user.id, uc.is_admin?, id: "checkboxFiveInput#{uc.id}" %>
                       <label for="checkboxFiveInput<%= uc.id %>"></label>
@@ -256,7 +254,7 @@ $("#invite_everyone").click( function() {
 $(function() {
 });
 
-$(".token-input-list-facebook").addClass("form-control mt5 font-15 autocomplete-border");
+$(".token-input-list-facebook").addClass("form-control mt5 font-15 wd100 autocomplete-border");
 
 $('.remove_act').click(function(){
   $('.loading_page').show();

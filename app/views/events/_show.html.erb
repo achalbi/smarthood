@@ -2,7 +2,7 @@
 <% provide(:page_image, @event.photo.pic_url) %>
 <% unless signed_in? %>
 <% end %>
-        <article id="event_name" class="panel overflow-hidden mb5">
+        <article id="event_name" class="panel overflow-hidden mb5 mr3">
             <header class="thumbnail">
             <div class="media wallpaper-container">
             <div class="image_overlay wallpaper">
@@ -46,7 +46,7 @@
                                         </ul>
                                     </div>
                                     <div id="back_to_event" class="hide pull-right mb5">
-                                        <%= link_to "Back to Event",@event,class: "semibold btn btn-info btn-custom", remote: true %>
+                                        <%= link_to "Back to Event",@event,class: "semibold btn btn-info btn-custom mr3", remote: true %>
                                     </div>
       <!--<% if @event.responded?(current_user) %>
        <a id="create_activity" class="btn btn-sm btn-success pull-right mr10" href="#" data-toggle="modal" data-target="#modal_create_activity">Add Activity</a>
@@ -120,8 +120,13 @@
                   <div class="col-sm-9 col-xs-9">
                   <%= f.text_field :address, :placeholder => :location, :size => 43, class: 'form-control events_with_autocomplete inherit_width', 'data-autocompleteUrl' => search_address_events_path , 'data-validation' => "length",
                  'data-validation-length' =>"3-250", 'data-validation-error-msg' => "The event address has to be a value between 3-250 characters", value: @event.address %>&nbsp;&nbsp;&nbsp;
-                
                 </div>
+                 <%= hidden_field_tag 'location_name' %>
+                    <%= f.hidden_field 'latitude'  %>
+                    <%= f.hidden_field 'longitude' %>
+                      <div class="form-group googlemap mb0">
+                        <%= render partial: "locations/activity_googlemap" %>
+                    </div>
                   <div class="" id="view_map_act">
                   </div>
                 </div>

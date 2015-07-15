@@ -1,4 +1,4 @@
-          <a  id="back_to_album" href="<%= request.referer %>/group_photos?grp_id=<%= @group.id %>" data-remote="true" class="btn btn-primary pull-right mr5  btn-custom">Back</a>
+          <a  id="back_to_album" href="<%= request.referer %>/group_photos?grp_id=<%= @group.id %>" data-remote="true" class="btn btn-primary pull-right mr5 btn-custom">Back</a>
           <div id="group_gallery"  ></div>
           <div id="gallery"  >
             <% if community.is_active?(current_user, community) %>
@@ -117,6 +117,7 @@
               });
 
 $('#album_privacy').addClass('form-control');
+  $('#back_to_album').hide();
 
 $('#grid').find('li').click(function(){
   $('#upload_pics_grp').hide();

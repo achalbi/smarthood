@@ -2,7 +2,7 @@ class EventsController < ApplicationController
   include UsersHelper, EventsHelper, GroupsHelper, ActivitynotificationsHelper
   require 'open-uri'
   helper_method :sort_column, :sort_direction
-  autocomplete :name, :extra_data => [:email]
+  #autocomplete :name, :extra_data => [:email]
 
   def new
     @group_ids = nil

@@ -91,6 +91,12 @@
                   <%= f.text_field :address, :placeholder => :location, :size => 43, class: 'form-control events_with_autocomplete inherit_width', 'data-autocompleteUrl' => search_address_events_path , 'data-validation' => "length",
                    'data-validation-length' =>"3-250", 'data-validation-error-msg' => "The event address has to be a value between 3-250 characters" %>&nbsp;&nbsp;&nbsp;
                 </div>
+                 <%= hidden_field_tag 'location_name' %>
+                    <%= f.hidden_field 'latitude'  %>
+                    <%= f.hidden_field 'longitude' %>
+                      <div class="form-group googlemap mb0">
+                        <%= render partial: "locations/activity_googlemap" %>
+                    </div>
                 <div class="input" id="view_map">
                 </div>
                 </div>

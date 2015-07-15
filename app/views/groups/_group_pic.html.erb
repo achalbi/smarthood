@@ -21,22 +21,20 @@
                 <div class="row">
                  <div class="col-xs-12 pt5 pr5">
                 <div class="center" id="follow_form">
-                  <% unless current_user.id == @group.User_id %>
-                    <% if @group.privacy? %>
-                    <%= link_to "join",join_grp_group_path(@group), class: "btn btn-success btn-custom secure pull-right show_loading mr5" , remote: true %>
-                    <% else %>
-                        <% if @group.following?(current_user, @group) %>
-                        <%= render 'unfollow', :group => @group %>
-                        <% else %>
-                        <%= render 'follow', :group => @group %>
-                        <% end %>
-                    <% end %>
+                    <% if @group.is_admin?(current_user) %>
+                      <a href="#" id="edit_group" class="btn btn-warning btn-custom pull-right mr5" data-toggle="modal" data-target="#">Edit</a>
+                     <% if @group.is_joined?(current_user, @group) && @group.can_admin_unjoin?(current_user) %>
+                       <%= link_to "Unjoin", unjoin_grp_group_path(@group), class: "btn btn-danger btn-custom pull-right mr5", remote: true %>
+                     <% end %>
                   <% else %>
-                    <a href="#" id="edit_group" class="btn btn-warning btn-custom secure pull-right show_loading mr5" data-toggle="modal" data-target="#">Edit</a>
-                   <% if @group.is_joined?(current_user, @group) %>
-                   <%= link_to "Unjoin", unjoin_grp_group_path(@group), class: "btn btn-danger btn-custom secure pull-right show_loading mr5", remote: true %>
-                   <% end %>
-                   <% end %>
+                    <% if @group.is_joined?(current_user, @group) %>
+                       <%= link_to "Unjoin", unjoin_grp_group_path(@group), class: "btn btn-danger btn-custom pull-right mr5", remote: true %>
+                     <% else %>
+                        <% if @group.privacy? %>
+                          <%= link_to "join",join_grp_group_path(@group), class: "btn btn-success btn-custom secure pull-right show_loading mr5" , remote: true %>
+                        <% end %>
+                     <% end %>
+                  <% end %>
                 </div>
             </div>
         </div>

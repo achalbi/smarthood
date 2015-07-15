@@ -91,9 +91,14 @@
                   <%= link_to "Hide map", '#', id: "hide_map_link_event",  class: "btn btn-danger mt3 btn-sm mr12-xs mr60-sm icon prev" %>
                   <div class="col-sm-9">
                   <%= f.text_field :address, :placeholder => :location, :size => 43, class: 'form-control  events_with_autocomplete inherit_width', 'data-autocompleteUrl' => search_address_events_path , 'data-validation' => "length",
-     'data-validation-length' =>"3-250", 'data-validation-error-msg' => "The event address has to be a value between 3-250 characters" %>&nbsp;&nbsp;&nbsp;
-                
+     'data-validation-length' =>"3-250", 'data-validation-error-msg' => "The event address has to be a value between 3-250 characters" %>
                 </div>
+                    <%= hidden_field_tag 'location_name' %>
+                    <%= f.hidden_field 'latitude'  %>
+                    <%= f.hidden_field 'longitude' %>
+                      <div class="form-group googlemap mb0">
+                        <%= render partial: "locations/googlemap" %>
+                    </div>                
                   </div>
                 <div class="" id="view_map">
                 

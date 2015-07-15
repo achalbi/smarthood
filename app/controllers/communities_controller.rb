@@ -1443,6 +1443,7 @@ def search_app_user
     @inv_users = User.where(['id IN (?)', @group.user_groups.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED,false).collect(&:user_id)])
     @ad_users = User.where(['id IN (?)', @group.user_groups.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED,true).collect(&:user_id)])
     @is_admin = @ad_users.include? current_user
+    @all_users =  @group.user_groups
     @ucs = @group.user_groups.where("group_id = ? AND invitation = ?",params[:grp_id], Uc_enum::JOINED)
     @community = Community.find(params[:id])
   end

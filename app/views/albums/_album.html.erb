@@ -13,7 +13,7 @@
                       
                     <% end %>
                       <% if @album.privacy ==  Privacyenum::PUBLIC || @album.user == current_user  %>
-                       <%= link_to "Share", '#', id: "share",  class: "btn btn-success  mr20 btn-custom" %>
+                       <%= link_to "Share", '#', id: "share",  class: "btn btn-success mr10 btn-custom" %>
                       <% end %>
                       <% if @album.downloadable? %>
                        <%= link_to "Download", gen_downloadable_link_album_path(@album.id) , id: "gen_download",  class: "btn btn-success btn-custom  mr20", remote: true %>

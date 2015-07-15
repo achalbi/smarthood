@@ -1190,3 +1190,11 @@ top: 40%!important;
 * html .ui-autocomplete {
     height: 250px;
 }
+
+/* google maps */
+
+html, body, #googlemap {
+        height: 100%;
+        margin: 0px;
+        padding: 0px
+      }

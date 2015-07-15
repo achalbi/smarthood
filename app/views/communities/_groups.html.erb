@@ -79,11 +79,11 @@
 
           <div class="center_block clearfix">
             <div class="control-label pl15 mt15">
-            <%= label_tag "Private group:" %>
+            <%= label_tag "Privacy" %>
             </div>
             <div>
                   <div class="col-sm-9">
-                    <%= f.select :privacy, options_for_select([["Public", Privacyenum::PUBLIC], ["Members", Privacyenum::MEMBERS], ["Private", Privacyenum::PRIVATE]], f.object.privacy) %>
+                    <%= f.select :privacy, options_for_select([["Public", Privacyenum::PUBLIC], ["Private", Privacyenum::PRIVATE]], f.object.privacy) %>
                   </div>
           </div>
           </div>
@@ -265,10 +265,10 @@ function handleImage(e){
             zindex: 11001,
             hintText: "Type in a user name",
           });
-
-$("#group_privacy").addClass('form-control mt5-xs col-sm-4  mr10 pull-left pl6');
-$(".token-input-list-facebook").addClass("form-control wd100 font-15 autocomplete-border");
-
+          
+          $("#group_privacy").addClass('form-control mt5-xs col-sm-4  mr10 pull-left pl6');
+          $(".token-input-list-facebook").addClass("form-control wd100 font-15 autocomplete-border");
+          
 
 </script>
 

@@ -17,7 +17,7 @@
                       <ul class="list-unstyled mb0">
                        <% ad_users.each do |user|%>
                             <li>
-                                <div class="col-sm-6 pl0 pr13 mb5">
+                                <div class="col-sm-6 pl0 pr5 mb5">
                                     <div class="panel widget nm">
                                         <div class="table-layout nm">
                                             <img src="<%= gravatar_for_url user, size: 82 %>" class="pull-left gravatar" ></img>
@@ -25,7 +25,7 @@
                                             <div class=" valign-middle">
                                                 <div class="panel-body mt5 pt10 pl95 pb0 pr0">
                                                     <p class="semibold mt0 mb0 ellipsis"><%= link_to user.name, user, remote: true %></p>
-                                                    <p class="mb0 ellipsis"><a class=" text-muted mb0" mailto="<%= user.email %>"><%= user.email %></a></p>
+                                                    <p class="mb0 ellipsis"><a class=" ellipsis text-muted" mailto="<%= user.email %>"><%= user.email %></a></p>
                                                     <p>
                                                       <% if current_user.is_cu_admin?(community) && user.id != current_user.id %>
                                                         <%= link_to "Remove", "/communities/#{community.id}/remove_user_cu?user_id=#{user.id}", class: "uibutton pull-right button_toggle remove_user", remote: true %>
@@ -41,9 +41,6 @@
                       </ul>
                     </div>
                    
-
-        
-                       
                                <!-- <span class=""><%="Member".pluralize(inv_users.count) %></span>-->
                             
         
@@ -54,14 +51,14 @@
               <% if inv_users.count > 0 %>
                 <% inv_users.each do |user|%>
                  <li>
-                   <div class="col-sm-6 pl0  pr13 mb5">
+                   <div class="col-sm-6 pl0 pr5 mb5">
                             <div class="panel widget nm">
                                 <div class="table-layout nm">
                                     <img src="<%= gravatar_for_url user, size: 82 %>" class="pull-left gravatar" ></img>
                                     <div class=" valign-middle">
                                         <div class="panel-body mt5 pl95 pb0 pr0">
                                             <p class=" ellipsis semibold text-muted mt0 mb0"><%= link_to user.name, user, remote: true %></h5>
-                                            <p class="mb0 ellipsis"><a class="text-muted" mailto="<%= user.email %>"><%= user.email %></a></p>
+                                            <p class="mb0 ellipsis"><a class="ellipsis text-muted" mailto="<%= user.email %>"><%= user.email %></a></p>
                                             <p>
                                               <% if current_user.is_cu_admin?(community) && user.id != current_user.id %>
                                                   <%= link_to "Remove", "/communities/#{community.id}/remove_user_cu?user_id=#{user.id}", class: "uibutton pull-right button_toggle remove_user", remote: true %>
@@ -75,11 +72,19 @@
                      </li>    
                 <% end %>
             </ul>
-         
           <% else %>
               <!--<address>No Members in the group</address>-->
           <% end %>
         </div>
+        
+        
+        
+        
+        
+        
+        
+        
+        
        
 
 <script type="text/javascript">

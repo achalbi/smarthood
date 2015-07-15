@@ -86,7 +86,7 @@
       </ul>
   </div>
     <div  class="tab-pane np" id="about_groups">
-           <%= render partial: 'groups/about', locals: {ad_users: @ad_users, inv_users: @inv_users, ad_groups: @ad_groups, inv_groups: @inv_groups, group: @group} %>
+           <%= render partial: 'groups/about', locals: {ad_users: @ad_users, mem_users: @mem_users, ad_groups: @ad_groups, inv_groups: @inv_groups, group: @group} %>
      </div>
     <div  class="tab-pane np " id="photos_groups">
         <%= render partial: 'groups/albums', locals: {group: @group, albums: @group.albums, album: @album, community: @community} %>
