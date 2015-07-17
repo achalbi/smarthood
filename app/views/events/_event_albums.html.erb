@@ -82,14 +82,17 @@
             </div>
             </div>
           </div>
+     
           <div class="center_block clearfix ">
-            <%= f.label  "Album downloadable: ", class: "control-label pl15 mt15 pull-left" %>
+            <%= f.label  "Album downloadable: ", class: "control-label pl15 mt10 pull-left" %>
             <div>
-            <div class="col-sm-1">
-              <%= check_box_tag :downloadable %>
+            <div class="col-sm-1 ">
+              <%= f.check_box :downloadable, class: "mt14 ml15" %>
             </div>
             </div>
           </div>
+          
+          
         <div class="center_block clearfix mt15">
          <div class="col-sm-9">    
            <%= fields_for :photos, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>

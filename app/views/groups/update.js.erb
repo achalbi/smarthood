@@ -1,2 +1,3 @@
-$("#grp_name").click();
-$("#comm_groups_list").html("<%= escape_javascript(render partial: 'communities/show_group', locals: { group: @group, community: @community} ) %>");
+$('#community_tabs').html("<%= escape_javascript(render :partial => 'groups/show') %>");
+$('body').removeClass('modal-open');
+$('body').css('padding-right', '');

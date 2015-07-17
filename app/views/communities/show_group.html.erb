@@ -1,7 +1,6 @@
 <script type="text/javascript">
-$("#community_tabs").html("<%= escape_javascript(render partial: 'communities/show_group', locals: { group: @group, inv_users: @inv_users, ad_users: @ad_users, community: @community} ) %>");
+$("#community_tabs").html("<%= escape_javascript(render partial: 'communities/show_group', locals: { group: @group, mem_users: @mem_users, ad_users: @ad_users, community: @community} ) %>");
 $(".busy").button('reset');
 $('#modal_create_group').modal('hide');
 $('#create_grp_form')[0].reset();
-
 </script>

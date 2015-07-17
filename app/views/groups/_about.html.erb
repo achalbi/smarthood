@@ -60,7 +60,7 @@
                 <div class="table-layout nm">
                     <img src="<%= gravatar_for_url user, size: 82 %>" class="pull-left gravatar" ></img>
                           <p class="mb0">
-                              <% if @group.is_joined?(current_user, @group) %>
+                              <% if user == current_user %>
                                  <%= link_to "Unjoin", unjoin_grp_group_path(@group, user_id: user.id), class: "btn btn-xs btn-danger pull-right mr5 bd-top-none", data: { confirm: "You sure?" }, remote: true %>
                                <% end %>
                             </p>   

@@ -1439,12 +1439,13 @@ def search_app_user
   end
 
   def show_group
+    @user = current_user
     @group = Group.find(params[:grp_id])
-    @inv_users = User.where(['id IN (?)', @group.user_groups.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED,false).collect(&:user_id)])
+    @mem_users = User.where(['id IN (?)', @group.user_groups.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED,false).collect(&:user_id)])
     @ad_users = User.where(['id IN (?)', @group.user_groups.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED,true).collect(&:user_id)])
+    @all_users =  @group.user_groups.where('invitation = ? ',Uc_enum::JOINED)
     @is_admin = @ad_users.include? current_user
-    @all_users =  @group.user_groups
-    @ucs = @group.user_groups.where("group_id = ? AND invitation = ?",params[:grp_id], Uc_enum::JOINED)
+    @ucs = @group.user_groups.where("user_id = ?  AND is_admin=?",current_user.id, true )
     @community = Community.find(params[:id])
   end
 

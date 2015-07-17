@@ -143,13 +143,15 @@
                                     <span class=" loading_menu pull-right hide" ><div class="indicator show"><span class="spinner "></span></div></span>
                                 </a>
                     </li>
-                    <li> 
+                    
+                    <!-- Buy and sell to be added later -->
+                    <!--<li> 
                                 <a href="<%= buysell_index_path %>" data-remote="true" id="buysell_home">
                                     <span class="figure"><i class="ico-cart-add"></i></span>
                                     <span class="text">Buy & Sell</span>
                                     <span class=" loading_menu pull-right hide" ><div class="indicator show"><span class="spinner "></span></div></span>
                                 </a>
-                    </li>
+                    </li>-->
                     
                       <!--<li>
                         <a href="javascript:void(0);" data-target="#images" data-toggle="submenu" data-parent=".topmenu">
@@ -200,13 +202,16 @@
                                     <span class=" loading_menu pull-right hide" ><div class="indicator show"><span class="spinner "></span></div></span>
                                    </a>
                                   </li>
-                                <li>
-                                    <a href='<%=groups_com_community_path(@community) %>' class="color-white" id='groups_community' data-remote="true">
-                                    <span class="figure"><i class="ico-group"></i></span>
-                                    <span class="text">Groups</span>
-                                    <span class=" loading_menu pull-right hide" ><div class="indicator show"><span class="spinner "></span></div></span>
-                                   </a>
-                                </li>
+                                  
+                                <% if @community.is_joined?(current_user, @community) %>  
+                                    <li>
+                                        <a href='<%=groups_com_community_path(@community) %>' class="color-white" id='groups_community' data-remote="true">
+                                        <span class="figure"><i class="ico-group"></i></span>
+                                        <span class="text">Groups</span>
+                                        <span class=" loading_menu pull-right hide" ><div class="indicator show"><span class="spinner "></span></div></span>
+                                       </a>
+                                    </li>
+                                <% end %>
                                 <li>
                                     <a href='<%=events_com_community_path(@community) %>' class="color-white"  id='events_community' data-remote="true">
                                     <span class="figure"><i class="ico-calendar"></i></span>

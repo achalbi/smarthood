@@ -1,14 +1,16 @@
      <div class="center loading_page hide" ><img src="/assets/loading.gif"></div>
           <div class="col-md-9 col-xs-12 pl5 pt5">
             <div class="row">
-                <a href="#" class="btn btn-success btn-custom pull-right mb5 mr20" data-toggle="modal" data-target="#modal_create_community">Create Community</a>
-            </div>    
-             <ul class='list-unstyled p0 mb0' id='my_comm_ul'>
-                <% @communities.each do |comm| %>
-                      <%=  render  partial: 'community', locals: {community: comm } %>
-                <% end %> 
-              
-             </ul>
+                <a href="#" class="btn btn-success btn-custom pull-right mb5" data-toggle="modal" data-target="#modal_create_community">Create Community</a>
+            </div>  
+            <div class="row pl15 pr0">
+               <ul class='list-unstyled p0 mb0' id='my_comm_ul'>
+                  <% @communities.each do |comm| %>
+                        <%=  render  partial: 'community', locals: {community: comm } %>
+                  <% end %> 
+                
+               </ul>
+            </div>
         </div>
         
         
@@ -32,6 +34,7 @@
               <div class="col-sm-9 getname">
                 <%= f.text_field :name, :placeholder=>"Title", 'data-validation' => "length",
                'data-validation-length' =>"3-25", 'data-validation-error-msg' => "The community name has to be a value between 3-25 characters", id: "comm_name", class: "form-control" %>
+               <p></p>
               </div>
           </div>
          </div>
@@ -42,8 +45,14 @@
                 <%= link_to "View map", '#', id: "view_map_link_crt",  class: "btn-info mt3 btn-sm icon add pull-right mr60-sm mr12-xs icon prev" %>
                 <%= link_to "Hide map", '#', id: "hide_map_link_crt",  class: "btn-danger mt3 btn-sm icon add pull-right mr60-sm mr12-xs icon prev" %>
                 <div class="col-sm-9">
-                  <%= f.text_field :address, :placeholder => :location, :size => 43, class: 'cu_with_autocomplete form-control inherit_width', 'data-autocompleteUrl' => search_address_communities_path, id: "create_community_address", 'data-validation' => "required", 'data-validation-error-msg' => "Location can't be blank" %>&nbsp;&nbsp;&nbsp;
+                  <%= f.text_field :address, :placeholder => :location, :size => 43, class: 'cu_with_autocomplete form-control inherit_width', 'data-autocompleteUrl' => search_address_communities_path, id: "community_address", 'data-validation' => "required", 'data-validation-error-msg' => "Location can't be blank" %>&nbsp;&nbsp;&nbsp;
                 </div>
+                 <%= hidden_field_tag 'location_name' %>
+                    <%= f.hidden_field 'latitude'  %>
+                    <%= f.hidden_field 'longitude' %>
+                      <div class="form-group googlemap mb0">
+                        <%= render partial: "locations/community_googlemap" %>
+                    </div>
             </div>
             <div class="input" id="view_map_crt">
 
@@ -76,7 +85,8 @@
               </div>
               <div>
                     <div class="col-sm-9">
-                      <%= f.select :privacy, options_for_select([["Public", Privacyenum::PUBLIC], ["Private", Privacyenum::PRIVATE], ["Protected", Privacyenum::PROTECTED]]) %>
+                      <!--<%= f.select :privacy, options_for_select([["Public", Privacyenum::PUBLIC], ["Private", Privacyenum::PRIVATE], ["Protected", Privacyenum::PROTECTED]]) %>-->
+                      <%= f.select :privacy, options_for_select([["Public", Privacyenum::PUBLIC], ["Private", Privacyenum::PRIVATE] ]) %>
                     </div>
               </div>
           </div> 

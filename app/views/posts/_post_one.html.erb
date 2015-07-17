@@ -288,7 +288,7 @@
                        
                         <div id="comm_list">
                           <li>
-                            <span  class="center_block"><h5 class="timestamp">Select <%= "Community".pluralize(@joined_communities.count+1) %>:</h5>
+                            <span  class="center_block"><h5 class="timestamp">Select <%= "Community".pluralize(@joined_communities.count+1) %>:</h5></span>
 <!--                             <label>
                           <%= check_box_tag( "community_id[]", active_community.id, @selected_comm.include?(active_community)) %>
                               <span><%= active_community.name %></span>
@@ -320,7 +320,7 @@
                        
                         <div id="comm_list">
                           <li>
-                            <span  class="center_block"><h5 class="timestamp">Select <%= "Group".pluralize(@groups.count+1) %>:</h5>
+                            <span  class="center_block"><h5 class="timestamp">Select <%= "Group".pluralize(@groups.count+1) %>:</h5></span>
                           </li>
                           <% @groups.each do |group| %>
                              <li  class="tr-hover select_unselect_group_<%= post.id %> c-pointer">
@@ -604,3 +604,4 @@
 
 
     </script>
+    </div>

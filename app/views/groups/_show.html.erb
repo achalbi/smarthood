@@ -74,12 +74,15 @@
      <div class="tab-pane np active " id="posts_groups">  
       <ul class="list-unstyled" id="posts_groups_ul" >
             <div id="posts" style="overflow:auto;">
-                
-            <%= render :partial => 'posts/group_post', :locals => {:post => @post}, :group => @group %>
+                <% if @group.is_joined?(current_user, @group)%>
+                    <%= render :partial => 'posts/group_post', :locals => {:post => @post}, :group => @group %>
+                <% end %>
               <div id="div_post" class="resources<%= @group.id %>">
                 <%= render partial: 'posts/post', locals: {posts: @posts, group: @group}  %>
               </div>
-             
+              <% if @posts.blank? %>
+                <p class="semibold center">No posts to display</p>
+             <% end %>
               <div id="loading_page" class="center loading_page_post"></div>
             </div>
       

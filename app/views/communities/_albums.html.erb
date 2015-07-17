@@ -14,12 +14,14 @@
       <div id="gallery1">
        
        <ul id="grid" class="list-unstyled mb0"> 
-      <% unless albums.nil? %>
+      <% unless albums.blank? %>
         <% albums.each do |album| %>
           <% unless album.photos[0].nil? %>
            <%= render partial: 'groups/album_list', locals: {album: album} %>
           <% end %> 
         <% end %>
+      <% else %>
+        <p class="semibold center">No albums to display</p>
       <% end %>  
     </ul>
   </div>

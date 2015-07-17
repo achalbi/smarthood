@@ -51,6 +51,10 @@
     .wdp-100-xs {
         width: 100%!important;
     }
+    
+    .max-ht130-xs{
+        max-height: 130px;
+    }
    
         
 }
@@ -112,6 +116,9 @@
         margin-left: 160px!important;
     }
     
+    .max-ht192-md{
+        max-height: 192px;
+    }
 }
 
 @media(min-width: 767px) and (max-width: 991px){
@@ -121,6 +128,9 @@
     }
     .mb0-sm{
         margin-bottom: 0px!important;
+    }
+    .max-ht234-sm{
+        max-height: 234px;
     }
 }
 

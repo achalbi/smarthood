@@ -19,7 +19,7 @@
                                 <p class="mb5 ellipsis color-white font-11"><%= privacy_str(group)  %></p>-->
                                 </span>
                                 <% unless group.photo.nil? %>
-                                  <%= link_to cl_image_tag(group.photo.pic_url(:medium), class:"image_al_c1 unveiled ht193 ", id:"#{group.photo.id}"), group, remote: true %>
+                                  <%= link_to cl_image_tag(group.photo.pic_url(:medium_large), class:"image_al_c1 unveiled ht193 ", id:"#{group.photo.id}"), group, remote: true %>
                                 <% end %>
                             </div>
                         </div>

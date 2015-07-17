@@ -1,1 +1,1 @@
-$('#main').html('<%= escape_javascript(render("index")) %>')
+$("#community_tabs").html("<%= escape_javascript(render partial: 'communities/groups', locals: { groups: @groups, other_groups: @other_groups, community: @community, inv_groups: @inv_groups } ) %>");

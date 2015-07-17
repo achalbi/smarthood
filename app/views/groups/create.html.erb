@@ -1,0 +1,6 @@
+<script>
+$(".busy").button('reset');
+$('#modal_create_group').modal('hide');
+$('#create_grp_form')[0].reset();
+$('#community_tabs').html('<%= escape_javascript(render("show")) %>');
+</script>

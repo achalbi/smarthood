@@ -1,1 +1,1 @@
-$('#groups_community_li').click();
+$("#community_tabs").html("<%= escape_javascript(render partial: 'communities/groups', locals: { groups: @groups, other_groups: @other_groups, community: @community, inv_groups: @inv_groups } ) %>")

@@ -22,6 +22,7 @@
                  <div class="col-xs-12 pt5 pr5">
                 <div class="center" id="follow_form">
                     <% if @group.is_admin?(current_user) %>
+                    <%= link_to "Delete", @group, method: :delete, remote: true, data: { confirm: "Do you really want to delete this group?" }, class: "pull-right btn-custom btn btn-danger mr5", title: "Delete photo" %>
                       <a href="#" id="edit_group" class="btn btn-warning btn-custom pull-right mr5" data-toggle="modal" data-target="#">Edit</a>
                      <% if @group.is_joined?(current_user, @group) && @group.can_admin_unjoin?(current_user) %>
                        <%= link_to "Unjoin", unjoin_grp_group_path(@group), class: "btn btn-danger btn-custom pull-right mr5", remote: true %>

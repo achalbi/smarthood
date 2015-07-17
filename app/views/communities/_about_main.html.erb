@@ -40,14 +40,21 @@
      'data-validation-length' =>"3-25", 'data-validation-error-msg' => "The community name has to be a value between 3-25 characters", id: "comm_name", class: "form-control" %>
           <p style="margin-left:10px;"></p>
           </div>
+          
           </div>
 
           <div class="center_block clearfix">
             <%= f.label :location, class: " " %>
             <div class="input ">
-              <%= f.text_field :address, :placeholder => :location, :size => 43, class: 'form-control events_with_autocomplete inherit_width', id: 'community_address2', 'data-autocompleteUrl' => search_address_communities_path, 'data-validation' => "required", 'data-validation-error-msg' => "Location can't be blank" %>
+              <%= f.text_field :address, :placeholder => :location, :size => 43, class: 'form-control events_with_autocomplete inherit_width', id: "community_address", 'data-autocompleteUrl' => search_address_communities_path, 'data-validation' => "required", 'data-validation-error-msg' => "Location can't be blank" %>
               <%= link_to "View map", '#', id: "view_map_link2",  class: "uibutton icon prev" %>
             </div>
+             <%= hidden_field_tag 'location_name' %>
+             <%= f.hidden_field 'latitude'  %>
+             <%= f.hidden_field 'longitude' %>
+             <div class="form-group googlemap mb0">
+                <%= render partial: "locations/community_googlemap" %>
+             </div>
             <div class="input" id="view_map2">
 
             </div>

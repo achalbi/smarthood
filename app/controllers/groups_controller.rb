@@ -6,11 +6,25 @@ class GroupsController < ApplicationController
   	@group = Group.new
   end
   def index
-    @group = Group.new
+    #@group = Group.new
    # @groups = Group.where(:id => current_user.user_groups.collect(&:group_id)) 
    #@groups = active_community_user_groups
-   @my_groups = Group.where('id IN (?)', current_user.user_groups.collect(&:group_id))
-   @community = active_community 
+   #@my_groups = Group.where('id IN (?)', current_user.user_groups.collect(&:group_id))
+   #@community = active_community 
+   @community = Community.find(params[:id])
+    @selected_community = @community
+    @selected_community.req_pending_cnt = User.where(['id IN (?)' , @community.requested_uc.collect(&:user_id)]).count
+    @community.req_pending_cnt = @selected_community.req_pending_cnt
+    @my_groups_ids = current_user.user_groups.where("community_id = ? AND invitation = ? ", @selected_community.id, Uc_enum::JOINED ).collect(&:group_id).uniq
+    @groups = Group.where('id IN (?)', @my_groups_ids)
+    @other_groups = []
+    if @my_groups_ids.blank?
+      @other_groups = Group.where("community_id = ? AND privacy != ?", @selected_community.id, Privacyenum::PRIVATE )
+    else
+      @other_groups = Group.where("community_id = ? AND id NOT IN (?) AND privacy != ?", @selected_community.id, @my_groups_ids, Privacyenum::PRIVATE)
+    end
+    @group_ids = current_user.invited_groups.collect(&:group_id)
+    @inv_groups = Group.where('id IN (?)', @group_ids)
  end
 
  def create
@@ -44,19 +58,32 @@ class GroupsController < ApplicationController
     else
     	flash[:error] = "Group not created!"
        # redirect_to :action => :index
-     end 
-     if params[:community_id].nil?
+    end
+        @post = Post.new
+        @posts = @group.posts.paginate(page: params[:page], :per_page => 8)
+        @user = current_user
+        @users = @group.users
+        @album = Album.new
+        @mem_users = User.where(['id IN (?)', @group.user_groups.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED,false).collect(&:user_id)])
+        @ad_users = User.where(['id IN (?)', @group.user_groups.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED,true).collect(&:user_id)])
+        @all_users =  @group.user_groups.where('invitation = ? ',Uc_enum::JOINED)
+        @is_admin = @ad_users.include? current_user
+        @ucs = @group.user_groups.where("user_id = ?  AND is_admin=?",current_user.id, true )
+        @community = active_community
+=begin
+       if params[:community_id].nil?
          respond_to do |format|
            format.html { redirect_to :action => :index   }
            format.js { redirect_to @group   }
          end
      else
           respond_to do |format|
-           format.html { }
-           #format.js { redirect_to :controller => 'communities', :action => 'show_group', :grp_id => @group.id, id: params[:comm_id] }
-           format.js { redirect_to @group }
+           format.html {  }
+           #format.js { redirect_to :controller => 'communities', :action => 'show_group', :grp_id => @group.id, id: params[:community_id] }
+           format.js { }
          end
      end
+=end
    end
 
  def show
@@ -242,12 +269,25 @@ def create_album
   def update
     @group = Group.find(params[:id])
     @group.update_attributes(params[:group])
+            @post = Post.new
+        @posts = @group.posts.paginate(page: params[:page], :per_page => 8)
+        @user = current_user
+        @users = @group.users
+        @album = Album.new
+        @mem_users = User.where(['id IN (?)', @group.user_groups.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED,false).collect(&:user_id)])
+        @ad_users = User.where(['id IN (?)', @group.user_groups.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED,true).collect(&:user_id)])
+        @all_users =  @group.user_groups.where('invitation = ? ',Uc_enum::JOINED)
+        @is_admin = @ad_users.include? current_user
+        @ucs = @group.user_groups.where("user_id = ?  AND is_admin=?",current_user.id, true )
+        @community = active_community
    # getNotifiableUsers(Objecttypeenum::GROUP, @group, nil, nil, Uc_enum::UPDATED)
+=begin
       respond_to do |format|
        format.html { }
        #format.js { redirect_to :controller => 'communities', :action => 'show_group', :grp_id => @group.id, id: params[:comm_id] }
        format.js { redirect_to @group }
      end
+=end
   end
 
 def acceptrequest
@@ -300,6 +340,7 @@ end
 
 def destroy
   Group.find(params[:id]).destroy
+  redirect_to action: "index", status: 303, id: active_community.id
 end
 
 
