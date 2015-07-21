@@ -128,13 +128,13 @@ function pageHeight() {
 }
  
 $('document').ready(function(){
+});
   intervalID = setInterval(checkScroll_comm_post, 1000);
   $('#posts_community_li').addClass('active');
   $('#about_community_li').removeClass('active');
   $('#photos_community_li').removeClass('active');
   $('#members_community_li').removeClass('active');
   $('#groups_community_li').removeClass('active');
-});
 
   $('.show_loading').click(function(){
     $('.loading_page').show();    
@@ -142,6 +142,7 @@ $('document').ready(function(){
 
 
 $(document).ready(function(){
+});
   $.validate({
     form : '#new_post',
     validateOnBlur : false,
@@ -151,7 +152,6 @@ $(document).ready(function(){
       $('#community_post_submit').button('loading');
     },
   });
-});
 
 
 

@@ -66,7 +66,7 @@
                   <div>
                     <a id="end_date_add_link_event" class="btn btn-success btn-sm  mt3 mr12-xs mr60-sm icon add">End Date</a>
                   <div class="col-sm-9 col-xs-9">
-                  <%= f.text_field :starts_at, :placeholder => "Time" %>
+                  <%= f.text_field :starts_at, :placeholder => "Time", :value => (@event.starts_at.blank? ? '' : @event.starts_at.strftime('%d/%m/%Y %H:%M')) %>
                 </div>
                   </div>
                 </div>
@@ -78,7 +78,7 @@
                   <div>
                    <a id="end_date_remove_link_event" href="#" class="btn btn-danger btn-sm mt3 mr12-xs mr60-sm icon prev">Remove</a>
                   <div class="col-sm-9 col-xs-9">
-                    <%= f.text_field :ends_at %>
+                    <%= f.text_field :ends_at, :placeholder => "Time", :value => (@event.ends_at.blank? ? '' : @event.ends_at.strftime('%d/%m/%Y %H:%M')) %>
                   </div>
                 </div> 
                   </div>

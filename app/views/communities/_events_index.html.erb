@@ -78,24 +78,24 @@
 
                 <div class="center_block clearfix">
                   <div class="control-label pl15 mt15">
-                  <%= label_tag :starts_at %>
+                    <%= label_tag :starts_at %>
                   </div>
                 <div>
                   <a id="end_date_add_link" href="#" class="btn-success mt3 btn-sm icon add pull-right mr60-sm mr12-xs icon prev icon add">End Date</a>
                   <div class="col-sm-9 col-xs-9">
-                  <%= f.text_field :starts_at, :placeholder => "Time" %>
-                    </div>
+                    <%= f.text_field :starts_at, :placeholder => "Time", :value => (@event.starts_at.blank? ? '' : @event.starts_at.strftime('%d/%m/%Y %H:%M')) %>
+                  </div>
                 </div>
                 </div>
                 
                 <div class="center_block clearfix" id="end_date">
                   <div class="control-label pl15">
-                  <%= label_tag :ends_at %>
+                  <%= label_tag :ends_at  %>
                     </div>
                     <div>
                    <a id="end_date_remove_link" href="#" class="btn-danger mt3 btn-sm add pull-right mr60-sm mr12-xs icon prev">Remove</a>
                   <div class="col-sm-9 col-xs-9">
-                    <%= f.text_field :ends_at %>
+                    <%= f.text_field :ends_at, :placeholder => "Time" , :value => (@event.ends_at.blank? ? '' : @event.ends_at.strftime('%d/%m/%Y %H:%M')) %>
                     </div>
                   </div>
                 </div> 
@@ -193,6 +193,8 @@
   
 <script type="text/javascript">
 
+
+
 $(document).ready(function(){
   $("li.event").click(function(){
     $(this).next('a').click();
@@ -230,7 +232,7 @@ $(document).ready(function(){
       $(".modal").modal("hide");
     },
   });
-  $('.loading_sub').hide();
+  $('.loading_page_post').hide();
 
 
 
@@ -393,7 +395,9 @@ $('#end_date_remove_link').click(function(){
 });
 
 
+
 $(document).ready(function() {
+    });
 
   for (var i = 1; i < 99999; i++){
      window.clearInterval(i);
@@ -420,7 +424,7 @@ $(document).ready(function() {
         onSelect: function (selectedDateTime){
           endDateTextBox.datetimepicker('option', 'minDate', startDateTextBox.datetimepicker('getDate') );
         },
-        dateFormat: "dd/mm/yy"
+        format:'d/m/Y H:i',
       });
       endDateTextBox.datetimepicker({ 
         onClose: function(dateText, inst) {
@@ -437,10 +441,9 @@ $(document).ready(function() {
         onSelect: function (selectedDateTime){
           startDateTextBox.datetimepicker('option', 'maxDate', endDateTextBox.datetimepicker('getDate') );
         },
-        dateFormat: "dd/mm/yy"
+        format:'d/m/Y H:i',
       });
 
-    });
 </script>
 
 
@@ -555,7 +558,6 @@ $(document).ready(function() {
                             intervalID = setInterval(checkScroll_prev_evts, 500);
                           }
                       });
-
 
 
                   </script>

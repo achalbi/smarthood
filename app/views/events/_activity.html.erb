@@ -62,7 +62,7 @@
                     
                 <a id="end_date_add_link" class="btn btn-success btn-sm mt3 icon add pull-right mr60-sm mr12-xs">End Date</a>
                   <div class="col-sm-9 col-xs-9">
-                  <%= f.text_field :starts_at, class:"form-control", :placeholder => "Time" %>&nbsp;&nbsp;&nbsp;
+                  <%= f.text_field :starts_at, class:"form-control", :placeholder => "Time", :value => (@event.starts_at.blank? ? '' : @event.starts_at.strftime('%d/%m/%Y %H:%M')) %>
                 </div>
                 </div>
                   </div>
@@ -76,13 +76,13 @@
                    <a id="end_date_remove_link"  href="#" class="btn-danger btn-sm icon add pull-right mt3 mr60-sm mr12-xs icon prev">Remove</a>
                     
                   <div class="col-sm-9 col-xs-9">
-                    <%= f.text_field :ends_at, class:"form-control" %>
+                    <%= f.text_field :ends_at, class:"form-control", :placeholder => "Time", :value => (@event.ends_at.blank? ? '' : @event.ends_at.strftime('%d/%m/%Y %H:%M')) %>
                   </div>
                 </div> 
                   </div>
 
                 <div class="center_block clearfix">
-                  <%= f.label :location, class: "control-label ml15" %>
+                  <%= f.label :location, class: "control-label ml15 mt15" %>
                   <div>
                     
                   <%= link_to "View map", '#', id: "view_map_link_activity",  class: "btn-info mt3 btn-sm icon add pull-right mr60-sm mr12-xs icon prev" %>
@@ -282,7 +282,7 @@ var endDateTextBox = $("#activity_ends_at");
         onSelect: function (selectedDateTime){
           endDateTextBox.datetimepicker('option', 'minDate', startDateTextBox.datetimepicker('getDate') );
         },
-        dateFormat: "dd/mm/yy"
+        format:'d/m/Y H:i'
       });
       endDateTextBox.datetimepicker({ 
         onClose: function(dateText, inst) {
@@ -299,7 +299,7 @@ var endDateTextBox = $("#activity_ends_at");
         onSelect: function (selectedDateTime){
           startDateTextBox.datetimepicker('option', 'maxDate', endDateTextBox.datetimepicker('getDate') );
         },
-        dateFormat: "dd/mm/yy"
+        format:'d/m/Y H:i'
       });
 
 

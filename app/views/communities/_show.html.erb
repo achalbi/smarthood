@@ -12,7 +12,8 @@
             <div class="huge-title">
                 <%= link_to cl_image_tag(@selected_community.photo.pic_url(:largest),rel: "#{@selected_community.id}", id:"#{@selected_community.photo.id}", width: "100%" ) , @selected_community.photo.pic_url, class: "fancybox-album albumLink roundCorner wallpaper-media wallpaper-image native" , title: "#{@selected_community.name}", remote: true  %>
                <h3 class="  meta bottom bottom-gardient ht55 mb0 animated color-white" data-wow-offset="80" data-wow-duration="3s" style="visibility: visible;-webkit-animation-duration: 3s; -moz-animation-duration: 3s; animation-duration: 3s;  text-shadow: 2px 2px #6A6A6A;"></h3>
-               <h3 class="  meta bottom mb0 wow bounceInDown animated color-white" data-wow-offset="80" data-wow-duration="3s" style="visibility: visible;-webkit-animation-duration: 3s; -moz-animation-duration: 3s; animation-duration: 3s;  text-shadow: 2px 2px #6A6A6A;"><%= @selected_community.name %></h3>
+               <!--<h3 class="  meta bottom mb0 wow bounceInDown animated color-white" data-wow-offset="80" data-wow-duration="3s" style="visibility: visible;-webkit-animation-duration: 3s; -moz-animation-duration: 3s; animation-duration: 3s;  text-shadow: 2px 2px #6A6A6A;"><%= @selected_community.name %></h3>-->
+               <h3 class="  meta bottom mb0 wow animated color-white" data-wow-offset="80" data-wow-duration="3s" style="visibility: visible;-webkit-animation-duration: 3s; -moz-animation-duration: 3s; animation-duration: 3s;  text-shadow: 2px 2px #6A6A6A;"><%= @selected_community.name %></h3>
             </div>
             </div>
             </div>

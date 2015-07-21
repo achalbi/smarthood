@@ -28,7 +28,7 @@
  <% end %>
 <address>
     <strong> <%= link_to community.name, "#", style: "font-size:14px;" %></strong> <br>
-    <strong>Description : &nbsp;</strong> <%= community.description %><br>
+    <strong></strong> <%= community.description %><br>
     <strong>Privacy : &nbsp;</strong><%= privacy_str(community) %><br>
   <% unless (community.req_pending_cnt.nil? || community.req_pending_cnt == 0)%>
     <strong><%=  'Request'.pluralize(community.req_pending_cnt) %> pending : &nbsp;</strong> <span class=" label important" style="right:0;padding-bottom:2px;"><%= if community.req_pending_cnt > 0 then community.req_pending_cnt end %></span><br>

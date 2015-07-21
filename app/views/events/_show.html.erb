@@ -11,7 +11,8 @@
                 <%= link_to cl_image_tag(@event.photo.pic_url(:largest), class:"padding1",rel: "#{@event.id}", id:"#{@event.photo.id}") , @event.photo.pic_url, class: "fancybox-album albumLink roundCorner wallpaper-media wallpaper-image native", title: "#{@event.title}", remote: true %>
               <% end %>
               <h3 class="  meta bottom bottom-gardient ht55 mb0 animated color-white" data-wow-offset="80" data-wow-duration="3s" style="visibility: visible;-webkit-animation-duration: 3s; -moz-animation-duration: 3s; animation-duration: 3s;  text-shadow: 2px 2px #6A6A6A;"></h3>
-              <h3 class="  meta bottom mb0 wow bounceInDown animated color-white" data-wow-offset="80" data-wow-duration="3s" style="visibility: visible;-webkit-animation-duration: 3s; -moz-animation-duration: 3s; animation-duration: 3s;  text-shadow: 2px 2px #6A6A6A;"><%= @event.title %></h3>
+              <!--<h3 class="  meta bottom mb0 wow bounceInDown animated color-white" data-wow-offset="80" data-wow-duration="3s" style="visibility: visible;-webkit-animation-duration: 3s; -moz-animation-duration: 3s; animation-duration: 3s;  text-shadow: 2px 2px #6A6A6A;"><%= @event.title %></h3>-->
+              <h3 class="  meta bottom mb0 wow animated color-white" data-wow-offset="80" data-wow-duration="3s" style="visibility: visible;-webkit-animation-duration: 3s; -moz-animation-duration: 3s; animation-duration: 3s;  text-shadow: 2px 2px #6A6A6A;"><%= @event.title %></h3>
             </div>
             </div>
             </div>
@@ -94,8 +95,8 @@
                   </div>
                   <div>
                   <a id="end_date_add_link_act" class="btn btn-success btn-sm mt3 icon add pull-right mr12-xs mr60-sm">End Date</a>
-                  <div class="col-sm-9 col-xs-9">
-                  <%= f.text_field :starts_at,class: "form-control", :placeholder => "Time", value: @event.starts_at  %>&nbsp;&nbsp;&nbsp;
+                <div class="col-sm-9 col-xs-9">
+                  <%= f.text_field :starts_at,class: "form-control", :placeholder => "Time", :value => (@event.starts_at.blank? ? '' : @event.starts_at.strftime('%d/%m/%Y %H:%M')) %>
                 </div>
                 </div>
                 </div>
@@ -107,7 +108,7 @@
                   <div>
                   <a id="end_date_remove_link_act" class="btn-danger btn-sm mt3 icon add pull-right mr12-xs mr60-sm icon prev">Remove</a>
                   <div class="col-sm-9 col-xs-9">
-                    <%= f.text_field :ends_at,class: "form-control",  value: @event.ends_at  %>&nbsp;&nbsp;&nbsp;
+                    <%= f.text_field :ends_at,class: "form-control", :placeholder => "Time", :value => (@event.ends_at.blank? ? '' : @event.ends_at.strftime('%d/%m/%Y %H:%M')) %>
                   </div>
                 </div> 
                 </div> 
@@ -231,7 +232,7 @@ var endDateTextBox = $("#activity_ends_at");
         onSelect: function (selectedDateTime){
           endDateTextBox.datetimepicker('option', 'minDate', startDateTextBox.datetimepicker('getDate') );
         },
-        dateFormat: "dd/mm/yy"
+        format:'d/m/Y H:i'
       });
       endDateTextBox.datetimepicker({ 
         onClose: function(dateText, inst) {
@@ -248,7 +249,7 @@ var endDateTextBox = $("#activity_ends_at");
         onSelect: function (selectedDateTime){
           startDateTextBox.datetimepicker('option', 'maxDate', endDateTextBox.datetimepicker('getDate') );
         },
-        dateFormat: "dd/mm/yy"
+        format:'d/m/Y H:i'
       });
 
 
@@ -280,7 +281,7 @@ var startDateTextBox = $("#event_starts_at");
         onSelect: function (selectedDateTime){
           endDateTextBox.datetimepicker('option', 'minDate', startDateTextBox.datetimepicker('getDate') );
         },
-        dateFormat: "dd/mm/yy"
+        format:'d/m/Y H:i'
       });
       endDateTextBox.datetimepicker({ 
         onClose: function(dateText, inst) {
@@ -297,7 +298,7 @@ var startDateTextBox = $("#event_starts_at");
         onSelect: function (selectedDateTime){
           startDateTextBox.datetimepicker('option', 'maxDate', endDateTextBox.datetimepicker('getDate') );
         },
-        dateFormat: "dd/mm/yy"
+        format:'d/m/Y H:i'
       });
       
       

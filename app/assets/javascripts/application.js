@@ -29,8 +29,8 @@
 //= require ../../../vendor/assets/javascripts/adminre/core
 //= require ../../../vendor/assets/javascripts/adminre/app
 //= require_tree ../../../vendor/assets/javascripts/adminre/.
+//= require ../../../vendor/assets/javascripts/jquery.datetimepicker
 
-// ../../../vendor/assets/javascripts/datetime/.
 // jquery.lazy-images
 // bootstrap-multiselect
 // jquery-fileupload/basic
