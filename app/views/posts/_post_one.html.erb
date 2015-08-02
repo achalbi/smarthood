@@ -52,6 +52,7 @@
                         <!-- <a href="<%= photo.pic_url %>" rel="rettyPhoto[<%= post.id %>]" class="lightview" data-lightview-group="thumbnail-<%= post.id %>" data-lightview-group-options="controls: 'thumbnails'"> -->
                      <a href="<%= photo.pic_url %>" rel="group[<%= post.id %>]" class="fancybox-album center">
                     <%= cl_image_tag(photo.pic_url(:large_mid), class:"image_al_c")  %></a> 
+                    </div>
                     <% break %>
                   <% end %>
 
@@ -183,10 +184,19 @@
           <% end %>
         </div>
         <% unless post.activities[0].nil? %>
-          <% unless post.activities[0].is_admin %>
+          <% if post.activities[0].is_admin %>
+            <strong class="semibold text-default col-xs-100">Event:</strong>
+            <div class="col-xs-6 col-sm-9 pl0">
+              <span><%= link_to post.activities[0].event.title, "/events/#{post.activities[0].event.id}", class: " semibold ml2", remote: "true" %></span>
+            </div>
+          <% else %>
+            <strong class="semibold text-default col-xs-100">Event:</strong>
+            <div class="col-xs-6 col-sm-9 pl0">
+              <span><%= link_to post.activities[0].event.title, "/events/#{post.activities[0].event.id}", class: " semibold ml2", remote: "true" %></span>
+            </div>
             <strong class="semibold text-default col-xs-100">Activity:</strong>
             <div class="col-xs-6 col-sm-9 pl0">
-              <span><%= link_to post.activities[0].title, "/events/#{post.activities[0].id}", class: " semibold ml2", remote: "true" %></span>
+              <span><%= link_to post.activities[0].title, "javascript:void(0);" ,class: " semibold ml2" %></span>
             </div>
           <% end %>
         <% end %>
@@ -228,7 +238,7 @@
       </div>
       </div>
       
-      <div class="panel-toolbar-wrapper brtb b0 nm np">
+    <div id="comment_panel" class="panel-toolbar-wrapper brtb b0 nm np">
       <div class="panel-toolbar ptb10">
         <% if signed_in? %>
            <a href="javascript:void(0);" class="semibold text-default ml15" id="cmnts_<%= post.id %>">Comment 
@@ -243,17 +253,17 @@
         <% end %>
       </div>
     </div>
-                          <% if signed_in? %>
-                                 <div class="panel-toolbar" >
-                                    <div id="postId_<%= post.id %>" class="comments">
-                                       <%= render :partial => "comments/comment", :locals => { :comment => @comment, :post => post} %>
-                                     </div>
-                                 </div>
-                          <% end %>
+      <% if signed_in? %>
+             <div class="panel-toolbar" >
+                <div id="postId_<%= post.id %>" class="comments">
+                   <%= render :partial => "comments/comment", :locals => { :comment => @comment, :post => post} %>
                 </div>
-      </div>
+             </div>
+      <% end %>
+       </div>
+     </div>
 
-    </div>
+  </div>
     
       
       

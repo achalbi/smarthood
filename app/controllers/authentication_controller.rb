@@ -14,10 +14,15 @@ class AuthenticationController < ApplicationController
      # acknowledge code and get access token from FB
    #  session[:access_token] = session[:oauth].get_access_token(params[:code])
   #end
+  @graph = Koala::Facebook::API.new(session["fb_access_token"])
+  
 
   if authentication
     #flash[:notice] = "Signed in successfully."
     user = User.find(authentication.user_id)
+ #  if user.profile_pic.nil?
+  #    user.profile_pic =  Cloudinary::Uploader.upload(@graph.get_picture(omniauth['uid'],:type => "square", height: 400 , width: 400))["public_id"]
+  #  end
       user.token = omniauth['credentials']['token'] # code needs to be removed
       user.fb_uid = omniauth['uid'] # code needs to be removed
       user.save
@@ -72,7 +77,10 @@ class AuthenticationController < ApplicationController
             
           end
     else
-      
+      if user.profile_pic.nil?
+        user.profile_pic =  Cloudinary::Uploader.upload(@graph.get_picture(omniauth['uid'],:type => "square", height: 400 , width: 400))["public_id"]
+        user.save
+      end
       #user.authentications.build(:provider => omniauth ['provider'], :uid => omniauth['uid'])
       user.authentications.build(:provider => omniauth['provider'], :uid => omniauth['uid'], :username => omniauth['info']['nickname'])
       #user.apply_omniauth(omniauth)

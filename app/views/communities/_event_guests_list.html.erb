@@ -73,7 +73,7 @@
           <% else %>
           <tr>
             <td>
-              <address>No guests in the event</address>
+              <p class="semibold center">No guests in the event</p>
             </td>
           </tr>
           <% end %>
@@ -96,6 +96,9 @@
          <%= render 'shared/error_messages', object: f.object %>
          <aside class="">
           <section>
+            <% unless @eds.count > 1 %>
+                <p class="semibold center">No guests to set as moderators</p>
+            <% end %>
             <!-- <h2 style="margin-left:65px;padding:3px;">Moderators</h2> -->
             <ul class="users" style="overflow:auto;">
               <% @eds.each do |uc| %>

@@ -31,7 +31,7 @@
                  <% end %>
 
                  <% if  current_user.is_cu_admin?(@selected_community) %>
-                    <%= link_to "edit", '#', id: "edit_comUnity",  class: " pull-right btn-custom btn btn-warning icon edit",:title => "Edit", style:"margin-right:5px;" %>
+                    <a href="#" id="edit_comUnity" class="pull-right btn-custom btn btn-warning icon edit" data-target="#modal2" data-toggle="modal">Edit</a>
                  <% end %>
 
                  <% if current_user.is_cu_admin?(@selected_community) %>

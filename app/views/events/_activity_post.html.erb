@@ -118,7 +118,8 @@
         }
 
 $(document).ready(function(){
-  $('.loading_sub').hide();
+//  $('.loading_sub').hide();
+  });
   $.validate({
     validateOnBlur : false,
     form : '#activity_new_post',
@@ -127,7 +128,6 @@ $(document).ready(function(){
       $('#activity_post_submit').attr('data-loading-text', 'Posting...');
       $('#activity_post_submit').button('loading');
     },
-  });
   });
 
 </script>

@@ -1,4 +1,6 @@
+$("#gallery_event").html("<%= escape_javascript( render partial: 'events/event_albums', locals: {event: @event, activity: @activity, albums: @albums, album: Album.new, hide: 'no' }) %>"); 
+$('body').removeClass('modal-open');
+$('body').css('padding-right', '');
 $('.modal_com').modal('hide');
 $(".busy").button('reset');
 $('.reset_form').click();
-$("#gallery_event").html("<%= escape_javascript( render partial: 'events/event_albums', locals: {event: @event, activity: @activity, albums: @albums, album: Album.new, hide: 'no' }) %>"); 

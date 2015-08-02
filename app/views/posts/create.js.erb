@@ -43,9 +43,9 @@ $("#sel_grp_label").hide();*/
 
 
 <% if @post_type == 'communities' %>
-$('#cu_post').html("<%= escape_javascript(render :partial => 'posts/communities_post', :locals => {:post => @post}, :communities => @communities) %>");
+$('#cu_post').html("<%= escape_javascript(render :partial => 'posts/communities_post', :locals => {posts: @posts, :post => @post}, :communities => @communities) %>");
 <% end %>
 <% if @post_type == 'community' %>
-$('#community_list').html("<%= escape_javascript(render :partial => 'communities/community_post', locals: {posts: @posts, community: @community}) %>");
+$('#community_list').html("<%= escape_javascript(render :partial => 'communities/community_post', locals: {posts: @posts, :post => @post, community: @community}) %>");
 <% end %>
 

@@ -35,19 +35,21 @@
       </div>-->
       <!--<h2 id="act_h"><span  class="pull-left"><strong>Sub-event</strong></span>   </h2>-->
      
-                                     <div id="btn_group_overlay" class="btn-group pull-right mb5">
-                                        <button type="button" class="btn btn-sm btn-info btn-custom dropdown-toggle " data-toggle="dropdown" aria-expanded="false"> Sub-Event <span class="caret"></span></button>
-                                        <ul class="dropdown-menu semibold-imp">
-                                              <li class="">
+                                     <div id="btn_group_overlay" class="btn-group pull-right mb5 mr5">
                                                 <% if @event.responded?(current_user) %>
-                                                 <a id="create_activity" class="semibold " href="#" data-toggle="modal" data-target="#modal_create_activity">Create Sub-Event</a>
+                                                    <button type="button" class="btn btn-sm btn-info btn-custom dropdown-toggle " data-toggle="dropdown" aria-expanded="false"> Sub-Event <span class="caret"></span></button>
                                                 <% end %>
+                                        <ul class="dropdown-menu semibold-imp">
+                                                <% if @event.responded?(current_user) %>
+                                              <li class="">
+                                                 <a id="create_activity" class="semibold " href="#" data-toggle="modal" data-target="#modal_create_activity">Create Sub-Event</a>
                                               </li>
+                                                <% end %>
                                              <%= render @activities %>
                                         </ul>
                                     </div>
                                     <div id="back_to_event" class="hide pull-right mb5">
-                                        <%= link_to "Back to Event",@event,class: "semibold btn btn-info btn-custom mr3", remote: true %>
+                                        <%= link_to "Back to Event", @event, class: "semibold btn btn-info btn-custom mr3", id: 'back_to_event', remote: true %>
                                     </div>
       <!--<% if @event.responded?(current_user) %>
        <a id="create_activity" class="btn btn-sm btn-success pull-right mr10" href="#" data-toggle="modal" data-target="#modal_create_activity">Add Activity</a>
@@ -73,7 +75,7 @@
           <div class="modal-content">
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal">×</button>
-              <span class="semi-bold font-15">Create Sub-event</span>
+              <span class="semibold font-15">Create Sub-event</span>
             </div>
               <%= f.hidden_field :event_id, value: @event.id %>
             <div class="modal-body">
@@ -164,10 +166,18 @@
         </div>
 <% end %>
 <script  type="text/javascript">
+
   
+ $('#back_to_event').click(function(){
+     $('body').append('<div id="fancybox-loading"><div></div></div><div class="fancybox-overlay fancybox-overlay-fixed" style="width: auto; height: auto; display: block;"></div>')
+ });
+
+  
+  $('#fancybox-loading').remove();
+  $('.fancybox-overlay').remove();
+
+
 $('#activity_privacy_create').addClass('form-control');
-
-
 
     $('#hide_map_link_act').hide();
     
@@ -385,7 +395,7 @@ function checkScroll_post() {
     insideLoop ="true";
     currentPage++;
   $('#loading_page').show();
-  if($('#activity_id').html() == null){
+/*  if($('#activity_id').html() == null){
       clearInterval(intervalID);
       for (var i = 1; i < 99999; i++){
         window.clearInterval(i);
@@ -393,8 +403,8 @@ function checkScroll_post() {
       restartInterval();
       insideLoop = "false";
       return;
-    }
-    jQuery.ajax('/events/post_paginate?id='+$('#activity_id').html()+'&event_id=<%= @event.id %>&page=' + currentPage, {asynchronous:true, evalScripts:true, method:'get', success: function(data, textStatus, jqXHR) {
+    }*/
+    jQuery.ajax('/events/post_paginate?id='+'<%= @activity.id %>'+'&event_id=<%= @event.id %>&page=' + currentPage, {asynchronous:true, evalScripts:true, method:'get', success: function(data, textStatus, jqXHR) {
       $('#loading_page').hide();
     if($(data).find('.posts_one_div').html()==null || $(data).find('.posts_one_div').html() == '' ){
       clearInterval(intervalID);
@@ -403,6 +413,7 @@ function checkScroll_post() {
       }
       restartInterval();
     }else{
+      console.log("right area");
       $('.resources<%= @activity.id %>').append(data);
     }
     insideLoop = "false";

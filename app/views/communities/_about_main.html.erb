@@ -161,15 +161,16 @@ $("#send_req").click(function(){
   $(this).hide();
 });
 
-$("#join_com").click(function(){
+/*$("#join_com").click(function(){
   $(this).hide();
 });
 
 $("#unjoin_com").click(function(){
   $(this).hide();
-});
+});*/
 
 $(document).ready(function(){
+});
   $.validate({
     form : "#update_community",
     onSuccess : function() {
@@ -178,7 +179,6 @@ $(document).ready(function(){
      // return false; // Will stop the submission of the form
     },
   });
-});
 
 
 $(document).ready(function(){
@@ -202,11 +202,11 @@ $(document).ready(function(){
   $('#edit_comUnity').toggle();
 });*/
 
-$("#edit_comUnity").click(function(){
+/*$("#edit_comUnity").click(function(){
     $('#modal2').modal({
       backdrop: "static"
     });
-});
+});*/
 $("#close2X").click(function(){
   $('#modal2').modal('hide');
   $('#about_community').click();

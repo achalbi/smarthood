@@ -127,15 +127,16 @@ $("#send_req").click(function(){
   $(this).hide();
 });
 
-$("#join_com").click(function(){
+/*$("#join_com").click(function(){
   $(this).hide();
 });
 
 $("#unjoin_com").click(function(){
   $(this).hide();
-});
+});*/
 
 $(document).ready(function(){
+});
   $.validate({
     onSuccess : function() {
       $('#updComUnity').attr('data-loading-text', 'Updating...');
@@ -143,7 +144,6 @@ $(document).ready(function(){
      // return false; // Will stop the submission of the form
     },
   });
-});
 
 
 $(document).ready(function(){

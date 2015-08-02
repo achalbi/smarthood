@@ -3,9 +3,9 @@ class Post < ActiveRecord::Base
 
 
   belongs_to :user
-  has_many :groupposts
+  has_many :groupposts, dependent: :destroy
   has_many :groups, :through => :groupposts
-  has_many :communityposts
+  has_many :communityposts, dependent: :destroy
   has_many :communities, :through => :communityposts
 
   belongs_to :postable, :polymorphic => true
@@ -15,13 +15,13 @@ class Post < ActiveRecord::Base
   accepts_nested_attributes_for :photos
 
 
-  has_many :activityposts
+  has_many :activityposts, dependent: :destroy
   has_many :activities, :through => :activityposts
   has_one :event, :through => :activityposts
 
   has_many :albums, :as => :albumable
   
-  has_many :comments
+  has_many :comments, dependent: :destroy
 
  # validates :content, presence: true
   validates :user_id, presence: true

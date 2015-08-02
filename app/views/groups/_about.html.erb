@@ -18,31 +18,29 @@
     </div>
  <ul class="list-unstyled" id="activity_groups_ul" >
   <% if ad_users.count > 0  %>
-  <% ad_users.each do |user|%>
-  <li>
-    
-                                          <div class="col-sm-6 pl0  pr5 mb5">
-                                                <div class="panel widget nm">
-                                                    <div class="table-layout nm">
-                                                        <img src="<%= gravatar_for_url user, size: 82 %>" class="pull-left gravatar" ></img>
-                                                        <p class="mb0">
-                                                                  <% if @group.is_joined?(current_user, @group) && @group.can_admin_unjoin?(current_user) %>
-                                                                     <%= link_to "Unjoin", unjoin_grp_group_path(@group, user_id: user.id), class: "btn btn-xs btn-danger pull-right mr5 bd-top-none", data: { confirm: "You sure?" }, remote: true %>
-                                                                   <% end %>
-                                                        <span class="badge badge-success ml10 mt5">moderator</span>
-                                                        </p>
-                                                        <div class=" valign-middle">
-                                                            <div class="panel-body mt5 pl95 pb0 pr0">
-                                                                <h5 class="semibold mt0 mb0"><%= link_to user.name.length > 17 ? user.name.slice(0..17) + "..." : user.name, user %></h5>
-                                                                <p class="mb0"><a class="ellipsis text-muted mb0" mailto="<%= user.email %>"><%= user.email.length > 17 ? user.email.slice(0..17) + "..." : user.email %></a></p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-    
-  </li>
-  <% end %>
+    <% ad_users.each do |user|%>
+    <li>
+      <div class="col-sm-6 pl0  pr5 mb5">
+            <div class="panel widget nm">
+                <div class="table-layout nm">
+                    <img src="<%= gravatar_for_url user, size: 82 %>" class="pull-left gravatar" ></img>
+                    <p class="mb0">
+                        <% if @group.is_joined?(current_user, @group) && @group.can_admin_unjoin?(current_user) %>
+                           <%= link_to "Unjoin", unjoin_grp_group_path(@group, user_id: user.id), class: "btn btn-xs btn-danger pull-right mr5 bd-top-none", data: { confirm: "You sure?" }, remote: true %>
+                         <% end %>
+                        <span class="badge badge-success ml10 mt5">moderator</span>
+                    </p>
+                     <div class=" valign-middle">
+                        <div class="panel-body mt5 pl95 pb0 pr0">
+                            <h5 class="semibold mt0 mb0"><%= link_to user.name.length > 17 ? user.name.slice(0..17) + "..." : user.name, user %></h5>
+                            <p class="mb0"><a class="ellipsis text-muted mb0" mailto="<%= user.email %>"><%= user.email.length > 17 ? user.email.slice(0..17) + "..." : user.email %></a></p>
+                        </div>
+                     </div>
+                </div>
+            </div>
+        </div>
+    </li>
+    <% end %>
   <% end %> 
   </ul>
 </div>
@@ -60,7 +58,7 @@
                 <div class="table-layout nm">
                     <img src="<%= gravatar_for_url user, size: 82 %>" class="pull-left gravatar" ></img>
                           <p class="mb0">
-                              <% if user == current_user %>
+                              <% if @group.can_admin_unjoin?(current_user) %>
                                  <%= link_to "Unjoin", unjoin_grp_group_path(@group, user_id: user.id), class: "btn btn-xs btn-danger pull-right mr5 bd-top-none", data: { confirm: "You sure?" }, remote: true %>
                                <% end %>
                             </p>   

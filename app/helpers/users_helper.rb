@@ -9,7 +9,8 @@ require 'uri'
     unless user.authentications.first.nil?
       auth = user.authentications.find_by_provider('facebook')
       unless auth.nil?
-        gravatar_url = "https://graph.facebook.com/#{user.authentications.first.username}/picture?width=180&height=180"
+        gravatar_url = cloudinary_url( current_user.profile_pic, :width => 180, :height => 180, :crop => :fill, :gravity => :face)
+       # gravatar_url = "https://graph.facebook.com/#{user.authentications.first.username}/picture?width=180&height=180"
           u = URI.parse(gravatar_url)
           head = Net::HTTP.get_response(u)
           gravatar_url = head['location']
@@ -30,7 +31,8 @@ require 'uri'
         auth = user.authentications.find_by_provider('facebook')
         unless auth.nil?
         size = (size.to_i-10).to_s
-          gravatar_url = "https://graph.facebook.com/#{auth.username}/picture?width=#{size}&height=#{size}"
+          gravatar_url = cloudinary_url( current_user.profile_pic, :width => size, :height => size, :crop => :fill, :gravity => :face)
+          #gravatar_url = "https://graph.facebook.com/#{auth.username}/picture?width=#{size}&height=#{size}"
             u = URI.parse(gravatar_url)
             head = Net::HTTP.get_response(u)
             gravatar_url = head['location']
@@ -54,7 +56,8 @@ require 'uri'
         unless user.authentications.first.nil?
           auth = user.authentications.find_by_provider('facebook')
         unless auth.nil?
-            gravatar_url = "https://graph.facebook.com/#{auth.username}/picture?width=#{size}&height=#{size}"
+            gravatar_url = cloudinary_url( current_user.profile_pic, :width => size, :height => size, :crop => :fill, :gravity => :face)
+            #gravatar_url = "https://graph.facebook.com/#{auth.username}/picture?width=#{size}&height=#{size}"
             u = URI.parse(gravatar_url)
               h = Net::HTTP.new u.host, u.port
               h.use_ssl = u.scheme == 'https'

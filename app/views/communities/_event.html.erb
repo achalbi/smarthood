@@ -10,7 +10,7 @@
     <div class="panel panel-default mb5 ">
         <div class="media">
             <% unless event.photo.nil? %>
-              <%= link_to cl_image_tag(event.photo.pic_url(:thumb_full_wide), class:"image_al_c1 wdp-100", id:"#{event.photo.id}"), event , remote: true %>
+              <%= link_to cl_image_tag(event.photo.pic_url(:thumb_full_wide), class:"image_al_c1 wdp-100 event_page_loading_center", id:"#{event.photo.id}"), event , remote: true %>
             <% end %>
       </div>
     <section class="panel-body pt10 pb5">
@@ -23,7 +23,9 @@
     </section>
     </div>
 </div>
-                    
+<img src="/assets/fancybox_loading.gif" class="hide" />  
+<img src="/assets/fancybox_overlay.png" class="hide" />
+<img src="/assets/fancybox_sprite.png" class="hide" />
             
 </li>
 <%= link_to "", "/communities/#{community.id}/show_event?event_id=#{event.id}", remote: true %>

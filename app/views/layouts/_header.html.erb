@@ -21,7 +21,7 @@
                       <li class="divider"></li>
                       <%  @joined_communities = Community.where(['id IN (?)', current_user.joined_uc.collect(&:community_id)])  %>
                       <% @joined_communities.each do |community| %>
-                        <li role="presentation"><a role="menuitem" class="presentation" tabindex="-1" href="/communities/<%= community.id %>"><span><%= community.name %></span></a></li>
+                        <li role="presentation" class="page_loading_center"><a role="menuitem" class="presentation" tabindex="-1" href="/communities/<%= community.id %>"><span><%= community.name %></span></a></li>
                       <% end %>
                     </ul>
                     </span>
@@ -91,10 +91,15 @@
                 </header>
             </div>
         <% end %>
-           
-
+           <img src="/assets/fancybox_loading.gif" class="hide" />
+           <img src="/assets/fancybox_overlay.png" class="hide" />
+           <img src="/assets/fancybox_sprite.png" class="hide" />
 <script type="text/javascript">
 
+         $('.page_loading_center').click(function(){
+             $('body').append('<div id="fancybox-loading"><div></div></div><div class="fancybox-overlay fancybox-overlay-fixed" style="width: auto; height: auto; display: block;"></div>')
+         });
+         
 
 window.fbAsyncInit = function() {
   FB._initialized = false;

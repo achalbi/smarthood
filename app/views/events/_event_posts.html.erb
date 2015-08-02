@@ -8,7 +8,7 @@
               <% unless @posts.count < 1  %>
                 <%= render partial: 'posts/post', locals: {posts: @posts, activity: @activity}  %>
               <% else %>
-              <div class="center" >No posts to display</div>
+              <p class="center semibold" >No posts to display</p>
               <% end %>
               </div>
               <p id="activity_id" class='hide'><%= @activity.id %></p>

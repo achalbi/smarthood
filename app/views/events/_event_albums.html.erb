@@ -152,46 +152,51 @@
         ctx.fillText("Click here to add photos",10,50);
         return;
       }
-     if(files.length<1){
-        ctx.setTransform(1, 0, 0, 1, 0, 0);
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.font="20px Arial";
-        ctx.fillText("Click here to add photos",10,50);
-        return;
-      }
-    canvas.width = 600;
-    canvas.height = 155*(Math.ceil(files.length/4));
-    for( var i = 0, len = files.length; i < len; i++) 
+ if(files.length<1){
+    $('#pic_com_<%= activity.id.to_s %>').val('');
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      canvas.width = 300;
+      canvas.height = 155;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.font="15px Arial";
+      ctx.fillText("Click here to add photos (Max: 50 files)",25,75);
+      return;
+    }
+  canvas.width = 453;
+  canvas.height = 155*(Math.ceil(files.length/3));
+  for( var i = 0, len = files.length; i < len; i++) 
+  {
+    if(files[i])
     {
-      if(files[i])
-      {
-        var reader = new FileReader();
-        reader.onload = function(event){
-          var img = new Image();
-  
-          img.onload = function(){
-            var ratioPx = 150;
-            var sWidth =ratioPx;
-            var ratio = img.width/sWidth;
-            var sHeight = img.height/ratio;   
-            if(sHeight>ratioPx){
-             sHeight =ratioPx;
-             ratio = img.height/sHeight;
-             sWidth = img.width/ratio;  
-           }
-           ctx.drawImage(img, 155*(iCnt%4),155*(Math.floor(iCnt/4)),sWidth,sHeight);
-                    //ctx.drawImage(img,0,0,sWidth,sHeight);
-                    iCnt++;
+      var reader = new FileReader();
+      reader.onload = function(event){
+        var img = new Image();
+
+        img.onload = function(){
+          var ratioPx = 150;
+          var sWidth =ratioPx;
+          var ratio = img.width/sWidth;
+          var sHeight = img.height/ratio;   
+          if(sHeight>ratioPx){
+           sHeight =ratioPx;
+           ratio = img.height/sHeight;
+           sWidth = img.width/ratio;  
+         }
+         ctx.drawImage(img, 155*(iCnt%3),155*(Math.floor(iCnt/3)),sWidth,sHeight);
+                          //ctx.drawImage(img,0,0,sWidth,sHeight);
+                          iCnt++;
+                        }
+                        img.src = event.target.result;
+                      }
+                      reader.readAsDataURL(e.target.files[i]);     
+                    }
                   }
-                  img.src = event.target.result;
                 }
-                reader.readAsDataURL(e.target.files[i]);     
-              }
-          }
-        }
+
 
   
   $(document).ready(function(){
+  });
     $.validate({
       onSuccess : function() {
         $('#crtAlb_com_<%= activity.id.to_s %>').attr('data-loading-text', 'Creating...');
@@ -199,6 +204,5 @@
        // return false; // Will stop the submission of the form
       },
     });
-  });
 </script>
  

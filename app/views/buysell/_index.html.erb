@@ -1,5 +1,5 @@
 <% provide(:title, 'Buy/Sell/Rent') %>
-<div class="col-md-9 pl5 pt5">
+<div class="col-md-9 pl5 pr5 pt5">
 <%= form_tag( '/buysell/search_items' , remote: true) do  %>	
   <%= hidden_field_tag :page, params[:page] %>
     <div class="row">

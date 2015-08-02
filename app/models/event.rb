@@ -8,7 +8,7 @@ class Event < ActiveRecord::Base
   belongs_to :photo
   accepts_nested_attributes_for :photo
   accepts_nested_attributes_for :eventdetails
-  has_many :posts, :as => :postable
+  has_many :posts, :as => :postable, :dependent => :destroy
 
   attr_reader :user_tokens
   attr_accessor :user_ids
@@ -34,7 +34,7 @@ class Event < ActiveRecord::Base
   has_many :editor_groups, class_name: "Group", :through => :event_editor_groups, source: "group"
 
   has_many :activityposts, dependent: :destroy
-  has_many :posts, :through => :activityposts
+  has_many :posts, :through => :activityposts, :dependent => :destroy
 	
 	#validates :description, presence: true
   validates :creator, presence: true

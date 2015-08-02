@@ -84,7 +84,7 @@
                                     <% end %>
                                     </p>
                                 </span>
-                                <%= link_to cl_image_tag(album.photos[0].pic_url(:medium), class:"image_al_c") , album, class:"albumLink unveiled", remote: true %>
+                                <%= link_to cl_image_tag(album.photos[0].pic_url(:medium_small), class:"image_al_c") , album, class:"albumLink unveiled", remote: true %>
                             </div>
                         </div>
                     </div>
@@ -96,7 +96,7 @@
 </div>
 
 <% else %>  
-<h4 class="center"> No Albums added by you. </h4>
+<p class="center semibold"> No Albums added by you. </p>
 <% end %>  
 </div>
 

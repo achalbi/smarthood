@@ -50,7 +50,7 @@
         </ul>
   </div>
   <div  class="center loading_page_post loading_sub mt10 mb10"></div>
-  
+   
 
 
 <%= form_for( @event, url: create_event_communities_path, remote: true, :html => {:multipart => true, id: 'create_event_form'}) do |f| %>
@@ -194,6 +194,11 @@
 <script type="text/javascript">
 
 
+ $('.event_page_loading_center').click(function(){
+     $('body').append('<div id="fancybox-loading"><div></div></div><div class="fancybox-overlay fancybox-overlay-fixed" style="width: auto; height: auto; display: block;"></div>');
+ });
+
+
 
 $(document).ready(function(){
   $("li.event").click(function(){
@@ -230,6 +235,7 @@ $(document).ready(function(){
       $('#create_event_submit').attr('data-loading-text', 'Creating...');
       $('#create_event_submit').button('loading');
       $(".modal").modal("hide");
+      $('body').append('<div id="fancybox-backdrop"><div id="fancybox-loading"><div></div></div><div class="fancybox-overlay fancybox-overlay-fixed" style="width: auto; height: auto; display: block;"></div></div>');
     },
   });
   $('.loading_page_post').hide();

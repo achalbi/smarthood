@@ -19,7 +19,7 @@ class Activity < ActiveRecord::Base
   belongs_to :event
 
   has_many :activityposts, dependent: :destroy
-  has_many :posts, :through => :activityposts
+  has_many :posts, :through => :activityposts, :dependent => :destroy
   has_many :activitydetails, :dependent => :destroy
 
   has_many :albums, :as => :albumable

@@ -1,2 +1,4 @@
 $('#modal_add_mod').modal('hide');
 $("#show_event_div").html("<%= escape_javascript( render partial: 'events/event_members', locals: { event: @event, activity: @activity, ad_users: @ad_users, inv_users: @inv_users, eds: @eds, ads: @ads } ) %>")
+$('body').removeClass('modal-open');
+$('body').css('padding-right', '');

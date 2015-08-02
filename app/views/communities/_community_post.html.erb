@@ -10,11 +10,13 @@
     <% end %>
     <% end %>
               <div id="div_post_<%= @selected_community.id.to_s %>" class="resources">
-                  <%= render 'posts/post' %>
+                  <%= render 'posts/post', locals: {post: @post} %>
                
               </div>
             </div>
-               <div id="loading_page" class="center loading_page_post"></div>
+               <div  class="col-md-12">
+                 <div id="loading_page" class="center loading_page_post"></div>
+               </div>
 
 
 <script type="text/javascript">

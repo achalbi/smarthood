@@ -1,11 +1,18 @@
 <% unless activity.is_admin %>
 <li class="sidetabs ml5">
       <%= link_to  activity.title, activity, id: "act_#{activity.id}", remote: true %>
+      <img src="/assets/fancybox_loading.gif" class="hide" />
+      <img src="/assets/fancybox_overlay.png" class="hide" />
+      <img src="/assets/fancybox_sprite.png" class="hide" />
 </li>
 <%= link_to(activity, remote: true) do %>
 <% end %>
 <% end %>
 <script type="text/javascript">
+  $('#act_<%= activity.id %>').click(function(){
+     $('body').append('<div id="fancybox-loading"><div></div></div><div class="fancybox-overlay fancybox-overlay-fixed" style="width: auto; height: auto; display: block;"></div>');
+ });
+
   
 $(".sidetabs").click(function(){
   $(".sidetabs").removeClass('sidetabs_selected');

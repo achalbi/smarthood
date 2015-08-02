@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140809052118) do
+ActiveRecord::Schema.define(:version => 20150723054844) do
 
   create_table "activities", :force => true do |t|
     t.string   "title"
@@ -594,6 +594,7 @@ ActiveRecord::Schema.define(:version => 20140809052118) do
     t.string   "token"
     t.string   "fb_uid"
     t.integer  "address_id"
+    t.string   "profile_pic"
     t.index ["email"], :name => "index_users_on_email", :unique => true
     t.index ["remember_token"], :name => "index_users_on_remember_token"
   end

@@ -2,7 +2,7 @@
 <% provide(:page_image, @selected_community.photo.pic_url) %>
  
 <div class="row">
-    <div class="col-md-9 pl20 pt5"  id="community_tabs">
+    <div class="col-md-9 pl20 pt5 pr5"  id="community_tabs">
         
     
     <div class="panel overflow-hidden mb5" id="community_about">
@@ -36,11 +36,12 @@
                    <%= link_to "Join", join_cu_community_path(@selected_community), class: " icon prev pull-right show_loading btn btn-custom btn-success", remote: true, id: "join_com", style:"margin-right:5px;" %>
                  <% end %>
                   <% if @selected_community.is_joined?(current_user, @selected_community) && @selected_community.can_admin_unjoin?(current_user) %>
-                   <%= link_to "Unjoin", unjoin_cu_community_path(@selected_community), class: " btn btn-danger btn-custom icon prev pull-right marginLeft10 show_loading", remote: true, id: "unjoin_com", style:"margin-right:5px;" %>
+                   <%= link_to "Unjoin", unjoin_cu_community_path(@selected_community), class: " btn btn-danger btn-custom icon prev pull-right marginLeft10 show_loading", remote: true, data: { confirm: "Do you really want to unjoin this community?" }, id: "unjoin_com", style:"margin-right:5px;" %>
                  <% end %>
 
                  <% if  current_user.is_cu_admin?(@selected_community) %>
-                    <%= link_to "edit", '#', id: "edit_comUnity",  class: " pull-right btn-custom btn btn-warning icon edit",:title => "Edit", style:"margin-right:5px;" %>
+                    <!--<%= link_to "edit", '#', id: "edit_comUnity",  class: " pull-right btn-custom btn btn-warning icon edit",:title => "Edit", style:"margin-right:5px;" %>-->
+                    <a href="#" id="edit_comUnity" class="pull-right btn-custom btn btn-warning icon edit" data-target="#modal2" data-toggle="modal">Edit</a>
                  <% end %>
 
                  <% if current_user.is_cu_admin?(@selected_community) %>

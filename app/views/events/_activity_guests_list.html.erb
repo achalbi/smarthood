@@ -2,16 +2,16 @@
   
              <%="".pluralize(ad_users.count) %>
                 <% if activity.admin?(current_user) %>
-                 <a href="#" id="moderator" class="btn btn-warning btn-custom mr20 pull-right button_toggle" data-toggle="modal" data-target="#modal_add_mod">Edit</a>
+                 <a href="#" id="moderator" class="btn btn-warning btn-custom mr20 pull-right" data-toggle="modal" data-target="#modal_add_mod">Edit</a>
                 <% end %>
                 
               <%="".pluralize(inv_users.count) %>
                <% if activity.admin?(current_user) %>
-                 <a href="#" id="guests" class="btn btn-success btn-custom pull-right button_toggle mr15" data-toggle="modal" data-target="#modal_add_mem">Add</a>
+                 <a href="#" id="guests" class="btn btn-success btn-custom pull-right  mr15" data-toggle="modal" data-target="#modal_add_mem">Add</a>
                <% end %>
 </div>
                 
-                <div class="row ml0">
+                <div class="row ml0 mr0">
      
                                       <ul class="list-unstyled mb0">
                                        <% ad_users.each do |user|%>
@@ -40,7 +40,7 @@
 
           <% if inv_users.count > 0 %>
             
-        <div class="row ml0">
+        <div class="row ml0 mr0">
      
           <ul class="list-unstyled mb0">
             <% inv_users.each do |user|%>
@@ -53,7 +53,7 @@
                                   <div class="panel-body mt5 pt0 pl95 pb0 pr0">
                                       <p class="semibold mt0 mb0">
                                        <% if activity.admin?(current_user) && user.user.id != current_user.id %>
-                                         <%= link_to "Unjoin", "/events/#{event.id}/unjoin_activity?user_id=#{user.user.id}&activity_id=#{activity.id}", class: "btn btn-xs btn-danger pull-right mr5 bd-top-none button_toggle remove_act", style: "bottom: 6px;", remote: true,  data: { confirm: "You want to remove the guest from the sub-event ?" } %>
+                                         <%= link_to "Unjoin", "/events/#{event.id}/unjoin_activity?user_id=#{user.user.id}&activity_id=#{activity.id}", class: "btn btn-xs btn-danger pull-right mr5 bd-top-none remove_act", style: "bottom: 6px;", remote: true,  data: { confirm: "You want to remove the guest from the sub-event ?" } %>
                                        <% end %>
                                        <%= link_to user.user.name.length > 17 ? user.user.name.slice(0..17) + "..." : user.user.name, user.user %>
                                       </p>
@@ -345,7 +345,7 @@ $("#submit_add_mem").click(function(){
 });
 
 $(function(){
-  $('.button_toggle').hide();
+//  $('.button_toggle').hide();
 
    $('.tr-hover').hover(function() {
        $(this).find('.button_toggle').show();

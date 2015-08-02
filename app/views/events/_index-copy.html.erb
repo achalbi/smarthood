@@ -2,24 +2,104 @@
 
 
 <div class="col-md-9 pl5 pr5" id="community_tabs">
-<div class=" ">
+<div class="row ">
+  
+<div class="center loading_page hide" ><img src="/assets/loading.gif"></div>
+<div class="hide">
+  <%= link_to "List view", '#', id: "list_view",  class: "uibutton pull-left marginRight15" %>
+  <%= link_to "Calendar view", '#', id: "fullCalendar_view",  class: "uibutton pull-left marginRight15 " %>
+  <!--   <%= link_to "Create Event", '#', id: "create_event",  class: " pull-left uibutton icon add" %> -->
+</div>
 
-<div id="event_list" class="">
+<!--<div class="row pr15">
+  <span class="pull-right ">
+    <%= select_tag :events_scope, options_for_select([["All Events", "all"], ["Active Community events", "active"], ["Events I created", "my"]], session['events_scope']), :onchange => "$.get('#{events_path}', {'events_scope':this.value}, null, 'script' );", class: "large pull-right"  %>
+  </span>
+</div>-->
+  
+<div class="row pl30 pr10">
+    <% if @invited_events.count > 0 %>
+      <ul class="list-unstyled mt5">
+        <% @invited_events.each do |event| %>
+           <div class="col-md-6 pl0 pr5">
+                <li class="tr-hover event" >
+                      <div class="panel  panel-default mb5">
+                          <div class="media">
+                              <% unless event.photo.nil? %>
+                                <%= link_to cl_image_tag(event.photo.pic_url(:thumb_full_wide), class:"image_al_c1 wdp-100", id:"#{event.photo.id}"), event, remote: true  %>
+                              <% end %>
+                        </div>
+                      <section class="panel-body pt10 pb5">
+                          <% if event.invited?(current_user)%>
+                            <span class="badge badge-default pull-right">Invitation Pending</span>
+                          <% end %>
+                            <span class="semibold mt10 ellipsis"><%= link_to event.title , event, class:"albumLink font-15", remote: true, title: "#{event.title}" %></span>
+                            <p class="ellipsis timestamp mb0 text-muted" ><span class="ico-time"></span><%= event.starts_at.strftime("%A, %B %d, %Y") %></p>
+                            <p class="ellipsis mb5 ellipsis font-11 text-muted"><span class="ico-location"></span><%= event.address %></p>
+                      </section>
+                      </div>
+                </li>
+          </div>
+          <%= link_to "", event, remote: true %>  
+          <% end %>
+        <% end %>
+      </ul>
+</div>
+
+
+<div id="event_list" class="row pl30">
+
+<div class="row">
+ <!-- <ul class="nav nav-pills mt5 mb10 ml20 list-unstyled" id="event_list"  >
+    <li class="active" id="upcoming_events_li"><a class="p7" href="#" aria-expanded="true" data-toggle="tab">Upcoming events</a></li>
+    <li id="past_events_li"><a class="p7" href="#" data-toggle="tab">Past events</a></li>
+  </ul>-->
+  
+</div>
+
+  
+<div id="upcoming_events" >  
+  <ul class="list-unstyled" id="upcoming_events_ul" >
+    <% unless @upcoming_events.blank? %>
+      <div id="upcoming_events_page" class="upcoming_events_paginate">
+      <% @upcoming_events.each do |upcoming_event| %>
+        <%= render :partial => 'events/event', :locals => {:event => upcoming_event} %>
+      <% end %>
+        </div>  
+        <!-- <div id="loading_upcoming_events_paginate" class="center" ><img src="https://res.cloudinary.com/rashi/image/upload/v1407379601/loading_ddb4yo.gif"></div> -->
+    <% end %>  
+  </ul>
+</div>
 
 <div id="past_events">
     <ul class="list-unstyled" id="past_events_ul">
-      <% unless @events.blank? %>
-      <div id="events_page" class="events_div">
-        <% @events.each do |event| %>
-          <%= render :partial => 'events/event', :locals => {:event => event} %> 
+      <% unless @past_events.blank? %>
+      <div id="past_events_page" class="past_events_paginate">
+        <% @past_events.each do |past_event| %>
+          <%= render :partial => 'events/event', :locals => {:event => past_event} %> 
         <% end %>
       </div>  
         <!-- <div id="loading_past_events_paginate" class="center" ><img src="https://res.cloudinary.com/rashi/image/upload/v1407379601/loading_ddb4yo.gif"></div> -->
       <% end %>
     </ul>
 </div>
-<div  class="center loading_page_post loading_sub mt10 mb10"></div>
+<div class="center loading_page hide" ><img src="/assets/loading.gif"></div>
 
+<!-- 
+<div id="today_events">
+<ul class="users" id="today_events_ul ">
+  <% unless @today_events.blank? %>
+    <div id="today_events_page" class="today_events_paginate">
+    <% @today_events.each do |today_event| %>
+      <%= render :partial => 'events/event', :locals => {:event => today_event} %> 
+    <% end %>
+    </div>    
+    <div id="loading_today_events_paginate" class="center" ><img src="https://res.cloudinary.com/rashi/image/upload/v1407379601/loading_ddb4yo.gif"></div>
+  <% end %>
+</ul>
+<br>
+</div>
+ -->
 </div>
 
 <div id='calendar_upper' class="marginRight15">
@@ -29,60 +109,95 @@
 </div>
 
 
+<%= form_for( @event, remote: true, :html => {:multipart => true, id: 'create_event_form'}) do |f| %>
+<div id="modal_create_event" style="display:none;" >
+          <div id="modal-from-dom" class="modal fade in" style="display: block;width:700px;">
+            <div class="modal-header">
+              <a href="#" id="closeX" class="close">×</a>
+              <h3>Create Event</h3>
+            </div>
+            <div class="modal-body" style="max-height:450px;">
+            <div class="row">
+              <div class="span15 ui-front">
+            
+               <%= render 'shared/error_messages', object: f.object %>
+               <div class="center_block clearfix">
+                  <%= f.label :title %>
+                  <div class="input">
+                    <%= f.text_field :title, :placeholder=>"Title", 'data-validation' => "length",
+     'data-validation-length' =>"3-25", 'data-validation-error-msg' => "The event name has to be a value between 3-25 characters" %></div>
+                </div>
+
+                <div class="center_block clearfix">
+                  <%= label_tag :starts_at %>
+                  <div class="input">
+                  <%= f.text_field :starts_at, :placeholder => "Time" %>&nbsp;&nbsp;&nbsp;
+                <a id="end_date_add_link" class="uibutton icon add">End Date</a>
+                </div>
+                </div>
+                <div class="center_block clearfix" id="end_date">
+                  <%= label_tag :ends_at %>
+                  <div class="input">
+                    <%= f.text_field :ends_at %>&nbsp;&nbsp;&nbsp;
+                   <a id="end_date_remove_link" class="uibutton icon prev">Remove</a>
+                  </div>
+                </div> 
+
+                <div class="center_block clearfix">
+                  <%= f.label :location %>
+                  <div class="input ">
+                  <%= f.text_field :address, :placeholder => :location, :size => 43, class: 'events_with_autocomplete inherit_width', 'data-autocompleteUrl' => search_address_events_path , 'data-validation' => "length",
+     'data-validation-length' =>"3-250", 'data-validation-error-msg' => "The event address has to be a value between 3-250 characters" %>&nbsp;&nbsp;&nbsp;
+                
+                  <%= link_to "View map", '#', id: "view_map_link",  class: "uibutton icon prev" %>
+                </div>
+                <div class="input" id="view_map">
+                
+                </div>
+                </div>
+                <div class="center_block clearfix">
+                  <%= f.label :description %>
+                  <div class="input">
+                  <%= f.text_area :description, :placeholder=>"Description", class: ' inherit_width', :title=>"Description", rows: 3, cols: 75, 'data-validation' => "length",
+     'data-validation-length' =>"3-250", 'data-validation-error-msg' => "The event description has to be a value between 3-250 characters"  %> 
+                </div>
+                </div>
+                <div class="center_block clearfix">
+                  <%= label_tag :privacy %>
+                  <div class="input">
+                    <%= f.select :privacy, options_for_select([["Public", Privacyenum::PUBLIC], ["Private", Privacyenum::PRIVATE]]) %>
+                  </div>
+                </div> <br>
+                <div class="center_block clearfix ">
+                    <label>Guests can invite</label>
+                  <div class="input">
+                    <div class="checkboxFive pull-right marginRight15" >
+                  <%= f.check_box 'GuestsCanInvite', id: "Guests_can_invite_other_guests" %>
+                    <label for="Guests_can_invite_other_guests" </label>
+                  </div>
+                  </div>
+                </div> <br>
+                <div class="center_block clearfix">
+                <%= label_tag "Add picture:" %>
+                
+                <div class="input">    
+                <canvas id="imageCanvas" style = "border: 1px solid #ddd; padding:5px; align:center;cursor:pointer" >select new image</canvas>
+                </div>
+                <%= f.fields_for :photo, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
+                  <%= photo_form.file_field :pic, id: "pic",style: "width:0px; height:0px;  padding:0px;  left:0px;" %>  
+                <% end %>
+              </div>
+        </div>   
+      </div>
+      </div>
+            <div class="modal-footer" >
+              <%= f.submit "Create", class: "btn primary pull-right", id: "create_event_submit" %>  
+            </div>
+          </div> 
+        </div>
+  <% end %>
+
 <script type="text/javascript">
-
-                    
-                        var currentPage = 1;
-                        var intervalID = -1000;
-                        var insideLoop_up ="false"; 
-
-                        function checkScroll_up_evts() {
-                          if (nearBottomOfPage() && insideLoop_up!="true") {
-                              insideLoop_up="true";
-                              currentPage++;
-                              $('.loading_sub').show();
-                          if($('.event').length == 0){
-                            clearInterval(intervalID);
-                            for (var i = 1; i < 99999; i++){
-                             window.clearInterval(i);
-                           }
-                           insideLoop_up = "false";
-                           return;
-                         }
-                         jQuery.ajax('/events/events_page?page=' + currentPage, {asynchronous:true, evalScripts:true, method:'get', success: function(data, textStatus, jqXHR) {
-                          $('.events_div').append($(data));
-                          $('.loading_sub').hide();
-                          if(typeof jQuery(data) == 'undefined' ||jQuery(data).html() == null){
-                            clearInterval(intervalID);
-                            for (var i = 1; i < 99999; i++){
-                             window.clearInterval(i);
-                           }
-                           restartInterval();
-                         }
-                         insideLoop_up ="false"; 
-                       },});
-                       }
-                      }
-
-
-
-                      function nearBottomOfPage() {
-                        return scrollDistanceFromBottom() < 150;
-                      }
-
-                      function scrollDistanceFromBottom(argument) {
-                        return pageHeight() - (window.pageYOffset + self.innerHeight);
-                      }
-
-                      function pageHeight() {
-                        return Math.max(document.body.scrollHeight, document.body.offsetHeight);
-                      }
-
-                        intervalID = setInterval(checkScroll_up_evts, 500);
-                      
-</script>
-<script type="text/javascript">
-
 
 /*$(function(){
   $('.loading_menu').hide();
@@ -135,7 +250,6 @@ endDateTextBox.datetimepicker({
 
 
 $(document).ready(function(){
-});
   $.validate({
     form : '#create_event_form',
     onSuccess : function() {
@@ -144,6 +258,7 @@ $(document).ready(function(){
     },
   });
   $('.loading_sub').hide();
+});
 
  /* $(document).ready(function(){
 //  $('.gravatar').addClass('thumbnail');  
@@ -275,7 +390,6 @@ $('#end_date_remove_link').click(function(){
 });
 
   $(function() {
-});
   $("#search_user").tokenInput("/events/search_auto_user", {
     crossDomain: false,
    // prePopulate: $(".eventdetails_with_autocomplete").data("pre"),
@@ -286,9 +400,9 @@ $('#end_date_remove_link').click(function(){
         zindex: 11001,
         hintText: "Type in a user name",
   });
+});
 
   $(function() {
-});
   $("#search_group").tokenInput("/events/search_auto_group", {
     crossDomain: false,
    // prePopulate: $(".eventdetails_with_autocomplete").data("pre"),
@@ -299,12 +413,13 @@ $('#end_date_remove_link').click(function(){
         zindex: 11001,
         hintText: "Type in a group name",
   });
+});
 
 $(document).ready(function() {
-}
 $('#past_events').hide();
 for (var i = 1; i < 99999; i++){
    window.clearInterval(i);
+}
 restartInterval();
 
   $('#page-2').hide();
@@ -330,7 +445,6 @@ restartInterval();
     });
 
     $(function() {
-    });
       return $('.eventdetails_with_autocomplete').autocomplete({
         minLength: 2,
         source: function(request, response) {
@@ -346,6 +460,7 @@ restartInterval();
           });
         }
       });
+    });
 
 
 
@@ -403,7 +518,6 @@ var updateEvent;
 
   $(document).ready(function(){
       // page is now ready, initialize the calendar...
-  });
       $('#calendar_events').fullCalendar({
           editable: true,
           header: {
@@ -452,6 +566,7 @@ var updateEvent;
 
 
 
+  });
 
   function showEventDetails(event){
        $.ajax({
@@ -483,12 +598,112 @@ updateEvent = function(the_event) {
  }
 
 
-$(document).ready(function(){
+var upcoming_events_currentPage = 2;
+var past_events_currentPage = 2;
+var today_events_currentPage = 2;
+
+var intervalID_U = -1000;
+var intervalID_P = -1000;
+var intervalID_T = -1000;
+
+var upcoming_event = "upcoming_events_paginate";
+var past_event = "past_events_paginate";
+var today_event = "today_events_paginate";
+
+$('#upcoming_events_li').click(function(){
+  $('#upcoming_events_page').addClass('paginate');
+  $('#past_events_page').removeClass('paginate');
+  $('#today_events_page').removeClass('paginate');
+   intervalID_U = setInterval(callCheckScroll, 250);
+   console.log("U--"+intervalID_U);
 });
+
+$('#past_events_li').click(function(){
+  $('#upcoming_events_page').removeClass('paginate');
+  $('#past_events_page').addClass('paginate');
+  $('#today_events_page').removeClass('paginate');
+   intervalID_P = setInterval(callCheckScroll, 250);
+   console.log("P--"+intervalID_P);
+});
+
+$('#today_events_li').click(function(){
+  $('#upcoming_events_page').removeClass('paginate');
+  $('#past_events_page').removeClass('paginate');
+  $('#today_events_page').removeClass('paginate');
+  $('#today_events_page').addClass('paginate');
+  intervalID_T = setInterval(callCheckScroll, 250);
+ console.log("T--"+intervalID_T);
+});
+
+function checkScroll_evt_idx(paginate) {
+  if (nearBottomOfPage() && same_page) {
+      var currentPage=0;
+      var intervalID;
+    if (paginate === "upcoming_events_paginate") {
+        currentPage = upcoming_events_currentPage++;
+        intervalID = intervalID_U;
+     } else if (paginate === "past_events_paginate") {
+        currentPage = past_events_currentPage++;
+        intervalID = intervalID_P;
+     } else if (paginate === "today_events_paginate") {
+        currentPage = today_events_currentPage++;
+        intervalID = intervalID_T;
+     }
+     console.log("ID--"+intervalID);
+  //console.log("endless request "+ currentPage+" " + paginate);
+  $('.loading_page').show();
+    jQuery.ajax('/events/'+paginate+'?page=' + currentPage, {asynchronous:true, evalScripts:true, method:'get', success: function(data, textStatus, jqXHR) {
+    $('.loading_page').hide();
+    
+    if(data==null || data == ''){
+      clearInterval(intervalID_U);
+      clearInterval(intervalID_P);
+      clearInterval(intervalID_T);
+      for (var i = 1; i < 99999; i++){
+        window.clearInterval(i);
+      }
+      restartInterval();
+
+      console.log(intervalID_U+"--"+intervalID_P+"--"+intervalID_T);
+    } 
+    $('.'+paginate).append(data);
+    },});
+  }
+}
+ 
+function nearBottomOfPage() {
+  return scrollDistanceFromBottom() < 50;
+}
+ 
+function scrollDistanceFromBottom(argument) {
+  return pageHeight() - (window.pageYOffset + self.innerHeight);
+}
+ 
+function pageHeight() {
+  return Math.max(document.body.scrollHeight, document.body.offsetHeight);
+}
+
+function callCheckScroll(){
+  if($("#upcoming_events_page").hasClass('paginate')){
+    checkScroll_evt_idx(upcoming_event)
+  }else if($("#past_events_page").hasClass('paginate')){
+    checkScroll_evt_idx(past_event)
+  }else if($("#today_events_page").hasClass('paginate')){
+    checkScroll_evt_idx(today_event)
+  }
+}
+ 
+$('document').ready(function(){
+ intervalID_T = setInterval(checkScroll_evt_idx, 250, upcoming_event);
+  //console.log("DT--"+intervalID_T);
+});
+
+
+$(document).ready(function(){
   $("li.event").click(function(){
     $(this).next('a').click();
-    $('.loading_sub').show();
+    $('.loading_page').show();
   });
-
+});
 
 </script>

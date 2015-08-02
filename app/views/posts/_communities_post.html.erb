@@ -1,6 +1,6 @@
 <div class="center loading_page hide" ><img src="/assets/loading.gif"></div>
 <div id="image">
-  <%= form_for(@post, remote: true,  :html => {:multipart => true, id: "communities_post", class: "panel mb10"}) do |f| %>
+  <%= form_for(@post, remote: true,  :html => {:multipart => true, id: "communities_post", class: "panel mb5"}) do |f| %>
   <div id="textarea_div">
     <%= render 'shared/error_messages', object: f.object %>
     <%= fields_for :photo, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
@@ -54,7 +54,10 @@
   <div id="div_post" class="home_page_post">
     <%= render 'posts/post' %>
   </div>
-  <div id="loading_page" class="center loading_page_post"></div>
+  </div>
+  <div id="" class="col-md-12">
+      <div id="loading_page" class="center loading_page_post"></div>
+  </div>
 </div>
      
               <div id="modal_sel_cu" class="modal fade">
@@ -205,7 +208,6 @@
 
 
 
-
         var currentPage = 1;
         var comms_post_intervalID = -1000;
         var insideLoop ="false"; 
@@ -253,8 +255,8 @@ function pageHeight() {
 }
 
 $('document').ready(function(){
-  comms_post_intervalID = setInterval(checkScroll_comms_post, 500);
 });
+  comms_post_intervalID = setInterval(checkScroll_comms_post, 500);
 
 /*$("#community_post_select").click(function(){
   $('#modal_sel_cu').modal({

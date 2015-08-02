@@ -1,0 +1,7 @@
+<% @events.each do |event| %>
+                     
+                      <div id="events_page" class="events_paginate">
+                          <%= render :partial => 'events/event', :locals => {:event => event, community: community} %> 
+                        </div>
+                   
+<% end %>

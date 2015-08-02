@@ -102,28 +102,29 @@ class EventsController < ApplicationController
       @event = Event.new
       @event.starts_at = Time.zone.now.beginning_of_day
       @event.ends_at = Time.zone.now.end_of_day
-      @events = active_community_events
-      @events = @events.between(params['start'], params['end']) if (params['start'] && params['end'])
-      #@upcoming_events = @events.where("starts_at > ?",Time.current.tomorrow.to_date).order("id DESC")
-      @upcoming_events = @events.where("starts_at > ?",Time.zone.now.beginning_of_day- 1.second).order("starts_at ASC").paginate(page: params[:page], :per_page => 5)
-      @past_events = @events.where("starts_at < ? ",Time.zone.now.beginning_of_day).order("starts_at DESC").paginate(page: params[:page], :per_page => 5)
-      #@past_events = @events.where("starts_at < ? and ends_at < ?",Time.current.to_date,Time.current.to_date).order("id DESC")
-      #@today_events = @events.where("starts_at BETWEEN ? AND ?",Time.current.to_date,Time.current.tomorrow.to_date).order("id DESC")
-      @events = @events.paginate(page: params[:page], :per_page => 5)
-      #@upcoming_events = @upcoming_events.paginate(:page => params[:page], :per_page => 5)
-      #@today_events = @today_events.paginate(:page => params[:page], :per_page => 5)
-      #@past_events = @past_events.paginate(:page => params[:page], :per_page => 5)
-      #ip_loc = Geocoder.search(remote_ip)[0]
+      
+      @events = Event.where('id IN (?)', current_user.eventdetails.pluck(:event_id)).order("starts_at DESC").paginate(page: params[:page], :per_page => 4)
+      
+      #@events = @events.between(params['start'], params['end']) if (params['start'] && params['end'])
+          #@upcoming_events = @events.where("starts_at > ?",Time.current.tomorrow.to_date).order("id DESC")
+      #@upcoming_events = @events.where("starts_at > ?",Time.zone.now.beginning_of_day- 1.second).order("starts_at ASC").paginate(page: params[:page], :per_page => 5)
+      #@past_events = @events.where("starts_at < ? ",Time.zone.now.beginning_of_day).order("starts_at DESC").paginate(page: params[:page], :per_page => 5)
+          #@past_events = @events.where("starts_at < ? and ends_at < ?",Time.current.to_date,Time.current.to_date).order("id DESC")
+          #@today_events = @events.where("starts_at BETWEEN ? AND ?",Time.current.to_date,Time.current.tomorrow.to_date).order("id DESC")
+          #@upcoming_events = @upcoming_events.paginate(:page => params[:page], :per_page => 5)
+          #@today_events = @today_events.paginate(:page => params[:page], :per_page => 5)
+          #@past_events = @past_events.paginate(:page => params[:page], :per_page => 5)
+          #ip_loc = Geocoder.search(remote_ip)[0]
+    
+         # @event.address = ip_loc.address
+         # @event.latitude = ip_loc.latitude
+         # @event.longitude = ip_loc.longitude
+         # result = request.location
 
-     # @event.address = ip_loc.address
-     # @event.latitude = ip_loc.latitude
-     # @event.longitude = ip_loc.longitude
-     # result = request.location
-
-      @invited_events = []
-      Eventdetail.where("user_id = ? AND status = ?", current_user.id, 'invited' ).find_each do |ed|
-        @invited_events << ed.event
-      end
+      #@invited_events = []
+      #Eventdetail.where("user_id = ? AND status = ?", current_user.id, 'invited' ).find_each do |ed|
+      #  @invited_events << ed.event
+      #end
 
       respond_to do |format|
         format.html {session['events_scope'] = 'all'}# index.html.erb
@@ -191,6 +192,10 @@ class EventsController < ApplicationController
           format.json { render :json => @groups_pp.map(&:attributes) }
         end
       end 
+      
+    def events_page
+     @events = Event.where('id IN (?)', current_user.eventdetails.pluck(:event_id)).order("starts_at DESC").paginate(page: params[:page], :per_page => 4)
+    end
 
     def upcoming_events_paginate
       @events = active_community_events
@@ -211,14 +216,19 @@ class EventsController < ApplicationController
     end
 
     def post_paginate
-      @activity = Activity.find(params[:id])
       @event = Event.find(params[:event_id])
-      @activities = @event.activities
-      if @activity.is_admin
-        @posts = @event.posts.paginate(:page => params[:page], :per_page => 4)
+      unless params[:id].blank?
+        @activity = Activity.find(params[:id])
+        if @activity.is_admin
+          @posts = @event.posts.paginate(:page => params[:page], :per_page => 4)
+        else
+         @posts = @activity.posts.paginate(:page => params[:page], :per_page => 4)
+        end 
       else
-       @posts = @activity.posts.paginate(:page => params[:page], :per_page => 4)
-      end 
+          @posts = @event.posts.paginate(:page => params[:page], :per_page => 4)
+      end
+      @activities = @event.activities
+      
     end
 
   def show
@@ -230,7 +240,8 @@ class EventsController < ApplicationController
     #@posts = @event.posts.paginate(:page => params[:page], :per_page => 4)
     @activities = @event.activities
     @activity = @event.activities.where(is_admin: true).first
-    
+      @post = Post.new
+      @posts = @event.posts.paginate(:page => params[:page], :per_page => 4)
 =begin
 
     @ad_eds = @event.eventdetails.where(is_admin: true )

@@ -1,4 +1,4 @@
-<li class="group" >
+    <li class="group" >
   
             <!--<div>
               <address>
@@ -19,12 +19,17 @@
                                 <p class="mb5 ellipsis color-white font-11"><%= privacy_str(group)  %></p>-->
                                 </span>
                                 <% unless group.photo.nil? %>
-                                  <%= link_to cl_image_tag(group.photo.pic_url(:medium_large), class:"image_al_c1 unveiled ht193 ", id:"#{group.photo.id}"), group, remote: true %>
+                                  <%= link_to cl_image_tag(group.photo.pic_url(:medium_large), class:"image_al_c1 unveiled ht193 grp_page_loading_center", id:"#{group.photo.id}"), group, remote: true %>
                                 <% end %>
                             </div>
                         </div>
                     </div>
-            
           </li>
 
 <%= link_to "", "/communities/#{community.id}/show_group?grp_id=#{group.id}", remote: true %>
+
+<script>
+     /*$('.grp_page_loading_center').click(function(){
+         $('body').append('<div id="fancybox-loading"><div></div></div><div class="fancybox-overlay fancybox-overlay-fixed" style="width: auto; height: auto; display: block;"></div>')
+     });*/
+</script>

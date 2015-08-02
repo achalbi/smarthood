@@ -1,4 +1,4 @@
-<div class="comments img_zoom panel-body slimscroll np">
+<div class="comments img_zoom panel-body np">
   <ul class="media-list mb0 comment_form_<%= post.id %>" id="comment_form_<%= post.id %>" >
   <li class="media no-border p0">
     <%= form_for [post.comments.build], remote: true, html: {id: "comment_#{post.id}"}  do |f| %>

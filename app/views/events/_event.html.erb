@@ -1,9 +1,9 @@
-<div class="col-md-6 pl0 pr5">
-    <li class="tr-hover event" >
+<div class="col-md-6 pl0 pr0">
+    <li class="tr-hover event " >
           <div class="panel  panel-default mb5">
               <div class="media">
                   <% unless event.photo.nil? %>
-                    <%= link_to cl_image_tag(event.photo.pic_url(:thumb_full_wide), class:"image_al_c1 wdp-100", id:"#{event.photo.id}"), event, remote: true  %>
+                    <%= link_to cl_image_tag(event.photo.pic_url(:thumb_full_wide), class:"image_al_c1 wdp-100 event_page_loading_center", id:"#{event.photo.id}"), event, remote: true  %>
                   <% end %>
             </div>
           <section class="panel-body pt10 pb5">
@@ -20,9 +20,9 @@
 
 <script type="text/javascript">
 $(document).ready(function(){
+});
   $("li.event").click(function(){
     $(this).next('a').click();
     $('.loading_page').show();
   });
-});
 </script>

@@ -1,6 +1,6 @@
 class CommunitiesController < ApplicationController
   include PhotosHelper, UsersHelper, CommunityHelper, ActivitynotificationsHelper
-  before_filter :signed_in_user, only: [:create, :destroy]
+  before_filter :signed_in_user, only: [:create, :destroy, :show]
 
   def new
   	@community = Community.new
@@ -149,6 +149,7 @@ def update
     @com_photo.remove_pic!
   end
   flash[:success] = "community: " + @community.name + " updated!"
+=begin  
   @selected_community = @community
   @ad_eds = @community.usercommunities.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED, true )
   @non_ad_eds = @community.usercommunities.where('invitation = ? AND is_admin = ?',Uc_enum::JOINED, false)
@@ -176,9 +177,10 @@ def update
         @post_ids << @community.posts.collect(&:id)
         @posts = Post.where(id: @post_ids.uniq).paginate(page: params[:page], :per_page => 4)
  # getNotifiableUsers(Objecttypeenum::COMUNITY, @community, nil, nil, Uc_enum::UPDATED)
+=end 
     respond_to do |format|
-    # format.html { redirect_to  @community  }
-      format.all { }
+      format.html { redirect_to  @community  }
+      format.js { }
     end
 end
 
@@ -965,7 +967,7 @@ def search_app_user
     @ad_users = @event.eventdetails.where(" is_admin=?", true)
     @inv_users = @event.eventdetails.where(" is_admin=?", false)
     @activities =[]
-    @activity = @event
+    @activity = Activity.find_by_event_id(@event.id)
 =begin
     @ad_users = []
     @event.eventdetails.where(" is_admin=?", true).find_each do |ed|
@@ -1482,6 +1484,7 @@ def search_app_user
         @usercommunity.status="active"
         @usercommunity.save
      end
+     render js: %(window.location.href='#{root_path}')
   end
 
 def update_album

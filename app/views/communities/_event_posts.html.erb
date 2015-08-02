@@ -1,7 +1,7 @@
 <ul class="users" id="posts_events_ul" >
             <div id="posts" style="overflow:auto;">
               <% if event.responded?(current_user.id) %>
-                <%= render :partial => 'communities/activity_post', :locals => {:post => @post, :activity => @activity} %>
+                <%= render :partial => 'communities/activity_post', :locals => {:post => @post, :activity => @activity, :event => @event} %>
               <% end %>
             </div>
         
@@ -9,7 +9,7 @@
               <% unless @posts.count < 1  %>
                 <%= render partial: 'posts/post', locals: {posts: @posts, activity: @activity}  %>
               <% else %>
-              <div class="center" >No posts to display</div>
+                <p class="center semibold" >No posts to display</p>
               <% end %>
               </div>
               <p id="activity_id" class='hide'><%= @activity.id %></p>
