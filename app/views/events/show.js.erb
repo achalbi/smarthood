@@ -1,4 +1,5 @@
 $('body').removeClass('modal-open');
 $('body').css('padding-right', '');
+$('#fancybox-backdrop').remove();
 $('#community_tabs').html('<%= escape_javascript(render("events/show")) %>');  
 $('#content').html('<%= escape_javascript(render("events/show")) %>');

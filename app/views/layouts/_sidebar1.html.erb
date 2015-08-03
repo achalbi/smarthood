@@ -130,7 +130,7 @@
                     </li>
                     -->
                      <li>
-                            <a href='<%= events_path %>' data-remote="true" >
+                            <a href='<%= events_path %>' data-remote="true" id="home_events" >
                             <span class="figure"><i class="ico-calendar"></i></span>
                             <span class="text">Events</span>
                             <span class=" loading_menu pull-right hide" ><div class="indicator show"><span class="spinner "></span></div></span>
@@ -247,10 +247,8 @@
           $(this).find('.badge-primary').removeClass('badge-primary').addClass('badge-default');
          });
          
+        
 
-         
-         
-           
          
                   /* $(".submenu > li").click(function(){
                    $(".submenu > li").removeClass("active");

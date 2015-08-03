@@ -15,7 +15,7 @@
               <div id="loading_page" class="center loading_page_post"></div>
 			</ul>
       <script type="text/javascript">
-
+/*
      var currentPage_event_post = 1;
         var events_post_intervalID = -1000;
         var insideLoop_events ="false"; 
@@ -61,8 +61,56 @@
     }
       events_post_intervalID = setInterval(checkScroll_events_post, 500);
     
+*/
 
 
+var currentPage = 1;
+var intervalID = -1000;
+var insideLoop ="false"; 
+ 
+function checkScroll_post() {
+   if (nearBottomOfPage() && insideLoop!="true" ) {
+    insideLoop ="true";
+    currentPage++;
+  $('#loading_page').show();
+/*  if($('#activity_id').html() == null){
+      clearInterval(intervalID);
+      for (var i = 1; i < 99999; i++){
+        window.clearInterval(i);
+      }
+      restartInterval();
+      insideLoop = "false";
+      return;
+    }*/
+    $.ajax('/events/post_paginate?id='+'<%= @activity.id %>'+'&event_id=<%= @event.id %>&page=' + currentPage, {asynchronous:true, evalScripts:true, method:'get', success: function(data, textStatus, jqXHR) {
+      $('#loading_page').hide();
+    if($(data).find('.paginate_do').html()==null || $(data).find('.paginate_do').html() == '' ){
+      clearInterval(intervalID);
+      for (var i = 1; i < 99999; i++){
+        window.clearInterval(i);
+      }
+      restartInterval();
+    }else{
+      $('.resources<%= @activity.id %>').append(data);
+    }
+    insideLoop = "false";
+  },});
+  }
+}
+ 
+function nearBottomOfPage() {
+  return scrollDistanceFromBottom() < 150;
+}
+ 
+function scrollDistanceFromBottom(argument) {
+  return pageHeight() - (window.pageYOffset + self.innerHeight);
+}
+ 
+function pageHeight() {
+  return Math.max(document.body.scrollHeight, document.body.offsetHeight);
+}
+ 
+  intervalID = setInterval(checkScroll_post, 250);
 
 
       </script>

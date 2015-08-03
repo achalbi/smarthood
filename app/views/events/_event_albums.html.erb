@@ -1,9 +1,6 @@
             <div id="evt_album">
               <% unless albums.nil? %>
-                      <% if !@event.responded?(current_user) && albums.count == 0 %>
-                         <div class="center">No Albums to display</div>
-                      <% end %> 
-                       <% if @event.responded?(current_user) %>
+                      <% if @event.responded?(current_user) %>
                          <% unless hide =="yes" %>
                             <div class="row">
                              <a id="upload_pics_event_btn_<%= activity.id.to_s %>" class="btn btn-success btn-custom mb10 mr15 pull-right" data-toggle="modal" data-target="#upload_pics_event_<%= activity.id.to_s %>"> Create Album </a>
@@ -34,6 +31,9 @@
                     </div>
                   </li>
                     <% end %> 
+                    <% end %> 
+                    <% if albums.blank? %>
+                      <p class="semibold center">No albums to display</p>
                     <% end %>
                     </ul>
                     </div>

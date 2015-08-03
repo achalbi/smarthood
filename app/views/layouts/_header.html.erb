@@ -17,7 +17,7 @@
                     <span class="default dropdown-toggle" id="menu1" data-toggle="dropdown"><a href="#" id="logo1"><span class="color-white"><%= @community.name %></span></a>
                     <span class="caret color-white"></span></span>
                     <ul class="dropdown-menu dropdown-transparent dropdown-transparent-xs" role="menu" aria-labelledby="menu1">
-                      <li role="presentation"><a role="menuitem" class="presentation" tabindex="-1" href="/"><span>Home</span></a></li>
+                      <li role="presentation" class="page_loading_center"><a role="menuitem" class="presentation" tabindex="-1" href="/"><span>Home</span></a></li>
                       <li class="divider"></li>
                       <%  @joined_communities = Community.where(['id IN (?)', current_user.joined_uc.collect(&:community_id)])  %>
                       <% @joined_communities.each do |community| %>

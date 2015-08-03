@@ -79,6 +79,12 @@
                       }
 
                         intervalID = setInterval(checkScroll_up_evts, 500);
+                        
+  $("li.event").click(function(){
+    $('body').append('<div id="fancybox-backdrop"><div id="fancybox-loading"><div></div></div><div class="fancybox-overlay fancybox-overlay-fixed" style="width: auto; height: auto; display: block;"></div></div>')
+    $(this).next('a').click();
+    $('.loading_page').show();
+  });
                       
 </script>
 <script type="text/javascript">
