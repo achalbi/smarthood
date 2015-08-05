@@ -27,9 +27,9 @@
                     <span class="pull-right "> &nbsp;</span>
                     <%= link_to "May be", "/communities/#{community.id}/event_invitation?event_id=#{@event.id}&status=maybe", class: "uibutton pull-right button_toggle_pic event_inv", remote: true %>
                     <span class="pull-right "> &nbsp;</span>
-                    <%= link_to "No", "/communities/#{community.id}/event_invitation?event_id=#{@event.id}&status=no", class: "uibutton pull-right button_toggle_pic event_inv marginRight5", remote: true %>
+                    <%= link_to "Not Going", "/communities/#{community.id}/event_invitation?event_id=#{@event.id}&status=no", class: "uibutton pull-right button_toggle_pic event_inv marginRight5", remote: true %>
                     <span class="pull-right "> &nbsp;</span>
-                    <%= link_to "Yes", "/communities/#{community.id}/event_invitation?event_id=#{@event.id}&status=yes", class: "uibutton pull-right button_toggle_pic event_inv ", remote: true %>
+                    <%= link_to "Going", "/communities/#{community.id}/event_invitation?event_id=#{@event.id}&status=yes", class: "uibutton pull-right button_toggle_pic event_inv ", remote: true %>
                   </p></address>
                 </div>
             <% end %>

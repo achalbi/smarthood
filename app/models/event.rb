@@ -73,7 +73,7 @@ class Event < ActiveRecord::Base
   end
 
   def responded?(user)
-    self.eventdetails.where("user_id = ? AND status!=?", user, "invited").exists?
+    self.eventdetails.where("user_id = ? AND (status=? or status=? or status=?)", user, Uc_enum::YES, Uc_enum::NO, Uc_enum::MAYBE).exists?
   end
   
    def invited?(user)

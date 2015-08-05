@@ -17,6 +17,7 @@
     </div>
     <div class="panel-footer">
         <div class="panel-toolbar-wrapper">
+            <p class=" text-muted semibold  select-comm-warning">Please select atleast one community below</p>
             <div class="panel-toolbar sel_com_head">
                 <ul class="media-list media-list-contact nm">
                     <li class=" text-muted semibold">Post to community</li>
@@ -274,8 +275,10 @@ $(".checkboxFive").click( function() {
   }
   if(j>0){
     $(".sel_com_head").show();
+    $(".select-comm-warning").hide();
   }else{
     $(".sel_com_head").hide();
+    $(".select-comm-warning").show();
   }
   console.log(($('#feeds').val().length <1) || j==0);
     if(($('#feeds').val().length <1) || j==0 ){
@@ -285,6 +288,7 @@ $(".checkboxFive").click( function() {
     }
 });
     $(".sel_com_head").hide();
+    $(".select-comm-warning").show();
     
     
   $('#feeds').keyup(function(){

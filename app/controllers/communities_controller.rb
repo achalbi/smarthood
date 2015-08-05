@@ -840,12 +840,13 @@ def search_app_user
       @event.ends_at = Time.zone.now.end_of_day
       @event.address = @community.address
      # @events = Event.where("starts_at > ? AND community_id = ?",Time.zone.now.beginning_of_day- 1.second, @community).order("starts_at ASC")
-      @events = Event.where("community_id = ?", @community).order("starts_at DESC")
-      @events = @events.paginate(page: params[:page], :per_page => 5)
+      #@events = Event.where("community_id = ?", @community).order("starts_at DESC")
+      #@events = @events.paginate(page: params[:page], :per_page => 5)
       @invited_events = []
-      Eventdetail.where("user_id = ? AND status = ?", current_user.id, 'invited' ).find_each do |ed|
-        @invited_events << ed.event
-      end
+      #Eventdetail.where("user_id = ? AND status = ?", current_user.id, 'invited' ).find_each do |ed|
+      #  @invited_events << ed.event
+      #end
+      @events = Event.where("community_id = ?", @community).where('id IN (?)', current_user.eventdetails.pluck(:event_id)).order("starts_at DESC").paginate(page: params[:page], :per_page => 4)
       @period = 'up'
       #ip_loc = Geocoder.search(remote_ip)[0]
 
@@ -877,8 +878,9 @@ def search_app_user
  
   def events_page
       @community = Community.find(params[:id])
-      @events = Event.where("community_id = ?", @community).order("starts_at DESC")
-      @events = @events.paginate(page: params[:page], :per_page => 5)
+      #@events = Event.where("community_id = ?", @community).order("starts_at DESC")
+      #@events = @events.paginate(page: params[:page], :per_page => 5)
+      @events = Event.where("community_id = ?", @community).where('id IN (?)', current_user.eventdetails.pluck(:event_id)).order("starts_at DESC").paginate(page: params[:page], :per_page => 4)
       @period = 'up'
  end
 

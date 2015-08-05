@@ -38,8 +38,8 @@
               <%="".pluralize(inv_users.count) %>
                 <ul class="nav nav-pills mt5 mb10 ml5 list-unstyled">
                   <li class="active" id="all_li"><a class="c-pointer pt3 pb3 bd-rad12" data-toggle="tab" ><span class="font-11">Invited - <%= inv_users.count %></span></a></li>
-                  <li id="yes_li"><a class="c-pointer pt3 pb3 bd-rad12"><span class="font-11" data-toggle="tab">Yes - <%= inv_users.where(status: "yes").count %></span></a></li>
-                  <li id="no_li"><a class="c-pointer pt3 pb3 bd-rad12"><span class="font-11" data-toggle="tab">No - <%= inv_users.where(status: "no").count %></span></a></li>
+                  <li id="yes_li"><a class="c-pointer pt3 pb3 bd-rad12"><span class="font-11" data-toggle="tab">Going - <%= inv_users.where(status: "yes").count %></span></a></li>
+                  <li id="no_li"><a class="c-pointer pt3 pb3 bd-rad12"><span class="font-11" data-toggle="tab">Not Going - <%= inv_users.where(status: "no").count %></span></a></li>
                   <li id="maybe_li"><a class="c-pointer pt3 pb3 bd-rad12"><span class="font-11" data-toggle="tab">May be - <%= inv_users.where(status: "maybe").count %></span></a></li>
                 </ul>
           
@@ -56,11 +56,11 @@
                                          <% if user.status == "invited" %>
                                                             <li class="invited">
                                                         <% elsif user.status == "yes" %>
-                                                            <li class="yes">
+                                                            <li class="Going">
                                                         <% elsif user.status == "no" %>
-                                                            <li class="no">
+                                                            <li class="Not Going">
                                                         <% elsif user.status == "maybe" %>
-                                                            <li class="maybe">
+                                                            <li class="Maybe">
                                                         <% else %>
                                                         <% end %>
                                             <div class="col-sm-6 pl0 pr5 mb5">
@@ -71,9 +71,9 @@
                                                         <% if user.status == "invited" %>
                                                             <span class="badge badge-default ml10 mt5 ">Not Responded</span>
                                                         <% elsif user.status == "yes" %>
-                                                            <span class="badge badge-default ml10 mt5 ">Yes</span>
+                                                            <span class="badge badge-default ml10 mt5 ">Going</span>
                                                         <% elsif user.status == "no" %>
-                                                            <span class="badge badge-default ml10 mt5 ">No</span>
+                                                            <span class="badge badge-default ml10 mt5 ">Not Going</span>
                                                         <% elsif user.status == "maybe" %>
                                                             <span class="badge badge-default ml10 mt5 ">May be</span>
                                                         <% else %>

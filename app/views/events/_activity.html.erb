@@ -20,9 +20,9 @@
                     <span class="pull-right "> &nbsp;</span>
                     <%= link_to "May be", "/events/#{@event.id}/event_invitation?status=maybe", class: "uibutton pull-right button_toggle_pic event_inv", remote: true %>
                     <span class="pull-right "> &nbsp;</span>
-                    <%= link_to "No", "/events/#{@event.id}/event_invitation?status=no", class: "uibutton pull-right button_toggle_pic event_inv marginRight5", remote: true %>
+                    <%= link_to "Not Going", "/events/#{@event.id}/event_invitation?status=no", class: "uibutton pull-right button_toggle_pic event_inv marginRight5", remote: true %>
                     <span class="pull-right "> &nbsp;</span>
-                    <%= link_to "Yes", "/events/#{@event.id}/event_invitation?status=yes", class: "uibutton pull-right button_toggle_pic event_inv ", remote: true %>
+                    <%= link_to "Going", "/events/#{@event.id}/event_invitation?status=yes", class: "uibutton pull-right button_toggle_pic event_inv ", remote: true %>
                   </p></address>
                 </div>
             <% end %>

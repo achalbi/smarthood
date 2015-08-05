@@ -23,4 +23,7 @@ class Uc_enum
     Uc_enum.add_item :ACCEPTED, "accepted"
     Uc_enum.add_item :ADD_MODERATOR, "add_moderator"
     Uc_enum.add_item :SHARED, "shared"
+    Uc_enum.add_item :YES, "yes"
+    Uc_enum.add_item :NO, "no"
+    Uc_enum.add_item :MAYBE, "maybe"
 end

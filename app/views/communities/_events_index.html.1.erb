@@ -1,4 +1,10 @@
 <% unless community.nil? %>
+  <!--<ul class="tabs">
+    <%= render 'communities/links' %>
+  </ul>-->
+  
+
+  
   <div class="row">
  <% unless (community.privacy == Privacyenum::PROTECTED && !current_user.is_cu_admin?(community)) %>
               <% if community.is_active?(current_user, community) %>
@@ -6,6 +12,38 @@
               <% end %>
           <% end %>
 </div>
+<!--  
+  <div class="row pl15">
+   <ul class="list-unstyled mt5">
+      <% @invited_events.each do |event| %>
+              <div class="col-xs-6 pl0 pr5">
+                  <li class="tr-hover event" >
+                        <div class="panel  panel-default mb5">
+                            <div class="media">
+                                <% unless event.photo.nil? %>
+                                  <%= link_to cl_image_tag(event.photo.pic_url(:thumb_full_wide), class:"image_al_c1 wdp-100", id:"#{event.photo.id}"), event, remote: true  %>
+                                <% end %>
+                          </div>
+                        <section class="panel-body pt10 pb5">
+                            <span class="badge badge-default pull-right">Invitation pending</span>
+                            <span class="semibold mt10 ellipsis"><%= link_to event.title , event, class:"albumLink font-15", remote: true, title: "#{event.title}" %></span>
+                              <p class="ellipsis timestamp mb0 text-muted" ><span class="ico-time"></span><%= event.starts_at.strftime("%A, %B %d, %Y") %></p>
+                              <p class="ellipsis mb5 ellipsis font-11 text-muted"><span class="ico-location"></span><%= event.address %></p>
+                        </section>
+                        </div>
+                  </li>
+            </div>
+          <%= link_to "", "/communities/#{community.id}/show_event?event_id=#{event.id}", remote: true %>  
+        <% end %>
+ </ul>
+</div>
+
+    <div class="row">
+      <ul class="nav nav-pills mt5 mb10 ml5" id="group_link">
+        <li class="active" id="up_events_li"><a class="p7" href="#" data-toggle="tab">Upcoming events</a></li><%= link_to "", up_events_community_path(@community) , remote: true %>
+        <li id="prev_events_li"><a class="p7" href="#" data-toggle="tab">Past events</a></li><%= link_to "", prev_events_community_path(@community) , remote: true %>
+      </ul>
+</div>-->
   <div class="" id="comm_groups_list">
         <ul id="events_list" class="home_page_post list-unstyled mt5">
           <%= render :partial => 'communities/events', :locals => {:events => events, community: community} %>                  
@@ -200,6 +238,7 @@ $(document).ready(function(){
       $('body').append('<div id="fancybox-backdrop"><div id="fancybox-loading"><div></div></div><div class="fancybox-overlay fancybox-overlay-fixed" style="width: auto; height: auto; display: block;"></div></div>');
     },
   });
+  $('.loading_page_post').hide();
 
 
 
@@ -437,8 +476,7 @@ $(document).ready(function() {
                          jQuery.ajax('/communities/<%= community.id %>/events_page?page=' + currentPage, {asynchronous:true, evalScripts:true, method:'get', success: function(data, textStatus, jqXHR) {
                           $('.home_page_post').append($(data));
                           $('.loading_sub').hide();
-                          if(typeof jQuery(data) == 'undefined' ||jQuery(data).html() == null){
-                          console.log(jQuery(data).html());
+                          if(typeof jQuery(data) == 'undefined' ||jQuery(data).html() == null || $(data).find('.events_paginate').html()==null){
                             clearInterval(intervalID);
                             for (var i = 1; i < 99999; i++){
                              window.clearInterval(i);
@@ -450,7 +488,7 @@ $(document).ready(function() {
                        }
                       }
 
-                 /*     function checkScroll_prev_evts() {
+                      function checkScroll_prev_evts() {
                           if (nearBottomOfPage() && insideLoop_prev!="true") {
                               insideLoop_prev="true";
                               currentPage++;
@@ -489,7 +527,7 @@ $(document).ready(function() {
 
                       function pageHeight() {
                         return Math.max(document.body.scrollHeight, document.body.offsetHeight);
-                      }*/
+                      }
 
                         intervalID = setInterval(checkScroll_up_evts, 500);
                       
@@ -511,7 +549,7 @@ $(document).ready(function() {
 
                       });
 
-                     /* $("#prev_events_li").click(function(){
+                      $("#prev_events_li").click(function(){
                          currentPage = 1;
                          intervalID = -1000;
                          insideLoop_prev ="false"; 
@@ -525,7 +563,7 @@ $(document).ready(function() {
                         if(k == 99998){
                             intervalID = setInterval(checkScroll_prev_evts, 500);
                           }
-                      });*/
+                      });
 
 
                   </script>

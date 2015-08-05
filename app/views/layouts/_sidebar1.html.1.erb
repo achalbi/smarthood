@@ -30,7 +30,55 @@
                           </a>
                          </li>
                         
-
+                          
+                       <!-- <li>
+                            <a href="javascript:void(0);" data-target="#communities" data-toggle="submenu" data-parent=".topmenu">
+                                <span class="figure"><i class="ico-home11"></i></span>
+                                <span class="text"><%= @community.name %></span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul id="communities" class="submenu collapse ">
+                                <li>
+                                    <%= render partial: '/static_pages/community-name', locals: {community: active_community } %>
+                                </li>                                
+                                <li>
+                                    <a href='<%=posts_com_community_path(@community) %>' id='posts_community' data-remote="true">
+                                    <span class="text">Posts</span>
+                                    <span class=" loading_menu pull-right hide" ><img src="/assets/loading-sub.gif"></span>
+                                   </a>
+                                </li>
+                                  <li>
+                                    <a href='<%=photos_com_community_path(@community) %>' id='photos_community' data-remote="true">
+                                     <span class="text">Albums</span>
+                                     <span class=" loading_menu pull-right hide" ><img src="/assets/loading-sub.gif"></span>
+                                    </a>
+                                  
+                                 </li>
+                                 <li>
+                                  <% if current_user.is_cu_admin?(@community)  %>
+                                    <% unless (@community.req_pending_cnt.nil? || @community.req_pending_cnt == 0)%>
+                                        <span class="pull-right label important" style="margin:5px;margin-right:10px;position:absolute;right:0;"><%= if @community.req_pending_cnt > 0 then @community.req_pending_cnt end %></span>
+                                        &nbsp;<% end %>
+                                        <% end %>
+                                    <a href='<%=members_com_community_path(@community) %>' id='members_community' data-remote="true">
+                                    <span class="text">Members</span>
+                                    <span class=" loading_menu pull-right hide" ><img src="/assets/loading-sub.gif"></span>
+                                   </a>
+                                  </li>
+                                <li>
+                                    <a href='<%=groups_com_community_path(@community) %>' id='groups_community' data-remote="true">
+                                    <span class="text">Groups</span>
+                                    <span class=" loading_menu pull-right hide" ><img src="/assets/loading-sub.gif"></span>
+                                   </a>
+                                </li>
+                                <li>
+                                    <a href='<%=events_com_community_path(@community) %>' id='events_community' data-remote="true">
+                                    <span class="text">Events</span>
+                                    <span class=" loading_menu pull-right hide" ><img src="/assets/loading-sub.gif"></span>
+                                   </a>
+                                </li>
+                            </ul>
+                    </li>-->
                     <li>
                               <a href='<%= other_com_communities_path %>' id='public_comUnity' data-remote="true">
                                 <span class="figure"><i class="ico-office"></i></span>
@@ -39,7 +87,48 @@
                                </a>
                     </li>      
                           
-                        
+                            
+<!--                       <li class="dis-none-imp">
+                        <a href="javascript:void(0);" data-target="#components" data-toggle="submenu" data-parent=".topmenu">
+                            <span class="figure"><i class="ico-office"></i></span>
+                            <span class="text">Communities</span>
+                            <span class="arrow"></span>
+                        </a>
+                        <ul id="components" class="submenu collapse ">
+                            
+                            <li>
+                                <a href='<%= create_community_communities_path %>' id='ComUnity' data-remote="true">
+                                <span class="text">Create</span>
+                                <span class=" loading_menu pull-right hide" ><img src="/assets/loading-sub.gif"></span>
+                               </a>
+                            </li>
+                              <li>
+                                <a href='<%= my_com_communities_path %>' id='joined_comUnity' data-remote="true">
+                                 <span class="text">My communities</span>
+                                 <span class=" loading_menu pull-right hide" ><img src="/assets/loading-sub.gif"></span>
+                                </a>
+                               <span id="mem_req_count"  class="cnt">
+                                 <%= render partial: 'communities/mem_req_count'%>
+                               </span>
+                             </li>
+                             <li>
+                              <a href='<%= other_com_communities_path %>' id='public_comUnity' data-remote="true">
+                                <span class="text">Other communities</span>
+                                <span class=" loading_menu pull-right hide" ><img src="/assets/loading-sub.gif"></span>
+                               </a>
+                              </li>
+                            <li>
+                              <a href='<%= invites_requests_communities_path %>' id='invites_comUnity' data-remote="true">
+                                <span class="text">Invites</span>
+                                <span class=" loading_menu pull-right hide" ><img src="/assets/loading-sub.gif"></span>
+                               </a>
+                               <span id="inv_req_count"  class="cnt">
+                                <%= render partial: 'communities/inv_req_count'%>
+                              </span>
+                            </li>
+                        </ul>
+                    </li>
+                    -->
                      <li>
                             <a href='<%= events_path %>' data-remote="true" id="home_events" >
                             <span class="figure"><i class="ico-calendar"></i></span>
@@ -63,7 +152,21 @@
                                     <span class=" loading_menu pull-right hide" ><div class="indicator show"><span class="spinner "></span></div></span>
                                 </a>
                     </li>-->
-
+                    
+                      <!--<li>
+                        <a href="javascript:void(0);" data-target="#images" data-toggle="submenu" data-parent=".topmenu">
+                            <span class="figure"><i class="ico-images2"></i></span>
+                            <span class="text">Photos</span>
+                            <span class="arrow"></span>
+                        </a>
+                          <ul id="images" class="submenu collapse ">
+                              <li> 
+                                <a href="<%= list_albums_path %>" data-remote="true" id="list_album">
+                                <span class="text">Albums</span></a>
+                                <div class=" loading_menu pull-right hide" ><img src="/assets/loading-sub.gif"></div> 
+                            </li>
+                          </ul>  
+                        </li>-->
                 <% else %>
                                  <li class="active">
                                     <a href="/communities/<%= @community.id %>" data-remote="true" id="active_community_link" class="color-white"> 
@@ -125,7 +228,7 @@
             <div class="scrollrail" style="width: 8px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 7px; opacity: 0.2; z-index: 90; right: 0px; background: rgb(51, 51, 51);"></div>
             </div>
         </aside>
-  
+        
         
         <script>
         

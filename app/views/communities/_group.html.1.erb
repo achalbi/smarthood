@@ -1,10 +1,22 @@
 <li class="group" >
-                      <div class="col-xs-6 pl0 pr4">
+  
+            <!--<div>
+              <address>
+                <strong> <%= link_to group.name, "#", style: "font-size:13px;" %></strong> <br>
+                <strong>Description : &nbsp;</strong> <%= group.description %><br>
+                <strong>Privacy : &nbsp;</strong><%= privacy_str(group) %><br>
+                 <strong><%= "Member".pluralize(group.users.count) %> : </strong><%= pluralize(group.users.count, "person") %> <br> 
+              </address>  
+            </div>-->
+            
+                    <div class="col-xs-6 pl0 pr4">
                         <div class="thumbnail mb4">
                             <div class="media bd-rad5">
                                 <span class="meta bottom bottom-gardient  pb0">
                                 <span class="semibold mt10"><%= link_to group.name.length > 17 ? group.name.slice(0..17) + "..." : group.name , group, class:" color-white font-15", remote: true, title: "#{group.name}" %></span>
                                 <p class="mb5 ellipsis color-white font-11"><%= group.description.length > 17 ? group.description.slice(0..17) + "..." : group.description %></p>
+                                <!--<p class="mb0 ellipsis color-white font-11"><%= "Member".pluralize(group.users.count) %>:<%= pluralize(group.users.count, "person") %></p>
+                                <p class="mb5 ellipsis color-white font-11"><%= privacy_str(group)  %></p>-->
                                 </span>
                                 <% unless group.photo.nil? %>
                                   <%= link_to cl_image_tag(group.photo.pic_url(:medium_large), class:"image_al_c1 unveiled ht193 grp_page_loading_center", id:"#{group.photo.id}"), group, remote: true %>
@@ -15,3 +27,9 @@
           </li>
 
 <%= link_to "", "/communities/#{community.id}/show_group?grp_id=#{group.id}", remote: true %>
+
+<script>
+     /*$('.grp_page_loading_center').click(function(){
+         $('body').append('<div id="fancybox-loading"><div></div></div><div class="fancybox-overlay fancybox-overlay-fixed" style="width: auto; height: auto; display: block;"></div>')
+     });*/
+</script>

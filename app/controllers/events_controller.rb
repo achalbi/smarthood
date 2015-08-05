@@ -811,11 +811,14 @@ class EventsController < ApplicationController
     @ed_user.status = params[:status]
     @ed_user.save
     respond_to do |format|
+        format.all { redirect_to(:action => :show, :id => @event.id) }
+=begin      
       if params[:status] == 'yes' || params[:status] == 'maybe'
         format.all { redirect_to(:action => :show, :id => @event.id) }
       else
         format.all { redirect_to :action => :index }
       end
+=end
     end
   end
   

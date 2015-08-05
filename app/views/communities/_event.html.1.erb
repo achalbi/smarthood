@@ -1,4 +1,11 @@
+<!--<% if event.starts_at.to_date == Time.zone.now.to_date %>
+<strong>Today</strong>
+<% elsif event.starts_at.to_date == Time.zone.now.to_date - 1.day %>
+<strong class="timestamp" >Yesterday</strong>
+<% else %>
+<% end %>-->
 <li class="tr-hover event" >
+
   <div class="col-md-6 pl0 pr5">
     <div class="panel panel-default mb5 ">
         <div class="media">

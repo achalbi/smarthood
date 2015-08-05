@@ -44,7 +44,7 @@
             <div>
                 <%= link_to "View map", '#', id: "view_map_link_crt",  class: "btn-info mt3 btn-sm icon add pull-right mr60-sm mr12-xs icon prev" %>
                 <%= link_to "Hide map", '#', id: "hide_map_link_crt",  class: "btn-danger mt3 btn-sm icon add pull-right mr60-sm mr12-xs icon prev" %>
-                <div class="col-sm-9">
+                <div class="col-sm-9 col-xs-9">
                   <%= f.text_field :address, :placeholder => :location, :size => 43, class: 'cu_with_autocomplete form-control inherit_width', 'data-autocompleteUrl' => search_address_communities_path, id: "community_address", 'data-validation' => "required", 'data-validation-error-msg' => "Location can't be blank" %>&nbsp;&nbsp;&nbsp;
                 </div>
                  <%= hidden_field_tag 'location_name' %>

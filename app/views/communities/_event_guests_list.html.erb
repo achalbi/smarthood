@@ -40,8 +40,8 @@
             <td style="padding:5px 0 0 0;">
                 <ul class="pills guests center_block">
                   <li class="active" id="all_li"><a class="c-pointer" >Invited - <%= inv_users.count %></a></li>
-                  <li id="yes_li"><a class="c-pointer">Yes - <%= inv_users.where(status: "yes").count %></a></li>
-                  <li id="no_li"><a class="c-pointer">No - <%= inv_users.where(status: "no").count %></a></li>
+                  <li id="yes_li"><a class="c-pointer">Going - <%= inv_users.where(status: "yes").count %></a></li>
+                  <li id="no_li"><a class="c-pointer">Not Going - <%= inv_users.where(status: "no").count %></a></li>
                   <li id="maybe_li"><a class="c-pointer">May be - <%= inv_users.where(status: "maybe").count %></a></li>
                 </ul>
             </td>
@@ -56,9 +56,9 @@
                       <% if ed.status == "invited" %>
                           <span class="label pull-right ">Not Responded</span>
                       <% elsif ed.status == "yes" %>
-                          <span class="label success pull-right ">Yes</span>
+                          <span class="label success pull-right ">Going</span>
                       <% elsif ed.status == "no" %>
-                          <span class="label important pull-right ">No</span>
+                          <span class="label important pull-right ">Not Going</span>
                       <% elsif ed.status == "maybe" %>
                           <span class="label warning pull-right ">May be</span>
                       <% else %>
