@@ -137,8 +137,8 @@
         <div class="center_block clearfix">
             <%= f.label "privacy:", class: "control-label pl15 mt15" %>
             <div>
-            <div class="col-sm-9">
-             <%= f.select :privacy, options_for_select([["Public", Privacyenum::PUBLIC], ["Private", Privacyenum::PRIVATE]], f.object.privacy) %>
+            <div class="col-xs-6">
+             <%= f.select :privacy, options_for_select([["Public", Privacyenum::PUBLIC], ["Private", Privacyenum::PRIVATE]], f.object.privacy), {}, { :class => 'form-control' } %>
             </div>
             </div>
           </div>
@@ -146,8 +146,8 @@
            <div class="center_block clearfix ">
             <%= f.label  "Album downloadable: ", class: "control-label pl15 mt10 pull-left" %>
             <div>
-            <div class="col-sm-1 ">
-              <%= f.check_box :downloadable, class: "form-control" %>
+            <div class="col-xs-6 ">
+              <%= f.check_box :downloadable, class: "ht35" %>
             </div>
             </div>
           </div>
@@ -322,8 +322,8 @@ function handleImage(e){
       ctx.fillText("Click here to add photos (Max: 50 files)",25,75);
       return;
     }
-  canvas.width = 453;
-  canvas.height = 155*(Math.ceil(files.length/3));
+  canvas.width = 311;
+  canvas.height = 155*(Math.ceil(files.length/2));
   for( var i = 0, len = files.length; i < len; i++) 
   {
     if(files[i])
@@ -342,7 +342,7 @@ function handleImage(e){
            ratio = img.height/sHeight;
            sWidth = img.width/ratio;  
          }
-         ctx.drawImage(img, 155*(iCnt%3),155*(Math.floor(iCnt/3)),sWidth,sHeight);
+         ctx.drawImage(img, 155*(iCnt%2),155*(Math.floor(iCnt/2)),sWidth,sHeight);
                           //ctx.drawImage(img,0,0,sWidth,sHeight);
                           iCnt++;
                         }
@@ -362,6 +362,8 @@ function handleImage(e){
 $(".photo_del").click(function(){
   $(this).closest('li').hide();
 });
+
+$('#album_privacy').addClass('form-control');
 
 $(".del-alb").click(function(){
  // $('.loading_page').show();

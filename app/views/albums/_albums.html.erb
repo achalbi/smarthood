@@ -1,4 +1,4 @@
-   <div id="camera_rolls" class="col-sm-9 pl5 pt5">
+   <div id="camera_rolls" class="col-sm-9 pl5 pt5 pr0">
 
 <%= form_for(@album, remote: true, :html => {:multipart => true}) do  |f| %> 
   <div id="modal" style="display:none" >
@@ -29,7 +29,7 @@
             <div class="center_block clearfix">
               <%= f.label :privacy %>
               <div class="input">
-                <%= f.select :privacy, options_for_select([["Public", Privacyenum::PUBLIC], ["Private", Privacyenum::PRIVATE]]) %>
+                <%= f.select :privacy, options_for_select([["Public", Privacyenum::PUBLIC], ["Private", Privacyenum::PRIVATE]]), {}, { :class => 'form-control' } %>
               </div>
             </div>
           </span>
@@ -63,7 +63,7 @@
 
 <% unless @albums.blank? %>
 
-<div id="gallery">
+<div id="gallery" class="gallery_album">
  <ul id="grid" class="list-unstyled mb0">
 
    <% @albums.each do |album| %>
@@ -164,8 +164,8 @@ $(document).ready(function(){
       ctx.fillText("Click here to add photos",10,50);
       return;
     }
-    canvas.width = 500;
-    canvas.height = 155*(Math.ceil(files.length/3));
+    canvas.width = 311;
+    canvas.height = 155*(Math.ceil(files.length/2));
     for( var i = 0, len = files.length; i < len; i++) 
     {
       if(files[i])
@@ -184,7 +184,7 @@ $(document).ready(function(){
              ratio = img.height/sHeight;
              sWidth = img.width/ratio;  
            }
-           ctx.drawImage(img, 155*(iCnt%3),155*(Math.floor(iCnt/3)),sWidth,sHeight);
+           ctx.drawImage(img, 155*(iCnt%2),155*(Math.floor(iCnt/2)),sWidth,sHeight);
                   //ctx.drawImage(img,0,0,sWidth,sHeight);
                   iCnt++;
                 }

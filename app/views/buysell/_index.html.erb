@@ -574,8 +574,8 @@ function handleImage(e){
   var ctx = canvas.getContext('2d');
   var iCnt=0;
   var files = e.target.files;
-    canvas.width = 500;
-    canvas.height = 155*(Math.ceil(files.length/3));
+    canvas.width = 311;
+    canvas.height = 155*(Math.ceil(files.length/2));
     for( var i = 0, len = files.length; i < len; i++) 
     {
       if(files[i])
@@ -594,7 +594,7 @@ function handleImage(e){
              ratio = img.height/sHeight;
              sWidth = img.width/ratio;  
            }
-           ctx.drawImage(img, 155*(iCnt%3),155*(Math.floor(iCnt/3)),sWidth,sHeight);
+           ctx.drawImage(img, 155*(iCnt%2),155*(Math.floor(iCnt/2)),sWidth,sHeight);
                   //ctx.drawImage(img,0,0,sWidth,sHeight);
                   iCnt++;
                 }

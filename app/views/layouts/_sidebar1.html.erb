@@ -99,7 +99,7 @@
                                     <span class=" loading_menu pull-right hide" ><div class="indicator show"><span class="spinner "></span></div></span>
                                    </a>
                                   </li>
-                                 
+                                 <!--
                                   <% if (@community.privacy == Privacyenum::PUBLIC) || (@community.privacy == Privacyenum::PRIVATE) || (@community.privacy == Privacyenum::PROTECTED && @community.is_admin?(current_user)) %>
                                     <% if @community.is_joined?(current_user, @community) %>  
                                         <li>
@@ -110,7 +110,7 @@
                                            </a>
                                         </li>
                                     <% end %>
-                                <% end %>    
+                                <% end %>  -->  
                                 <li>
                                     <a href='<%=events_com_community_path(@community) %>' class="color-white"  id='events_community' data-remote="true">
                                     <span class="figure"><i class="ico-calendar"></i></span>

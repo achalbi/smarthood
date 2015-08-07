@@ -5,9 +5,9 @@
                         <% unless @event.responded?(current_user) %>
                         <div class="">
                           <address><p><strong>Attend this event</strong>
-                            <%= link_to "May be", "/events/#{@event.id}/event_invitation?status=maybe", class: "btn btn-warning pull-right btn-custom", remote: true %>
-                            <%= link_to "Not Going", "/events/#{@event.id}/event_invitation?status=no", class: "pull-right btn btn-danger btn-custom mr10", remote: true %>
-                            <%= link_to "Going", "/events/#{@event.id}/event_invitation?status=yes", class: "pull-right btn btn-success btn-custom mr10", remote: true %>
+                            <%= link_to "May be", "/events/#{@event.id}/event_invitation?status=maybe", class: "btn btn-warning pull-right btn-custom event_resp", remote: true %>
+                            <%= link_to "Not Going", "/events/#{@event.id}/event_invitation?status=no", class: "pull-right btn btn-danger btn-custom mr10 event_resp", remote: true %>
+                            <%= link_to "Going", "/events/#{@event.id}/event_invitation?status=yes", class: "pull-right btn btn-success btn-custom mr10 event_resp", remote: true %>
                           </p></address>
                         </div>
                         <% else %>
@@ -16,9 +16,9 @@
                         <div id="attending_event">
                           <address><p><strong>Attend this event</strong>
                             <%= link_to "Cancel", "#", class: "btn pull-right btn-custom btn-default", id: "cancel_invite" %>
-                            <%= link_to "May be", "/events/#{@event.id}/event_invitation?status=maybe", class: "btn btn-warning pull-right btn-custom mr10", remote: true %>
-                            <%= link_to "Not Going", "/events/#{@event.id}/event_invitation?status=no", class: "pull-right btn btn-danger btn-custom mr10", remote: true %>
-                            <%= link_to "Going", "/events/#{@event.id}/event_invitation?status=yes", class: "pull-right btn btn-success btn-custom mr10", remote: true %>
+                            <%= link_to "May be", "/events/#{@event.id}/event_invitation?status=maybe", class: "btn btn-warning pull-right btn-custom mr10 event_resp", remote: true %>
+                            <%= link_to "Not Going", "/events/#{@event.id}/event_invitation?status=no", class: "pull-right btn btn-danger btn-custom mr10 event_resp", remote: true %>
+                            <%= link_to "Going", "/events/#{@event.id}/event_invitation?status=yes", class: "pull-right btn btn-success btn-custom mr10 event_resp", remote: true %>
                           </p></address>
                         </div>
             <div class="text pull-right" id="edit_del_btn">
@@ -271,5 +271,9 @@ function handleImage(e){
     });
     
     $("#attending_event").hide();
+    
+     $('.event_resp').click(function(){
+       $('body').append('<div id="fancybox-loading"><div></div></div><div class="fancybox-overlay fancybox-overlay-fixed" style="width: auto; height: auto; display: block;"></div>')
+     });
     
 </script>
