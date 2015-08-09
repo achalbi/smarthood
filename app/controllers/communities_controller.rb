@@ -998,6 +998,8 @@ def search_app_user
   def delete_event
     @community = Community.find(params[:id])
     @event = Event.find(params[:event_id])
+     @posts = Post.find_by_post_type(@event)
+     @posts.delete_all
     @event.destroy
     redirect_to :action => "events_com"
   end
@@ -1139,6 +1141,8 @@ def search_app_user
 
   def delete_activity
     @activity = Activity.find(params[:activity_id])
+     @posts = Post.find_by_post_type(@activity)
+      @posts.delete_all
     @activity.destroy
     @event = Event.find(@activity.event_id)
     @community = Community.find(params[:id])
@@ -1525,6 +1529,8 @@ end
       photo.remove_pic!
       photo.destroy
     end
+     @posts = Post.find_by_post_type(@album)
+     @posts.delete_all
     Album.find(params[:id]).destroy
    redirect_back_or root_path
   end

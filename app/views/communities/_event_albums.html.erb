@@ -2,7 +2,7 @@
                           
               <% unless albums.nil? %>
                        <% if !@event.responded?(current_user) && albums.count == 0 %>
-                          <div class="center">No Albums to display</div>
+                          <!--<div class="center">No Albums to display</div>-->
                        <% end %> 
                     <div id="gallery1" class=" pull-left">
                        <ul id="grid" style="margin:0px" >
@@ -28,6 +28,8 @@
                     <% end %>
                     </ul>
                     </div>
+               <% else %>
+                 <div class="center">No Albums to display</div>
                <% end %>  
                      
           </div>

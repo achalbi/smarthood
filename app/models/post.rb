@@ -27,5 +27,9 @@ class Post < ActiveRecord::Base
   validates :user_id, presence: true
 
   default_scope order: 'posts.updated_at DESC'
+  
+  def self.find_by_post_type(obj)
+    where(:postable_id => obj.id, :postable_type => obj.class.name )
+  end
 
 end

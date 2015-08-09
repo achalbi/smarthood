@@ -27,7 +27,7 @@
                          <div class="ml10"><strong><%= link_to cu.name, "#",class: "" %></strong></div>
                        </li>      
                        <div style="display:none;">
-                            <%= check_box_tag 'cu_ids[]', cu.id, cu.id, id:"cu_check_#{cu.id}" %>
+                            <%= check_box_tag 'cu_ids[]', cu.id, nil, id:"cu_check_#{cu.id}" %>
                        </div>
                       <% end %>
                     <% end %>

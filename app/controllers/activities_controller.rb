@@ -59,6 +59,8 @@ class ActivitiesController < ApplicationController
   def destroy
     @activity = Activity.find(params[:id])
     @event = Event.find(@activity.event_id)
+     @posts = Post.find_by_post_type(@activity)
+     @posts.delete_all
      Activity.find(params[:id]).destroy
     #flash[:success] = "Activity destroyed!"
     respond_to do |format|

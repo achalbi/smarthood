@@ -1,7 +1,7 @@
  <!-- <ul class="tabs">
     <%= render 'communities/links', locals: { community: @community} %>
   </ul>-->
-  <div id="gallery"  >
+  <div id="gallery"  class="gallery_album">
      <% if @community.is_active?(current_user, @community) %>
          <% unless (@community.privacy == Privacyenum::PROTECTED && !current_user.is_cu_admin?(@community)) %>
             <div class="row">

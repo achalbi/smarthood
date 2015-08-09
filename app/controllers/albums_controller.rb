@@ -139,6 +139,8 @@ class AlbumsController < ApplicationController
       photo.destroy
     end
     #Cloudinary::Api.delete_resources_by_prefix(@str)
+     @posts = Post.find_by_post_type(@album)
+      @posts.delete_all
     Album.find(params[:id]).destroy
     @camera_roll = @camera_roll.group_by { |t| t.created_at.beginning_of_month }  
     @albums = current_user.albums.all

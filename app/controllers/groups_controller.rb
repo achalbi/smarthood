@@ -339,6 +339,8 @@ def join_grp
 end
 
 def destroy
+  @posts = Post.find_by_post_type(Group.find(params[:id]))
+   @posts.delete_all
   Group.find(params[:id]).destroy
   redirect_to action: "index", status: 303, id: active_community.id
 end

@@ -44,21 +44,21 @@
           <%= submit_tag "Create album", class: "btn primary "  %>        
         </div>
          <br><br>
-         <div id="gallery">
-       <ul id="grid">
-        <% @camera_roll.each do |photo| %>
-          <li>
-          <div  class="img_zoom" id="div-img_<%= photo.id %>">
-        <a href="#" id="a-img_<%= photo.id %>">
-        <%= cl_image_tag(photo.pic_url(:thumb), class:"image_al_c ", id:"#{photo.id}")   %></a> 
-        </div>
-        </li>
-         <div style="display:none" >
-            <%= check_box_tag "photo[#{photo.id}]", photo.id %>
-           
-        </div>
-        <% end %>
-       </ul>
+         <div id="gallery" class="gallery_album">
+               <ul id="grid">
+                <% @camera_roll.each do |photo| %>
+                  <li>
+                  <div  class="img_zoom" id="div-img_<%= photo.id %>">
+                <a href="#" id="a-img_<%= photo.id %>">
+                <%= cl_image_tag(photo.pic_url(:thumb), class:"image_al_c ", id:"#{photo.id}")   %></a> 
+                </div>
+                </li>
+                 <div style="display:none" >
+                    <%= check_box_tag "photo[#{photo.id}]", photo.id %>
+                   
+                </div>
+                <% end %>
+               </ul>
       </div>
       <% end %>
       </div>

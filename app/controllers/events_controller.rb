@@ -448,8 +448,10 @@ class EventsController < ApplicationController
   # DELETE /events/1.json
   def destroy
     @event = Event.find(params[:id])
+     @posts = Post.find_by_post_type(@event)
+      @posts.delete_all
     @event.destroy
-
+     
     respond_to do |format|
       format.html { redirect_to events_url }
       format.js { redirect_to events_url }
@@ -470,6 +472,8 @@ class EventsController < ApplicationController
   def delete_activity
     @activity = Activity.find(params[:activity_id])
     @event = @activity.event
+     @posts = Post.find_by_post_type(@activity)
+    @posts.delete_all
     @activity.destroy
     @eds = @event.eventdetails
     @ad_users = @event.eventdetails.where(" is_admin=?", true)
