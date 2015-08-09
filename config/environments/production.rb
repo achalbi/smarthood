@@ -82,8 +82,8 @@ EMS::Application.configure do
   :address              => "smtp.gmail.com",
   :port                 => 587,
   :domain               => 'smarthood.in',
-  :user_name            => 'rashi.residency@gmail.com',
-  :password             => 'Residency',
+  :user_name            => 'smarthood.in@gmail.com',
+  :password             => 'smarthood@in15',
   :authentication       => 'plain',
   :enable_starttls_auto => true  }
 
