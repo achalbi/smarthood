@@ -1,0 +1,129 @@
+       <%= form_for(SConcern.new, remote: true,  :html => {:multipart => true, class: "panel mb5"}) do |f| %>
+            <div id="textarea_div">
+            <%= render 'shared/error_messages', object: f.object %>
+                        <%= fields_for :photo, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
+                         
+                        <%= photo_form.file_field :pic, id: "pic1",style: "width:1px; height:1px; padding:0px;  left:0px;display:none;" %>  
+
+                        <% end %>
+                        
+                         <div class="">
+                          <%= f.text_area :content, placeholder: "Write concern...", 'data-validation' => "required", 'data-validation-error-msg' => "Post can't be blank", 'rows' => "2", class: "form-control form-control-minimal", :id => 'sconcern_text' %>
+                          <%= f.hidden_field :status, value: "open" %>
+                        </div>
+                        <div class="thumbnail thumbnail-album">
+                        <!-- media -->
+                          <div class="media">
+                              <canvas id="imageCanvas1" width="100%" class="pull-left ml2 mb3 mr0" >Add pictures</canvas>
+                              <a href="#" id="img_close" class="close pull-left">×</a>
+                          </div>
+                      </div>
+            
+    <div class="panel-footer">
+        <div class="panel-toolbar-wrapper">
+          <div class="panel-toolbar">
+              <div class="btn-group">
+                <button type="button" class="btn btn-default" id="cam"><span class="glyphicon glyphicon-camera"></span></button>
+                <!--<button type="button" class="btn btn-default" id="modal_sel_grp_btn"  data-toggle="modal" data-target="#modal_sel_grp"><span class="glyphicon glyphicon-home"></span></button>-->
+              </div>
+            </div>
+          <div class="panel-toolbar text-right">
+             <%= f.submit "Post", id: "sconcern_submit", class: "btn btn-primary btn-custom disabled" %>
+          </div>
+        </div>
+    </div>
+</div>
+<% end %>      
+
+<script>
+  $("#img_close").hide();
+    $("#imageCanvas1").hide();
+  
+  $('#sconcern_text').keyup(function(){
+    if($('#sconcern_text').val().length <1){
+      $('#sconcern_submit').addClass('disabled');
+    }else{
+      $('#sconcern_submit').removeClass('disabled');
+    }
+  });
+
+  $("#img_close").click(function(){
+    $("#img_close").hide();
+    $("#pic1").val("");
+    $("#imageCanvas1").hide();
+  });
+
+
+
+  var imageLoader = document.getElementById('pic1');
+  imageLoader.addEventListener('change', handleImage, false);
+  $("#cam").click(function(){
+    $("#pic1").click();
+  });
+  var canvas = document.getElementById('imageCanvas1');
+  var ctx = canvas.getContext('2d');
+  ctx.font="8pt tahoma ";
+  ctx.fillStyle = 'grey';
+  ctx.fillText("Add picture",35,46);
+  $("#imageCanvas1").hide();
+  function handleImage(e){
+    var canvas = document.getElementById('imageCanvas1');
+    var ctx = canvas.getContext('2d');
+    var iCnt=0;
+    var files = e.target.files;
+    if(files.length<1){
+     /* 
+     $('#pic1').val('');
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.clearRect(0, 0, 132, 88);
+      ctx.font="8pt tahoma ";
+      ctx.fillStyle = 'grey';
+      ctx.fillText("Add picture",35,46);
+      */
+      return;
+    }
+    $("#imageCanvas1").show();
+    $("#img_close").show();
+    canvas.width = 132;
+    canvas.height = 88*(Math.ceil(files.length/1));
+    for( var i = 0, len = files.length; i < len; i++) 
+    {
+      if(files[i])
+      {
+        var reader = new FileReader();
+        reader.onload = function(event){
+          var img = new Image();
+
+          img.onload = function(){
+            var ratioPx = 150;
+            var sWidth =ratioPx;
+            var ratio = img.width/sWidth;
+            var sHeight = img.height/ratio;   
+            if(sHeight>ratioPx){
+             sHeight =ratioPx;
+             ratio = img.height/sHeight;
+             sWidth = img.width/ratio;  
+           }
+           ctx.drawImage(img, 155*(iCnt%4),155*(Math.floor(iCnt/4)),sWidth,sHeight);
+                  //ctx.drawImage(img,0,0,sWidth,sHeight);
+                  iCnt++;
+                }
+                img.src = event.target.result;
+              }
+              reader.readAsDataURL(e.target.files[i]);     
+            }
+          }
+        }
+
+  $.validate({
+    validateOnBlur : false,
+    form : '#new_s_concern',
+    onSuccess : function() {
+      $('.loading_page').show();
+      $('#sconcern_submit').attr('data-loading-text', 'Posting...');
+      $('#sconcern_submit').button('loading');
+    },
+  });
+  
+  
+</script>

@@ -779,15 +779,22 @@ def search_app_user
     @selected_community = @community
     @selected_community.req_pending_cnt = User.where(['id IN (?)' , @community.requested_uc.collect(&:user_id)]).count
     @group_ids = current_user.user_groups.where("invitation = ? AND community_id = ?", Uc_enum::JOINED, @selected_community).pluck(:group_id)
-    @evnt_ids = Event.where("community_id = ?",params[:id]).pluck(:id)
-    @events = Eventdetail.where("user_id = ? AND status = ? AND event_id IN (?)", current_user.id, 'yes', @evnt_ids).collect(&:event)
+    
+    event_ids = current_user.eventdetails.pluck(:event_id)
+      @events = Event.where('id IN (?) and community_id = ?', event_ids, @community).order("starts_at DESC")
+      @events_comm = Event.where('community_id = ? and privacy = ?', @community , Privacyenum::PUBLIC).order("starts_at DESC")
+      @events = @events + @events_comm
+      @events = @events.uniq
+    
+    #@evnt_ids = Event.where("community_id = ?",params[:id]).pluck(:id)
+    #@events = Eventdetail.where("user_id = ? AND status = ? AND event_id IN (?)", current_user.id, 'yes', @evnt_ids).collect(&:event)
     @activity_ids = []
     @events.each do |event|
      @a_ids = event.activities.where("is_admin = ?", true ).pluck(:id)
      @a_ids.concat(Activitydetail.where("activity_id IN (?) AND user_id = ?",event.activities, current_user ).pluck(:activity_id))
      @activity_ids.concat(@a_ids)
     end
-    @albums.concat(Album.where("albumable_id IN (?) AND albumable_type = ?", @group_ids, Objecttypeenum::GROUP))    
+    #@albums.concat(Album.where("albumable_id IN (?) AND albumable_type = ?", @group_ids, Objecttypeenum::GROUP))    
     @albums.concat(Album.where("albumable_id IN (?) AND albumable_type = ?", @activity_ids, Objecttypeenum::ACTIVITY))   
     @albums.concat(Album.where("albumable_id = ? AND albumable_type = ?", params[:id], Objecttypeenum::COMMUNITY))   
     @albums = @albums.sort_by(&:created_at).reverse
@@ -833,7 +840,7 @@ def search_app_user
  end
 
   def events_com
-    flash.clear
+     flash.clear
     @community = Community.find(params[:id])
     @event = Event.new
       @event.starts_at = Time.zone.now.beginning_of_day
@@ -846,7 +853,12 @@ def search_app_user
       #Eventdetail.where("user_id = ? AND status = ?", current_user.id, 'invited' ).find_each do |ed|
       #  @invited_events << ed.event
       #end
-      @events = Event.where("community_id = ?", @community).where('id IN (?)', current_user.eventdetails.pluck(:event_id)).order("starts_at DESC").paginate(page: params[:page], :per_page => 4)
+      event_ids = current_user.eventdetails.pluck(:event_id)
+      @events = Event.where('id IN (?) and community_id = ?', event_ids, @community).order("starts_at DESC")
+      @events_comm = Event.where('community_id = ? and privacy = ?', @community , Privacyenum::PUBLIC).order("starts_at DESC")
+      @events = @events + @events_comm
+      @events = @events.uniq.paginate(page: params[:page], :per_page => 4)
+      
       @period = 'up'
       #ip_loc = Geocoder.search(remote_ip)[0]
 
@@ -880,7 +892,11 @@ def search_app_user
       @community = Community.find(params[:id])
       #@events = Event.where("community_id = ?", @community).order("starts_at DESC")
       #@events = @events.paginate(page: params[:page], :per_page => 5)
-      @events = Event.where("community_id = ?", @community).where('id IN (?)', current_user.eventdetails.pluck(:event_id)).order("starts_at DESC").paginate(page: params[:page], :per_page => 4)
+      event_ids = current_user.eventdetails.pluck(:event_id)
+      @events = Event.where('id IN (?) and community_id = ?', event_ids, @community).order("starts_at DESC")
+      @events_comm = Event.where('community_id = ? and privacy = ?', @community , Privacyenum::PUBLIC).order("starts_at DESC")
+      @events = @events + @events_comm
+      @events = @events.uniq.paginate(page: params[:page], :per_page => 4)
       @period = 'up'
  end
 
@@ -1223,8 +1239,14 @@ def search_app_user
     @event = Event.find(params[:event_id])
     @eds = @event.eventdetails
     @ed_user = @eds.find_by_user_id(current_user.id)
-    @ed_user.status = params[:status]
-    @ed_user.save
+    if @ed_user.nil?
+     @ed_user = @event.eventdetails.create(user_id: current_user.id, is_admin: false, status: params[:status])
+    end
+    unless @ed_user.nil?
+      @event.save
+      @ed_user.status = params[:status]
+      @ed_user.save
+    end
     respond_to do |format|
       if params[:status] == 'yes' || params[:status] == 'maybe'
         format.all { redirect_to(:action => :show_event, :format => :js, :event_id => @event.id, id: active_community.id) }

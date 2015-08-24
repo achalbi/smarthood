@@ -7,7 +7,7 @@
                 <!-- START Template Navigation/Menu -->
             <ul class="topmenu topmenu-responsive" data-toggle="menu">
                       <div class="mb15 mt10">
-                        <span class="media-object      mr10 ml5 pull-left">
+                        <span class="media-object      mr10 ml10 pull-left">
                              <%= gravatar_for @user, size: 50 %>
                         </span>
                         <span class="">
@@ -115,6 +115,13 @@
                                     <a href='<%=events_com_community_path(@community) %>' class="color-white"  id='events_community' data-remote="true">
                                     <span class="figure"><i class="ico-calendar"></i></span>
                                     <span class="text">Events</span>
+                                    <span class=" loading_menu pull-right hide" ><div class="indicator show"><span class="spinner "></span></div></span>
+                                   </a>
+                                </li>
+                                <li>
+                                    <a href='<%= s_concerns_path %>' class="color-white"  id='s_concern' data-remote="true">
+                                    <span class="figure"><i class="ico-notification"></i></span>
+                                    <span class="text">Concerns</span>
                                     <span class=" loading_menu pull-right hide" ><div class="indicator show"><span class="spinner "></span></div></span>
                                    </a>
                                 </li>

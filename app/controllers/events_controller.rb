@@ -102,8 +102,12 @@ class EventsController < ApplicationController
       @event = Event.new
       @event.starts_at = Time.zone.now.beginning_of_day
       @event.ends_at = Time.zone.now.end_of_day
+      event_ids = current_user.eventdetails.pluck(:event_id)
+      @events = Event.where('id IN (?)', event_ids).order("starts_at DESC")
+      @events_comm = Event.where('community_id IN (?) and privacy = ?', current_user.joined_uc.pluck(:community_id) , Privacyenum::PUBLIC).order("starts_at DESC")
+      @events = @events + @events_comm
+      @events = @events.uniq.paginate(page: params[:page], :per_page => 4)
       
-      @events = Event.where('id IN (?)', current_user.eventdetails.pluck(:event_id)).order("starts_at DESC").paginate(page: params[:page], :per_page => 4)
       
       #@events = @events.between(params['start'], params['end']) if (params['start'] && params['end'])
           #@upcoming_events = @events.where("starts_at > ?",Time.current.tomorrow.to_date).order("id DESC")
@@ -194,7 +198,13 @@ class EventsController < ApplicationController
       end 
       
     def events_page
-     @events = Event.where('id IN (?)', current_user.eventdetails.pluck(:event_id)).order("starts_at DESC").paginate(page: params[:page], :per_page => 4)
+      @community = active_community
+      event_ids = current_user.eventdetails.pluck(:event_id)
+      @events = Event.where('id IN (?)', event_ids).order("starts_at DESC")
+      @events_comm = Event.where('community_id IN (?) and privacy = ?', current_user.joined_uc.pluck(:community_id) , Privacyenum::PUBLIC).order("starts_at DESC")
+      @events = @events + @events_comm
+      @events = @events.uniq.paginate(page: params[:page], :per_page => 4)
+      
     end
 
     def upcoming_events_paginate
@@ -812,8 +822,14 @@ class EventsController < ApplicationController
     @event = Event.find(params[:id])
     @eds = @event.eventdetails
     @ed_user = @eds.find_by_user_id(current_user.id)
-    @ed_user.status = params[:status]
-    @ed_user.save
+    if @ed_user.nil?
+     @ed_user = @event.eventdetails.create(user_id: current_user.id, is_admin: false, status: params[:status])
+    end
+    unless @ed_user.nil?
+      @event.save
+      @ed_user.status = params[:status]
+      @ed_user.save
+    end
     respond_to do |format|
         format.all { redirect_to(:action => :show, :id => @event.id) }
 =begin      

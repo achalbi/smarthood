@@ -9,11 +9,11 @@ require 'uri'
     unless user.authentications.first.nil?
       auth = user.authentications.find_by_provider('facebook')
       unless auth.nil?
-        gravatar_url = cloudinary_url( current_user.profile_pic, :width => 180, :height => 180, :crop => :fill, :gravity => :face)
+        gravatar_url = Cloudinary::Utils.cloudinary_url( user.profile_pic, :width => 180, :height => 180, :crop => :fill, :gravity => :face)
        # gravatar_url = "https://graph.facebook.com/#{user.authentications.first.username}/picture?width=180&height=180"
-          u = URI.parse(gravatar_url)
-          head = Net::HTTP.get_response(u)
-          gravatar_url = head['location']
+       #   u = URI.parse(gravatar_url)
+      #    head = Net::HTTP.get_response(u)
+       #   gravatar_url = head['location']
       end
     else
       gravatar_id = Digest::MD5::hexdigest(user.email.downcase)
@@ -27,26 +27,27 @@ require 'uri'
     gravatar_url = ""
     begin
       size = options[:size]
-      unless user.authentications.first.nil?
-        auth = user.authentications.find_by_provider('facebook')
-        unless auth.nil?
+     # unless user.authentications.first.nil?
+        #auth = user.authentications.find_by_provider('facebook')
+      #  unless auth.nil?
+      unless user.profile_pic.nil?
         size = (size.to_i-10).to_s
-          gravatar_url = cloudinary_url( current_user.profile_pic, :width => size, :height => size, :crop => :fill, :gravity => :face)
+        gravatar_url = Cloudinary::Utils.cloudinary_url( user.profile_pic, :width => size, :height => size, :crop => :fill, :gravity => :face)
           #gravatar_url = "https://graph.facebook.com/#{auth.username}/picture?width=#{size}&height=#{size}"
-            u = URI.parse(gravatar_url)
-            head = Net::HTTP.get_response(u)
-            gravatar_url = head['location']
-        else
-        gravatar_id = Digest::MD5::hexdigest(user.email.downcase)
-        gravatar_url = "https://secure.gravatar.com/avatar/#{gravatar_id}?s=#{size}"        
-        end
+          #  u = URI.parse(gravatar_url)
+          #  head = Net::HTTP.get_response(u)
+          #  gravatar_url = head['location']
+      #  else
+      #  gravatar_id = Digest::MD5::hexdigest(user.email.downcase)
+      #  gravatar_url = "https://secure.gravatar.com/avatar/#{gravatar_id}?s=#{size}"        
+      #  end
       else
         gravatar_id = Digest::MD5::hexdigest(user.email.downcase)
         gravatar_url = "https://secure.gravatar.com/avatar/#{gravatar_id}?s=#{size}"
       end
     rescue Exception => e
     end
-      image_tag(gravatar_url, alt: user.name, class: "gravatar img-circle")
+    image_tag(gravatar_url, alt: user.name, class: "gravatar img-circle")
   end
   
     def gravatar_for_url(user, options = { size: 50 })
@@ -56,15 +57,15 @@ require 'uri'
         unless user.authentications.first.nil?
           auth = user.authentications.find_by_provider('facebook')
         unless auth.nil?
-            gravatar_url = cloudinary_url( current_user.profile_pic, :width => size, :height => size, :crop => :fill, :gravity => :face)
+            gravatar_url = Cloudinary::Utils.cloudinary_url( user.profile_pic, :width => size, :height => size, :crop => :fill, :gravity => :face)
             #gravatar_url = "https://graph.facebook.com/#{auth.username}/picture?width=#{size}&height=#{size}"
-            u = URI.parse(gravatar_url)
-              h = Net::HTTP.new u.host, u.port
-              h.use_ssl = u.scheme == 'https'
-              head = h.start do |ua|
-                ua.head u.path
-              end
-              gravatar_url = head['location']
+           # u = URI.parse(gravatar_url)
+          #    h = Net::HTTP.new u.host, u.port
+          #    h.use_ssl = u.scheme == 'https'
+          #    head = h.start do |ua|
+          #      ua.head u.path
+          #    end
+          #    gravatar_url = head['location']
           else
           gravatar_id = Digest::MD5::hexdigest(user.email.downcase)
           gravatar_url = "https://secure.gravatar.com/avatar/#{gravatar_id}?s=#{size}"        

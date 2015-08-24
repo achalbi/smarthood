@@ -1,0 +1,6 @@
+<script>
+    
+$('body').removeClass('modal-open');
+$('body').css('padding-right', '');
+$("#single_post_<%= @post.id %>").html("<%= j render partial: 'posts/post_one', locals: { post: @post } %>");
+</script>

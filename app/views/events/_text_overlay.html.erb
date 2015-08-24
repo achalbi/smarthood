@@ -4,21 +4,21 @@
                  <div class="col-xs-12 pr15">
                         <% unless @event.responded?(current_user) %>
                         <div class="">
-                          <address><p><strong>Attend this event</strong>
+                          <address><p><strong>Going?</strong>
                             <%= link_to "May be", "/events/#{@event.id}/event_invitation?status=maybe", class: "btn btn-warning pull-right btn-custom event_resp", remote: true %>
-                            <%= link_to "Not Going", "/events/#{@event.id}/event_invitation?status=no", class: "pull-right btn btn-danger btn-custom mr10 event_resp", remote: true %>
-                            <%= link_to "Going", "/events/#{@event.id}/event_invitation?status=yes", class: "pull-right btn btn-success btn-custom mr10 event_resp", remote: true %>
+                            <%= link_to "No", "/events/#{@event.id}/event_invitation?status=no", class: "pull-right btn btn-danger btn-custom mr10 event_resp", remote: true %>
+                            <%= link_to "Yes", "/events/#{@event.id}/event_invitation?status=yes", class: "pull-right btn btn-success btn-custom mr10 event_resp", remote: true %>
                           </p></address>
                         </div>
                         <% else %>
                             <%= link_to "Edit invite", "#",id: "edit_invite", class: "pull-right btn btn-default btn-custom ml10 mr10" %>
                         <% end %>
                         <div id="attending_event">
-                          <address><p><strong>Attend this event</strong>
+                          <address><p><strong>Going?</strong>
                             <%= link_to "Cancel", "#", class: "btn pull-right btn-custom btn-default", id: "cancel_invite" %>
                             <%= link_to "May be", "/events/#{@event.id}/event_invitation?status=maybe", class: "btn btn-warning pull-right btn-custom mr10 event_resp", remote: true %>
-                            <%= link_to "Not Going", "/events/#{@event.id}/event_invitation?status=no", class: "pull-right btn btn-danger btn-custom mr10 event_resp", remote: true %>
-                            <%= link_to "Going", "/events/#{@event.id}/event_invitation?status=yes", class: "pull-right btn btn-success btn-custom mr10 event_resp", remote: true %>
+                            <%= link_to "No", "/events/#{@event.id}/event_invitation?status=no", class: "pull-right btn btn-danger btn-custom mr10 event_resp", remote: true %>
+                            <%= link_to "Yes", "/events/#{@event.id}/event_invitation?status=yes", class: "pull-right btn btn-success btn-custom mr10 event_resp", remote: true %>
                           </p></address>
                         </div>
             <div class="text pull-right" id="edit_del_btn">

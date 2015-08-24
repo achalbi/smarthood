@@ -1,0 +1,58 @@
+  <div id="s_concern_new_post" class="sconcern_post">
+      <%= render partial: 'new' %>
+  </div>
+ 
+
+  <div id="s_concern_posts" class="sconcern_post">
+    <% if @posts.count > 0 %>
+      <%= render 'posts/post', locals: {post: @post} %>
+    <% else %>
+      <p class="semibold center mt20">No concerns raised yet</p>
+    <% end %>
+  </div>
+ <div  class="col-md-12">
+      <div class="center loading_page_post"></div>
+ </div>
+ 
+ <script>
+   
+   
+var currentPage_scon<%= @community.id.to_s %> = 1;
+var intervalID_scon = -1000;
+var insideLoop_scon ="false"; 
+
+function checkScroll_scon_post() {
+  if (nearBottomOfPage() && insideLoop_scon!="true" ) {
+    insideLoop_scon ="true";
+    currentPage_scon<%= @community.id.to_s %>++;
+  $('.loading_page_post').show();
+    jQuery.ajax('/s_concerns/next_page?page=' + currentPage_scon<%= @community.id.to_s %> + '&id=' + '<%= @community.id.to_s %>' , {asynchronous:true, evalScripts:true, method:'get', success: function(data, textStatus, jqXHR) {
+    $('#s_concern_posts').append($(data));
+    $('.loading_page_post').hide();
+    if(typeof jQuery(data) == 'undefined' ||jQuery(data).html() == null || $(data).find('.paginate_do').html()==null){
+      clearInterval(intervalID_scon);
+      for (var i = 1; i < 99999; i++){
+         window.clearInterval(i);
+      }
+      restartInterval();
+    }
+    insideLoop_scon = "false";
+  },});
+  }
+}
+ 
+function nearBottomOfPage() {
+  return scrollDistanceFromBottom() < 150;
+}
+ 
+function scrollDistanceFromBottom(argument) {
+  return pageHeight() - (window.pageYOffset + self.innerHeight);
+}
+ 
+function pageHeight() {
+  return Math.max(document.body.scrollHeight, document.body.offsetHeight);
+}
+ 
+  intervalID_scon = setInterval(checkScroll_scon_post, 1000);
+   
+ </script>

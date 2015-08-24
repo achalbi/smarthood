@@ -5,6 +5,7 @@ class Event < ActiveRecord::Base
   after_validation :geocode, :if => :address_changed?          # auto-fetch coordinates
   has_many :eventdetails, :dependent => :destroy
   belongs_to :User
+  belongs_to :community
   belongs_to :photo
   accepts_nested_attributes_for :photo
   accepts_nested_attributes_for :eventdetails

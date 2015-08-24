@@ -26,6 +26,7 @@ class Objecttypeenum
     Objecttypeenum.add_item :USER_IDS, "User_id"
     Objecttypeenum.add_item :BUYSELL, "Buysell"
     Objecttypeenum.add_item :BUYSELLITEM, "BuysellItem"
+    Objecttypeenum.add_item :SCONCERN, "SConcern"
 
 
 =begin

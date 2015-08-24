@@ -15,6 +15,8 @@ class Community < ActiveRecord::Base
   belongs_to :user
   belongs_to :photo, dependent: :destroy
 
+  has_many :events
+
   has_many :communityposts, dependent: :destroy
 #  has_many :posts, :as => :postable
   has_many :posts, :through => :communityposts

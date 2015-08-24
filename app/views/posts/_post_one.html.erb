@@ -1,3 +1,4 @@
+<div id="single_post_<%= post.id %>">
      <div id="table_<%= post.id %>">
       <div class="paginate_do">
         <div class = "panel mb5">
@@ -10,7 +11,7 @@
               </li>
                 <li class="text-left">
                 <p class="ellipsis nm"><span class="semibold"> <%= link_to post.user.name, post.user, remote: true %></span>
-                      <% unless (post.postable_type != Objecttypeenum::EVENT && post.postable_type != Objecttypeenum::ACTIVITY && post.postable_type != Objecttypeenum::ALBUM && post.postable_type != Objecttypeenum::BUYSELLITEM )%>
+                      <% unless (post.postable_type != Objecttypeenum::EVENT && post.postable_type != Objecttypeenum::ACTIVITY && post.postable_type != Objecttypeenum::ALBUM && post.postable_type != Objecttypeenum::BUYSELLITEM && post.postable_type != Objecttypeenum::SCONCERN)%>
                         <% unless post.title.blank? %>
                             <%= post.title.gsub(/\n/, '<br>').html_safe %>
                         <% end %>
@@ -28,6 +29,9 @@
                       <% if ( post.postable_type == Objecttypeenum::BUYSELLITEM)%>
                         <li><a href="#" id="update_sell_rent" class="" data-toggle="modal" data-target="#modal_edit_buysell_<%= post.id %>">Edit</a></li>
                       <% end %>
+                      <% if ( post.postable_type == Objecttypeenum::SCONCERN && (post.user == current_user || post.communities[0].is_admin?(current_user)) ) %>
+                        <li><a href="#" id="update_s_concern" class="" data-toggle="modal" data-target="#modal_edit_sconcern_<%= post.id %>">Edit</a></li>
+                      <% end %>
                       <li class = ""><%= link_to "Delete", post, method: :delete, remote: true, style: "color:#FD3708 !important;", data: { confirm: "You sure?" }, title: "delete the post" %></li>
                   </ul>
                 </div>
@@ -43,16 +47,19 @@
             <div class="thumbnail thumbnail-album">
               <div class="media">
                 <div class=""><span class="spinner"></span></div>
-                  <% i = 0 %>
-                  <% post.photos.each do |photo| %>
-                  <div>
+                <% if ( post.postable_type == Objecttypeenum::SCONCERN) && !post.postable.albums.blank? %>
+                  <a href="<%= post.postable.albums[0].photos[0].pic_url %>" rel="group[<%= post.id %>]" class="fancybox-album center">
+                    <%= cl_image_tag(post.postable.albums[0].photos[0].pic_url(:large_mid), class:"image_al_c")  %></a> 
+                <% end %>
+                
+        <% i = 0 %>
+        <% post.photos.each do |photo| %>
                     <% i += 1 %>
 
                     <% if (post.postable_type != Objecttypeenum::EVENT && post.postable_type != Objecttypeenum::ACTIVITY && post.postable_type != Objecttypeenum::ALBUM && post.postable_type != Objecttypeenum::BUYSELL)%>
                         <!-- <a href="<%= photo.pic_url %>" rel="rettyPhoto[<%= post.id %>]" class="lightview" data-lightview-group="thumbnail-<%= post.id %>" data-lightview-group-options="controls: 'thumbnails'"> -->
                      <a href="<%= photo.pic_url %>" rel="group[<%= post.id %>]" class="fancybox-album center">
                     <%= cl_image_tag(photo.pic_url(:large_mid), class:"image_al_c")  %></a> 
-                    </div>
                     <% break %>
                   <% end %>
 
@@ -83,7 +90,6 @@
                   <% end %>
 
             <% end %>
-          </div>
         <% end %>
                       <% if ( post.postable_type == Objecttypeenum::BUYSELLITEM)%>
                       <p>
@@ -145,6 +151,16 @@
                       <% end %>
       </div>
     </div>  
+     <% if ( post.postable_type == Objecttypeenum::SCONCERN) %>
+     <div class=" panel-toolbar-wrapper b0 nm np">
+         <div class="panel-toolbar">
+           <span class="center_block">
+                  <strong class="semibold text-default ml19">Status:</strong><strong class="semibold ml10"><%= post.postable.status  %></strong>
+           </span>
+         </div>
+    </div>  
+    <% end %>
+    
        
      <div class=" panel-toolbar-wrapper b0 nm np">
          <div class="panel-toolbar">
@@ -157,7 +173,7 @@
                   <% j=0 %>
                  <!--  <strong style="font-size:14px;" > -->
                   <span class="center_block">
-                  <strong class="semibold text-default col-xs-100">Communities:</strong>
+                  <strong class="semibold text-default col-xs-100"> <%="Community".pluralize(post.communities.count) %>:</strong>
                   <div class="col-xs-6  col-sm-9 pl0">
                   <% post.communities.each do |cu| %>
                   <% j+=1 %>
@@ -518,6 +534,67 @@
 <% end %>
 
 
+<% if ( post.postable_type == Objecttypeenum::SCONCERN) %>
+
+<%= form_for( post.postable, remote: true,  :html => {:multipart => true, method: 'put'}) do |f| %>
+  <div id="modal_edit_sconcern_<%= post.id %>" class="modal fade" >
+          <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">×</button>
+              <span class="font-15 semibold">Edit concern</span>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+              <div class="mrp8 mlp8">
+                <%= f.hidden_field :id %>
+                   <%= render 'shared/error_messages', object: f.object %>
+                    <div class="center_block clearfix">
+                      <%= f.label :content, class: "control-label mt15 pl15" %>
+                      <div>
+                        <div class="col-sm-12">
+                      <%= f.text_area :content, :placeholder=>"Write concern", class: 'form-control inherit_width', :title => "Content", rows: 3, cols: 75  %> 
+                      </div>
+                    </div>
+                  </div>
+                    <div class="  mb15">
+                      <div class="center_block clearfix col-xs-6 mt15">
+                            <%= f.label :status, class: "control-label" %>
+                            <div class="input">
+                              <%= f.select :status, options_for_select([["Open", "open"], ["In-progress", "in-progress"], ["Closed", "closed"]], f.object.status), {}, id: "condition", class: "form-control" %>
+                            </div>
+                      </div>
+                    </div> 
+                    
+                <div class="center_block clearfix col-xs-12 mt20 mb10">
+                    <% unless post.postable.albums.blank? %>
+                        <%= label_tag "photo", "Change picture", class: "control-label" %>
+                    <% else %>
+                        <%= label_tag "photo", "Add picture", class: "control-label" %>
+                    <% end %>
+                  <%= fields_for :photo, Photo.new, :child_index => 'NEW_RECORD' do |photo_form| %>
+                    <%= photo_form.file_field :pic, id: "pic2_#{post.id}",style: "width:0px; height:0px; padding:0px;  left:0px;" %>  
+                  <% end %>
+                  <div class="input"> 
+                    <canvas id="imageCanvas2_<%= post.id %>" style = "border: 1px solid #ddd; padding:5px; align:center; width:200px;cursor:pointer" >select new image</canvas>
+                    <% unless post.postable.albums.blank? %>
+                    <%= cl_image_tag(post.postable.albums[0].photos[0].pic_url(:small), class:" thumbnail albumLink", id:"sconcern_edit_pic_#{post.id}", style: "cursor:pointer;") %>   
+                     <script> $('#imageCanvas2_<%= post.id %>').hide(); </script>
+                    <% end %>
+                  </div>
+                </div> 
+              </div>    
+             </div>
+           </div>
+            <div class="modal-footer" >
+              <button type='submit' , class="btn btn-success btn-custom pull-right edit_sconcern" id="edit_sconcern_<%= post.id %>" >Update</button>
+            </div>
+          </div>          
+        </div>
+        </div>
+<% end %>
+<% end %>
+
 
     <script type="text/javascript">
           $(function(){
@@ -611,6 +688,76 @@
 
   });*/
   
+  </script>
+<script>
+  
+    $("#sconcern_edit_pic_<%= post.id %>").click(function(){
+      $('#pic2_<%= post.id %>').click();
+    });
 
+var imageLoader = document.getElementById('pic2_<%= post.id %>');
+imageLoader.addEventListener('change', handleImage, false);
+$("#imageCanvas2_<%= post.id %>").click(function(){
+  $("#pic2_<%= post.id %>").click();
+});
+var canvas = document.getElementById('imageCanvas2_<%= post.id %>');
+var ctx = canvas.getContext('2d');
+ctx.font="30px Arial";
+ctx.fillText("Select picture",10,50);
+
+function handleImage(e){
+  var canvas = document.getElementById('imageCanvas2_<%= post.id %>');
+  var ctx = canvas.getContext('2d');
+  var iCnt=0;
+  var files = e.target.files;
+  canvas.width = 180;
+  canvas.height = 155*(Math.ceil(files.length/1));
+     if(files.length<1){
+      $('#pic2_<%= post.id %>').val('');
+      $('#sconcern_edit_pic_<%= post.id %>').show();
+      $('#imageCanvas2_<%= post.id %>').hide();
+      return;
+    }
+  for( var i = 0, len = files.length; i < len; i++) 
+  {
+          $('#sconcern_edit_pic_<%= post.id %>').hide();
+          $('#imageCanvas2_<%= post.id %>').show();
+    if(files[i])
+    {
+      var reader = new FileReader();
+      reader.onload = function(event){
+        var img = new Image();
+
+        img.onload = function(){
+          var ratioPx = 150;
+          var sWidth =ratioPx;
+          var ratio = img.width/sWidth;
+          var sHeight = img.height/ratio;   
+          if(sHeight>ratioPx){
+           sHeight =ratioPx;
+           ratio = img.height/sHeight;
+           sWidth = img.width/ratio;  
+         }
+         ctx.drawImage(img, 155*(iCnt%1),155*(Math.floor(iCnt/1)),sWidth,sHeight);
+                  //ctx.drawImage(img,0,0,sWidth,sHeight);
+                  iCnt++;
+                }
+                img.src = event.target.result;
+              }
+              reader.readAsDataURL(e.target.files[i]);     
+            }
+          }
+        }
+        
+        $("#edit_sconcern_<%= post.id %>").click(function(){
+          $.validate({
+            form : '#edit_s_concern_<%= post.postable_id %>',
+            onSuccess : function() {
+              $('#edit_sconcern_<%= post.id %>').attr('data-loading-text', 'Updating...');
+              $('#edit_sconcern_<%= post.id %>').button('loading');
+            },
+          });
+        });
 
     </script>
+</div>  

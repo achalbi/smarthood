@@ -16,16 +16,18 @@ class AuthenticationController < ApplicationController
   #end
   @graph = Koala::Facebook::API.new(session["fb_access_token"])
   
-
   if authentication
     #flash[:notice] = "Signed in successfully."
     user = User.find(authentication.user_id)
- #  if user.profile_pic.nil?
-  #    user.profile_pic =  Cloudinary::Uploader.upload(@graph.get_picture(omniauth['uid'],:type => "square", height: 400 , width: 400))["public_id"]
-  #  end
+    if user.profile_pic.nil?
+      user.profile_pic =  Cloudinary::Uploader.upload(@graph.get_picture(omniauth['uid'],:type => "square", height: 400 , width: 400))["public_id"]
+   # else
+  #    Cloudinary::Uploader.destroy(user.profile_pic)
+   #   user.profile_pic =  Cloudinary::Uploader.upload(@graph.get_picture(omniauth['uid'],:type => "square", height: 400 , width: 400))["public_id"]
+    end
       user.token = omniauth['credentials']['token'] # code needs to be removed
       user.fb_uid = omniauth['uid'] # code needs to be removed
-      user.save
+      user.save!
       
       user_session = omniauth['extra']['raw_info']
       unless user_session.nil?
@@ -79,7 +81,7 @@ class AuthenticationController < ApplicationController
     else
       if user.profile_pic.nil?
         user.profile_pic =  Cloudinary::Uploader.upload(@graph.get_picture(omniauth['uid'],:type => "square", height: 400 , width: 400))["public_id"]
-        user.save
+      #  Cloudinary::Uploader.destroy(user.profile_pic)
       end
       #user.authentications.build(:provider => omniauth ['provider'], :uid => omniauth['uid'])
       user.authentications.build(:provider => omniauth['provider'], :uid => omniauth['uid'], :username => omniauth['info']['nickname'])

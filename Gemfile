@@ -35,6 +35,8 @@ gem "schema_plus"
 gem 'sanitize'
 gem 'puma'
 gem "rack-timeout"
+gem "pry-byebug"
+gem 'gem_bench', :group => :console
 #gem 'schema_associations' #, '~> 1.2.2'
 #gem 'schema_validations' #, '~> 1.0.0'
 #gem 'bootstrap-multiselect-rails'

@@ -15,7 +15,6 @@ class SessionsController < ApplicationController
  #     render 'new'
  #   end
    auth = request.env['omniauth.auth']
- 
     # Find an authentication or create an authentication
     @authentication = Authentication.find_with_omniauth(auth)
     if @authentication.nil?

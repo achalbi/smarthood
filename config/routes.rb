@@ -1,6 +1,16 @@
 EMS::Application.routes.draw do
 
 
+  resources :s_concerns do
+    member do
+      get :show_post, :create_post
+    end
+    collection do
+      get :next_page
+    end
+  end
+
+
   get "issue_ticket_action/destroy"
 
   get "issue_ticket_action/update"
